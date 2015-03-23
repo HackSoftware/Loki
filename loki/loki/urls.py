@@ -8,5 +8,5 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^auth/', include('djoser.urls')),
-    #url(r'', include('hack_fmi.urls', namespace='hack_fmi')),
+    url(r'', include('hack_fmi.urls', namespace='hack_fmi')),
 )
