@@ -16,17 +16,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=jpbhxfh_$%xh-%q2*@$#g)1%tvvgu3v_z6@qmf#+r+y=1gy9y'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-TEMPLATE_DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
 # Application definition
 
 INSTALLED_APPS = (
@@ -39,7 +28,6 @@ INSTALLED_APPS = (
 
     'rest_framework',
     'rest_framework.authtoken',
-    'djoser',
 
     'hack_fmi',
 )
@@ -57,17 +45,6 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'loki.urls'
 
 WSGI_APPLICATION = 'loki.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -92,6 +69,16 @@ AUTH_USER_MODEL = 'hack_fmi.BaseUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
 }
+
+try:
+    if 'TRAVIS' in os.environ:
+        from .travis_settings import *
+    else:
+        from .local_settings import *
+except ImportError:
+    exit("{}_settings.py not found!".format("travis" if 'TRAVIS' in os.environ else "local"))
