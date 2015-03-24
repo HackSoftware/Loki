@@ -1,2 +1,4 @@
 Django==1.7.7
+Pillow==2.7.0
 djangorestframework==3.1.0
+djoser==0.2.1
