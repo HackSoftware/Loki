@@ -81,7 +81,7 @@ REST_FRAMEWORK = {
 
 
 #TODO: Just for the begining
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 try:
     if 'TRAVIS' in os.environ:
