@@ -1,4 +1,5 @@
 Django==1.7.7
 Pillow==2.7.0
+PyJWT==1.0.0
 djangorestframework==3.1.0
-djoser==0.2.1
+djangorestframework-jwt==1.4.0
