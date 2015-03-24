@@ -56,6 +56,12 @@ class BaseUser(AbstractBaseUser):
     def is_staff(self):
         return self.is_admin
 
+    def get_competitor(self):
+        try:
+            return self.competitor
+        except:
+            return False
+
 
 class Language(models.Model):
     name = models.CharField(max_length=30)
