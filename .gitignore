@@ -57,3 +57,4 @@ target/
 *.iml
 
 db.sqlite3
+local_settings.py
