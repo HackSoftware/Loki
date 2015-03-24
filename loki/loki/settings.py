@@ -28,6 +28,7 @@ INSTALLED_APPS = (
 
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
 
     'hack_fmi',
 )
@@ -36,6 +37,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -74,6 +78,10 @@ REST_FRAMEWORK = {
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
 }
+
+
+#TODO: Just for the begining
+CORS_ORIGIN_ALLOW_ALL = False
 
 try:
     if 'TRAVIS' in os.environ:
