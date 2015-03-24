@@ -2,11 +2,6 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'loki.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^auth/', include('djoser.urls')),
-    url(r'', include('hack_fmi.urls', namespace='hack_fmi')),
+    url(r'^hackfmi/', include('hack_fmi.urls', namespace='hack_fmi')),
 )
