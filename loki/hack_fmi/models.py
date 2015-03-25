@@ -63,7 +63,7 @@ class BaseUser(AbstractBaseUser):
             return False
 
 
-class Language(models.Model):
+class Skill(models.Model):
     name = models.CharField(max_length=30)
 
     def __str__(self):
@@ -83,6 +83,6 @@ class Competitor(BaseUser):
         (XL, 'XL')
     )
 
-    known_technologies = models.ManyToManyField(Language)
+    known_skills = models.ManyToManyField(Skill)
     faculty_number = models.SmallIntegerField()
     shirt_size = models.SmallIntegerField(choices=SHIRT_SIZE, default=S)

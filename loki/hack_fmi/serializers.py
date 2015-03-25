@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import Language, Competitor
+from .models import Skill, Competitor
 
 
-class LanguageSerializer(serializers.ModelSerializer):
+class SkillSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Language
+        model = Skill
         fields = ('id', 'name',)
 
 
@@ -15,7 +15,7 @@ class CompetitorSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'email',
-            'known_technologies',
+            'known_skills',
             'faculty_number',
             'shirt_size',
             'password'

@@ -5,15 +5,15 @@ from rest_framework.decorators import api_view
 
 from rest_framework_jwt.views import ObtainJSONWebToken
 
-from .models import Language
+from .models import Skill
 
-from .serializers import LanguageSerializer, CompetitorSerializer
+from .serializers import SkillSerializer, CompetitorSerializer
 
 
-class LanguageListView(APIView):
+class SkillListView(APIView):
     def get(self, request, format=None):
-        languages = Language.objects.all()
-        serializer = LanguageSerializer(languages, many=True)
+        languages = Skill.objects.all()
+        serializer = SkillSerializer(languages, many=True)
         return Response(serializer.data)
 
 

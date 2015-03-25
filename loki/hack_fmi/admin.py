@@ -1,13 +1,13 @@
 from django.contrib import admin
 
-from .models import Competitor, Language
+from .models import Competitor, Skill
 
 
-class LanguageAdmin(admin.ModelAdmin):
+class SkillAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
     class Meta:
-        model = Language
+        model = Skill
 
 
 class CompetitorAdmin(admin.ModelAdmin):
@@ -16,5 +16,5 @@ class CompetitorAdmin(admin.ModelAdmin):
     class Meta:
         model = Competitor
 
-admin.site.register(Language, LanguageAdmin)
+admin.site.register(Skill, SkillAdmin)
 admin.site.register(Competitor, CompetitorAdmin)

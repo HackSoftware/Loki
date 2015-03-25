@@ -1,12 +1,12 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Language, Competitor, BaseUser
+from .models import Skill, Competitor, BaseUser
 
 
 class RegistrationTests(APITestCase):
     def setUp(self):
-        self.language = Language.objects.create(name="C#")
+        self.skills = Skill.objects.create(name="C#")
 
     def test_register_user(self):
         data = {
@@ -14,7 +14,7 @@ class RegistrationTests(APITestCase):
             'first_name': 'Ivaylo',
             'last_name': 'Naidobriq',
             'faculty_number': '123',
-            'known_technologies': '1',
+            'known_skills': '1',
             'password': '123'
         }
         url = reverse('hack_fmi:register')
@@ -29,7 +29,7 @@ class RegistrationTests(APITestCase):
             'first_name': 'Ivaylo',
             'last_name': 'Naidobriq',
             'faculty_number': '123',
-            'known_technologies': '1',
+            'known_skills': '1',
         }
         url = reverse('hack_fmi:register')
         response = self.client.post(url, data, format='json')
@@ -38,7 +38,7 @@ class RegistrationTests(APITestCase):
 
 class LoginTests(APITestCase):
     def setUp(self):
-        self.language = Language.objects.create(name="C#")
+        self.skills = Skill.objects.create(name="C#")
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
             first_name='Ivaylo',
