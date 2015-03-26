@@ -83,6 +83,10 @@ REST_FRAMEWORK = {
 #TODO: Just for the begining
 CORS_ORIGIN_ALLOW_ALL = True
 
+JWT_AUTH = {
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+}
+
 try:
     if 'TRAVIS' in os.environ:
         from .travis_settings import *
