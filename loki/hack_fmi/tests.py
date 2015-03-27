@@ -11,8 +11,7 @@ class RegistrationTests(APITestCase):
     def test_register_user(self):
         data = {
             'email': 'ivo@abv.bg',
-            'first_name': 'Ivaylo',
-            'last_name': 'Naidobriq',
+            'full_name': 'Ivo Bachvarov',
             'faculty_number': '123',
             'known_skills': '1',
             'password': '123'
@@ -26,8 +25,7 @@ class RegistrationTests(APITestCase):
     def test_register_user_no_password(self):
         data = {
             'email': 'ivo@abv.bg',
-            'first_name': 'Ivaylo',
-            'last_name': 'Naidobriq',
+            'full_name': 'Ivo Bachvarov',
             'faculty_number': '123',
             'known_skills': '1',
         }
@@ -41,8 +39,7 @@ class LoginTests(APITestCase):
         self.skills = Skill.objects.create(name="C#")
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
-            first_name='Ivaylo',
-            last_name='Naidobriq',
+            full_name='Ivo Naidobriq',
             faculty_number='123',
         )
         self.competitor.set_password('123')
@@ -69,8 +66,7 @@ class LoginTests(APITestCase):
     def test_wrong_not_competetor(self):
         self.baseuser = BaseUser.objects.create(
             email='baseuser@abv.bg',
-            first_name='Ivaylo',
-            last_name='Naidobriq',
+            full_name='Ivo Naidobriq',
         )
         self.baseuser.set_password('123')
         self.baseuser.save()

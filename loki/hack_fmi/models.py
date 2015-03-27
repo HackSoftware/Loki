@@ -5,25 +5,25 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 class UserManager(BaseUserManager):
 
     def __create_user(self, email, password, is_admin,
-                      first_name, last_name):
+                      full_name):
         if not email:
             raise ValueError('Users must have an email address')
 
         email = self.normalize_email(email)
         user = self.model(email=email,
                           is_admin=is_admin,
-                          first_name=first_name, last_name=last_name)
+                          full_name=full_name)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password, first_name='', last_name=''):
+    def create_user(self, email, password, full_name=''):
         return self.__create_user(email, password, False,
-                                  first_name, last_name)
+                                  full_name)
 
-    def create_superuser(self, email, password, first_name='', last_name=''):
+    def create_superuser(self, email, password, full_name=''):
         return self.__create_user(email, password, True,
-                                  first_name, last_name)
+                                  full_name)
 
 
 class BaseUser(AbstractBaseUser):
@@ -56,6 +56,21 @@ class BaseUser(AbstractBaseUser):
     def is_staff(self):
         return self.is_admin
 
+    @property
+    def full_name(self):
+        return "{} {}".format(self.first_name, self.last_name)
+
+    @full_name.setter
+    def full_name(self, full_name):
+        names = full_name.strip().split()
+        if len(names) >= 2:
+            self.first_name = names[0]
+            self.last_name = names[-1]
+        elif len(names) == 1:
+            self.first_name = names[0]
+        else:
+            raise ValueError('Not valid full_name.')
+
     def get_competitor(self):
         try:
             return self.competitor
@@ -83,6 +98,7 @@ class Competitor(BaseUser):
         (XL, 'XL')
     )
 
+    is_vegetarian = models.BooleanField(default=False)
     known_skills = models.ManyToManyField(Skill)
-    faculty_number = models.SmallIntegerField()
+    faculty_number = models.IntegerField()
     shirt_size = models.SmallIntegerField(choices=SHIRT_SIZE, default=S)
