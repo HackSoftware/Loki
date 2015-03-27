@@ -102,3 +102,17 @@ class Competitor(BaseUser):
     known_skills = models.ManyToManyField(Skill)
     faculty_number = models.IntegerField()
     shirt_size = models.SmallIntegerField(choices=SHIRT_SIZE, default=S)
+
+
+class Team(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    members = models.ManyToManyField(Competitor, through='TeamMembership')
+    description = models.TextField()
+    repository = models.URLField(blank=True)
+    technologies = models.ManyToManyField(Skill)
+
+
+class TeamMembership(models.Model):
+    competitor = models.ForeignKey(Competitor)
+    team = models.ForeignKey(Team)
+    is_leader = models.BooleanField(default=False)

@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
-from .models import Skill, Competitor, BaseUser
+from .models import Skill, Competitor, BaseUser, Team
 
 
 class RegistrationTests(APITestCase):
@@ -91,3 +91,13 @@ class LoginTests(APITestCase):
         self.assertEqual(response2.status_code, status.HTTP_200_OK)
 
         self.assertEqual(response1.data, response2.data)
+
+
+class TeamRegistrationTests(APITestCase):
+    def test_serializer(self):
+        Competitor.objects.create()
+        team = Team.objects.create(
+            name='alala',
+            teammates=1
+
+        )
