@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from rest_framework_jwt.views import ObtainJSONWebToken
 
@@ -11,6 +11,8 @@ from .serializers import SkillSerializer, CompetitorSerializer, TeamSerializer
 
 
 class SkillListView(APIView):
+    permission_classes = (AllowAny,)
+
     def get(self, request, format=None):
         languages = Skill.objects.all()
         serializer = SkillSerializer(languages, many=True)
@@ -36,6 +38,7 @@ class TeamListView(APIView):
 
 
 @api_view(['POST'])
+@permission_classes((AllowAny,))
 def register(request):
     serializer = CompetitorSerializer(data=request.data)
     if serializer.is_valid():
@@ -47,6 +50,8 @@ def register(request):
 
 
 class Login(ObtainJSONWebToken):
+    permission_classes = (AllowAny,)
+
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
