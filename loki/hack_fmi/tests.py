@@ -113,7 +113,7 @@ class TeamRegistrationTests(APITestCase):
     def test_register_team(self):
         data = {
             'name': 'Pandas',
-            'description': 'GameDevelopers',
+            'idea_description': 'GameDevelopers',
             'repository': 'https://github.com/HackSoftware',
             'technologies': 1,
         }
@@ -126,7 +126,7 @@ class TeamRegistrationTests(APITestCase):
     def test_registered_team_has_leader(self):
         data = {
             'name': 'Pandas',
-            'description': 'GameDevelopers',
+            'idea_description': 'GameDevelopers',
             'repository': 'https://github.com/HackSoftware',
             'technologies': 1,
         }

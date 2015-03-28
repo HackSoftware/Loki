@@ -107,7 +107,7 @@ class Competitor(BaseUser):
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
     members = models.ManyToManyField(Competitor, through='TeamMembership')
-    description = models.TextField()
+    idea_description = models.TextField()
     repository = models.URLField(blank=True)
     technologies = models.ManyToManyField(Skill)
 

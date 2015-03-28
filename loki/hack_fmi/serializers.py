@@ -33,7 +33,7 @@ class TeamSerializer(serializers.ModelSerializer):
         fields = (
             'name',
             'members',
-            'description',
+            'idea_description',
             'repository',
             'technologies',
         )
