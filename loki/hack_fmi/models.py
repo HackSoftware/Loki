@@ -32,7 +32,7 @@ class BaseUser(AbstractBaseUser):
     email = models.EmailField(unique=True)
     avatar = models.ImageField(blank=True)
     is_admin = models.BooleanField(default=False)
-
+    is_active = models.BooleanField(default=True)
     USERNAME_FIELD = 'email'
 
     objects = UserManager()
@@ -50,10 +50,6 @@ class BaseUser(AbstractBaseUser):
         return True
 
     def has_module_perms(self, app_label):
-        return True
-
-    @property
-    def is_active(self):
         return True
 
     @property
