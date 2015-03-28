@@ -66,10 +66,13 @@ class Login(ObtainJSONWebToken):
 def register_team(request):
     logged_user = request.user
     serializer = TeamSerializer(data=request.data)
+    if not logged_user.get_competitor():
+        return Response('Not a HackFMI user.', status=status.HTTP_403_FORBIDDEN)
+
     if serializer.is_valid():
         team = serializer.save()
         team_membership = TeamMembership.objects.create(
-            competitor=logged_user,
+            competitor=logged_user.competitor,
             team=team,
             is_leader=True
         )
