@@ -6,7 +6,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from rest_framework_jwt.views import ObtainJSONWebToken
 
-from .models import Skill, Competitor, Team, TeamMembership
+from .models import Skill, Competitor, Team, TeamMembership, BaseUser
 from .serializers import SkillSerializer, CompetitorSerializer, TeamSerializer
 from .helper import send_registration_mail
 
@@ -94,5 +94,11 @@ def me(request):
 
 @api_view(['POST'])
 @permission_classes((AllowAny,))
-def registration_activation(request):
-    print(request.activation_code)
+def activation(request):
+    user = BaseUser.objects.get(activation_code=request.data['activation_code'])
+    if user:
+        user.is_active = True
+        user.save()
+        return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
