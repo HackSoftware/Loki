@@ -91,3 +91,9 @@ def me(request):
     serializer = CompetitorSerializer(logged_competitor, many=False)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes((AllowAny,))
+def registration_activation(request):
+    print(request.activation_code)

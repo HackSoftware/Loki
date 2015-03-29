@@ -47,6 +47,18 @@ class RegistrationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(mail.outbox), 1)
 
+    def test_activate_user(self):
+        data = {
+            'email': 'ivo@abv.bg',
+            'full_name': 'Ivo Bachvarov',
+            'faculty_number': '123',
+            'known_skills': '1',
+            'password': '123'
+        }
+        url = reverse('hack_fmi:register')
+        self.client.post(url, data, format='json')
+
+
 
 class LoginTests(APITestCase):
     def setUp(self):
