@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from .helper import get_random_code
 
 
 class UserManager(BaseUserManager):
@@ -34,7 +33,6 @@ class BaseUser(AbstractBaseUser):
     avatar = models.ImageField(blank=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
-    activation_code = models.CharField(max_length=32, default=get_random_code(32))
     USERNAME_FIELD = 'email'
 
     objects = UserManager()
@@ -76,10 +74,6 @@ class BaseUser(AbstractBaseUser):
             return self.competitor
         except:
             return False
-
-    def activate(self, activation_code):
-        if self.activation_code == activation_code:
-            self.is_active = True
 
 
 class Skill(models.Model):

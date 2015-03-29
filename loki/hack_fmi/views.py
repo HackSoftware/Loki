@@ -4,11 +4,8 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
-from rest_framework_jwt.views import ObtainJSONWebToken
-
-from .models import Skill, Competitor, Team, TeamMembership, BaseUser
+from .models import Skill, Competitor, Team, TeamMembership
 from .serializers import SkillSerializer, CompetitorSerializer, TeamSerializer
-from .helper import send_registration_mail
 
 from djoser import views
 
@@ -43,19 +40,6 @@ class TeamListView(APIView):
 class CustomRegistrationView(views.RegistrationView):
     def get_serializer_class(self):
         return CompetitorSerializer
-
-
-@api_view(['POST'])
-@permission_classes((AllowAny,))
-def register(request):
-    serializer = CompetitorSerializer(data=request.data)
-    if serializer.is_valid():
-        new_user = serializer.save()
-        new_user.set_password(serializer._validated_data['password'])
-        send_registration_mail(new_user)
-        new_user.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Login(views.LoginView):
