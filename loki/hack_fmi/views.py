@@ -37,7 +37,7 @@ class TeamListView(APIView):
         return Response(serializer.data)
 
 
-class CustomRegistrationView(views.RegistrationView):
+class RegistrationView(views.RegistrationView):
     def get_serializer_class(self):
         return CompetitorSerializer
 
