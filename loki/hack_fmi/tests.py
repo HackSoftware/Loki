@@ -48,16 +48,18 @@ class RegistrationTests(APITestCase):
         self.assertEqual(len(mail.outbox), 1)
 
     def test_activate_user(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'full_name': 'Ivo Bachvarov',
-            'faculty_number': '123',
-            'known_skills': '1',
-            'password': '123'
-        }
-        url = reverse('hack_fmi:register')
+        competitor = Competitor.objects.create(
+            email='ivo@abv.bg',
+            full_name='Ivo Naidobriq',
+            faculty_number='123',
+        )
+        self.assertFalse(competitor.is_active)
+        code = competitor.activation_code
+        data = {'activation_code': code}
+        url = reverse('hack_fmi:activation')
         self.client.post(url, data, format='json')
-
+        competitor = Competitor.objects.get(activation_code=code)
+        self.assertTrue(competitor.is_active)
 
 
 class LoginTests(APITestCase):
