@@ -11,8 +11,8 @@ urlpatterns = [
 
     url(r'^api/new-register/$', CustomRegistrationView.as_view()),
     url(r'^api/login/', Login.as_view(), name='login'),
-    url(r'^api/logout/$', ActivationView.as_view(), name='activate'),
-    url(r'^api/activate/$', LogoutView.as_view(), name='activate'),
+    url(r'^api/logout/$', LogoutView.as_view(), name='activate'),
+    url(r'^api/activate/$', ActivationView.as_view(), name='activate'),
     url(r'^api/me/$', UserView.as_view(), name='me'),
 
 ]
