@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from .models import Skill, Competitor, BaseUser, TeamMembership
+from django.core import mail
 
 
 class RegistrationTests(APITestCase):
@@ -33,6 +34,19 @@ class RegistrationTests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_email_sent(self):
+        data = {
+            'email': 'ivo@abv.bg',
+            'full_name': 'Ivo Bachvarov',
+            'faculty_number': '123',
+            'known_skills': '1',
+            'password': '123'
+        }
+        url = reverse('hack_fmi:register')
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(len(mail.outbox), 1)
+
 
 class LoginTests(APITestCase):
     def setUp(self):
@@ -43,6 +57,7 @@ class LoginTests(APITestCase):
             faculty_number='123',
         )
         self.competitor.set_password('123')
+        self.competitor.activate(self.competitor.activation_code)
         self.competitor.save()
 
     def test_login(self):
@@ -69,6 +84,7 @@ class LoginTests(APITestCase):
             full_name='Ivo Naidobriq',
         )
         self.baseuser.set_password('123')
+        self.baseuser.activate(self.baseuser.activation_code)
         self.baseuser.save()
 
         data = {
@@ -79,24 +95,18 @@ class LoginTests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
-    def test_login_two_times_same_token(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'password': '123',
-        }
-        url = reverse('hack_fmi:login')
-        response1 = self.client.post(url, data, format='json')
-        self.assertEqual(response1.status_code, status.HTTP_200_OK)
-        response2 = self.client.post(url, data, format='json')
-        self.assertEqual(response2.status_code, status.HTTP_200_OK)
+    def test_get_data_after_login(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor)
+        url = reverse('hack_fmi:me')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['email'], self.competitor.email)
 
-        self.assertEqual(response1.data, response2.data)
-
-    # def test_get_data_after_login(self):
-    #     self.client = APIClient()
-    #     self.client.force_authenticate(user=self.competitor)
-    #     url = reverse('hack_fmi:me')
-    #     # print(self.client.get(url).data)
+    def test_get_data_not_login(self):
+        url = reverse('hack_fmi:me')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class TeamRegistrationTests(APITestCase):
@@ -122,6 +132,7 @@ class TeamRegistrationTests(APITestCase):
 
         self.assertEqual(len(response.data['members']), 1)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # self.assertEqual(len(response.data['technologies']), 1)
 
     def test_registered_team_has_leader(self):
         data = {

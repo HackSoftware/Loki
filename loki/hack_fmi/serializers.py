@@ -1,4 +1,5 @@
 from rest_framework import serializers
+
 from .models import Skill, Competitor, Team, TeamMembership
 
 
@@ -22,6 +23,7 @@ class CompetitorSerializer(serializers.ModelSerializer):
             'shirt_size',
             'password'
         )
+        extra_kwargs = {'password': {'write_only': True}}
 
 
 class TeamSerializer(serializers.ModelSerializer):

@@ -9,6 +9,8 @@ from rest_framework_jwt.views import ObtainJSONWebToken
 from .models import Skill, Competitor, Team, TeamMembership
 from .serializers import SkillSerializer, CompetitorSerializer, TeamSerializer
 
+from django.core.mail import send_mail
+
 
 class SkillListView(APIView):
     permission_classes = (AllowAny,)
@@ -44,6 +46,7 @@ def register(request):
     if serializer.is_valid():
         new_user = serializer.save()
         new_user.set_password(serializer._validated_data['password'])
+        send_mail('HAckFMI регистрация', 'Here is the message.', 'from@example.com', (new_user.email,), fail_silently=False)
         new_user.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -81,12 +84,10 @@ def register_team(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# @api_view(['GET'])
-# @permission_classes((IsAuthenticated,))
-# def get_request(request):
-#     logged_user = request.user
-#     print(logged_user)
-#     serializer = CompetitorSerializer(data=request.data)
-#     if serializer.is_valid():
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-#     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+@api_view(['GET'])
+@permission_classes((IsAuthenticated,))
+def me(request):
+    logged_competitor = request.user.get_competitor()
+    serializer = CompetitorSerializer(logged_competitor, many=False)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
