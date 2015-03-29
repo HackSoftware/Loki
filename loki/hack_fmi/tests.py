@@ -23,6 +23,18 @@ class RegistrationTests(APITestCase):
         self.assertEqual(Competitor.objects.count(), 1)
         self.assertEqual(BaseUser.objects.count(), 1)
 
+    def test_registraion_full_name(self):
+        data = {
+            'email': 'ivo@abv.bg',
+            'full_name': 'Ivo Bachvarov',
+            'faculty_number': '123',
+            'known_skills': '1',
+            'password': '123'
+        }
+        url = reverse('hack_fmi:register')
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
     def test_register_user_no_password(self):
         data = {
             'email': 'ivo@abv.bg',
@@ -57,7 +69,6 @@ class RegistrationTests(APITestCase):
         }
         url = reverse('hack_fmi:register')
         self.client.post(url, data, format='json')
-
 
 
 class LoginTests(APITestCase):
@@ -158,3 +169,4 @@ class TeamRegistrationTests(APITestCase):
         team_membership = TeamMembership.objects.get(id=1)
         self.assertEqual(self.competitor, team_membership.competitor)
         self.assertTrue(team_membership.is_leader)
+        url = reverse('hack_fmi:me')

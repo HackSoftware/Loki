@@ -68,8 +68,6 @@ class BaseUser(AbstractBaseUser):
         if len(names) >= 2:
             self.first_name = names[0]
             self.last_name = names[-1]
-        elif len(names) == 1:
-            self.first_name = names[0]
         else:
             raise ValueError('Not valid full_name.')
 

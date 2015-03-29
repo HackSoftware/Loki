@@ -8,8 +8,7 @@ from rest_framework_jwt.views import ObtainJSONWebToken
 
 from .models import Skill, Competitor, Team, TeamMembership
 from .serializers import SkillSerializer, CompetitorSerializer, TeamSerializer
-
-from django.core.mail import send_mail
+from .helper import send_registration_mail
 
 
 class SkillListView(APIView):
@@ -46,7 +45,7 @@ def register(request):
     if serializer.is_valid():
         new_user = serializer.save()
         new_user.set_password(serializer._validated_data['password'])
-        send_mail('HAckFMI регистрация', 'Here is the message.', 'from@example.com', (new_user.email,), fail_silently=False)
+        send_registration_mail(new_user)
         new_user.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
