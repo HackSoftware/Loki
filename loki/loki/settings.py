@@ -30,6 +30,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
+    'djoser',
 
     'hack_fmi',
 )
@@ -74,20 +75,12 @@ AUTH_USER_MODEL = 'hack_fmi.BaseUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ),
 }
 
-
 #TODO: Just for the begining
 CORS_ORIGIN_ALLOW_ALL = True
-
-JWT_AUTH = {
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=20),
-}
 
 try:
     if 'TRAVIS' in os.environ:
@@ -96,3 +89,13 @@ try:
         from .local_settings import *
 except ImportError:
     exit("{}_settings.py not found!".format("travis" if 'TRAVIS' in os.environ else "local"))
+
+
+DJOSER = {
+    'DOMAIN': 'frontend.com',
+    'SITE_NAME': 'Frontend',
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{TokenAuthentication}',
+    'LOGIN_AFTER_ACTIVATION': True,
+    'SEND_ACTIVATION_EMAIL': True,
+}

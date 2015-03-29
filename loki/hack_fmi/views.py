@@ -10,6 +10,8 @@ from .models import Skill, Competitor, Team, TeamMembership, BaseUser
 from .serializers import SkillSerializer, CompetitorSerializer, TeamSerializer
 from .helper import send_registration_mail
 
+from djoser import views
+
 
 class SkillListView(APIView):
     permission_classes = (AllowAny,)
@@ -38,6 +40,11 @@ class TeamListView(APIView):
         return Response(serializer.data)
 
 
+class CustomRegistrationView(views.RegistrationView):
+    def get_serializer_class(self):
+        return CompetitorSerializer
+
+
 @api_view(['POST'])
 @permission_classes((AllowAny,))
 def register(request):
@@ -51,16 +58,12 @@ def register(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class Login(ObtainJSONWebToken):
-    permission_classes = (AllowAny,)
-
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            user = serializer.object.get('user')
-            if not user.get_competitor():
-                return Response('Not a HackFMI user.', status=status.HTTP_403_FORBIDDEN)
-        return super(Login, self).post(request)
+class Login(views.LoginView):
+    def action(self, serializer):
+        user = serializer.object
+        if not user.get_competitor():
+            return Response('Not a HackFMI user.', status=status.HTTP_403_FORBIDDEN)
+        return super(Login, self).action(serializer)
 
 
 @api_view(['POST'])
@@ -90,15 +93,3 @@ def me(request):
     serializer = CompetitorSerializer(logged_competitor, many=False)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(['POST'])
-@permission_classes((AllowAny,))
-def activation(request):
-    user = BaseUser.objects.get(activation_code=request.data['activation_code'])
-    if user:
-        user.is_active = True
-        user.save()
-        return Response(status=status.HTTP_200_OK)
-    else:
-        return Response(status=status.HTTP_400_BAD_REQUEST)

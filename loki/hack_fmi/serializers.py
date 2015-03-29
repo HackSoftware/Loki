@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Skill, Competitor, Team, TeamMembership
+from .models import Skill, Competitor, Team, TeamMembership, BaseUser
 
 
 class SkillSerializer(serializers.ModelSerializer):
@@ -36,6 +36,12 @@ class CompetitorSerializer(serializers.ModelSerializer):
             'teammembership_set'
         )
         extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        new_user = super().create(validated_data)
+        new_user.set_password(validated_data['password'])
+        new_user.save()
+        return new_user
 
 
 class TeamSerializer(serializers.ModelSerializer):
