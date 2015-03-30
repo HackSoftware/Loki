@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-30 16:40+0000\n"
+"POT-Creation-Date: 2015-03-30 10:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 
 #: authentication.py:69
 msgid "Invalid basic header. No credentials provided."
@@ -323,4 +325,74 @@ msgstr ""
 
 #: authtoken/serializers.py:26
 msgid "Must include \"username\" and \"password\"."
+
+#: djoser/constants.py:3
+msgid "Unable to login with provided credentials."
+msgstr "Невалидно име или парола!"
+
+#: djoser/constants.py:4
+msgid "User account is disabled."
+msgstr "Регистрацията не е активирана"
+
+#: djoser/constants.py:5
+msgid "Invalid token for given user."
+msgstr ""
+
+#: djoser/constants.py:6
+msgid "The two password fields didn't match."
+msgstr ""
+
+#: djoser/constants.py:7
+#, python-brace-format
+msgid "The two {0} fields didn't match."
+msgstr ""
+
+#: djoser/constants.py:8
+msgid "Invalid password."
+msgstr "Невалидна парола"
+
+#: djoser/templates/activation_email_body.txt:2
+#, python-format
+msgid ""
+"You're receiving this email because you created an account on %(site_name)s."
+msgstr ""
+
+#: djoser/templates/activation_email_body.txt:4
+msgid "Please go to the following page to activate account:"
+msgstr "Моля активирайте акаунта си от следния линк:"
+
+#: djoser/templates/activation_email_body.txt:9
+#: djoser/templates/password_reset_email_body.txt:10
+msgid "Thanks for using our site!"
+msgstr "Happy Hacking"
+
+#: djoser/templates/activation_email_body.txt:11
+#: djoser/templates/password_reset_email_body.txt:12
+#, python-format
+msgid "The %(site_name)s team"
+msgstr ""
+
+#: djoser/templates/activation_email_subject.txt:2
+#, python-format
+msgid "Account activation on %(site_name)s"
+msgstr "Активация на регистрация"
+
+#: djoser/templates/password_reset_email_body.txt:2
+#, python-format
+msgid ""
+"You're receiving this email because you requested a password reset for your "
+"user account at %(site_name)s."
+msgstr ""
+
+#: djoser/templates/password_reset_email_body.txt:4
+msgid "Please go to the following page and choose a new password:"
+msgstr ""
+
+#: djoser/templates/password_reset_email_body.txt:8
+msgid "Your username, in case you've forgotten:"
+msgstr ""
+
+#: djoser/templates/password_reset_email_subject.txt:2
+#, python-format
+msgid "Password reset on %(site_name)s"
 msgstr ""
