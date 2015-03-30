@@ -78,5 +78,4 @@ def register_team(request):
 def me(request):
     logged_competitor = request.user.get_competitor()
     serializer = CompetitorSerializer(logged_competitor, many=False)
-
     return Response(serializer.data, status=status.HTTP_200_OK)

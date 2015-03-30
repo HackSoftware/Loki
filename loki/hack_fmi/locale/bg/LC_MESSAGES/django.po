@@ -1,0 +1,326 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-01-30 16:40+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: authentication.py:69
+msgid "Invalid basic header. No credentials provided."
+msgstr ""
+
+#: authentication.py:72
+msgid "Invalid basic header. Credentials string should not contain spaces."
+msgstr ""
+
+#: authentication.py:78
+msgid "Invalid basic header. Credentials not correctly base64 encoded."
+msgstr ""
+
+#: authentication.py:90
+msgid "Invalid username/password."
+msgstr "Невалидно име или парола."
+
+#: authentication.py:156
+msgid "Invalid token header. No credentials provided."
+msgstr "Невалиден token header."
+
+#: authentication.py:159
+msgid "Invalid token header. Token string should not contain spaces."
+msgstr ""
+
+#: authentication.py:168
+msgid "Invalid token."
+msgstr "Невалиден толкен."
+
+#: authentication.py:171
+msgid "User inactive or deleted."
+msgstr "Потребителят е неактивен или изтрит"
+
+#: exceptions.py:38
+msgid "A server error occurred."
+msgstr "Грешка в сървъра"
+
+#: exceptions.py:73
+msgid "Malformed request."
+msgstr "Уродлив рекуест"
+
+#: exceptions.py:78
+msgid "Incorrect authentication credentials."
+msgstr "Невалидни данни"
+
+#: exceptions.py:83
+msgid "Authentication credentials were not provided."
+msgstr "Вашето име и парола не са предадени"
+
+#: exceptions.py:88
+msgid "You do not have permission to perform this action."
+msgstr "Нямате право да предприемате това действие"
+
+#: exceptions.py:93 views.py:77
+msgid "Not found."
+msgstr "Не е намерено"
+
+#: exceptions.py:98
+msgid "Method \"{method}\" not allowed."
+msgstr "Метод \"{method}\" не е позволен."
+
+#: exceptions.py:109
+msgid "Could not satisfy the request Accept header."
+msgstr "Не може да се удовлетвори request Accept header"
+
+#: exceptions.py:121
+msgid "Unsupported media type \"{media_type}\" in request."
+msgstr "Невалидно графично съдържание \"{media_type}\" в заявката"
+
+#: exceptions.py:134
+msgid "Request was throttled."
+msgstr ""
+
+#: fields.py:153 relations.py:132 relations.py:156 validators.py:77
+#: validators.py:155
+msgid "This field is required."
+msgstr "Това поле е задължително"
+
+#: fields.py:154
+msgid "This field may not be null."
+msgstr "Това поле не може да е празно"
+
+#: fields.py:487 fields.py:515
+msgid "\"{input}\" is not a valid boolean."
+msgstr "\"{input}\" не е валидно булево поле"
+
+#: fields.py:550
+msgid "This field may not be blank."
+msgstr "Това поле не може да бъде празно"
+
+#: fields.py:551 fields.py:1324
+msgid "Ensure this field has no more than {max_length} characters."
+msgstr "Полето не може да има повече от {max_length} символа"
+
+#: fields.py:552
+msgid "Ensure this field has at least {min_length} characters."
+msgstr "Полето трябва да има минимум {min_length} символа"
+
+#: fields.py:587
+msgid "Enter a valid email address."
+msgstr "Въведете валиден имейл адрес"
+
+#: fields.py:604
+msgid "This value does not match the required pattern."
+msgstr "Тази стойност не съответства на необходимия шаблон."
+
+#: fields.py:615
+msgid ""
+"Enter a valid \"slug\" consisting of letters, numbers, underscores or "
+"hyphens."
+msgstr "\"slug\""
+
+#: fields.py:627
+msgid "Enter a valid URL."
+msgstr "Въведете валиден url"
+
+#: fields.py:638
+msgid "\"{value}\" is not a valid UUID."
+msgstr ""
+
+#: fields.py:657
+msgid "A valid integer is required."
+msgstr "Въведете валидно число"
+
+#: fields.py:658 fields.py:692 fields.py:725
+msgid "Ensure this value is less than or equal to {max_value}."
+msgstr "Въведете стойност по-малка или равна на {max_value}."
+
+#: fields.py:659 fields.py:693 fields.py:726
+msgid "Ensure this value is greater than or equal to {min_value}."
+msgstr "Въведете стойност по-голяма или равна на {min_value}"
+
+#: fields.py:660 fields.py:694 fields.py:730
+msgid "String value too large."
+msgstr "Низът е прекалено голям."
+
+#: fields.py:691 fields.py:724
+msgid "A valid number is required."
+msgstr "Необходимо е валидно число."
+
+#: fields.py:727
+msgid "Ensure that there are no more than {max_digits} digits in total."
+msgstr "Моля въведете не повече от {max_digits} цифри."
+
+#: fields.py:728
+msgid "Ensure that there are no more than {max_decimal_places} decimal places."
+msgstr ""
+
+#: fields.py:729
+msgid ""
+"Ensure that there are no more than {max_whole_digits} digits before the "
+"decimal point."
+msgstr ""
+
+#: fields.py:813
+msgid "Datetime has wrong format. Use one of these formats instead: {format}."
+msgstr "Невалиден формат. Използвайте някой от тези формати: {format}"
+
+#: fields.py:814
+msgid "Expected a datetime but got a date."
+msgstr "Получена дата вместо дата и време"
+
+#: fields.py:878
+msgid "Date has wrong format. Use one of these formats instead: {format}."
+msgstr "Датата е грешен формат. Използвайте някой от тези формати: {format}."
+
+#: fields.py:879
+msgid "Expected a date but got a datetime."
+msgstr ""
+
+#: fields.py:936
+msgid "Time has wrong format. Use one of these formats instead: {format}."
+msgstr ""
+
+#: fields.py:992 fields.py:1036
+msgid "\"{input}\" is not a valid choice."
+msgstr ""
+
+#: fields.py:1037 fields.py:1151 serializers.py:482
+msgid "Expected a list of items but got type \"{input_type}\"."
+msgstr ""
+
+#: fields.py:1067
+msgid "No file was submitted."
+msgstr "Не е предаден файл."
+
+#: fields.py:1068
+msgid "The submitted data was not a file. Check the encoding type on the form."
+msgstr ""
+
+#: fields.py:1069
+msgid "No filename could be determined."
+msgstr ""
+
+#: fields.py:1070
+msgid "The submitted file is empty."
+msgstr ""
+
+#: fields.py:1071
+msgid ""
+"Ensure this filename has at most {max_length} characters (it has {length})."
+msgstr ""
+
+#: fields.py:1113
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr "Качете валидно изображение. Каченият файл не е картинка или е повреден"
+
+#: fields.py:1188
+msgid "Expected a dictionary of items but got type \"{input_type}\"."
+msgstr ""
+
+#: pagination.py:221
+msgid "Invalid page \"{page_number}\": {message}."
+msgstr ""
+
+#: pagination.py:442
+msgid "Invalid cursor"
+msgstr ""
+
+#: relations.py:133
+msgid "Invalid pk \"{pk_value}\" - object does not exist."
+msgstr ""
+
+#: relations.py:134
+msgid "Incorrect type. Expected pk value, received {data_type}."
+msgstr ""
+
+#: relations.py:157
+msgid "Invalid hyperlink - No URL match."
+msgstr ""
+
+#: relations.py:158
+msgid "Invalid hyperlink - Incorrect URL match."
+msgstr ""
+
+#: relations.py:159
+msgid "Invalid hyperlink - Object does not exist."
+msgstr ""
+
+#: relations.py:160
+msgid "Incorrect type. Expected URL string, received {data_type}."
+msgstr ""
+
+#: relations.py:295
+msgid "Object with {slug_name}={value} does not exist."
+msgstr ""
+
+#: relations.py:296
+msgid "Invalid value."
+msgstr ""
+
+#: serializers.py:299
+msgid "Invalid data. Expected a dictionary, but got {datatype}."
+msgstr ""
+
+#: validators.py:22
+msgid "This field must be unique."
+msgstr ""
+
+#: validators.py:76
+msgid "The fields {field_names} must make a unique set."
+msgstr ""
+
+#: validators.py:219
+msgid "This field must be unique for the \"{date_field}\" date."
+msgstr ""
+
+#: validators.py:234
+msgid "This field must be unique for the \"{date_field}\" month."
+msgstr ""
+
+#: validators.py:247
+msgid "This field must be unique for the \"{date_field}\" year."
+msgstr ""
+
+#: versioning.py:39
+msgid "Invalid version in \"Accept\" header."
+msgstr ""
+
+#: versioning.py:70 versioning.py:112
+msgid "Invalid version in URL path."
+msgstr ""
+
+#: versioning.py:138
+msgid "Invalid version in hostname."
+msgstr ""
+
+#: versioning.py:160
+msgid "Invalid version in query parameter."
+msgstr ""
+
+#: views.py:81
+msgid "Permission denied."
+msgstr ""
+
+#: authtoken/serializers.py:20
+msgid "User account is disabled."
+msgstr ""
+
+#: authtoken/serializers.py:23
+msgid "Unable to log in with provided credentials."
+msgstr ""
+
+#: authtoken/serializers.py:26
+msgid "Must include \"username\" and \"password\"."
+msgstr ""

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 import datetime
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -57,6 +58,10 @@ WSGI_APPLICATION = 'loki.wsgi.application'
 
 LANGUAGE_CODE = 'bg'
 
+USE_I18N = True
+
+USE_L10N = True
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -64,10 +69,9 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+ugettext = lambda s: s
 
-LANGUAGES = [
-    ('bg', 'bg'),
-]
+LANGUAGES = (('bg', ugettext('Bulgarian')),)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -104,5 +108,5 @@ DJOSER = {
 }
 
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale')
+    os.path.join(BASE_DIR, 'hack_fmi/locale/')
 )
