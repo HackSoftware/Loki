@@ -27,7 +27,8 @@ class CompetitorSerializer(serializers.ModelSerializer):
         model = Competitor
         fields = (
             'email',
-            'full_name',
+            'first_name',
+            'last_name',
             'is_vegetarian',
             'known_skills',
             'faculty_number',

@@ -39,7 +39,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-
+    'django.middleware.locale.LocaleMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -55,7 +55,7 @@ WSGI_APPLICATION = 'loki.wsgi.application'
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'bg'
 
 TIME_ZONE = 'UTC'
 
@@ -65,6 +65,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+LANGUAGES = [
+    ('bg', 'bg'),
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -99,3 +102,7 @@ DJOSER = {
     'LOGIN_AFTER_ACTIVATION': True,
     'SEND_ACTIVATION_EMAIL': True,
 }
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale')
+)

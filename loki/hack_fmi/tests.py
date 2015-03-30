@@ -12,7 +12,8 @@ class RegistrationTests(APITestCase):
     def test_register_user(self):
         data = {
             'email': 'ivo@abv.bg',
-            'full_name': 'Ivo Bachvarov',
+            'first_name': 'Ivo',
+            'last_name': 'Bachvarov',
             'faculty_number': '123',
             'known_skills': '1',
             'password': '123'
@@ -26,7 +27,8 @@ class RegistrationTests(APITestCase):
     def test_registraion_full_name(self):
         data = {
             'email': 'ivo@abv.bg',
-            'full_name': 'Ivo Bachvarov',
+            'first_name': 'Ivo',
+            'last_name': 'Bachvarov',
             'faculty_number': '123',
             'known_skills': '1',
             'password': '123'
@@ -38,7 +40,8 @@ class RegistrationTests(APITestCase):
     def test_register_user_no_password(self):
         data = {
             'email': 'ivo@abv.bg',
-            'full_name': 'Ivo Bachvarov',
+            'first_name': 'Ivo',
+            'last_name': 'Bachvarov',
             'faculty_number': '123',
             'known_skills': '1',
         }
@@ -49,7 +52,8 @@ class RegistrationTests(APITestCase):
     def test_email_sent(self):
         data = {
             'email': 'ivo@abv.bg',
-            'full_name': 'Ivo Bachvarov',
+            'first_name': 'Ivo',
+            'last_name': ' Bachvarov',
             'faculty_number': '123',
             'known_skills': '1',
             'password': '123'
