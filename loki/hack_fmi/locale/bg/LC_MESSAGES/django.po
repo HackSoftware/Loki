@@ -315,16 +315,13 @@ msgstr ""
 msgid "Permission denied."
 msgstr ""
 
-#: authtoken/serializers.py:20
-msgid "User account is disabled."
-msgstr ""
-
 #: authtoken/serializers.py:23
 msgid "Unable to log in with provided credentials."
 msgstr ""
 
 #: authtoken/serializers.py:26
 msgid "Must include \"username\" and \"password\"."
+msgstr ""
 
 #: djoser/constants.py:3
 msgid "Unable to login with provided credentials."
@@ -375,7 +372,7 @@ msgstr ""
 #: djoser/templates/activation_email_subject.txt:2
 #, python-format
 msgid "Account activation on %(site_name)s"
-msgstr "Активация на регистрация"
+msgstr "Активация на регистрация на %(site_name)s"
 
 #: djoser/templates/password_reset_email_body.txt:2
 #, python-format
