@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
-from .models import Skill, Competitor, BaseUser, TeamMembership, Season
+from .models import Skill, Competitor, BaseUser, TeamMembership, Season, Team
 from django.core import mail
 
 
@@ -163,3 +163,27 @@ class TeamRegistrationTests(APITestCase):
         self.assertEqual(self.competitor, team_membership.competitor)
         self.assertTrue(team_membership.is_leader)
         url = reverse('hack_fmi:me')
+
+    def test_register_more_than_one_team(self):
+        data = {
+           'name': 'Pandas',
+           'idea_description': 'GameDevelopers',
+           'repository': 'https://github.com/HackSoftware',
+           'technologies': 1,
+           }
+        url = reverse('hack_fmi:register_team')
+        response1 = self.client.post(url, data, format='json')
+
+        data = {
+           'name': 'Pandass',
+           'idea_description': 'GameDeveloperss',
+           'repository': 'https://github.com/HackSoftwares',
+           'technologies': 1,
+           }
+        url = reverse('hack_fmi:register_team')
+        response2 = self.client.post(url, data, format='json')
+        # self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Team.objects.count(), 1)
+        # print(response1.data)
+        # print()
+        # print(response2.data)

@@ -116,8 +116,6 @@ class TeamMembership(models.Model):
     team = models.ForeignKey(Team)
     is_leader = models.BooleanField(default=False)
 
-    unique_together = (("competitor", "team.season"),)
-
 
 class Season(models.Model):
     number = models.SmallIntegerField(default=0)

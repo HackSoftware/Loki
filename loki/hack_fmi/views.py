@@ -6,6 +6,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from .models import Skill, Competitor, Team, TeamMembership
 from .serializers import SkillSerializer, CompetitorSerializer, TeamSerializer
+from django.core.exceptions import ValidationError
 
 from djoser import views
 
@@ -59,6 +60,8 @@ def register_team(request):
         return Response('Not a HackFMI user.', status=status.HTTP_403_FORBIDDEN)
 
     if serializer.is_valid():
+        if TeamMembership.objects.filter(competitor=logged_user.competitor, team__season=1).exists():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         team = serializer.save()
         team_membership = TeamMembership.objects.create(
             competitor=logged_user.competitor,
