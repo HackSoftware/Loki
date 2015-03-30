@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
-from .models import Skill, Competitor, BaseUser, TeamMembership
+from .models import Skill, Competitor, BaseUser, TeamMembership, Season
 from django.core import mail
 
 
@@ -127,6 +127,7 @@ class LoginTests(APITestCase):
 class TeamRegistrationTests(APITestCase):
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
+        self.seasson = Season.objects.create(number=1, is_active=True)
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
             full_name='Ivo Naidobriq',

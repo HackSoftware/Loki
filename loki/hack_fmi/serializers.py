@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Skill, Competitor, Team, TeamMembership, BaseUser
+from .models import Skill, Competitor, Team, TeamMembership, Season
 
 
 class SkillSerializer(serializers.ModelSerializer):
@@ -58,3 +58,11 @@ class TeamSerializer(serializers.ModelSerializer):
             'repository',
             'technologies',
         )
+
+    def create(self, validated_data):
+        team = Team(**validated_data)
+        # Implement season logic here
+        season = Season.objects.all()
+        team.season = season[0]
+        team.save()
+        return team
