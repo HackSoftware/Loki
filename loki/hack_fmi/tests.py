@@ -1,7 +1,7 @@
 from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
-from .models import Skill, Competitor, BaseUser, TeamMembership, Season, Team
+from .models import Skill, Competitor, BaseUser, TeamMembership, Season, Team, Invitation
 from django.core import mail
 
 
@@ -242,6 +242,40 @@ class TeamRegistrationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
 
+    def test_invitation_for_team(self):
+        data = {
+            'name': 'Pandas',
+            'idea_description': 'GameDevelopers',
+            'repository': 'https://github.com/HackSoftware',
+            'technologies': [1],
+            }
+        url = reverse('hack_fmi:register_team')
+        self.client.post(url, data, format='json')
+        team = Team.objects.get(id=1)
+        self.competitor2 = Competitor.objects.create(
+            email='stenly@abv.bg',
+            full_name='Stenly Naidobriq',
+            faculty_number='1234',
+        )
+        url = reverse('hack_fmi:invitation')
+        data = {'email': 'stenly@abv.bg'}
+        self.client.post(url, data, format='json')
+        self.assertEquals(Invitation.objects.count(), 1)
+        self.assertEqual(Invitation.objects.all()[0].team.id, team.id)
+        self.assertEqual(Invitation.objects.all()[0].competitor.id, self.competitor2.id)
+
+    def test_test_invitation_not_from_leader(self):
+        team = Team.objects.create(
+            name='Pandass2',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.seasson
+        )
+        url = reverse('hack_fmi:invitation')
+        data = {'email': 'stenly@abv.bg'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
 
 class LeaveTeamTests(APITestCase):
     def setUp(self):
@@ -277,3 +311,4 @@ class LeaveTeamTests(APITestCase):
         self.assertEqual(self.team.members.count(), 2)
         self.client.post(url, format='json')
         self.assertEqual(self.team.members.count(), 1)
+
