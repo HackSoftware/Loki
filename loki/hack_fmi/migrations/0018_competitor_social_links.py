@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('hack_fmi', '0016_auto_20150331_1331'),
+        ('hack_fmi', '0017_invitation'),
     ]
 
     operations = [
