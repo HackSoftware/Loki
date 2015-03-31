@@ -9,6 +9,7 @@ from .serializers import SkillSerializer, CompetitorSerializer, TeamSerializer
 from django.core.exceptions import ValidationError
 
 from djoser import views
+from django.conf import settings
 
 
 class SkillListView(APIView):
@@ -48,6 +49,12 @@ class RegistrationView(views.RegistrationView):
     def get_serializer_class(self):
         return CompetitorSerializer
 
+    def get_send_email_extras(self):
+
+        return {
+            'subject_template_name': settings.BASE_DIR +  '/hack_fmi/templates/activation_email_subject.txt',
+            'plain_body_template_name': settings.BASE_DIR + '/hack_fmi/templates/activation_email_body.txt',
+        }
 
 class Login(views.LoginView):
     def action(self, serializer):

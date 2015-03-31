@@ -63,6 +63,20 @@ class RegistrationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(mail.outbox), 1)
 
+    def test_email_sent_new_tempalte(self):
+        data = {
+            'email': 'ivo@abv.bg',
+            'first_name': 'Ivo',
+            'last_name': ' Bachvarov',
+            'faculty_number': '123',
+            'known_skills': '1',
+            'password': '123'
+        }
+        url = reverse('hack_fmi:register')
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn("Ти успешно се регистрира за HackFMI 5! През нашата нова система можеш лесно да намериш отбор, с който да се състезаваш.  Ако вече имаш идея можеш да създадеш отбор и да поканиш още хора в него.", mail.outbox[0].body)
+
 
 class LoginTests(APITestCase):
     def setUp(self):
