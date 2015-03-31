@@ -29,11 +29,12 @@ class CompetitorListView(APIView):
         return Response(serializer.data)
 
 
+@permission_classes((IsAuthenticated,))
 class TeamListView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
-        if request.GET['id']:
+        if 'id' in request.GET.keys():
             id = request.GET['id']
             team = Team.objects.get(id=id)
             serializer = TeamSerializer(team, many=False)

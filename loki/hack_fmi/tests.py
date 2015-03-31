@@ -194,16 +194,35 @@ class TeamRegistrationTests(APITestCase):
             repository='https://github.com/HackSoftware',
             season=self.seasson
         )
-        data = {
-            'name': 'Pandas',
-            'idea_description': 'GameDevelopers',
-            'repository': 'https://github.com/HackSoftware',
-            'technologies': 1,
-        }
-        url = reverse('hack_fmi:register_team')
-        self.client.post(url, data, format='json')
+        Team.objects.create(
+            name='Pandass2',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.seasson
+        )
         url_get = reverse('hack_fmi:teams')
         data = {'id': 2}
         response = self.client.get(url_get, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], 'Pandas')
+        self.assertEqual(response.data['name'], 'Pandass2')
+
+    def test_list_team_all(self):
+        Team.objects.create(
+            name='Pandass',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.seasson
+        )
+        Team.objects.create(
+            name='Pandass2',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.seasson
+        )
+
+        url_get = reverse('hack_fmi:teams')
+
+        response = self.client.get(url_get, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
