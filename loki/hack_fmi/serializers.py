@@ -20,7 +20,7 @@ class TeamMembershipSerializer(serializers.ModelSerializer):
 
 
 class CompetitorSerializer(serializers.ModelSerializer):
-    known_skills = SkillSerializer(many=True, read_only=True)
+    known_skills = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Skill.objects.all())
     teammembership_set = TeamMembershipSerializer(many=True, read_only=True)
 
     class Meta:
@@ -60,7 +60,7 @@ class TeamSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        team = Team(**validated_data)
+        team = super(TeamSerializer, self).create(validated_data)
         # Implement season logic here
         season = Season.objects.all()
         team.season = season[0]

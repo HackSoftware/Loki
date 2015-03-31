@@ -56,6 +56,7 @@ class RegistrationView(views.RegistrationView):
             'plain_body_template_name': settings.BASE_DIR + '/hack_fmi/templates/activation_email_body.txt',
         }
 
+
 class Login(views.LoginView):
     def action(self, serializer):
         user = serializer.object
@@ -75,7 +76,11 @@ def register_team(request):
     if serializer.is_valid():
         if TeamMembership.objects.filter(competitor=logged_user.competitor, team__season=1).exists():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # TODO: Find a proper way to do this!
         team = serializer.save()
+        team.technologies = request.data['technologies']
+        team.save()
+
         team_membership = TeamMembership.objects.create(
             competitor=logged_user.competitor,
             team=team,

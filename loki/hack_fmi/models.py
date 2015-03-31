@@ -107,7 +107,7 @@ class Team(models.Model):
     idea_description = models.TextField()
     repository = models.URLField(blank=True)
     technologies = models.ManyToManyField(Skill)
-    season = models.ForeignKey('Season')
+    season = models.ForeignKey('Season', default=0)
 
 
 class TeamMembership(models.Model):
