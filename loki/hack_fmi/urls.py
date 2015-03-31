@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import SkillListView, TeamListView, CompetitorListView, Login, register_team, me, RegistrationView
+from .views import SkillListView, TeamListView, CompetitorListView, Login, register_team, leave_team, me, RegistrationView
 from djoser.views import ActivationView, LogoutView
 
 urlpatterns = [
@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^api/logout/$', LogoutView.as_view(), name='activate'),
     url(r'^api/activate/$', ActivationView.as_view(), name='activate'),
     url(r'^api/me/$', me, name='me'),
+    url(r'^api/leave_team/$', leave_team, name='leave_team'),
 ]

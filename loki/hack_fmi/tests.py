@@ -241,3 +241,39 @@ class TeamRegistrationTests(APITestCase):
         response = self.client.get(url_get, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
+
+
+class LeaveTeamTests(APITestCase):
+    def setUp(self):
+        self.skills = Skill.objects.create(name="C#")
+        self.season = Season.objects.create(number=1, is_active=True)
+        self.competitor1 = Competitor.objects.create(
+            email='ivooo@abv.bg',
+            full_name='Ivo Naidobriq',
+            faculty_number='123',
+            is_active=True,
+        )
+        self.competitor2 = Competitor.objects.create(
+            email='ivo@abv.bg',
+            full_name='Ivooo Naidobriq',
+            faculty_number='124',
+            is_active=True,
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor1)
+        data = {
+            'name': 'Pandass',
+            'idea_description': 'GameDeveloperss',
+            'repository': 'https://github.com/HackSoftwares',
+            'technologies': [1],
+        }
+        url = reverse('hack_fmi:register_team')
+        self.client.post(url, data, format='json')
+        self.team = Team.objects.get(id=1)
+        TeamMembership.objects.create(competitor=self.competitor2, team=self.team)
+
+    def test_member_leaves_team(self):
+        url = reverse('hack_fmi:leave_team')
+        self.assertEqual(self.team.members.count(), 2)
+        self.client.post(url, format='json')
+        self.assertEqual(self.team.members.count(), 1)
