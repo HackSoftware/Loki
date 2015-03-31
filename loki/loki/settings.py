@@ -10,7 +10,6 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -69,9 +68,8 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-ugettext = lambda s: s
 
-LANGUAGES = (('bg', ugettext('Bulgarian')),)
+LANGUAGES = (('bg', 'Bulgarian'),)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -97,15 +95,6 @@ try:
 except ImportError:
     exit("{}_settings.py not found!".format("travis" if 'TRAVIS' in os.environ else "local"))
 
-
-DJOSER = {
-    'DOMAIN': 'frontend.com',
-    'SITE_NAME': 'Frontend',
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'LOGIN_AFTER_ACTIVATION': True,
-    'SEND_ACTIVATION_EMAIL': True,
-}
 
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'hack_fmi/locale/')

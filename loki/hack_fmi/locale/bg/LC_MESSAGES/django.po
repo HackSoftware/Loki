@@ -277,7 +277,7 @@ msgstr ""
 
 #: validators.py:22
 msgid "This field must be unique."
-msgstr ""
+msgstr "Този email вече е използван!"
 
 #: validators.py:76
 msgid "The fields {field_names} must make a unique set."
