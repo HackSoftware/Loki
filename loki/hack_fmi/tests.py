@@ -16,7 +16,8 @@ class RegistrationTests(APITestCase):
             'last_name': 'Bachvarov',
             'faculty_number': '123',
             'known_skills': [1],
-            'password': '123'
+            'password': '123',
+            'needs_work': 'false',
         }
         url = reverse('hack_fmi:register')
         response = self.client.post(url, data, format='json')
@@ -24,6 +25,7 @@ class RegistrationTests(APITestCase):
         self.assertEqual(Competitor.objects.count(), 1)
         self.assertEqual(BaseUser.objects.count(), 1)
         self.assertEqual(len(Competitor.objects.first().known_skills.all()), 1)
+        self.assertFalse(Competitor.objects.first().needs_work)
 
     def test_registraion_full_name(self):
         data = {
