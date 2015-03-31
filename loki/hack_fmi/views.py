@@ -97,3 +97,12 @@ def me(request):
     logged_competitor = request.user.get_competitor()
     serializer = CompetitorSerializer(logged_competitor, many=False)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def leave_team(request):
+    logged_competitor = request.user.get_competitor()
+    TeamMembership.objects.get(competitor=logged_competitor).delete()
+    return Response(status=status.HTTP_200_OK)
+
