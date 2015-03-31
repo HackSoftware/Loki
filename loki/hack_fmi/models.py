@@ -120,3 +120,8 @@ class TeamMembership(models.Model):
 class Season(models.Model):
     number = models.SmallIntegerField(default=0)
     is_active = models.BooleanField(default=False)
+
+
+class Invitation(models.Model):
+    team = models.ForeignKey(Team)
+    competitor = models.ForeignKey(Competitor)

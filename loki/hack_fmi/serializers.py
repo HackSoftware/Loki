@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Skill, Competitor, Team, TeamMembership, Season
+from .models import Skill, Competitor, Team, TeamMembership, Season, Invitation
 
 
 class SkillSerializer(serializers.ModelSerializer):
@@ -68,3 +68,13 @@ class TeamSerializer(serializers.ModelSerializer):
         team.season = season[0]
         team.save()
         return team
+
+
+class InvitationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Invitation
+        fields = (
+            'team',
+            'competitor',
+        )

@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from .models import Skill, Competitor, Team, TeamMembership
-from .serializers import SkillSerializer, CompetitorSerializer, TeamSerializer
+from .serializers import SkillSerializer, CompetitorSerializer, TeamSerializer, Invitation
 from django.core.exceptions import ValidationError
 
 from djoser import views
@@ -106,3 +106,14 @@ def leave_team(request):
     TeamMembership.objects.get(competitor=logged_competitor).delete()
     return Response(status=status.HTTP_200_OK)
 
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def invitation(request):
+    logged_competitor = request.user.get_competitor()
+    membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
+    invited_competitor = Competitor.objects.filter(email=request.data['email']).first()
+    if invited_competitor and membership.is_leader:
+        Invitation.objects.create(team=membership.team, competitor=invited_competitor)
+        return Response(status=status.HTTP_201_CREATED)
+    return Response(status=status.HTTP_404_NOT_FOUND)
