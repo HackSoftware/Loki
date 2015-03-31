@@ -325,7 +325,7 @@ msgstr ""
 
 #: djoser/constants.py:3
 msgid "Unable to login with provided credentials."
-msgstr "Невалидно име или парола!"
+msgstr "Невалиден email или парола!"
 
 #: djoser/constants.py:4
 msgid "User account is disabled."

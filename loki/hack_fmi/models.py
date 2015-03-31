@@ -100,6 +100,7 @@ class Competitor(BaseUser):
     faculty_number = models.IntegerField()
     shirt_size = models.SmallIntegerField(choices=SHIRT_SIZE, default=S)
     needs_work = models.BooleanField(default=True)
+    social_links = models.TextField(blank=True)
 
 
 class Team(models.Model):
