@@ -33,6 +33,11 @@ class TeamListView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
+        if request.GET['id']:
+            id = request.GET['id']
+            team = Team.objects.get(id=id)
+            serializer = TeamSerializer(team, many=False)
+            return Response(serializer.data)
         teams = Team.objects.all()
         serializer = TeamSerializer(teams, many=True)
         return Response(serializer.data)

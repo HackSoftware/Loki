@@ -148,6 +148,7 @@ class TeamRegistrationTests(APITestCase):
 
         self.assertEqual(len(response.data['members']), 1)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        # print(response.data)
         # self.assertEqual(len(response.data['technologies']), 1)
 
     def test_registered_team_has_leader(self):
@@ -172,7 +173,7 @@ class TeamRegistrationTests(APITestCase):
            'technologies': 1,
            }
         url = reverse('hack_fmi:register_team')
-        response1 = self.client.post(url, data, format='json')
+        first_response = self.client.post(url, data, format='json')
 
         data = {
            'name': 'Pandass',
@@ -181,9 +182,28 @@ class TeamRegistrationTests(APITestCase):
            'technologies': 1,
            }
         url = reverse('hack_fmi:register_team')
-        response2 = self.client.post(url, data, format='json')
-        # self.assertEqual(response2.status_code, status.HTTP_400_BAD_REQUEST)
+        second_response = self.client.post(url, data, format='json')
+        self.assertEqual(first_response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(second_response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Team.objects.count(), 1)
-        # print(response1.data)
-        # print()
-        # print(response2.data)
+
+    def test_list_team_by_id(self):
+        Team.objects.create(
+            name='Pandass',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.seasson
+        )
+        data = {
+            'name': 'Pandas',
+            'idea_description': 'GameDevelopers',
+            'repository': 'https://github.com/HackSoftware',
+            'technologies': 1,
+        }
+        url = reverse('hack_fmi:register_team')
+        self.client.post(url, data, format='json')
+        url_get = reverse('hack_fmi:teams')
+        data = {'id': 2}
+        response = self.client.get(url_get, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], 'Pandas')
