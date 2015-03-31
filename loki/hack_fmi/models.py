@@ -99,6 +99,7 @@ class Competitor(BaseUser):
     known_skills = models.ManyToManyField(Skill)
     faculty_number = models.IntegerField()
     shirt_size = models.SmallIntegerField(choices=SHIRT_SIZE, default=S)
+    needs_work = models.BooleanField(default=True)
 
 
 class Team(models.Model):

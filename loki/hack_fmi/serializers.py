@@ -34,7 +34,9 @@ class CompetitorSerializer(serializers.ModelSerializer):
             'faculty_number',
             'shirt_size',
             'password',
-            'teammembership_set'
+            'teammembership_set',
+            'needs_work',
+
         )
         extra_kwargs = {'password': {'write_only': True}}
 
