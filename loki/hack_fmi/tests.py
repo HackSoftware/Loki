@@ -283,7 +283,7 @@ class TeamRegistrationTests(APITestCase):
             repository='https://github.com/HackSoftware',
             season=self.seasson
         )
-        invitation = Invitation.objects.create(
+        Invitation.objects.create(
             team=team,
             competitor=self.competitor
         )
@@ -291,6 +291,26 @@ class TeamRegistrationTests(APITestCase):
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
+
+    def test_accept_invitations(self):
+        team = Team.objects.create(
+            name='Pandass2',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.seasson
+        )
+        invitation = Invitation.objects.create(
+            team=team,
+            competitor=self.competitor
+        )
+        url = reverse('hack_fmi:invitation')
+        data = {'id': invitation.id}
+        response = self.client.put(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(TeamMembership.objects.all()), 1)
+        self.assertEqual(len(Invitation.objects.all()), 0)
+
 
 
 class LeaveTeamTests(APITestCase):

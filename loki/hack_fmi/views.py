@@ -124,3 +124,13 @@ class InvitationView(APIView):
         invitations = Invitation.objects.filter(competitor=logged_competitor)
         serializer = InvitationSerializer(invitations, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, format=None):
+        logged_competitor = request.user.get_competitor()
+        invitation = Invitation.objects.get(id=request.data['id'])
+        if invitation.competitor != logged_competitor:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        TeamMembership.objects.create(competitor=logged_competitor, team=invitation.team)
+        invitation.delete()
+        return Response(status=status.HTTP_200_OK)

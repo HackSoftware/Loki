@@ -71,6 +71,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class InvitationSerializer(serializers.ModelSerializer):
+    team = TeamSerializer(many=False, read_only=True)
 
     class Meta:
         model = Invitation
