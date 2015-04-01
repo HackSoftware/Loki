@@ -111,6 +111,9 @@ class Team(models.Model):
     technologies = models.ManyToManyField(Skill)
     season = models.ForeignKey('Season', default=1)
 
+    def __str__(self):
+        return self.name
+
 
 class TeamMembership(models.Model):
     competitor = models.ForeignKey(Competitor)

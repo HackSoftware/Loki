@@ -276,8 +276,25 @@ class TeamRegistrationTests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_get_invitations(self):
+        team = Team.objects.create(
+            name='Pandass2',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.seasson
+        )
+        invitation = Invitation.objects.create(
+            team=team,
+            competitor=self.competitor
+        )
+        url = reverse('hack_fmi:invitation')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
 
 class LeaveTeamTests(APITestCase):
+
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
         self.season = Season.objects.create(number=1, is_active=True)
