@@ -129,3 +129,6 @@ class Season(models.Model):
 class Invitation(models.Model):
     team = models.ForeignKey(Team)
     competitor = models.ForeignKey(Competitor)
+
+    class Meta:
+        unique_together = ('team', 'competitor')
