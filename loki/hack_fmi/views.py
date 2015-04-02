@@ -136,12 +136,17 @@ class InvitationView(APIView):
             error = {"error": "Този потребител все още не е регистриран в системата."}
             return Response(error, status=status.HTTP_404_NOT_FOUND)
         if Invitation.objects.filter(team=membership.team, competitor=invited_competitor).first():
-            error = {"error": "Вече си изпратил покана на този участник. Изчакай отговор от него."}
+            error = {"error": "Вече си изпратил покана на този участник. Изчакай да потвърди!"}
+            return Response(error, status=status.HTTP_404_NOT_FOUND)
+
+        if membership.team in invited_competitor.team_set.all():
+            error = {"error": "Този участник вече е в отбора ти!"}
             return Response(error, status=status.HTTP_404_NOT_FOUND)
 
         if membership.is_leader:
             Invitation.objects.create(team=membership.team, competitor=invited_competitor)
-            return Response(status=status.HTTP_201_CREATED)
+            message = {"message": "Успx поканата за да се включи в отбора!"}
+            return Response(message, status=status.HTTP_201_CREATED)
 
         return Response(status=status.HTTP_404_NOT_FOUND)
 
