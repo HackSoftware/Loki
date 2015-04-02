@@ -1,4 +1,4 @@
-from django.core.mail import send_mass_mail
+from django.core.mail import send_mail
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -108,17 +108,15 @@ def leave_team(request):
     team = Team.objects.get(id=membership.team.id)
     if membership.is_leader:
         members = list(team.members.all())
-        user_emails = tuple([member.email for member in members])
-        emails = []
-        for user_email in user_emails:
-            emails.append((
-                'Разпуснат отбор',
-                'Твоят отбор беше изтрит от лидера.',
-                # Set default email
-                'stanislav.bozhanov@gmail.com',
-                (user_email,)
-            ))
-        send_mass_mail(emails)
+        user_emails = [member.email for member in members]
+
+        send_mail(
+            'Изтрит отбор HackFMI',
+            'Лидера на твоя отбор напусна и отбора беше изтрит.',
+            'register@hackfmi.com',
+            user_emails,
+            fail_silently=False
+        )
         team.delete()
         return Response(status=status.HTTP_200_OK)
     TeamMembership.objects.get(competitor=logged_competitor).delete()
