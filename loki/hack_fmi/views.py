@@ -149,7 +149,7 @@ class InvitationView(APIView):
 
     def delete(self, request, format=None):
         logged_competitor = request.user.get_competitor()
-        invitation = Invitation.objects.get(id=request.data['id'])
+        invitation = Invitation.objects.get(id=request.GET['id'])
         if invitation.competitor != logged_competitor:
             error = {"error": "Тази покана не е за теб."}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)

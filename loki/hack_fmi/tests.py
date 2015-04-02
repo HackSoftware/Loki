@@ -275,7 +275,6 @@ class TeamRegistrationTests(APITestCase):
         data = {'email': 'stenly@abv.bg'}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        print(response.data)
 
     def test_get_invitations(self):
         team = Team.objects.create(
@@ -311,7 +310,23 @@ class TeamRegistrationTests(APITestCase):
         self.assertEqual(len(TeamMembership.objects.all()), 1)
         self.assertEqual(len(Invitation.objects.all()), 0)
 
-
+    def test_accept_declain(self):
+        team = Team.objects.create(
+            name='Pandass2',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.seasson
+        )
+        invitation = Invitation.objects.create(
+            team=team,
+            competitor=self.competitor
+        )
+        url = reverse('hack_fmi:invitation')
+        data = {'id': invitation.id}
+        response = self.client.delete(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(TeamMembership.objects.all()), 0)
+        self.assertEqual(len(Invitation.objects.all()), 0)
 
 class LeaveTeamTests(APITestCase):
 
