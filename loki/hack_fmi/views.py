@@ -115,10 +115,10 @@ class InvitationView(APIView):
         membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
         invited_competitor = Competitor.objects.filter(email=request.data['email']).first()
         if not invited_competitor:
-            error = {"Error": "Този потребител все още не е регистриран в системата."}
+            error = {"error": "Този потребител все още не е регистриран в системата."}
             return Response(error, status=status.HTTP_404_NOT_FOUND)
         if Invitation.objects.filter(team=membership.team, competitor=invited_competitor).first():
-            error = {"Error": "Вече си изпратил покана на този участник. Изчакай отговор от него."}
+            error = {"error": "Вече си изпратил покана на този участник. Изчакай отговор от него."}
             return Response(error, status=status.HTTP_404_NOT_FOUND)
 
         if membership.is_leader:
@@ -137,10 +137,10 @@ class InvitationView(APIView):
         logged_competitor = request.user.get_competitor()
         invitation = Invitation.objects.get(id=request.data['id'])
         if invitation.competitor != logged_competitor:
-            error = {"Error": "Тази покана не е за теб."}
+            error = {"error": "Тази покана не е за теб."}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
         if logged_competitor.team_set.all():
-            error = {"Error": "Вече имаш отбор. Напусни го и тогава можеш да приемеш нова покана."}
+            error = {"error": "Вече имаш отбор. Напусни го и тогава можеш да приемеш нова покана."}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
         TeamMembership.objects.create(competitor=logged_competitor, team=invitation.team)
@@ -151,7 +151,7 @@ class InvitationView(APIView):
         logged_competitor = request.user.get_competitor()
         invitation = Invitation.objects.get(id=request.data['id'])
         if invitation.competitor != logged_competitor:
-            error = {"Error": "Тази покана не е за теб."}
+            error = {"error": "Тази покана не е за теб."}
             return Response(error, status=status.HTTP_400_BAD_REQUEST)
 
         invitation.delete()

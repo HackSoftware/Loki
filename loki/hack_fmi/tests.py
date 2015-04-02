@@ -275,6 +275,7 @@ class TeamRegistrationTests(APITestCase):
         data = {'email': 'stenly@abv.bg'}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        print(response.data)
 
     def test_get_invitations(self):
         team = Team.objects.create(
