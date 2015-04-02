@@ -36,6 +36,7 @@ class CompetitorSerializer(serializers.ModelSerializer):
             'password',
             'teammembership_set',
             'needs_work',
+            'social_links',
 
         )
         extra_kwargs = {'password': {'write_only': True}}
