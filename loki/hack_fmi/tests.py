@@ -343,8 +343,17 @@ class LeaveTeamTests(APITestCase):
         TeamMembership.objects.create(competitor=self.competitor2, team=self.team)
 
     def test_member_leaves_team(self):
+        self.client.logout()
+        self.client.force_authenticate(user=self.competitor2)
+        self.assertEqual(self.team.members.count(), 2)
+        url = reverse('hack_fmi:leave_team')
+        self.client.post(url, format='json')
+        self.assertEqual(self.team.members.count(), 1)
+
+    def test_leader_leaves_team(self):
         url = reverse('hack_fmi:leave_team')
         self.assertEqual(self.team.members.count(), 2)
         self.client.post(url, format='json')
-        self.assertEqual(self.team.members.count(), 1)
+        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(self.team.members.count(), 0)
 

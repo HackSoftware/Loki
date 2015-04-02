@@ -1,3 +1,5 @@
+from django.core.mail import send_mass_mail
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -6,7 +8,6 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from .models import Skill, Competitor, Team, TeamMembership
 from .serializers import SkillSerializer, CompetitorSerializer, TeamSerializer, Invitation, InvitationSerializer
-from django.core.exceptions import ValidationError
 
 from djoser import views
 from django.conf import settings
@@ -103,6 +104,23 @@ def me(request):
 @permission_classes((IsAuthenticated,))
 def leave_team(request):
     logged_competitor = request.user.get_competitor()
+    membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
+    team = Team.objects.get(id=membership.team.id)
+    if membership.is_leader:
+        members = list(team.members.all())
+        user_emails = tuple([member.email for member in members])
+        emails = []
+        for user_email in user_emails:
+            emails.append((
+                'Разпуснат отбор',
+                'Твоят отбор беше изтрит от лидера.',
+                # Set default email
+                'stanislav.bozhanov@gmail.com',
+                (user_email,)
+            ))
+        send_mass_mail(emails)
+        team.delete()
+        return Response(status=status.HTTP_200_OK)
     TeamMembership.objects.get(competitor=logged_competitor).delete()
     return Response(status=status.HTTP_200_OK)
 
