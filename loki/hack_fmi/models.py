@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class UserManager(BaseUserManager):
 
-    def __create_user(self, email, password, is_admin,
+    def __create_user(self, email, password, is_admin, is_active,
                       full_name):
         if not email:
             raise ValueError('Users must have an email address')
@@ -12,17 +12,18 @@ class UserManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email,
                           is_admin=is_admin,
+                          is_active=is_active,
                           full_name=full_name)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_user(self, email, password, full_name=''):
-        return self.__create_user(email, password, False,
+        return self.__create_user(email, password, False, False,
                                   full_name)
 
     def create_superuser(self, email, password, full_name=''):
-        return self.__create_user(email, password, full_name, True)
+        return self.__create_user(email, password, True, True, full_name)
 
 
 class BaseUser(AbstractBaseUser):
@@ -58,15 +59,6 @@ class BaseUser(AbstractBaseUser):
     @property
     def full_name(self):
         return "{} {}".format(self.first_name, self.last_name)
-
-    @full_name.setter
-    def full_name(self, full_name):
-        names = full_name.strip().split()
-        if len(names) >= 2:
-            self.first_name = names[0]
-            self.last_name = names[-1]
-        else:
-            raise ValueError('Not valid full_name.')
 
     def get_competitor(self):
         try:
