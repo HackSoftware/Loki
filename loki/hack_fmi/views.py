@@ -141,6 +141,10 @@ class InvitationView(APIView):
             error = {"error": "Този участник вече е в отбора ти!"}
             return Response(error, status=status.HTTP_404_NOT_FOUND)
 
+        if len(membership.team.teammembership_set.all()) > 6:
+            error = {"error": "В този отбор вече има повече от 6 човека. Трябва някой да напусне отбора за да можеш да приемш тази покана!"}
+            return Response(error, status=status.HTTP_404_NOT_FOUND)
+
         if membership.is_leader:
             Invitation.objects.create(team=membership.team, competitor=invited_competitor)
             message = {"message": "Успx поканата за да се включи в отбора!"}
