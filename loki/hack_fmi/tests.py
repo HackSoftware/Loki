@@ -6,6 +6,7 @@ from django.core import mail
 
 
 class RegistrationTests(APITestCase):
+
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
 
@@ -26,19 +27,6 @@ class RegistrationTests(APITestCase):
         self.assertEqual(BaseUser.objects.count(), 1)
         self.assertEqual(len(Competitor.objects.first().known_skills.all()), 1)
         self.assertFalse(Competitor.objects.first().needs_work)
-
-    def test_registraion_full_name(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'first_name': 'Ivo',
-            'last_name': 'Bachvarov',
-            'faculty_number': '123',
-            'known_skills': [1],
-            'password': '123'
-        }
-        url = reverse('hack_fmi:register')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_register_user_no_password(self):
         data = {
@@ -66,7 +54,7 @@ class RegistrationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(mail.outbox), 1)
 
-    def test_email_sent_new_tempalte(self):
+    def test_email_sent_new_template(self):
         data = {
             'email': 'ivo@abv.bg',
             'first_name': 'Ivo',
@@ -82,6 +70,7 @@ class RegistrationTests(APITestCase):
 
 
 class LoginTests(APITestCase):
+
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
         self.competitor = Competitor.objects.create(
@@ -111,13 +100,13 @@ class LoginTests(APITestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_wrong_not_competetor(self):
-        self.baseuser = BaseUser.objects.create(
+    def test_wrong_not_competitor(self):
+        self.base_user = BaseUser.objects.create(
             email='baseuser@abv.bg',
             full_name='Ivo Naidobriq',
         )
-        self.baseuser.set_password('123')
-        self.baseuser.save()
+        self.base_user.set_password('123')
+        self.base_user.save()
 
         data = {
             'email': 'baseuser@abv.bg',
@@ -142,9 +131,10 @@ class LoginTests(APITestCase):
 
 
 class TeamRegistrationTests(APITestCase):
+
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
-        self.seasson = Season.objects.create(number=1, is_active=True)
+        self.season = Season.objects.create(number=1, is_active=True)
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
             full_name='Ivo Naidobriq',
@@ -179,24 +169,23 @@ class TeamRegistrationTests(APITestCase):
         team_membership = TeamMembership.objects.get(id=1)
         self.assertEqual(self.competitor, team_membership.competitor)
         self.assertTrue(team_membership.is_leader)
-        url = reverse('hack_fmi:me')
 
     def test_register_more_than_one_team(self):
         data = {
-           'name': 'Pandas',
-           'idea_description': 'GameDevelopers',
-           'repository': 'https://github.com/HackSoftware',
-           'technologies': [1],
-           }
+            'name': 'Pandas',
+            'idea_description': 'GameDevelopers',
+            'repository': 'https://github.com/HackSoftware',
+            'technologies': [1],
+        }
         url = reverse('hack_fmi:register_team')
         first_response = self.client.post(url, data, format='json')
 
         data = {
-           'name': 'Pandass',
-           'idea_description': 'GameDeveloperss',
-           'repository': 'https://github.com/HackSoftwares',
-           'technologies': [1],
-           }
+            'name': 'Pandass',
+            'idea_description': 'GameDeveloperss',
+            'repository': 'https://github.com/HackSoftwares',
+            'technologies': [1],
+        }
         url = reverse('hack_fmi:register_team')
         second_response = self.client.post(url, data, format='json')
         self.assertEqual(first_response.status_code, status.HTTP_201_CREATED)
@@ -208,13 +197,13 @@ class TeamRegistrationTests(APITestCase):
             name='Pandass',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
-            season=self.seasson
+            season=self.season
         )
         Team.objects.create(
             name='Pandass2',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
-            season=self.seasson
+            season=self.season
         )
         url_get = reverse('hack_fmi:teams')
         data = {'id': 2}
@@ -227,13 +216,13 @@ class TeamRegistrationTests(APITestCase):
             name='Pandass',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
-            season=self.seasson
+            season=self.season
         )
         Team.objects.create(
             name='Pandass2',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
-            season=self.seasson
+            season=self.season
         )
 
         url_get = reverse('hack_fmi:teams')
@@ -248,7 +237,7 @@ class TeamRegistrationTests(APITestCase):
             'idea_description': 'GameDevelopers',
             'repository': 'https://github.com/HackSoftware',
             'technologies': [1],
-            }
+        }
         url = reverse('hack_fmi:register_team')
         self.client.post(url, data, format='json')
         team = Team.objects.get(id=1)
@@ -265,11 +254,11 @@ class TeamRegistrationTests(APITestCase):
         self.assertEqual(Invitation.objects.all()[0].competitor.id, self.competitor2.id)
 
     def test_test_invitation_not_from_leader(self):
-        team = Team.objects.create(
+        Team.objects.create(
             name='Pandass2',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
-            season=self.seasson
+            season=self.season
         )
         url = reverse('hack_fmi:invitation')
         data = {'email': 'stenly@abv.bg'}
@@ -281,7 +270,7 @@ class TeamRegistrationTests(APITestCase):
             name='Pandass2',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
-            season=self.seasson
+            season=self.season
         )
         Invitation.objects.create(
             team=team,
@@ -297,7 +286,7 @@ class TeamRegistrationTests(APITestCase):
             name='Pandass2',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
-            season=self.seasson
+            season=self.season
         )
         invitation = Invitation.objects.create(
             team=team,
@@ -310,12 +299,12 @@ class TeamRegistrationTests(APITestCase):
         self.assertEqual(len(TeamMembership.objects.all()), 1)
         self.assertEqual(len(Invitation.objects.all()), 0)
 
-    def test_accept_declain(self):
+    def test_accept_decline(self):
         team = Team.objects.create(
             name='Pandass2',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
-            season=self.seasson
+            season=self.season
         )
         invitation = Invitation.objects.create(
             team=team,
@@ -327,6 +316,7 @@ class TeamRegistrationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(TeamMembership.objects.all()), 0)
         self.assertEqual(len(Invitation.objects.all()), 0)
+
 
 class LeaveTeamTests(APITestCase):
 
@@ -373,3 +363,7 @@ class LeaveTeamTests(APITestCase):
         self.assertEqual(len(mail.outbox), 2)
         self.assertEqual(self.team.members.count(), 0)
 
+    def test_leader_leaves_team_emails_sent(self):
+        url = reverse('hack_fmi:leave_team')
+        self.client.post(url, format='json')
+        self.assertEqual(len(mail.outbox), 2)
