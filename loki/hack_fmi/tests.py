@@ -143,45 +143,32 @@ class TeamRegistrationTests(APITestCase):
             full_name='Ivo Naidobriq',
             faculty_number='123',
         )
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.competitor)
-
-    def test_register_team(self):
-        data = {
+        self.team_data = {
             'name': 'Pandas',
             'idea_description': 'GameDevelopers',
             'repository': 'https://github.com/HackSoftware',
             'technologies': [1]
         }
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor)
+
+    def test_register_team(self):
         url = reverse('hack_fmi:register_team')
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, self.team_data, format='json')
         self.assertEqual(len(response.data['members']), 1)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(response.data['technologies']), 1)
 
     def test_registered_team_has_leader(self):
-        data = {
-            'name': 'Pandas',
-            'idea_description': 'GameDevelopers',
-            'repository': 'https://github.com/HackSoftware',
-            'technologies': [1],
-
-        }
         url = reverse('hack_fmi:register_team')
-        self.client.post(url, data, format='json')
+        self.client.post(url, self.team_data, format='json')
         team_membership = TeamMembership.objects.get(id=1)
         self.assertEqual(self.competitor, team_membership.competitor)
         self.assertTrue(team_membership.is_leader)
 
     def test_register_more_than_one_team(self):
-        data = {
-            'name': 'Pandas',
-            'idea_description': 'GameDevelopers',
-            'repository': 'https://github.com/HackSoftware',
-            'technologies': [1],
-        }
         url = reverse('hack_fmi:register_team')
-        first_response = self.client.post(url, data, format='json')
+        first_response = self.client.post(url, self.team_data, format='json')
 
         data = {
             'name': 'Pandass',
@@ -194,6 +181,19 @@ class TeamRegistrationTests(APITestCase):
         self.assertEqual(first_response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(second_response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Team.objects.count(), 1)
+
+
+class TeamManagementTests(APITestCase):
+
+    def setUp(self):
+        self.season = Season.objects.create(number=1, is_active=True)
+        self.competitor = Competitor.objects.create(
+            email='ivo@abv.bg',
+            full_name='Ivo Naidobriq',
+            faculty_number='123',
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor)
 
     def test_list_team_by_id(self):
         Team.objects.create(
@@ -227,9 +227,7 @@ class TeamRegistrationTests(APITestCase):
             repository='https://github.com/HackSoftware',
             season=self.season
         )
-
         url_get = reverse('hack_fmi:teams')
-
         response = self.client.get(url_get, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
