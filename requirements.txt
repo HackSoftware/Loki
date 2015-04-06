@@ -8,6 +8,7 @@ djoser==0.2.1
 docopt==0.6.2
 pbr==0.10.8
 Pillow==2.7.0
+psycopg2==2.6
 PyJWT==1.0.0
 PyYAML==3.11
 requests==2.6.0
