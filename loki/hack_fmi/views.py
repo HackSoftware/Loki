@@ -1,4 +1,4 @@
-from django.core.mail import send_mass_mail
+from django.core.mail import send_mail
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -108,17 +108,15 @@ def leave_team(request):
     team = Team.objects.get(id=membership.team.id)
     if membership.is_leader:
         members = list(team.members.all())
-        user_emails = tuple([member.email for member in members])
-        emails = []
-        for user_email in user_emails:
-            emails.append((
-                'Разпуснат отбор',
-                'Твоят отбор беше изтрит от лидера.',
-                # Set default email
-                'stanislav.bozhanov@gmail.com',
-                (user_email,)
-            ))
-        send_mass_mail(emails)
+        user_emails = [member.email for member in members]
+
+        send_mail(
+            'Изтрит отбор HackFMI',
+            'Лидера на твоя отбор напусна и отбора беше изтрит.',
+            'register@hackfmi.com',
+            user_emails,
+            fail_silently=False
+        )
         team.delete()
         return Response(status=status.HTTP_200_OK)
     TeamMembership.objects.get(competitor=logged_competitor).delete()
@@ -136,12 +134,21 @@ class InvitationView(APIView):
             error = {"error": "Този потребител все още не е регистриран в системата."}
             return Response(error, status=status.HTTP_404_NOT_FOUND)
         if Invitation.objects.filter(team=membership.team, competitor=invited_competitor).first():
-            error = {"error": "Вече си изпратил покана на този участник. Изчакай отговор от него."}
+            error = {"error": "Вече си изпратил покана на този участник. Изчакай да потвърди!"}
+            return Response(error, status=status.HTTP_404_NOT_FOUND)
+
+        if membership.team in invited_competitor.team_set.all():
+            error = {"error": "Този участник вече е в отбора ти!"}
+            return Response(error, status=status.HTTP_404_NOT_FOUND)
+
+        if len(membership.team.teammembership_set.all()) > 6:
+            error = {"error": "В този отбор вече има повече от 6 човека. Трябва някой да напусне отбора за да можеш да приемш тази покана!"}
             return Response(error, status=status.HTTP_404_NOT_FOUND)
 
         if membership.is_leader:
             Invitation.objects.create(team=membership.team, competitor=invited_competitor)
-            return Response(status=status.HTTP_201_CREATED)
+            message = {"message": "Успx поканата за да се включи в отбора!"}
+            return Response(message, status=status.HTTP_201_CREATED)
 
         return Response(status=status.HTTP_404_NOT_FOUND)
 

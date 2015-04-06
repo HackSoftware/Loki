@@ -360,8 +360,11 @@ class LeaveTeamTests(APITestCase):
         url = reverse('hack_fmi:leave_team')
         self.assertEqual(self.team.members.count(), 2)
         self.client.post(url, format='json')
-        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox[0].to), 2)
         self.assertEqual(self.team.members.count(), 0)
+        self.assertEqual(len(Team.objects.all()), 0)
+        self.assertEqual(len(TeamMembership.objects.all()), 0)
 
     def test_leader_leaves_team_emails_sent(self):
         url = reverse('hack_fmi:leave_team')
