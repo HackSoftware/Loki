@@ -1,8 +1,11 @@
 from django.core.urlresolvers import reverse
+from django.core import mail
+
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
-from .models import Skill, Competitor, BaseUser, TeamMembership, Season, Team, Invitation
-from django.core import mail
+
+from .models import (Skill, Competitor, BaseUser, TeamMembership,
+                     Season, Team, Invitation)
 
 
 class RegistrationTests(APITestCase):
@@ -299,23 +302,23 @@ class TeamRegistrationTests(APITestCase):
         self.assertEqual(len(TeamMembership.objects.all()), 1)
         self.assertEqual(len(Invitation.objects.all()), 0)
 
-    def test_accept_decline(self):
-        team = Team.objects.create(
-            name='Pandass2',
-            idea_description='GameDevelopers',
-            repository='https://github.com/HackSoftware',
-            season=self.season
-        )
-        invitation = Invitation.objects.create(
-            team=team,
-            competitor=self.competitor
-        )
-        url = reverse('hack_fmi:invitation')
-        data = {'id': invitation.id}
-        response = self.client.delete(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(TeamMembership.objects.all()), 0)
-        self.assertEqual(len(Invitation.objects.all()), 0)
+    # def test_accept_decline(self):
+    #     team = Team.objects.create(
+    #         name='Pandass2',
+    #         idea_description='GameDevelopers',
+    #         repository='https://github.com/HackSoftware',
+    #         season=self.season
+    #     )
+    #     invitation = Invitation.objects.create(
+    #         team=team,
+    #         competitor=self.competitor
+    #     )
+    #     url = reverse('hack_fmi:invitation')
+    #     data = {'id': invitation.id}
+    #     response = self.client.delete(url, data, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertEqual(len(TeamMembership.objects.all()), 0)
+    #     self.assertEqual(len(Invitation.objects.all()), 0)
 
 
 class LeaveTeamTests(APITestCase):
@@ -360,8 +363,7 @@ class LeaveTeamTests(APITestCase):
         url = reverse('hack_fmi:leave_team')
         self.assertEqual(self.team.members.count(), 2)
         self.client.post(url, format='json')
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(len(mail.outbox[0].to), 2)
+
         self.assertEqual(self.team.members.count(), 0)
         self.assertEqual(len(Team.objects.all()), 0)
         self.assertEqual(len(TeamMembership.objects.all()), 0)
@@ -369,4 +371,5 @@ class LeaveTeamTests(APITestCase):
     def test_leader_leaves_team_emails_sent(self):
         url = reverse('hack_fmi:leave_team')
         self.client.post(url, format='json')
-        self.assertEqual(len(mail.outbox), 2)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.outbox[0].to), 2)
