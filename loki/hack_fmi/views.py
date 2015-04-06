@@ -133,25 +133,25 @@ class InvitationView(APIView):
         invited_competitor = Competitor.objects.filter(email=request.data['email']).first()
         if not invited_competitor:
             error = {"error": "Този потребител все още не е регистриран в системата."}
-            return Response(error, status=status.HTTP_404_NOT_FOUND)
+            return Response(error, status=status.HTTP_403_FORBIDDEN)
         if Invitation.objects.filter(team=membership.team, competitor=invited_competitor).first():
             error = {"error": "Вече си изпратил покана на този участник. Изчакай да потвърди!"}
-            return Response(error, status=status.HTTP_404_NOT_FOUND)
+            return Response(error, status=status.HTTP_403_FORBIDDEN)
 
         if membership.team in invited_competitor.team_set.all():
             error = {"error": "Този участник вече е в отбора ти!"}
-            return Response(error, status=status.HTTP_404_NOT_FOUND)
+            return Response(error, status=status.HTTP_403_FORBIDDEN)
 
         if len(membership.team.teammembership_set.all()) > 6:
-            error = {"error": "В този отбор вече има повече от 6 човека. Трябва някой да напусне отбора за да можеш да приемш тази покана!"}
-            return Response(error, status=status.HTTP_404_NOT_FOUND)
+            error = {"error": "В този отбор вече има повече от 6 човека. "
+                              "Трябва някой да напусне отбора за да можеш да приемш тази покана!"}
+            return Response(error, status=status.HTTP_403_FORBIDDEN)
 
         if membership.is_leader:
             Invitation.objects.create(team=membership.team, competitor=invited_competitor)
-            message = {"message": "Успx поканата за да се включи в отбора!"}
+            message = {"message": "Успешно изпратихте поканата за включване в отбора!"}
             return Response(message, status=status.HTTP_201_CREATED)
-
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     def get(self, request, format=None):
         logged_competitor = request.user.get_competitor()
@@ -164,10 +164,10 @@ class InvitationView(APIView):
         invitation = Invitation.objects.get(id=request.data['id'])
         if invitation.competitor != logged_competitor:
             error = {"error": "Тази покана не е за теб."}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+            return Response(error, status=status.HTTP_403_FORBIDDEN)
         if logged_competitor.team_set.all():
             error = {"error": "Вече имаш отбор. Напусни го и тогава можеш да приемеш нова покана."}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
+            return Response(error, status=status.HTTP_403_FORBIDDEN)
 
         TeamMembership.objects.create(competitor=logged_competitor, team=invitation.team)
         invitation.delete()
@@ -178,7 +178,6 @@ class InvitationView(APIView):
         invitation = Invitation.objects.get(id=request.GET['id'])
         if invitation.competitor != logged_competitor:
             error = {"error": "Тази покана не е за теб."}
-            return Response(error, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response(error, status=status.HTTP_403_FORBIDDEN)
         invitation.delete()
         return Response(status=status.HTTP_200_OK)

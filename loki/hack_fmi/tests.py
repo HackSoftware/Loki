@@ -264,7 +264,7 @@ class TeamManagementTests(APITestCase):
         url = reverse('hack_fmi:invitation')
         data = {'email': 'stenly@abv.bg'}
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_invitations(self):
         team = Team.objects.create(
