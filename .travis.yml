@@ -15,3 +15,7 @@ before_script:
 
 script:
   - python manage.py migrate
+  - coveralls --rcfile=.coverage.rc
+
+after_success:
+  - coveralls --rcfile=.coverage.rc
