@@ -2,14 +2,13 @@ from django.conf.urls import url
 
 from djoser.views import ActivationView, LogoutView
 
-from .views import (SkillListView, TeamListView, CompetitorListView, Login,
+from .views import (SkillListView, TeamListView, Login,
                     register_team, leave_team, me, RegistrationView, InvitationView)
 
 
 urlpatterns = [
     url(r'^api/skills/$', SkillListView.as_view(), name='skills'),
     url(r'^api/register_team/$', register_team, name='register_team'),
-    url(r'^api/competitors/$', CompetitorListView.as_view(), name='competitors'),
     url(r'^api/teams/$', TeamListView.as_view(), name='teams'),
 
     url(r'^api/register/$', RegistrationView.as_view(), name='register'),

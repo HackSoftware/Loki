@@ -17,3 +17,5 @@ after_success:
 notifications:
   slack:
     secure: UJWWLC1NEy5slof7PrsrpGjL0ydS7jHBkeog6owqSk6avgOlbE7xGvKNiLfawJOIJ9SkOzaKJIxnCZ37QutT70gtwnb/a+cLK1XhNXuAiRE9OKIFCRSsMX3FxEX0YHIeHE1Q4EoMOr7pCWAFCGRReZNhAHvpRkfzO0F1KBtbCLI=
+    on_success: change
+    on_failure: change
