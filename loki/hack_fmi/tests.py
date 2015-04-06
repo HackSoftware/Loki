@@ -19,7 +19,7 @@ class RegistrationTests(APITestCase):
             'first_name': 'Ivo',
             'last_name': 'Bachvarov',
             'faculty_number': '123',
-            'known_skills': [1],
+            'known_skills': [self.skills.id],
             'password': '123',
             'needs_work': 'false',
         }
@@ -37,7 +37,7 @@ class RegistrationTests(APITestCase):
             'first_name': 'Ivo',
             'last_name': 'Bachvarov',
             'faculty_number': '123',
-            'known_skills': [1],
+            'known_skills': [self.skills.id],
         }
         url = reverse('hack_fmi:register')
         response = self.client.post(url, data, format='json')
@@ -49,7 +49,7 @@ class RegistrationTests(APITestCase):
             'first_name': 'Ivo',
             'last_name': ' Bachvarov',
             'faculty_number': '123',
-            'known_skills': [1],
+            'known_skills': [self.skills.id],
             'password': '123'
         }
         url = reverse('hack_fmi:register')
@@ -63,7 +63,7 @@ class RegistrationTests(APITestCase):
             'first_name': 'Ivo',
             'last_name': ' Bachvarov',
             'faculty_number': '123',
-            'known_skills': [1],
+            'known_skills': [self.skills.id],
             'password': '123'
         }
         url = reverse('hack_fmi:register')
@@ -147,7 +147,7 @@ class TeamRegistrationTests(APITestCase):
             'name': 'Pandas',
             'idea_description': 'GameDevelopers',
             'repository': 'https://github.com/HackSoftware',
-            'technologies': [1]
+            'technologies': [self.skills.id]
         }
         self.client = APIClient()
         self.client.force_authenticate(user=self.competitor)
@@ -186,6 +186,7 @@ class TeamRegistrationTests(APITestCase):
 class TeamManagementTests(APITestCase):
 
     def setUp(self):
+        self.skills = Skill.objects.create(name="C#")
         self.season = Season.objects.create(number=1, is_active=True)
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -196,20 +197,20 @@ class TeamManagementTests(APITestCase):
         self.client.force_authenticate(user=self.competitor)
 
     def test_list_team_by_id(self):
-        Team.objects.create(
+        team1 = Team.objects.create(
             name='Pandass',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
             season=self.season
         )
-        Team.objects.create(
+        team2 = Team.objects.create(
             name='Pandass2',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
             season=self.season
         )
         url_get = reverse('hack_fmi:teams')
-        data = {'id': 2}
+        data = {'id': team2.id}
         response = self.client.get(url_get, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], 'Pandass2')
@@ -237,7 +238,7 @@ class TeamManagementTests(APITestCase):
             'name': 'Pandas',
             'idea_description': 'GameDevelopers',
             'repository': 'https://github.com/HackSoftware',
-            'technologies': [1],
+            'technologies': [self.skills.id],
         }
         url = reverse('hack_fmi:register_team')
         self.client.post(url, data, format='json')
@@ -342,7 +343,7 @@ class LeaveTeamTests(APITestCase):
             'name': 'Pandass',
             'idea_description': 'GameDeveloperss',
             'repository': 'https://github.com/HackSoftwares',
-            'technologies': [1],
+            'technologies': [self.skills.id],
         }
         url = reverse('hack_fmi:register_team')
         self.client.post(url, data, format='json')
