@@ -14,7 +14,7 @@ before_script:
   - psql -c 'CREATE DATABASE testdb;' -U postgres
 
 script:
-  - python manage.py migrate
+  - python loki/manage.py migrate
   - coveralls --rcfile=.coverage.rc
 
 after_success:
