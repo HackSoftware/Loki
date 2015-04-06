@@ -15,7 +15,7 @@ before_script:
 
 script:
   - python loki/manage.py migrate
-  - coveralls --rcfile=.coverage.rc
+  - coverage run --source='.' loki/manage.py test
 
 after_success:
   - coveralls --rcfile=.coverage.rc
