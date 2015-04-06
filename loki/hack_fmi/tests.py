@@ -162,7 +162,7 @@ class TeamRegistrationTests(APITestCase):
     def test_registered_team_has_leader(self):
         url = reverse('hack_fmi:register_team')
         self.client.post(url, self.team_data, format='json')
-        team_membership = TeamMembership.objects.get(id=1)
+        team_membership = TeamMembership.objects.first()
         self.assertEqual(self.competitor, team_membership.competitor)
         self.assertTrue(team_membership.is_leader)
 
@@ -241,7 +241,7 @@ class TeamManagementTests(APITestCase):
         }
         url = reverse('hack_fmi:register_team')
         self.client.post(url, data, format='json')
-        team = Team.objects.get(id=1)
+        team = Team.objects.first()
         self.competitor2 = Competitor.objects.create(
             email='stenly@abv.bg',
             full_name='Stenly Naidobriq',
@@ -346,7 +346,7 @@ class LeaveTeamTests(APITestCase):
         }
         url = reverse('hack_fmi:register_team')
         self.client.post(url, data, format='json')
-        self.team = Team.objects.get(id=1)
+        self.team = Team.objects.first()
         TeamMembership.objects.create(competitor=self.competitor2, team=self.team)
 
     def test_member_leaves_team(self):
