@@ -1,5 +1,5 @@
 [report]
-omit = */migrations/*,odin/*,*/admin.py,*/tests.py,*/__init__.py,manage.py,wsgi.py
+omit = */migrations/*,*/admin.py,*/tests.py,*/__init__.py,*/manage.py,*/wsgi.py,*/example_local_settings.py
 exclude_lines =
     class Command
     __init__
