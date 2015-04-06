@@ -1,5 +1,12 @@
 [report]
-omit = */migrations/*,*/admin.py,*/tests.py,*/__init__.py,*/manage.py,*/wsgi.py,*/example_local_settings.py
+omit = 
+	*/migrations/*
+	*/admin.py
+	*/tests.py
+	*/__init__.py
+	loki/manage.py
+	loki/wsgi.py
+	loki/example_local_settings.py
 exclude_lines =
     class Command
     __init__
