@@ -20,7 +20,11 @@ class TeamMembershipSerializer(serializers.ModelSerializer):
 
 
 class CompetitorSerializer(serializers.ModelSerializer):
-    known_skills = serializers.PrimaryKeyRelatedField(many=True, read_only=False, queryset=Skill.objects.all())
+    known_skills = serializers.PrimaryKeyRelatedField(
+        queryset=Skill.objects.all(),
+        many=True,
+        read_only=False
+    )
     teammembership_set = TeamMembershipSerializer(many=True, read_only=True)
 
     class Meta:
