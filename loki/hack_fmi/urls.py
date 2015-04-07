@@ -2,9 +2,14 @@ from django.conf.urls import url
 
 from djoser.views import ActivationView, LogoutView
 
+<<<<<<< HEAD
 from .views import (SkillListView, Login, TeamAPI,
                     leave_team, me, RegistrationView, InvitationView, MentorListView)
 
+=======
+from .views import SkillListView, TeamAPI, leave_team, InvitationView
+from .auth import Login, RegistrationView, me
+>>>>>>> 1ad716ceda066eeba298444a2dd3e3f0027a3a6a
 
 urlpatterns = [
     url(r'^api/skills/$', SkillListView.as_view(), name='skills'),
