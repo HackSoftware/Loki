@@ -8,6 +8,17 @@ from .models import (Skill, Competitor, BaseUser, TeamMembership,
                      Season, Team, Invitation)
 
 
+class SkillTests(APITestCase):
+
+    def setUp(self):
+        self.skill = Skill.objects.create(name="C#")
+
+    def test_get_skill(self):
+        url = reverse('hack_fmi:skills')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
 class RegistrationTests(APITestCase):
 
     def setUp(self):
