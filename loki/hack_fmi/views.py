@@ -21,8 +21,8 @@ class SkillListView(generics.ListAPIView):
     serializer_class = SkillSerializer
 
 
-class TeamListView(generics.ListAPIView):
-    permission_classes = (IsAuthenticated,)
+class TeamAPI(generics.ListCreateAPIView):
+    permission_classes = (IsHackFMIUser,)
     serializer_class = TeamSerializer
 
     def get_queryset(self):
@@ -31,6 +31,10 @@ class TeamListView(generics.ListAPIView):
         if needed_id is not None:
             queryset = queryset.filter(id=needed_id)
         return queryset
+
+    def perform_create(self, serializer):
+        team = serializer.save()
+        team.add_member(self.request.user, is_leader=True)
 
 
 class RegistrationView(views.RegistrationView):
@@ -51,41 +55,6 @@ class Login(views.LoginView):
         if not user.get_competitor():
             return Response('Not a HackFMI user.', status=status.HTTP_403_FORBIDDEN)
         return super(Login, self).action(serializer)
-
-
-class RegisterTeam(generics.CreateAPIView):
-    permission_classes = (IsHackFMIUser,)
-    serializer = TeamSerializer
-
-    def perform_create(self, serializer):
-        team = serializer.save()
-        team.add_member(self.user, is_leader=True)
-
-
-@api_view(['POST'])
-@permission_classes((IsAuthenticated,))
-def register_team(request):
-    logged_user = request.user
-    serializer = TeamSerializer(data=request.data)
-    if not logged_user.get_competitor():
-        return Response('Not a HackFMI user.', status=status.HTTP_403_FORBIDDEN)
-
-    if serializer.is_valid():
-        if TeamMembership.objects.filter(competitor=logged_user.competitor, team__season=1).exists():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # TODO: Find a proper way to do this!
-        team = serializer.save()
-        team.technologies = request.data['technologies']
-        team.save()
-
-        team_membership = TeamMembership.objects.create(
-            competitor=logged_user.competitor,
-            team=team,
-            is_leader=True
-        )
-        team_membership.save()
-        return Response(serialasizer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])

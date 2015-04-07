@@ -272,6 +272,7 @@ class LeaveTeamTests(APITestCase):
         }
         url = reverse('hack_fmi:register_team')
         self.client.post(url, data, format='json')
+
         self.team = Team.objects.first()
         TeamMembership.objects.create(competitor=self.competitor2, team=self.team)
 
