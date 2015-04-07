@@ -9,9 +9,9 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from djoser import views
 
-from .models import Skill, Competitor, Team, TeamMembership
+from .models import Skill, Competitor, Team, TeamMembership, Mentor
 from .serializers import (SkillSerializer, CompetitorSerializer,
-                          TeamSerializer, Invitation, InvitationSerializer)
+                          TeamSerializer, Invitation, InvitationSerializer, MentorSerializer)
 from .premissions import IsHackFMIUser
 
 
@@ -147,3 +147,9 @@ class InvitationView(APIView):
             return Response(error, status=status.HTTP_403_FORBIDDEN)
         invitation.delete()
         return Response(status=status.HTTP_200_OK)
+
+
+class MentorListView(generics.ListAPIView):
+    permission_classes = (IsHackFMIUser,)
+    queryset = Mentor.objects.all()
+    serializer_class = MentorSerializer
