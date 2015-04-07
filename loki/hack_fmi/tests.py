@@ -244,92 +244,6 @@ class TeamManagementTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
 
-    def test_invitation_for_team(self):
-        data = {
-            'name': 'Pandas',
-            'idea_description': 'GameDevelopers',
-            'repository': 'https://github.com/HackSoftware',
-            'technologies': [self.skills.id],
-        }
-        url = reverse('hack_fmi:register_team')
-        self.client.post(url, data, format='json')
-        team = Team.objects.first()
-        self.competitor2 = Competitor.objects.create(
-            email='stenly@abv.bg',
-            full_name='Stenly Naidobriq',
-            faculty_number='1234',
-        )
-        url = reverse('hack_fmi:invitation')
-        data = {'email': 'stenly@abv.bg'}
-        self.client.post(url, data, format='json')
-        self.assertEquals(Invitation.objects.count(), 1)
-        self.assertEqual(Invitation.objects.all()[0].team.id, team.id)
-        self.assertEqual(Invitation.objects.all()[0].competitor.id, self.competitor2.id)
-
-    def test_test_invitation_not_from_leader(self):
-        Team.objects.create(
-            name='Pandass2',
-            idea_description='GameDevelopers',
-            repository='https://github.com/HackSoftware',
-            season=self.season
-        )
-        url = reverse('hack_fmi:invitation')
-        data = {'email': 'stenly@abv.bg'}
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_get_invitations(self):
-        team = Team.objects.create(
-            name='Pandass2',
-            idea_description='GameDevelopers',
-            repository='https://github.com/HackSoftware',
-            season=self.season
-        )
-        Invitation.objects.create(
-            team=team,
-            competitor=self.competitor
-        )
-        url = reverse('hack_fmi:invitation')
-        response = self.client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-
-    def test_accept_invitations(self):
-        team = Team.objects.create(
-            name='Pandass2',
-            idea_description='GameDevelopers',
-            repository='https://github.com/HackSoftware',
-            season=self.season
-        )
-        invitation = Invitation.objects.create(
-            team=team,
-            competitor=self.competitor
-        )
-        url = reverse('hack_fmi:invitation')
-        data = {'id': invitation.id}
-        response = self.client.put(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(TeamMembership.objects.all()), 1)
-        self.assertEqual(len(Invitation.objects.all()), 0)
-
-    # def test_accept_decline(self):
-    #     team = Team.objects.create(
-    #         name='Pandass2',
-    #         idea_description='GameDevelopers',
-    #         repository='https://github.com/HackSoftware',
-    #         season=self.season
-    #     )
-    #     invitation = Invitation.objects.create(
-    #         team=team,
-    #         competitor=self.competitor
-    #     )
-    #     url = reverse('hack_fmi:invitation')
-    #     data = {'id': invitation.id}
-    #     response = self.client.delete(url, data, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(len(TeamMembership.objects.all()), 0)
-    #     self.assertEqual(len(Invitation.objects.all()), 0)
-
 
 class LeaveTeamTests(APITestCase):
 
@@ -383,3 +297,211 @@ class LeaveTeamTests(APITestCase):
         self.client.post(url, format='json')
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(len(mail.outbox[0].to), 2)
+
+
+class InvitationTests(APITestCase):
+
+    def setUp(self):
+        self.skills = Skill.objects.create(name="C#")
+        self.season = Season.objects.create(number=1, is_active=True)
+        self.competitor_leader = Competitor.objects.create(
+            email='ivo@abv.bg',
+            full_name='Ivo Naidobriq',
+            faculty_number='123',
+        )
+        self.competitor_not_leader = Competitor.objects.create(
+            email='sten@abv.bg',
+            full_name='Sten Naidobriq',
+            faculty_number='123',
+        )
+        self.competitor_dummy = Competitor.objects.create(
+            email='dummy@abv.bg',
+            full_name='Dummy Naidobriq',
+            faculty_number='123',
+        )
+        self.team = Team.objects.create(
+            name='Pandas',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.season,
+        )
+        self.team_dummy = Team.objects.create(
+            name='Dummy',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.season,
+        )
+        self.team_membership = TeamMembership.objects.create(
+            competitor=self.competitor_leader,
+            team=self.team,
+            is_leader=True,
+        )
+
+    def test_send_invitation_for_team(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        url = reverse('hack_fmi:invitation')
+        data = {'email': self.competitor_not_leader.email}
+        self.client.post(url, data, format='json')
+
+        self.assertEquals(Invitation.objects.count(), 1)
+        self.assertEqual(Invitation.objects.all()[0].team.id, self.team.id)
+        self.assertEqual(Invitation.objects.all()[0].competitor.id, self.competitor_not_leader.id)
+
+    def test_test_send_invitation_not_from_leader(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_not_leader)
+        TeamMembership.objects.create(
+            competitor=self.competitor_not_leader,
+            team=self.team,
+            is_leader=False,
+        )
+
+        url = reverse('hack_fmi:invitation')
+        data = {'email': self.competitor_dummy.email}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_send_invitation_to_not_existing_user(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        url = reverse('hack_fmi:invitation')
+        data = {'email': 'not_exist@abv.bg'}
+        response = self.client.post(url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_send_invitation_twice_to_same_competitor(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        Invitation.objects.create(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
+        url = reverse('hack_fmi:invitation')
+        data = {'email': self.competitor_not_leader.email}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_send_invitation_member_already_in_team(self):
+        TeamMembership.objects.create(
+            competitor=self.competitor_not_leader,
+            team=self.team,
+            is_leader=False,
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        url = reverse('hack_fmi:invitation')
+        data = {'email': self.competitor_not_leader.email}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_send_invitation_when_team_is_full(self):
+        for i in range(5):
+            TeamMembership.objects.create(
+                competitor=Competitor.objects.create(
+                    email='dummy{0}@abv.bg'.format(i),
+                    full_name='Dum Naidobriq',
+                    faculty_number='123',
+                ),
+                team=self.team,
+                is_leader=False,
+            )
+        self.assertEqual(self.team.members.count(), 6)
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        url = reverse('hack_fmi:invitation')
+        data = {'email': self.competitor_not_leader.email}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_get_invitations(self):
+        Invitation.objects.create(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_not_leader)
+
+        url = reverse('hack_fmi:invitation')
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_accept_invitation(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_not_leader)
+        invitation = Invitation.objects.create(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
+        url = reverse('hack_fmi:invitation')
+        data = {'id': invitation.id}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(TeamMembership.objects.all()), 2)
+        self.assertEqual(len(Invitation.objects.all()), 0)
+
+    def test_accept_invitation_already_has_team(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_not_leader)
+        TeamMembership.objects.create(
+            competitor=self.competitor_not_leader,
+            team=self.team_dummy,
+            is_leader=True,
+        )
+        invitation = Invitation.objects.create(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
+        url = reverse('hack_fmi:invitation')
+        data = {'id': invitation.id}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_accept_invitation_that_is_not_yours(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        invitation = Invitation.objects.create(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
+        url = reverse('hack_fmi:invitation')
+        data = {'id': invitation.id}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_decline_invitation(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_not_leader)
+        invitation = Invitation.objects.create(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
+        url = reverse('hack_fmi:invitation')
+        data = {'id': invitation.id}
+        response = self.client.delete(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(TeamMembership.objects.all()), 1)
+        self.assertEqual(len(Invitation.objects.all()), 0)
+
+    def test_decline_invitation_that_is_not_yours(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_leader)
+        invitation = Invitation.objects.create(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
+        url = reverse('hack_fmi:invitation')
+        data = {'id': invitation.id}
+        response = self.client.delete(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(len(TeamMembership.objects.all()), 1)
+        self.assertEqual(len(Invitation.objects.all()), 1)
