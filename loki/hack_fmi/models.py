@@ -126,6 +126,17 @@ class Season(models.Model):
     number = models.SmallIntegerField(default=0)
     is_active = models.BooleanField(default=False)
 
+    def save(self, *args, **kwargs):
+        if self.is_active:
+            try:
+                currently_active = self.__class__.objects.get(is_active=True)
+            except self.__class__.DoesNotExist:
+                pass
+            else:
+                currently_active.is_active = False
+                currently_active.save()
+        return super().save(*args, **kwargs)
+
 
 class Invitation(models.Model):
     team = models.ForeignKey(Team)

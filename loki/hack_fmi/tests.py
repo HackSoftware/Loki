@@ -507,3 +507,11 @@ class InvitationTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(len(TeamMembership.objects.all()), 1)
         self.assertEqual(len(Invitation.objects.all()), 1)
+
+
+class SeasonTests(APITestCase):
+
+    def test_season_deactivates_automatically(self):
+        Season.objects.create(number=1, is_active=True)
+        Season.objects.create(number=2, is_active=True)
+        self.assertFalse(Season.objects.filter(number=1).first().is_active)

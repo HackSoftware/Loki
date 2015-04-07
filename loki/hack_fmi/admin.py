@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Competitor, Skill, Team, TeamMembership, Invitation, Mentor
+from .models import Competitor, Skill, Team, TeamMembership, Invitation, Mentor, Season
 
 
 class SkillAdmin(admin.ModelAdmin):
@@ -44,9 +44,17 @@ class MentorAdmin(admin.ModelAdmin):
     class Meta:
         model = Mentor
 
+
+class SeasonAdmin(admin.ModelAdmin):
+    list_display = ('number', 'is_active')
+
+    class Meta:
+        model = Season
+
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Skill, SkillAdmin)
 admin.site.register(Competitor, CompetitorAdmin)
 admin.site.register(TeamMembership, TeamMembershipAdmin)
 admin.site.register(Invitation, InvitationAdmin)
 admin.site.register(Mentor, MentorAdmin)
+admin.site.register(Season, SeasonAdmin)
