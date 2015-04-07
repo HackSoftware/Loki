@@ -95,6 +95,12 @@ class Competitor(BaseUser):
     social_links = models.TextField(blank=True)
 
 
+class TeamMembership(models.Model):
+    competitor = models.ForeignKey('Competitor')
+    team = models.ForeignKey('Team')
+    is_leader = models.BooleanField(default=False)
+
+
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
     members = models.ManyToManyField(Competitor, through='TeamMembership')
@@ -103,14 +109,15 @@ class Team(models.Model):
     technologies = models.ManyToManyField(Skill)
     season = models.ForeignKey('Season', default=1)
 
+    def add_member(self, competitor, is_leader=False):
+        return TeamMembership.objects.create(
+            competitor=competitor,
+            team=self,
+            is_leader=is_leader
+        )
+
     def __str__(self):
         return self.name
-
-
-class TeamMembership(models.Model):
-    competitor = models.ForeignKey(Competitor)
-    team = models.ForeignKey(Team)
-    is_leader = models.BooleanField(default=False)
 
 
 class Season(models.Model):

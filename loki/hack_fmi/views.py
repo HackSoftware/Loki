@@ -12,6 +12,7 @@ from djoser import views
 from .models import Skill, Competitor, Team, TeamMembership
 from .serializers import (SkillSerializer, CompetitorSerializer,
                           TeamSerializer, Invitation, InvitationSerializer)
+from .premissions import IsHackFMIUser
 
 
 class SkillListView(generics.ListAPIView):
@@ -52,6 +53,15 @@ class Login(views.LoginView):
         return super(Login, self).action(serializer)
 
 
+class RegisterTeam(generics.CreateAPIView):
+    permission_classes = (IsHackFMIUser,)
+    serializer = TeamSerializer
+
+    def perform_create(self, serializer):
+        team = serializer.save()
+        team.add_member(self.user, is_leader=True)
+
+
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def register_team(request):
@@ -74,7 +84,7 @@ def register_team(request):
             is_leader=True
         )
         team_membership.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serialasizer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

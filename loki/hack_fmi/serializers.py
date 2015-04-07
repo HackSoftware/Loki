@@ -51,6 +51,10 @@ class CompetitorSerializer(serializers.ModelSerializer):
 class TeamSerializer(serializers.ModelSerializer):
     members = CompetitorSerializer(many=True, read_only=True)
     technologies = SkillSerializer(many=True, read_only=True)
+    technology_ids = serializers.PrimaryKeyRelatedField(
+        queryset=Skill.objects.all(),
+        write_only=True
+    )
 
     class Meta:
         model = Team
@@ -60,6 +64,7 @@ class TeamSerializer(serializers.ModelSerializer):
             'idea_description',
             'repository',
             'technologies',
+            'technology_ids',
         )
 
     def create(self, validated_data):
