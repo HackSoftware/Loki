@@ -74,9 +74,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         team = super(TeamSerializer, self).create(validated_data)
-        # Implement season logic here
-        season = Season.objects.all()
-        team.season = season[0]
+        team.season = Season.objects.get(is_active=True)
         team.save()
         return team
 
