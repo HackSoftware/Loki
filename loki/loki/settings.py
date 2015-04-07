@@ -31,6 +31,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
+    'ckeditor',
 
     'hack_fmi',
 )
@@ -76,6 +77,8 @@ LANGUAGES = (('bg', 'Bulgarian'),)
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, '../static')
+
 AUTH_USER_MODEL = 'hack_fmi.BaseUser'
 
 REST_FRAMEWORK = {
@@ -99,3 +102,9 @@ except ImportError:
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'hack_fmi/locale/')
 )
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+    },
+}

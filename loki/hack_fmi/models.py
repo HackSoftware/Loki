@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+from ckeditor.fields import RichTextField
+
 
 class UserManager(BaseUserManager):
 
@@ -135,5 +137,5 @@ class Invitation(models.Model):
 
 class Mentor(models.Model):
     name = models.CharField(max_length=100)
-    description = models.TextField()
+    description = RichTextField()
     picture = models.ImageField(blank=True)
