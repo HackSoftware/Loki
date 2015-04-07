@@ -224,7 +224,7 @@ class TeamManagementTests(APITestCase):
         data = {'id': team2.id}
         response = self.client.get(url_get, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['name'], 'Pandass2')
+        self.assertEqual(response.data[0]['name'], 'Pandass2')
 
     def test_list_team_all(self):
         Team.objects.create(

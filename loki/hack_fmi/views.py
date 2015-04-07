@@ -3,7 +3,7 @@ from django.conf import settings
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
@@ -14,37 +14,22 @@ from .serializers import (SkillSerializer, CompetitorSerializer,
                           TeamSerializer, Invitation, InvitationSerializer)
 
 
-class SkillListView(APIView):
+class SkillListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
-
-    def get(self, request, format=None):
-        languages = Skill.objects.all()
-        serializer = SkillSerializer(languages, many=True)
-        return Response(serializer.data)
+    queryset = Skill.objects.all()
+    serializer_class = SkillSerializer
 
 
-class CompetitorListView(APIView):
+class TeamListView(generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
+    serializer_class = TeamSerializer
 
-    def get(self, request, format=None):
-        competitors = Competitor.objects.all()
-        serializer = CompetitorSerializer(competitors, many=True)
-        return Response(serializer.data)
-
-
-@permission_classes((IsAuthenticated,))
-class TeamListView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, format=None):
-        if 'id' in request.GET.keys():
-            id = request.GET['id']
-            team = Team.objects.get(id=id)
-            serializer = TeamSerializer(team, many=False)
-            return Response(serializer.data)
-        teams = Team.objects.all()
-        serializer = TeamSerializer(teams, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        queryset = Team.objects.all()
+        needed_id = self.request.QUERY_PARAMS.get('id', None)
+        if needed_id is not None:
+            queryset = queryset.filter(id=needed_id)
+        return queryset
 
 
 class RegistrationView(views.RegistrationView):
