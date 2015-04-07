@@ -120,6 +120,7 @@ class LoginTests(APITestCase):
             full_name='Ivo Naidobriq',
         )
         self.base_user.set_password('123')
+        self.base_user.is_active = True
         self.base_user.save()
 
         data = {
@@ -128,7 +129,7 @@ class LoginTests(APITestCase):
         }
         url = reverse('hack_fmi:login')
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_get_data_after_login(self):
         self.client = APIClient()
