@@ -124,3 +124,9 @@ class Invitation(models.Model):
 
     class Meta:
         unique_together = ('team', 'competitor')
+
+
+class Mentor(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.TextField()
+    picture = models.ImageField(blank=True)
