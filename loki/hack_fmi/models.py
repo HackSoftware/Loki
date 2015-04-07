@@ -102,6 +102,9 @@ class TeamMembership(models.Model):
     team = models.ForeignKey('Team')
     is_leader = models.BooleanField(default=False)
 
+    def __str__(self):
+        return "{} {}".foramt(self.competitor, self.team)
+
 
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -126,6 +129,9 @@ class Season(models.Model):
     number = models.SmallIntegerField(default=0)
     is_active = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.number
+
 
 class Invitation(models.Model):
     team = models.ForeignKey(Team)
@@ -134,8 +140,14 @@ class Invitation(models.Model):
     class Meta:
         unique_together = ('team', 'competitor')
 
+    def __str__(self):
+        return "{} {}".foramt(self.team, self.competitor)
+
 
 class Mentor(models.Model):
     name = models.CharField(max_length=100)
     description = RichTextField()
     picture = models.ImageField(blank=True)
+
+    def __str__(self):
+        return self.name
