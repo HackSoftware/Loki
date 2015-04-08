@@ -121,6 +121,11 @@ class Team(models.Model):
             is_leader=is_leader
         )
 
+    def get_leader(self):
+        for membership in self.teammembership_set.all():
+            if membership.is_leader:
+                return membership.competitor
+
     def __str__(self):
         return self.name
 

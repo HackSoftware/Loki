@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import PermissionDenied
 
 from .models import Skill, Competitor, Team, TeamMembership, Mentor
 from .serializers import (SkillSerializer, TeamSerializer,
@@ -19,20 +20,27 @@ class SkillListView(generics.ListAPIView):
     serializer_class = SkillSerializer
 
 
-class TeamAPI(generics.ListCreateAPIView):
+class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
     permission_classes = (IsHackFMIUser,)
     serializer_class = TeamSerializer
 
     def get_queryset(self):
         queryset = Team.objects.all()
-        needed_id = self.request.QUERY_PARAMS.get('id', None)
-        if needed_id is not None:
-            queryset = queryset.filter(id=needed_id)
+        needed_id = self.kwargs.get('pk', None)
+        if needed_id:
+            queryset = queryset.filter(pk=needed_id)
         return queryset
 
     def perform_create(self, serializer):
         team = serializer.save()
         team.add_member(self.request.user.get_competitor(), is_leader=True)
+
+    def perform_update(self, serializer):
+        team = self.get_object()
+        if self.request.user.get_competitor() != team.get_leader():
+            raise PermissionDenied("You are not a leader!")
+
+        team = serializer.save()
 
 
 @api_view(['POST'])

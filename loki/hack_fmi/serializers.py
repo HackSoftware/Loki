@@ -4,12 +4,14 @@ from .models import Skill, Competitor, Team, TeamMembership, Season, Invitation,
 
 
 class SkillSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Skill
         fields = ('id', 'name')
 
 
 class TeamMembershipSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = TeamMembership
         fields = (

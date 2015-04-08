@@ -165,14 +165,14 @@ class TeamRegistrationTests(APITestCase):
         self.client.force_authenticate(user=self.competitor)
 
     def test_register_team(self):
-        url = reverse('hack_fmi:register_team')
+        url = reverse('hack_fmi:teams')
         response = self.client.post(url, self.team_data, format='json')
         self.assertEqual(len(response.data['members']), 1)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(response.data['technologies']), 1)
 
     def test_registered_team_has_leader(self):
-        url = reverse('hack_fmi:register_team')
+        url = reverse('hack_fmi:teams')
         self.client.post(url, self.team_data, format='json')
         team_membership = TeamMembership.objects.first()
         self.assertEqual(self.competitor, team_membership.competitor)
@@ -209,7 +209,7 @@ class TeamManagementTests(APITestCase):
         self.client.force_authenticate(user=self.competitor)
 
     def test_list_team_by_id(self):
-        team1 = Team.objects.create(
+        Team.objects.create(
             name='Pandass',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
@@ -221,9 +221,10 @@ class TeamManagementTests(APITestCase):
             repository='https://github.com/HackSoftware',
             season=self.season
         )
-        url_get = reverse('hack_fmi:teams')
-        data = {'id': team2.id}
-        response = self.client.get(url_get, data, format='json')
+        url_get = reverse('hack_fmi:teams', kwargs={
+            'pk': team2.id,
+        })
+        response = self.client.get(url_get, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['name'], 'Pandass2')
 
@@ -244,6 +245,48 @@ class TeamManagementTests(APITestCase):
         response = self.client.get(url_get, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
+
+    def test_update_test(self):
+        team = Team.objects.create(
+            name='Pandass',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.season
+        )
+        team.add_member(self.competitor, is_leader=True)
+
+        data = {
+            'name': 'New panda name',
+        }
+
+        url_get = reverse('hack_fmi:teams', kwargs={
+                'pk': team.id,
+            }
+        )
+        response = self.client.patch(url_get, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Team.objects.first().name, data['name'])
+
+    def test_update_not_leader(self):
+        team = Team.objects.create(
+            name='Pandass',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.season
+        )
+        team.add_member(self.competitor, is_leader=False)
+
+        data = {
+            'name': 'New panda name',
+        }
+
+        url_get = reverse('hack_fmi:teams', kwargs={
+                'pk': team.id,
+            }
+        )
+        response = self.client.patch(url_get, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Team.objects.first().name, 'Pandass')
 
 
 class LeaveTeamTests(APITestCase):
@@ -271,7 +314,7 @@ class LeaveTeamTests(APITestCase):
             'repository': 'https://github.com/HackSoftwares',
             'technologies': [self.skills.id],
         }
-        url = reverse('hack_fmi:register_team')
+        url = reverse('hack_fmi:teams')
         self.client.post(url, data, format='json')
 
         self.team = Team.objects.first()
