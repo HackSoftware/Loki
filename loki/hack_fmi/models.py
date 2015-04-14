@@ -152,7 +152,7 @@ class Season(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.number
+        return str(self.number)
 
 
 class Invitation(models.Model):

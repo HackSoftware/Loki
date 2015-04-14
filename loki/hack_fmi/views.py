@@ -40,7 +40,7 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
         if self.request.user.get_competitor() != team.get_leader():
             raise PermissionDenied("You are not a leader!")
 
-        team = serializer.save()
+        serializer.save()
 
 
 @api_view(['POST'])
@@ -73,6 +73,7 @@ class InvitationView(APIView):
         logged_competitor = request.user.get_competitor()
         membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
         invited_competitor = Competitor.objects.filter(email=request.data['email']).first()
+        current_season = membership.team.season
         if not invited_competitor:
             error = {"error": "Този потребител все още не е регистриран в системата."}
             return Response(error, status=status.HTTP_403_FORBIDDEN)
@@ -84,7 +85,7 @@ class InvitationView(APIView):
             error = {"error": "Този участник вече е в отбора ти!"}
             return Response(error, status=status.HTTP_403_FORBIDDEN)
 
-        if len(membership.team.teammembership_set.all()) >= 6:
+        if len(membership.team.teammembership_set.all()) >= current_season.max_team_members_count:
             error = {"error": "В този отбор вече има повече от 6 човека. "
                               "Трябва някой да напусне отбора за да можеш да приемш тази покана!"}
             return Response(error, status=status.HTTP_403_FORBIDDEN)
