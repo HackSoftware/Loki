@@ -578,19 +578,36 @@ class InvitationTests(APITestCase):
 
 class SeasonTests(APITestCase):
 
+    def setUp(self):
+        self.skills = Skill.objects.create(name="C#")
+        Season.objects.create(
+            number=1,
+            topic='TestTopic1',
+            is_active=True,
+            sign_up_deadline="2015-5-1",
+            mentor_pick_start_date="2015-4-15",
+            mentor_pick_end_date="2015-5-1",
+        )
+        Season.objects.create(
+            number=2,
+            topic='TestTopic2',
+            is_active=True,
+            sign_up_deadline="2015-5-1",
+            mentor_pick_start_date="2015-4-15",
+            mentor_pick_end_date="2015-5-1",
+        )
+        self.competitor = Competitor.objects.create(
+            email='ivo@abv.bg',
+            full_name='Ivo Naidobriq',
+            faculty_number='123',
+        )
+
     def test_season_deactivates_automatically(self):
-        Season.objects.create(number=1,
-                              topic='TestTopic1',
-                              is_active=True,
-                              sign_up_deadline="2015-5-1",
-                              mentor_pick_start_date="2015-4-15",
-                              mentor_pick_end_date="2015-5-1",
-                              )
-        Season.objects.create(number=2,
-                              topic='TestTopic2',
-                              is_active=True,
-                              sign_up_deadline="2015-5-1",
-                              mentor_pick_start_date="2015-4-15",
-                              mentor_pick_end_date="2015-5-1",
-                              )
         self.assertFalse(Season.objects.filter(number=1).first().is_active)
+
+    def test_season_get_request(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor)
+        url = reverse('hack_fmi:season')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -136,6 +136,6 @@ class MentorListView(generics.ListAPIView):
 
 class SeasonListView(generics.ListAPIView):
     permission_classes = (IsHackFMIUser,)
-    queryset = Season.objects.filter(is_active=True).first()
+    queryset = Season.objects.filter(is_active=True)
     serializer_class = SeasonSerializer
 
