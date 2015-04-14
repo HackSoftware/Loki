@@ -102,3 +102,19 @@ class MentorSerializer(serializers.ModelSerializer):
             'name',
             'description',
         )
+
+
+class SeasonSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Season
+        fields = (
+            'id',
+            'number',
+            'topic',
+            'min_team_members_count',
+            'max_team_members_count',
+            'sign_up_deadline',
+            'mentor_pick_start_date',
+            'mentor_pick_end_date',
+        )
