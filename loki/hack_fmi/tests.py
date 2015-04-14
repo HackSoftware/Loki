@@ -149,7 +149,13 @@ class TeamRegistrationTests(APITestCase):
 
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
-        self.season = Season.objects.create(number=1, is_active=True)
+        self.season = Season.objects.create(number=1,
+                                            topic='TestTopic',
+                                            is_active=True,
+                                            sign_up_deadline="2015-5-1",
+                                            mentor_pick_start_date="2015-4-1",
+                                            mentor_pick_end_date="2015-5-1",
+                                            )
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
             full_name='Ivo Naidobriq',
@@ -199,7 +205,13 @@ class TeamManagementTests(APITestCase):
 
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
-        self.season = Season.objects.create(number=1, is_active=True)
+        self.season = Season.objects.create(number=1,
+                                            topic='TestTopic',
+                                            is_active=True,
+                                            sign_up_deadline="2015-5-1",
+                                            mentor_pick_start_date="2015-4-1",
+                                            mentor_pick_end_date="2015-5-1",
+                                            )
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
             full_name='Ivo Naidobriq',
@@ -293,7 +305,13 @@ class LeaveTeamTests(APITestCase):
 
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
-        self.season = Season.objects.create(number=1, is_active=True)
+        self.season = Season.objects.create(number=1,
+                                            topic='TestTopic',
+                                            is_active=True,
+                                            sign_up_deadline="2015-5-1",
+                                            mentor_pick_start_date="2015-4-1",
+                                            mentor_pick_end_date="2015-5-1",
+                                            )
         self.competitor1 = Competitor.objects.create(
             email='ivooo@abv.bg',
             full_name='Ivo Naidobriq',
@@ -348,7 +366,13 @@ class InvitationTests(APITestCase):
 
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
-        self.season = Season.objects.create(number=1, is_active=True)
+        self.season = Season.objects.create(number=1,
+                                            topic='TestTopic',
+                                            is_active=True,
+                                            sign_up_deadline="2015-5-1",
+                                            mentor_pick_start_date="2015-4-1",
+                                            mentor_pick_end_date="2015-5-1",
+                                            )
         self.competitor_leader = Competitor.objects.create(
             email='ivo@abv.bg',
             full_name='Ivo Naidobriq',
@@ -555,6 +579,18 @@ class InvitationTests(APITestCase):
 class SeasonTests(APITestCase):
 
     def test_season_deactivates_automatically(self):
-        Season.objects.create(number=1, is_active=True)
-        Season.objects.create(number=2, is_active=True)
+        Season.objects.create(number=1,
+                              topic='TestTopic1',
+                              is_active=True,
+                              sign_up_deadline="2015-5-1",
+                              mentor_pick_start_date="2015-4-15",
+                              mentor_pick_end_date="2015-5-1",
+                              )
+        Season.objects.create(number=2,
+                              topic='TestTopic2',
+                              is_active=True,
+                              sign_up_deadline="2015-5-1",
+                              mentor_pick_start_date="2015-4-15",
+                              mentor_pick_end_date="2015-5-1",
+                              )
         self.assertFalse(Season.objects.filter(number=1).first().is_active)
