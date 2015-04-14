@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
 from .models import (Skill, Competitor, BaseUser, TeamMembership,
-                     Season, Team, Invitation)
+                     Season, Team, Invitation, Mentor)
 
 
 class SkillTests(APITestCase):
@@ -366,13 +366,14 @@ class InvitationTests(APITestCase):
 
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
-        self.season = Season.objects.create(number=1,
-                                            topic='TestTopic',
-                                            is_active=True,
-                                            sign_up_deadline="2015-5-1",
-                                            mentor_pick_start_date="2015-4-1",
-                                            mentor_pick_end_date="2015-5-1",
-                                            )
+        self.season = Season.objects.create(
+            number=1,
+            topic='TestTopic',
+            is_active=True,
+            sign_up_deadline="2015-5-1",
+            mentor_pick_start_date="2015-4-1",
+            mentor_pick_end_date="2015-5-1",
+        )
         self.competitor_leader = Competitor.objects.create(
             email='ivo@abv.bg',
             full_name='Ivo Naidobriq',
@@ -605,9 +606,73 @@ class SeasonTests(APITestCase):
     def test_season_deactivates_automatically(self):
         self.assertFalse(Season.objects.filter(number=1).first().is_active)
 
-    def test_season_get_request(self):
+    def test_get_season(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.competitor)
         url = reverse('hack_fmi:season')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class MentorTests(APITestCase):
+
+    def setUp(self):
+        self.skills = Skill.objects.create(name="C#")
+        self.season = Season.objects.create(
+            number=1,
+            topic='TestTopic',
+            is_active=True,
+            sign_up_deadline="2015-5-1",
+            mentor_pick_start_date="2015-4-1",
+            mentor_pick_end_date="2015-5-1",
+        )
+        self.competitor_leader = Competitor.objects.create(
+            email='ivo@abv.bg',
+            full_name='Ivo Naidobriq',
+            faculty_number='123',
+        )
+        self.team = Team.objects.create(
+            name='Pandas',
+            idea_description='GameDevelopers',
+            repository='https://github.com/HackSoftware',
+            season=self.season,
+        )
+        self.team_membership = TeamMembership.objects.create(
+            competitor=self.competitor_leader,
+            team=self.team,
+            is_leader=True,
+        )
+        self.mentor = Mentor.objects.create(
+            name='Sten',
+            description='I help!',
+        )
+        self.mentor2 = Mentor.objects.create(
+            name='Sten2',
+            description='I help!',
+        )
+
+    def test_get_mentors(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_leader)
+        url = reverse('hack_fmi:mentors')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_assign_mentor_to_leader_team(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_leader)
+        url = reverse('hack_fmi:assign_mentor')
+        data = {'id': self.mentor.id}
+        self.client.put(url, data, format='json')
+        name = self.team.mentors.get(id=self.mentor.id)
+        self.assertEqual(str(name), "Sten")
+
+    def test_assign_more_than_allowed_mentors(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_leader)
+        url = reverse('hack_fmi:assign_mentor')
+        data = {'id': self.mentor.id}
+        self.client.put(url, data, format='json')
+        data = {'id': self.mentor2.id}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
