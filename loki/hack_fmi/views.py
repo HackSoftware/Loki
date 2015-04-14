@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import PermissionDenied
 
-from .models import Skill, Competitor, Team, TeamMembership, Mentor
+from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
 from .serializers import (SkillSerializer, TeamSerializer,
                           Invitation, InvitationSerializer, MentorSerializer)
 
@@ -136,3 +136,5 @@ class MentorListView(generics.ListAPIView):
 
 class SeasonListView(generics.ListAPIView):
     permission_classes = (IsHackFMIUser,)
+    queryset = Season.objects.filter(is_active=True).first()
+    serializer_class = SeasonSerializer
