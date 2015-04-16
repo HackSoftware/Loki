@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('hack_fmi', '0028_team_members_needed_desc'),
+        ('hack_fmi', '0028_auto_20150416_1436'),
     ]
 
     operations = [
