@@ -115,6 +115,7 @@ class Team(models.Model):
     season = models.ForeignKey('Season', default=1)
     need_more_members = models.BooleanField(default=True)
     room = models.ForeignKey('Room', null=True, blank=True)
+    members_needed_desc = models.TextField(blank=True)
 
     def add_member(self, competitor, is_leader=False):
         return TeamMembership.objects.create(
