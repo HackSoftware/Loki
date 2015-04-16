@@ -6,8 +6,7 @@ from ckeditor.fields import RichTextField
 
 class UserManager(BaseUserManager):
 
-    def __create_user(self, email, password, is_admin, is_active,
-                      full_name):
+    def __create_user(self, email, password, is_admin, is_active, full_name):
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -103,7 +102,7 @@ class TeamMembership(models.Model):
     is_leader = models.BooleanField(default=False)
 
     def __str__(self):
-        return "{} {}".foramt(self.competitor, self.team)
+        return "{} {}".format(self.competitor, self.team)
 
 
 class Team(models.Model):
@@ -114,6 +113,7 @@ class Team(models.Model):
     repository = models.URLField(blank=True)
     technologies = models.ManyToManyField(Skill)
     season = models.ForeignKey('Season', default=1)
+    need_more_members = models.BooleanField(default=True)
 
     def add_member(self, competitor, is_leader=False):
         return TeamMembership.objects.create(

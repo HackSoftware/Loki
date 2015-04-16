@@ -177,6 +177,7 @@ class TeamRegistrationTests(APITestCase):
         self.assertEqual(len(response.data['members']), 1)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(response.data['technologies']), 1)
+        self.assertEqual(len(response.data['technologies_full']), 1)
 
     def test_registered_team_has_leader(self):
         url = reverse('hack_fmi:teams')
@@ -227,7 +228,7 @@ class TeamManagementTests(APITestCase):
             name='Pandass',
             idea_description='GameDevelopers',
             repository='https://github.com/HackSoftware',
-            season=self.season
+            season=self.season,
         )
         team2 = Team.objects.create(
             name='Pandass2',
@@ -235,9 +236,11 @@ class TeamManagementTests(APITestCase):
             repository='https://github.com/HackSoftware',
             season=self.season
         )
+
         url_get = reverse('hack_fmi:teams', kwargs={
             'pk': team2.id,
         })
+
         response = self.client.get(url_get, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['name'], 'Pandass2')
