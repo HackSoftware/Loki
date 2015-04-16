@@ -6,8 +6,7 @@ from ckeditor.fields import RichTextField
 
 class UserManager(BaseUserManager):
 
-    def __create_user(self, email, password, is_admin, is_active,
-                      full_name):
+    def __create_user(self, email, password, is_admin, is_active, full_name):
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -146,7 +145,7 @@ class Season(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.number
+        return str(self.number)
 
 
 class Invitation(models.Model):
