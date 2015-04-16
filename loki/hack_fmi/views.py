@@ -1,3 +1,4 @@
+from datetime import date
 from django.core.mail import send_mail
 
 from rest_framework.views import APIView
@@ -33,6 +34,9 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         team = serializer.save()
+        season = Season.objects.filter(is_active=True).first()
+        if season.sign_up_deadline < date.today():
+            raise PermissionDenied("You are pass the deadline for creating teams!")
         team.add_member(self.request.user.get_competitor(), is_leader=True)
 
     def perform_update(self, serializer):
@@ -148,12 +152,15 @@ class AssignMentor(APIView):
         mentor = Mentor.objects.get(id=request.data['id'])
         membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
         season = membership.team.season
+        if season.mentor_pick_start_date > date.today() or season.mentor_pick_end_date < date.today():
+            error = {"error": "В момента не може да избирате ментор."}
+            return Response(error, status.HTTP_403_FORBIDDEN)
         if membership.is_leader and len(membership.team.mentors.all()) >= season.max_mentor_pick:
-            error = {"error": "Този отбор не може да има повече ментори!"}
+            error = {"error": "Този отбор не може да има повече ментори."}
             return Response(error, status.HTTP_403_FORBIDDEN)
         if membership.is_leader and len(membership.team.mentors.all()) < season.max_mentor_pick:
             membership.team.mentors.add(mentor)
             return Response(status=status.HTTP_200_OK)
         if not membership.is_leader:
-            error = {"error": "Не си лидер на този отбор, за да избираш ментори"}
+            error = {"error": "Не си лидер на този отбор, за да избираш ментори."}
             return Response(error, status.HTTP_403_FORBIDDEN)

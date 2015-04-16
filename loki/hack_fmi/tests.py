@@ -149,13 +149,14 @@ class TeamRegistrationTests(APITestCase):
 
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
-        self.season = Season.objects.create(number=1,
-                                            topic='TestTopic',
-                                            is_active=True,
-                                            sign_up_deadline="2015-5-1",
-                                            mentor_pick_start_date="2015-4-1",
-                                            mentor_pick_end_date="2015-5-1",
-                                            )
+        self.season = Season.objects.create(
+            number=1,
+            topic='TestTopic',
+            is_active=True,
+            sign_up_deadline="2016-5-1",
+            mentor_pick_start_date="2016-4-1",
+            mentor_pick_end_date="2016-5-1",
+        )
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
             full_name='Ivo Naidobriq',
@@ -205,13 +206,14 @@ class TeamManagementTests(APITestCase):
 
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
-        self.season = Season.objects.create(number=1,
-                                            topic='TestTopic',
-                                            is_active=True,
-                                            sign_up_deadline="2015-5-1",
-                                            mentor_pick_start_date="2015-4-1",
-                                            mentor_pick_end_date="2015-5-1",
-                                            )
+        self.season = Season.objects.create(
+            number=1,
+            topic='TestTopic',
+            is_active=True,
+            sign_up_deadline="2016-5-1",
+            mentor_pick_start_date="2016-4-1",
+            mentor_pick_end_date="2016-5-1",
+        )
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
             full_name='Ivo Naidobriq',
@@ -305,13 +307,14 @@ class LeaveTeamTests(APITestCase):
 
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
-        self.season = Season.objects.create(number=1,
-                                            topic='TestTopic',
-                                            is_active=True,
-                                            sign_up_deadline="2015-5-1",
-                                            mentor_pick_start_date="2015-4-1",
-                                            mentor_pick_end_date="2015-5-1",
-                                            )
+        self.season = Season.objects.create(
+            number=1,
+            topic='TestTopic',
+            is_active=True,
+            sign_up_deadline="2016-5-1",
+            mentor_pick_start_date="2016-4-1",
+            mentor_pick_end_date="2016-5-1",
+        )
         self.competitor1 = Competitor.objects.create(
             email='ivooo@abv.bg',
             full_name='Ivo Naidobriq',
@@ -370,9 +373,9 @@ class InvitationTests(APITestCase):
             number=1,
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2015-5-1",
-            mentor_pick_start_date="2015-4-1",
-            mentor_pick_end_date="2015-5-1",
+            sign_up_deadline="2016-5-1",
+            mentor_pick_start_date="2016-4-1",
+            mentor_pick_end_date="2016-5-1",
         )
         self.competitor_leader = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -585,17 +588,17 @@ class SeasonTests(APITestCase):
             number=1,
             topic='TestTopic1',
             is_active=True,
-            sign_up_deadline="2015-5-1",
-            mentor_pick_start_date="2015-4-15",
-            mentor_pick_end_date="2015-5-1",
+            sign_up_deadline="2016-5-1",
+            mentor_pick_start_date="2016-4-15",
+            mentor_pick_end_date="2016-5-1",
         )
         Season.objects.create(
             number=2,
             topic='TestTopic2',
             is_active=True,
-            sign_up_deadline="2015-5-1",
-            mentor_pick_start_date="2015-4-15",
-            mentor_pick_end_date="2015-5-1",
+            sign_up_deadline="2016-5-1",
+            mentor_pick_start_date="2016-4-15",
+            mentor_pick_end_date="2016-5-1",
         )
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
