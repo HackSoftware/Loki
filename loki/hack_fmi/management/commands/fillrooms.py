@@ -1,4 +1,4 @@
-from django.core.management.base import BaseCommand
+from django.core.management.base import BaseCommand, CommandError
 from hack_fmi.models import Room, Team
 
 
@@ -7,7 +7,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         all_rooms = Room.objects.all()
+        capacity = sum([room.capacity for room in all_rooms])
         all_teams = Team.objects.all()
+        if len(all_teams) > capacity:
+            raise CommandError('Teams are more than capacity')
         all_teams = list(all_teams)
         while all_teams:
             for room in all_rooms:

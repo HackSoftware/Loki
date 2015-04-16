@@ -1,3 +1,4 @@
+from django.core.management.base import CommandError
 from django.core.management import call_command
 from django.core.urlresolvers import reverse
 from django.core import mail
@@ -713,3 +714,14 @@ class RoomTests(APITestCase):
         call_command('fillrooms')
         for team in Team.objects.all():
             self.assertTrue(team.room.number)
+
+    def test_more_teams_than_rooms(self):
+        for i in range(10):
+            Team.objects.create(
+                name='Pandas{0}'.format(i+15),
+                idea_description='GameDevelopers',
+                repository='https://github.com/HackSoftware',
+                season=self.season,
+            )
+        with self.assertRaises(CommandError):
+            call_command('fillrooms')

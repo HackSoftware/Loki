@@ -13,8 +13,14 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='team',
+            name='members_needed_desc',
+            field=models.TextField(blank=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='team',
             name='room',
-            field=models.ForeignKey(blank=True, default=0, to='hack_fmi.Room'),
-            preserve_default=False,
+            field=models.ForeignKey(null=True, blank=True, to='hack_fmi.Room'),
+            preserve_default=True,
         ),
     ]
