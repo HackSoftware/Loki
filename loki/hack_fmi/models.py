@@ -175,3 +175,9 @@ class Mentor(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Room(models.Model):
+    number = models.IntegerField()
+    season = models.ForeignKey(Season)
+    capacity = models.SmallIntegerField()
