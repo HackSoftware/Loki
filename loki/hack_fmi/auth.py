@@ -19,6 +19,15 @@ class RegistrationView(views.RegistrationView):
         return {
             'subject_template_name': settings.BASE_DIR +  '/hack_fmi/templates/activation_email_subject.txt',
             'plain_body_template_name': settings.BASE_DIR + '/hack_fmi/templates/activation_email_body.txt',
+
+        }
+
+
+class PasswordResetView(views.PasswordResetView):
+    def get_send_email_extras(self):
+        return {
+            'subject_template_name': settings.BASE_DIR + '/hack_fmi/templates/password_reset_email_subject.txt',
+            'plain_body_template_name': settings.BASE_DIR + '/hack_fmi/templates/password_reset_email_body.txt',
         }
 
 
