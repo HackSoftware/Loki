@@ -17,4 +17,10 @@ class Migration(migrations.Migration):
             field=models.TextField(blank=True),
             preserve_default=True,
         ),
+        migrations.AddField(
+            model_name='team',
+            name='room',
+            field=models.ForeignKey(null=True, blank=True, to='hack_fmi.Room'),
+            preserve_default=True,
+        ),
     ]

@@ -115,6 +115,7 @@ class Team(models.Model):
     season = models.ForeignKey('Season', default=1)
     need_more_members = models.BooleanField(default=True)
     members_needed_desc = models.CharField(max_length=255, blank=True)
+    room = models.ForeignKey('Room', null=True, blank=True)
 
     def add_member(self, competitor, is_leader=False):
         return TeamMembership.objects.create(
@@ -182,3 +183,9 @@ class Room(models.Model):
     number = models.IntegerField()
     season = models.ForeignKey(Season)
     capacity = models.SmallIntegerField()
+
+    def get_number_of_teams(self):
+        return len(self.team_set.all())
+
+    def is_full(self):
+        return len(self.team_set.all()) >= self.capacity
