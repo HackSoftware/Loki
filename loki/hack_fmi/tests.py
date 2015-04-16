@@ -1,3 +1,4 @@
+from django.core.management import call_command
 from django.core.urlresolvers import reverse
 from django.core import mail
 
@@ -5,7 +6,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
 from .models import (Skill, Competitor, BaseUser, TeamMembership,
-                     Season, Team, Invitation, Mentor)
+                     Season, Team, Invitation, Mentor, Room)
 
 
 class SkillTests(APITestCase):
@@ -682,3 +683,33 @@ class MentorTests(APITestCase):
         data = {'id': self.mentor2.id}
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+
+class RoomTests(APITestCase):
+    def setUp(self):
+        self.season = Season.objects.create(
+            number=1,
+            topic='TestTopic',
+            is_active=True,
+            sign_up_deadline="2015-5-1",
+            mentor_pick_start_date="2015-4-1",
+            mentor_pick_end_date="2015-5-1",
+        )
+        for i in range(10):
+            Team.objects.create(
+                name='Pandas{0}'.format(i),
+                idea_description='GameDevelopers',
+                repository='https://github.com/HackSoftware',
+                season=self.season,
+            )
+        for i in [1, 4, 10]:
+            Room.objects.create(
+                number=100+i,
+                season=self.season,
+                capacity=i,
+            )
+
+    def test_fill_rooms(self):
+        call_command('fillrooms')
+        for team in Team.objects.all():
+            self.assertTrue(team.room.number)

@@ -114,6 +114,7 @@ class Team(models.Model):
     technologies = models.ManyToManyField(Skill)
     season = models.ForeignKey('Season', default=1)
     need_more_members = models.BooleanField(default=True)
+    room = models.ForeignKey('Room', null=True, blank=True)
 
     def add_member(self, competitor, is_leader=False):
         return TeamMembership.objects.create(
@@ -181,3 +182,9 @@ class Room(models.Model):
     number = models.IntegerField()
     season = models.ForeignKey(Season)
     capacity = models.SmallIntegerField()
+
+    def get_number_of_teams(self):
+        return len(self.team_set.all())
+
+    def is_full(self):
+        return len(self.team_set.all()) >= self.capacity
