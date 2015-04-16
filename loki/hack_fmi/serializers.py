@@ -77,6 +77,7 @@ class TeamSerializer(serializers.ModelSerializer):
             'repository',
             'technologies',
             'technologies_full',
+            'need_more_members'
         )
 
     def create(self, validated_data):

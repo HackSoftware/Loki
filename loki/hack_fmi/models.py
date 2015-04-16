@@ -102,7 +102,7 @@ class TeamMembership(models.Model):
     is_leader = models.BooleanField(default=False)
 
     def __str__(self):
-        return "{} {}".foramt(self.competitor, self.team)
+        return "{} {}".format(self.competitor, self.team)
 
 
 class Team(models.Model):
@@ -113,6 +113,7 @@ class Team(models.Model):
     repository = models.URLField(blank=True)
     technologies = models.ManyToManyField(Skill)
     season = models.ForeignKey('Season', default=1)
+    need_more_members = models.BooleanField(default=True)
 
     def add_member(self, competitor, is_leader=False):
         return TeamMembership.objects.create(
