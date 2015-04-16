@@ -31,10 +31,11 @@ EMAIL_HOST_PASSWORD = ''
 DJOSER = {
     'DOMAIN': 'frontend.com',
     'SITE_NAME': 'Frontend',
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': '#/password_reset/{uid}/{token}',
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'LOGIN_AFTER_ACTIVATION': True,
     'SEND_ACTIVATION_EMAIL': True,
+    'PASSWORD_RESET_CONFIRM_RETYPE': True,
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
