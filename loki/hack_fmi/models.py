@@ -108,6 +108,7 @@ class TeamMembership(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
     members = models.ManyToManyField(Competitor, through='TeamMembership')
+    mentors = models.ManyToManyField('Mentor')
     idea_description = models.TextField()
     repository = models.URLField(blank=True)
     technologies = models.ManyToManyField(Skill)
@@ -131,6 +132,13 @@ class Team(models.Model):
 
 class Season(models.Model):
     number = models.SmallIntegerField(default=0)
+    topic = models.CharField(max_length=100)
+    min_team_members_count = models.SmallIntegerField(default=1)
+    max_team_members_count = models.SmallIntegerField(default=6)
+    sign_up_deadline = models.DateField()
+    mentor_pick_start_date = models.DateField()
+    mentor_pick_end_date = models.DateField()
+    max_mentor_pick = models.SmallIntegerField(default=1)
     is_active = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):

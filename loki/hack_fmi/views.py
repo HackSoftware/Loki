@@ -7,9 +7,9 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import PermissionDenied
 
-from .models import Skill, Competitor, Team, TeamMembership, Mentor
+from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
 from .serializers import (SkillSerializer, TeamSerializer,
-                          Invitation, InvitationSerializer, MentorSerializer)
+                          Invitation, InvitationSerializer, MentorSerializer, SeasonSerializer)
 
 from .premissions import IsHackFMIUser
 
@@ -40,7 +40,7 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
         if self.request.user.get_competitor() != team.get_leader():
             raise PermissionDenied("You are not a leader!")
 
-        team = serializer.save()
+        serializer.save()
 
 
 @api_view(['POST'])
@@ -73,6 +73,7 @@ class InvitationView(APIView):
         logged_competitor = request.user.get_competitor()
         membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
         invited_competitor = Competitor.objects.filter(email=request.data['email']).first()
+        current_season = membership.team.season
         if not invited_competitor:
             error = {"error": "Този потребител все още не е регистриран в системата."}
             return Response(error, status=status.HTTP_403_FORBIDDEN)
@@ -84,7 +85,7 @@ class InvitationView(APIView):
             error = {"error": "Този участник вече е в отбора ти!"}
             return Response(error, status=status.HTTP_403_FORBIDDEN)
 
-        if len(membership.team.teammembership_set.all()) >= 6:
+        if len(membership.team.teammembership_set.all()) >= current_season.max_team_members_count:
             error = {"error": "В този отбор вече има повече от 6 човека. "
                               "Трябва някой да напусне отбора за да можеш да приемш тази покана!"}
             return Response(error, status=status.HTTP_403_FORBIDDEN)
@@ -131,3 +132,28 @@ class MentorListView(generics.ListAPIView):
     permission_classes = (IsHackFMIUser,)
     queryset = Mentor.objects.all()
     serializer_class = MentorSerializer
+
+
+class SeasonListView(generics.ListAPIView):
+    permission_classes = (IsHackFMIUser,)
+    queryset = Season.objects.filter(is_active=True)
+    serializer_class = SeasonSerializer
+
+
+class AssignMentor(APIView):
+    permission_classes = (IsHackFMIUser,)
+
+    def put(self, request, format=None):
+        logged_competitor = request.user.get_competitor()
+        mentor = Mentor.objects.get(id=request.data['id'])
+        membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
+        season = membership.team.season
+        if membership.is_leader and len(membership.team.mentors.all()) >= season.max_mentor_pick:
+            error = {"error": "Този отбор не може да има повече ментори!"}
+            return Response(error, status.HTTP_403_FORBIDDEN)
+        if membership.is_leader and len(membership.team.mentors.all()) < season.max_mentor_pick:
+            membership.team.mentors.add(mentor)
+            return Response(status=status.HTTP_200_OK)
+        if not membership.is_leader:
+            error = {"error": "Не си лидер на този отбор, за да избираш ментори"}
+            return Response(error, status.HTTP_403_FORBIDDEN)
