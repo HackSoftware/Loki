@@ -33,10 +33,10 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
         return queryset
 
     def perform_create(self, serializer):
-        team = serializer.save()
         season = Season.objects.filter(is_active=True).first()
         if season.sign_up_deadline < date.today():
             raise PermissionDenied("You are pass the deadline for creating teams!")
+        team = serializer.save()
         team.add_member(self.request.user.get_competitor(), is_leader=True)
 
     def perform_update(self, serializer):
