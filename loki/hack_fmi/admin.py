@@ -39,7 +39,7 @@ class InvitationAdmin(admin.ModelAdmin):
 
 
 class MentorAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'description')
 
     class Meta:
         model = Mentor
@@ -57,6 +57,7 @@ class RoomAdmin(admin.ModelAdmin):
 
     class Meta:
         model = Room
+
 
 admin.site.register(Team, TeamAdmin)
 admin.site.register(Skill, SkillAdmin)

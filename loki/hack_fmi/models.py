@@ -190,3 +190,6 @@ class Room(models.Model):
 
     def is_full(self):
         return len(self.team_set.all()) >= self.capacity
+
+    def __str__(self):
+        return str(self.number)
