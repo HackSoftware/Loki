@@ -136,6 +136,7 @@ class Team(models.Model):
 class Season(models.Model):
     number = models.SmallIntegerField(default=0)
     topic = models.CharField(max_length=100)
+    front_page = RichTextField(blank=True)
     min_team_members_count = models.SmallIntegerField(default=1)
     max_team_members_count = models.SmallIntegerField(default=6)
     sign_up_deadline = models.DateField()
