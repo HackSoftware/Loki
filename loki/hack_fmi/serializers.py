@@ -54,6 +54,17 @@ class CompetitorSerializer(serializers.ModelSerializer):
         return new_user
 
 
+class MentorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Mentor
+        fields = (
+            'id',
+            'name',
+            'description',
+        )
+
+
 class TeamSerializer(serializers.ModelSerializer):
     members = CompetitorSerializer(many=True, read_only=True)
     technologies = serializers.PrimaryKeyRelatedField(
@@ -68,6 +79,19 @@ class TeamSerializer(serializers.ModelSerializer):
         source='technologies',
     )
 
+    mentors = serializers.PrimaryKeyRelatedField(
+        many=True,
+        read_only=False,
+        queryset=Mentor.objects.all(),
+        required=False,
+    )
+
+    mentors_full = MentorSerializer(
+        many=True,
+        read_only=True,
+        source='mentors',
+    )
+
     class Meta:
         model = Team
         fields = (
@@ -77,6 +101,8 @@ class TeamSerializer(serializers.ModelSerializer):
             'repository',
             'technologies',
             'technologies_full',
+            'mentors',
+            'mentors_full',
             'need_more_members',
             'members_needed_desc',
         )
@@ -85,6 +111,16 @@ class TeamSerializer(serializers.ModelSerializer):
         team = super(TeamSerializer, self).create(validated_data)
         team.season = Season.objects.get(is_active=True)
         return team
+
+    def validate(self, data):
+        """
+         Check that number of mentors is less than allowed.
+        """
+        season = Season.objects.get(is_active=True)
+        if any('mentors' in key for key in data):
+            if data['mentors'] > season.max_mentor_pick:
+                raise serializers.ValidationError("You are not allowed to pick that much mentors")
+        return data
 
 
 class InvitationSerializer(serializers.ModelSerializer):
@@ -96,17 +132,6 @@ class InvitationSerializer(serializers.ModelSerializer):
             'id',
             'team',
             'competitor',
-        )
-
-
-class MentorSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Mentor
-        fields = (
-            'id',
-            'name',
-            'description',
         )
 
 

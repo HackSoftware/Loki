@@ -43,7 +43,6 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
         team = self.get_object()
         if self.request.user.get_competitor() != team.get_leader():
             raise PermissionDenied("You are not a leader!")
-
         serializer.save()
 
 

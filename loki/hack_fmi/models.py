@@ -108,7 +108,7 @@ class TeamMembership(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=100, unique=True)
     members = models.ManyToManyField(Competitor, through='TeamMembership')
-    mentors = models.ManyToManyField('Mentor')
+    mentors = models.ManyToManyField('Mentor', blank=True, null=True)
     idea_description = models.TextField()
     repository = models.URLField(blank=True)
     technologies = models.ManyToManyField(Skill)
