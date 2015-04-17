@@ -118,6 +118,7 @@ class SeasonSerializer(serializers.ModelSerializer):
             'id',
             'number',
             'topic',
+            'front_page',
             'min_team_members_count',
             'max_team_members_count',
             'sign_up_deadline',
