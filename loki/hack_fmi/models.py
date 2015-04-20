@@ -157,7 +157,7 @@ class Season(models.Model):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return str(self.number)
+        return "HackFMI{}".format(self.number)
 
 
 class Invitation(models.Model):
@@ -175,6 +175,7 @@ class Mentor(models.Model):
     name = models.CharField(max_length=100)
     description = RichTextField()
     picture = models.ImageField(blank=True)
+    seasons = models.ManyToManyField('Season')
 
     def __str__(self):
         return self.name

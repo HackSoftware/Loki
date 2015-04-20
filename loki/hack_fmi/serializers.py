@@ -62,6 +62,7 @@ class MentorSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'description',
+            'picture',
         )
 
 

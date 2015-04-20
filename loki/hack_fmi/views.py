@@ -132,7 +132,7 @@ class InvitationView(APIView):
 
 
 class MentorListView(generics.ListAPIView):
-    permission_classes = (IsHackFMIUser,)
+    permission_classes = (AllowAny,)
     queryset = Mentor.objects.all()
     serializer_class = MentorSerializer
 
