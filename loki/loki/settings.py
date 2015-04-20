@@ -32,6 +32,7 @@ INSTALLED_APPS = (
     'corsheaders',
     'djoser',
     'ckeditor',
+    'post_office',
 
     'hack_fmi',
 )
@@ -108,3 +109,5 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'full',
     },
 }
+
+EMAIL_BACKEND = 'post_office.EmailBackend'

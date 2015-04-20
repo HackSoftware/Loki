@@ -27,10 +27,12 @@ DATABASES = {
 }
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = ''
-EMAIL_PORT = 123
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST = 'www.hackfmi.com'
+EMAIL_PORT = 27
+EMAIL_HOST_USER = 'register@hackfmi.com'
+EMAIL_HOST_PASSWORD = 'lololo123'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 DJOSER = {
     'DOMAIN': 'frontend.com',

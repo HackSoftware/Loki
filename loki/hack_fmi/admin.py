@@ -18,7 +18,9 @@ class CompetitorAdmin(admin.ModelAdmin):
 
 
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'idea_description')
+    list_display = ('name', 'idea_description', 'season')
+
+    list_filter = ('season',)
 
     class Meta:
         model = Team
