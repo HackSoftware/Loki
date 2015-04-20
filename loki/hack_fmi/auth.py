@@ -26,11 +26,14 @@ class RegistrationView(views.RegistrationView):
 
 
 class PasswordResetView(views.PasswordResetView):
-    def get_send_email_extras(self):
-        return {
-            'subject_template_name': settings.BASE_DIR + '/hack_fmi/templates/password_reset_email_subject.txt',
-            'plain_body_template_name': settings.BASE_DIR + '/hack_fmi/templates/password_reset_email_body.txt',
-        }
+
+    def send_email(self, to_email, from_email, context):
+        mail.send(
+            to_email,
+            from_email,
+            template='password_reset',
+            context=context,
+        )
 
 
 class Login(views.LoginView):
