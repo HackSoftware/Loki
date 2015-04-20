@@ -1,10 +1,12 @@
 from django.core.management.base import CommandError
 from django.core.management import call_command
 from django.core.urlresolvers import reverse
-from django.core import mail
+from post_office import mail
 
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
+
+from post_office.models import EmailTemplate
 
 from .models import (Skill, Competitor, BaseUser, TeamMembership,
                      Season, Team, Invitation, Mentor, Room)
@@ -312,6 +314,11 @@ class LeaveTeamTests(APITestCase):
 
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
+        self.template = EmailTemplate.objects.create(
+            name='delete_team',
+            subject='Изтрит отбор HackFMI',
+            content='Лидера на твоя отбор напусна и отбора беше изтрит.',
+        )
         self.season = Season.objects.create(
             number=1,
             topic='TestTopic',
@@ -365,8 +372,9 @@ class LeaveTeamTests(APITestCase):
     def test_leader_leaves_team_emails_sent(self):
         url = reverse('hack_fmi:leave_team')
         self.client.post(url, format='json')
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(len(mail.outbox[0].to), 2)
+
+        self.assertEqual(len(mail.get_queued()), 1)
+        self.assertEqual(len(mail.get_queued()[0].to), 2)
 
 
 class InvitationTests(APITestCase):

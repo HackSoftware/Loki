@@ -1,5 +1,4 @@
 from datetime import date
-from django.core.mail import send_mail
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -7,6 +6,8 @@ from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import PermissionDenied
+
+from post_office import mail
 
 from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
 from .serializers import (SkillSerializer, TeamSerializer,
@@ -55,13 +56,10 @@ def leave_team(request):
     if membership.is_leader:
         members = list(team.members.all())
         user_emails = [member.email for member in members]
-
-        send_mail(
-            'Изтрит отбор HackFMI',
-            'Лидера на твоя отбор напусна и отбора беше изтрит.',
-            'register@hackfmi.com',
+        mail.send(
             user_emails,
-            fail_silently=False
+            'register@hackfmi.com',
+            template='delete_team',
         )
         team.delete()
         return Response(status=status.HTTP_200_OK)
