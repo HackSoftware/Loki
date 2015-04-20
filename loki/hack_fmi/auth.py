@@ -5,22 +5,24 @@ from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
 
 from djoser import views
+from post_office import mail
 
 from .serializers import CompetitorSerializer
 from .premissions import IsHackFMIUser
 
 
 class RegistrationView(views.RegistrationView):
+
+    def send_email(self, to_email, from_email, context):
+        mail.send(
+            to_email,
+            from_email,
+            template='user_register',
+            context=context,
+        )
+
     def get_serializer_class(self):
         return CompetitorSerializer
-
-    def get_send_email_extras(self):
-
-        return {
-            'subject_template_name': settings.BASE_DIR +  '/hack_fmi/templates/activation_email_subject.txt',
-            'plain_body_template_name': settings.BASE_DIR + '/hack_fmi/templates/activation_email_body.txt',
-
-        }
 
 
 class PasswordResetView(views.PasswordResetView):

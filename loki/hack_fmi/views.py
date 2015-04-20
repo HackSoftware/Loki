@@ -58,6 +58,7 @@ def leave_team(request):
         user_emails = [member.email for member in members]
         mail.send(
             user_emails,
+            # TODO: Dont hard code that :(
             'register@hackfmi.com',
             template='delete_team',
         )

@@ -27,6 +27,11 @@ class RegistrationTests(APITestCase):
 
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
+        self.user_register = EmailTemplate.objects.create(
+            name='user_register',
+            subject='Регистриран потребител',
+            content='Lorem ipsum dolor sit amet, consectetur adipisicing'
+        )
 
     def test_register_user(self):
         data = {
@@ -70,7 +75,7 @@ class RegistrationTests(APITestCase):
         url = reverse('hack_fmi:register')
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(mail.get_queued()), 1)
 
     def test_email_sent_new_template(self):
         data = {
@@ -84,7 +89,7 @@ class RegistrationTests(APITestCase):
         url = reverse('hack_fmi:register')
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIn("Ти успешно се регистрира за HackFMI 5! През нашата нова система можеш лесно да намериш отбор, с който да се състезаваш.  Ако вече имаш идея можеш да създадеш отбор и да поканиш още хора в него.", mail.outbox[0].body)
+        self.assertIn(self.user_register.content, mail.get_queued()[0].message)
 
 
 class LoginTests(APITestCase):
