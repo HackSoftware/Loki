@@ -133,7 +133,7 @@ class InvitationView(APIView):
 
 class MentorListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
-    queryset = Mentor.objects.all()
+    queryset = Mentor.objects.filter(seasons__is_active=True)
     serializer_class = MentorSerializer
 
 
