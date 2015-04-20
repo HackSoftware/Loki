@@ -1,4 +1,5 @@
 from datetime import date
+from django.conf import settings
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,7 +13,6 @@ from post_office import mail
 from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
 from .serializers import (SkillSerializer, TeamSerializer,
                           Invitation, InvitationSerializer, MentorSerializer, SeasonSerializer)
-
 from .premissions import IsHackFMIUser
 
 
@@ -56,10 +56,10 @@ def leave_team(request):
     if membership.is_leader:
         members = list(team.members.all())
         user_emails = [member.email for member in members]
+        sender = settings.EMAIL_HOST_USER
         mail.send(
             user_emails,
-            # TODO: Dont hard code that :(
-            'register@hackfmi.com',
+            sender,
             template='delete_team',
         )
         team.delete()
