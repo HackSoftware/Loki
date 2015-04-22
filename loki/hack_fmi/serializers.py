@@ -96,6 +96,7 @@ class TeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = (
+            'id',
             'name',
             'members',
             'idea_description',
