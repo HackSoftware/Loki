@@ -131,7 +131,7 @@ SUIT_CONFIG = {
     'CONFIRM_UNSAVED_CHANGES': True,  # Default True
 
     # menu
-    'SEARCH_URL': '/admin/auth/user/',
+    'SEARCH_URL': '/admin/hack_fmi/competitor/',
     'MENU_ICONS': {
         'sites': 'icon-leaf',
         'auth': 'icon-lock',
