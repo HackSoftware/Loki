@@ -162,3 +162,14 @@ class AssignMentor(APIView):
         if not membership.is_leader:
             error = {"error": "Не си лидер на този отбор, за да избираш ментори."}
             return Response(error, status.HTTP_403_FORBIDDEN)
+
+    def delete(self, request, format=None):
+        logged_competitor = request.user.get_competitor()
+        mentor = Mentor.objects.get(id=request.data['id'])
+        membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
+        if membership.is_leader:
+            membership.team.mentors.remove(mentor)
+            return Response(status=status.HTTP_200_OK)
+        else:
+            error = {"error": "Не си лидер на този отбор, за да избираш ментори."}
+            return Response(error, status.HTTP_403_FORBIDDEN)
