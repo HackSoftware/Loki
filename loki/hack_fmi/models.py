@@ -195,4 +195,4 @@ class Partner(models.Model):
     seasons = models.ManyToManyField('Season')
 
     def __str__(self):
-        return str(self.number)
+        return self.name
