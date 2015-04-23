@@ -161,7 +161,7 @@ class Invitation(models.Model):
         unique_together = ('team', 'competitor')
 
     def __str__(self):
-        return "{} {}".foramt(self.team, self.competitor)
+        return "{} {}".format(self.team, self.competitor)
 
 
 class Mentor(models.Model):
