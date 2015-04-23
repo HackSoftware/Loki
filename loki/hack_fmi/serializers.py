@@ -41,6 +41,7 @@ class CompetitorSerializer(serializers.ModelSerializer):
             'shirt_size',
             'password',
             'teammembership_set',
+            'team_set',
             'needs_work',
             'social_links',
 
