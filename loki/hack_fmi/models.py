@@ -1,39 +1,41 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 from ckeditor.fields import RichTextField
 
 
 class UserManager(BaseUserManager):
 
-    def __create_user(self, email, password, is_admin, is_active, full_name):
+    def __create_user(self, email, password, is_staff, is_active, full_name, is_superuser):
         if not email:
             raise ValueError('Users must have an email address')
 
         email = self.normalize_email(email)
         user = self.model(email=email,
-                          is_admin=is_admin,
+                          is_staff=is_staff,
                           is_active=is_active,
-                          full_name=full_name)
+                          full_name=full_name,
+                          is_superuser=is_superuser)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
     def create_user(self, email, password, full_name=''):
         return self.__create_user(email, password, False, False,
-                                  full_name)
+                                  full_name, False)
 
     def create_superuser(self, email, password, full_name=''):
-        return self.__create_user(email, password, True, True, full_name)
+        return self.__create_user(email, password, True, True, full_name, True)
 
 
-class BaseUser(AbstractBaseUser):
+class BaseUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     avatar = models.ImageField(blank=True)
-    is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+
     USERNAME_FIELD = 'email'
 
     objects = UserManager()
@@ -46,16 +48,6 @@ class BaseUser(AbstractBaseUser):
 
     def __str__(self):
         return self.email
-
-    def has_perm(self, perm, obj=None):
-        return True
-
-    def has_module_perms(self, app_label):
-        return True
-
-    @property
-    def is_staff(self):
-        return self.is_admin
 
     @property
     def full_name(self):
@@ -94,6 +86,7 @@ class Competitor(BaseUser):
     shirt_size = models.SmallIntegerField(choices=SHIRT_SIZE, default=S)
     needs_work = models.BooleanField(default=True)
     social_links = models.TextField(blank=True)
+    registered = models.BooleanField(default=False)
 
 
 class TeamMembership(models.Model):
@@ -176,6 +169,7 @@ class Mentor(models.Model):
     description = RichTextField()
     picture = models.ImageField(blank=True)
     seasons = models.ManyToManyField('Season')
+    from_company = models.ForeignKey('Partner', null=True)
 
     def __str__(self):
         return self.name
@@ -191,6 +185,14 @@ class Room(models.Model):
 
     def is_full(self):
         return len(self.team_set.all()) >= self.capacity
+
+    def __str__(self):
+        return str(self.number)
+
+
+class Partner(models.Model):
+    name = models.CharField(max_length=60)
+    seasons = models.ManyToManyField('Season')
 
     def __str__(self):
         return str(self.number)
