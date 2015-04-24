@@ -180,3 +180,12 @@ class AssignMentor(APIView):
         else:
             error = {"error": "Не си лидер на този отбор, за да избираш ментори."}
             return Response(error, status.HTTP_403_FORBIDDEN)
+
+
+@api_view(['GET'])
+def get_schedule(request):
+    content = ""
+    with open("media/mentors.html", "r") as f:
+        content = f.read()
+
+    return Response(content, status=status.HTTP_200_OK)

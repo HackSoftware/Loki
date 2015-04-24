@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 from djoser.views import ActivationView, LogoutView, PasswordResetConfirmView
 
-from .views import SkillListView, TeamAPI, leave_team, InvitationView, MentorListView, SeasonListView, AssignMentor, PublicTeamView
+from .views import SkillListView, TeamAPI, leave_team, InvitationView, MentorListView, SeasonListView, AssignMentor, PublicTeamView, get_schedule
 from .auth import Login, RegistrationView, me, PasswordResetView
 
 
@@ -30,4 +30,6 @@ urlpatterns = [
     url(r'^api/me/$', me, name='me'),
     url(r'^api/season/$', SeasonListView.as_view(), name='season'),
     url(r'^api/assign_mentor/$', AssignMentor.as_view(), name='assign_mentor'),
+
+    url(r'^api/schedule/', get_schedule, name="get_schedule"),
 ]
