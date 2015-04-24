@@ -125,6 +125,6 @@ class PlacerTests(APITestCase):
             slots=SLOTS,
             mentors_to_teams=mentors_to_teams)
 
-        print(placing)
-        print("Leftovers: ")
-        print(placing["leftovers"])
+        # print(placing)
+        # print("Leftovers: ")
+        # print(placing["leftovers"])
