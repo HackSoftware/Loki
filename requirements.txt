@@ -16,3 +16,4 @@ psycopg2==2.6
 PyJWT==1.0.0
 PyYAML==3.11
 requests==2.6.0
+tabulate==0.7.5
