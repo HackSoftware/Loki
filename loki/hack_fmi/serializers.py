@@ -141,11 +141,6 @@ class TeamSerializer(serializers.ModelSerializer):
 
 class PublicTeamSerializer(serializers.ModelSerializer):
     members = PublicCompetiorSerializer(many=True, read_only=True)
-    technologies_full = SkillSerializer(
-        many=True,
-        read_only=True,
-        source='technologies',
-    )
 
     room = serializers.StringRelatedField()
 
@@ -158,9 +153,7 @@ class PublicTeamSerializer(serializers.ModelSerializer):
             'idea_description',
             'repository',
             'technologies',
-            'technologies_full',
             'mentors',
-            'mentors_full',
             'need_more_members',
             'members_needed_desc',
             'room',
