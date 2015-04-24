@@ -118,7 +118,6 @@ class Command(BaseCommand):
         json_placing = json.dumps(placing, indent=4)
 
         with open('media/placing.json', 'w') as f:
-            f.write(table)
             f.write(json_placing)
             f.close()
 
