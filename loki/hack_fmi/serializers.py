@@ -94,6 +94,8 @@ class TeamSerializer(serializers.ModelSerializer):
         source='mentors',
     )
 
+    room = serializers.StringRelatedField()
+
     class Meta:
         model = Team
         fields = (
@@ -108,6 +110,7 @@ class TeamSerializer(serializers.ModelSerializer):
             'mentors_full',
             'need_more_members',
             'members_needed_desc',
+            'room',
         )
 
     def create(self, validated_data):
