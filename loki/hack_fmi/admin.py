@@ -12,7 +12,8 @@ class SkillAdmin(admin.ModelAdmin):
 
 
 class CompetitorAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'shirt_size')
+    list_display = ('first_name', 'last_name', 'email', 'shirt_size', 'registered')
+    list_editable = ('registered',)
 
     class Meta:
         model = Competitor
