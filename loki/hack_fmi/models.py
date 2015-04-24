@@ -170,9 +170,13 @@ class Mentor(models.Model):
     picture = models.ImageField(blank=True)
     seasons = models.ManyToManyField('Season')
     from_company = models.ForeignKey('Partner', null=True)
+    order = models.PositiveIntegerField(default=0, blank=False, null=False)
 
     def __str__(self):
         return self.name
+
+    class Meta(object):
+        ordering = ('order',)
 
 
 class Room(models.Model):

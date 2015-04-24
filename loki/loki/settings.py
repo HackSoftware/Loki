@@ -33,6 +33,7 @@ INSTALLED_APPS = (
     'djoser',
     'ckeditor',
     'post_office',
+    'adminsortable2',
 
     'hack_fmi',
 )

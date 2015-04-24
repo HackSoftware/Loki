@@ -1,4 +1,5 @@
 from django.contrib import admin
+from adminsortable2.admin import SortableAdminMixin
 
 from .models import Competitor, Skill, Team, TeamMembership, Invitation, Mentor, Season, Room, Partner
 
@@ -40,7 +41,7 @@ class InvitationAdmin(admin.ModelAdmin):
         model = Invitation
 
 
-class MentorAdmin(admin.ModelAdmin):
+class MentorAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ('name', 'description', 'from_company')
 
     class Meta:
