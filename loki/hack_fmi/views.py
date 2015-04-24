@@ -12,7 +12,7 @@ from post_office import mail
 
 from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
 from .serializers import (SkillSerializer, TeamSerializer,
-                          Invitation, InvitationSerializer, MentorSerializer, SeasonSerializer)
+                          Invitation, InvitationSerializer, MentorSerializer, SeasonSerializer, PublicTeamSerializer)
 from .premissions import IsHackFMIUser
 
 
@@ -20,6 +20,12 @@ class SkillListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
+
+
+class PublicTeamView(generics.ListAPIView):
+    permission_classes = (AllowAny,)
+    queryset = Team.objects.all()
+    serializer_class = PublicTeamSerializer
 
 
 class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
