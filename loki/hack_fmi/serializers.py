@@ -21,6 +21,16 @@ class TeamMembershipSerializer(serializers.ModelSerializer):
         )
 
 
+class PublicCompetiorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Competitor
+        fields = (
+            'first_name',
+            'last_name',
+        )
+
+
 class CompetitorSerializer(serializers.ModelSerializer):
     known_skills = serializers.PrimaryKeyRelatedField(
         queryset=Skill.objects.all(),
@@ -127,6 +137,27 @@ class TeamSerializer(serializers.ModelSerializer):
             if data['mentors'] > season.max_mentor_pick:
                 raise serializers.ValidationError("You are not allowed to pick that much mentors")
         return data
+
+
+class PublicTeamSerializer(serializers.ModelSerializer):
+    members = PublicCompetiorSerializer(many=True, read_only=True)
+
+    room = serializers.StringRelatedField()
+
+    class Meta:
+        model = Team
+        fields = (
+            'id',
+            'name',
+            'members',
+            'idea_description',
+            'repository',
+            'technologies',
+            'mentors',
+            'need_more_members',
+            'members_needed_desc',
+            'room',
+        )
 
 
 class InvitationSerializer(serializers.ModelSerializer):
