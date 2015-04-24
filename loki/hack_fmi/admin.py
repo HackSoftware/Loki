@@ -75,3 +75,5 @@ admin.site.register(Invitation, InvitationAdmin)
 admin.site.register(Mentor, MentorAdmin)
 admin.site.register(Season, SeasonAdmin)
 admin.site.register(Partner, PartnerAdmin)
+admin.site.register(Room, RoomAdmin)
+
