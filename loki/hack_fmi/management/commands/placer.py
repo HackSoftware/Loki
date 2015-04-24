@@ -1,5 +1,8 @@
 from django.core.management.base import BaseCommand
 from hack_fmi.models import Team, Mentor
+import json
+from tabulate import tabulate
+from os import path
 
 
 class Command(BaseCommand):
@@ -27,7 +30,7 @@ class Command(BaseCommand):
                 start += 1
             return None
 
-        SLOTS = ["S{}".format(i) for i in range(1, 5)]
+        SLOTS = ["S{}".format(i) for i in range(1, 8)]
 
 
         INPUT = [(team.name,
@@ -87,15 +90,38 @@ class Command(BaseCommand):
                 "leftovers": leftovers
             }
 
+        def build_table_from_result(result, chosen_mentors):
+            headers = ["Slots"] + chosen_mentors
+
+            table = []
+
+            for slot in SLOTS:
+                teams_for_slot = []
+
+                for mentor in chosen_mentors:
+                    if slot in result[mentor]:
+                        teams_for_slot.append(result[mentor][slot])
+                    else:
+                        teams_for_slot.append("EMPTY")
+
+                table.append([slot] + teams_for_slot)
+
+            return tabulate(table, headers=headers, tablefmt="fancy_grid")
+
         placing = attempt_placing(
             teams=teams_with_choice,
             mentors=chosen_mentors,
             slots=SLOTS,
             mentors_to_teams=mentors_to_teams)
+        table = build_table_from_result(placing["placed"], chosen_mentors)
 
-        f = open('mentors_slots.txt', 'w')
-        f.write(str(placing))
-        f.close()
-        # print(placing)
-        # print("Leftovers: ")
-        # print(placing["leftovers"])
+        json_placing = json.dumps(placing, indent=4)
+
+        with open('media/placing.json', 'w') as f:
+            f.write(table)
+            f.write(json_placing)
+            f.close()
+
+        with open("media/mentors.html", "w") as f:
+            f.write(table)
+            f.close()
