@@ -121,6 +121,7 @@ class TeamSerializer(serializers.ModelSerializer):
             'need_more_members',
             'members_needed_desc',
             'room',
+            'picture',
         )
 
     def create(self, validated_data):
@@ -163,6 +164,7 @@ class PublicTeamSerializer(serializers.ModelSerializer):
             'need_more_members',
             'members_needed_desc',
             'room',
+            'picture',
         )
 
 
