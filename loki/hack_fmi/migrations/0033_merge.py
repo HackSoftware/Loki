@@ -7,8 +7,8 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('hack_fmi', '0032_mentor_seasons'),
         ('hack_fmi', '0032_auto_20150420_1115'),
+        ('hack_fmi', '0032_mentor_seasons'),
     ]
 
     operations = [
