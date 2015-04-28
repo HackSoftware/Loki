@@ -1,5 +1,4 @@
 from datetime import date
-from django.conf import settings
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,12 +7,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import PermissionDenied
 
-from post_office import mail
-
 from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
 from .serializers import (SkillSerializer, TeamSerializer,
                           Invitation, InvitationSerializer, MentorSerializer, SeasonSerializer, PublicTeamSerializer)
-from .premissions import IsHackFMIUser
+from .premissions import IsHackFMIUser, IsTeamLeaderOrReadOnly
+from .helper import send_team_delete_email
 
 
 class SkillListView(generics.ListAPIView):
@@ -29,47 +27,36 @@ class PublicTeamView(generics.ListAPIView):
 
 
 class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
-    permission_classes = (IsHackFMIUser,)
+    permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly)
     serializer_class = TeamSerializer
 
     def get_queryset(self):
         queryset = Team.objects.all()
+        # TODO: Use django filters
         needed_id = self.kwargs.get('pk', None)
         if needed_id:
             queryset = queryset.filter(pk=needed_id)
         return queryset
 
     def perform_create(self, serializer):
-        season = Season.objects.filter(is_active=True).first()
+        season = Season.objects.get(is_active=True)
         if season.sign_up_deadline < date.today():
             raise PermissionDenied("You are pass the deadline for creating teams!")
         team = serializer.save()
         team.add_member(self.request.user.get_competitor(), is_leader=True)
-
-    def perform_update(self, serializer):
-        team = self.get_object()
-        if self.request.user.get_competitor() != team.get_leader():
-            raise PermissionDenied("You are not a leader!")
-        serializer.save()
 
 
 @api_view(['POST'])
 @permission_classes((IsHackFMIUser,))
 def leave_team(request):
     logged_competitor = request.user.get_competitor()
-    membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
+    membership = TeamMembership.objects.get(competitor=logged_competitor)
     team = Team.objects.get(id=membership.team.id)
     if membership.is_leader:
-        members = list(team.members.all())
-        user_emails = [member.email for member in members]
-        sender = settings.EMAIL_HOST_USER
-        mail.send(
-            user_emails,
-            sender,
-            template='delete_team',
-        )
+        send_team_delete_email(team)
         team.delete()
         return Response(status=status.HTTP_200_OK)
+
     TeamMembership.objects.get(competitor=logged_competitor).delete()
     return Response(status=status.HTTP_200_OK)
 
@@ -79,9 +66,9 @@ class InvitationView(APIView):
 
     def post(self, request, format=None):
         logged_competitor = request.user.get_competitor()
-        membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
+        current_season = Season.objects.get(is_active=True)
+        membership = TeamMembership.objects.get(competitor=logged_competitor, team__season=current_season)
         invited_competitor = Competitor.objects.filter(email=request.data['email']).first()
-        current_season = membership.team.season
         if not invited_competitor:
             error = {"error": "Този потребител все още не е регистриран в системата."}
             return Response(error, status=status.HTTP_403_FORBIDDEN)

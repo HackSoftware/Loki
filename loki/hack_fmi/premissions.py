@@ -9,3 +9,12 @@ class IsHackFMIUser(permissions.BasePermission):
             return request.user and request.user.is_authenticated() and is_hackfmi_user
         except:
             return False
+
+
+class IsTeamLeaderOrReadOnly(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.get_leader() == request.user.get_competitor()
