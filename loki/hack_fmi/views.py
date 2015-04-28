@@ -20,6 +20,18 @@ class SkillListView(generics.ListAPIView):
     serializer_class = SkillSerializer
 
 
+class MentorListView(generics.ListAPIView):
+    permission_classes = (AllowAny,)
+    queryset = Mentor.objects.filter(seasons__is_active=True)
+    serializer_class = MentorSerializer
+
+
+class SeasonListView(generics.ListAPIView):
+    permission_classes = (AllowAny,)
+    queryset = Season.objects.filter(is_active=True)
+    serializer_class = SeasonSerializer
+
+
 class PublicTeamView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     queryset = Team.objects.all()
@@ -121,18 +133,6 @@ class InvitationView(APIView):
             return Response(error, status=status.HTTP_403_FORBIDDEN)
         invitation.delete()
         return Response(status=status.HTTP_200_OK)
-
-
-class MentorListView(generics.ListAPIView):
-    permission_classes = (AllowAny,)
-    queryset = Mentor.objects.filter(seasons__is_active=True)
-    serializer_class = MentorSerializer
-
-
-class SeasonListView(generics.ListAPIView):
-    permission_classes = (AllowAny,)
-    queryset = Season.objects.filter(is_active=True)
-    serializer_class = SeasonSerializer
 
 
 class AssignMentor(APIView):
