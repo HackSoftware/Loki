@@ -110,6 +110,7 @@ class Team(models.Model):
     members_needed_desc = models.CharField(max_length=255, blank=True)
     room = models.ForeignKey('Room', null=True, blank=True)
     picture = models.ImageField(blank=True)
+    place = models.SmallIntegerField(null=True)
 
     def add_member(self, competitor, is_leader=False):
         return TeamMembership.objects.create(
