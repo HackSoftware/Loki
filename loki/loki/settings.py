@@ -38,6 +38,7 @@ INSTALLED_APPS = (
     'ckeditor',
     'post_office',
     'adminsortable2',
+    'django_extensions',
 
     'hack_fmi',
 )
