@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'django_extensions',
 
     'hack_fmi',
+    'base_app',
 )
 
 MIDDLEWARE_CLASSES = (
