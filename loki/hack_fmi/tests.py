@@ -665,13 +665,14 @@ class MentorTests(APITestCase):
 
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
+        # TODO: Fix dates not to be hardcoded
         self.season = Season.objects.create(
             number=1,
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2015-5-1",
+            sign_up_deadline="2016-5-1",
             mentor_pick_start_date="2015-4-1",
-            mentor_pick_end_date="2015-5-1",
+            mentor_pick_end_date="2016-5-1",
         )
         self.competitor_leader = Competitor.objects.create(
             email='ivo@abv.bg',
