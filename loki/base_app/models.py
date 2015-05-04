@@ -1,4 +1,4 @@
-from loki.local_settings import MEDIA_ROOT
+from loki.settings import MEDIA_ROOT
 from django.db import models
 
 
