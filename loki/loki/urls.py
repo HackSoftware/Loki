@@ -7,4 +7,5 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^hackfmi/', include('hack_fmi.urls', namespace='hack_fmi')),
     url(r'^ckeditor/', include('ckeditor.urls')),
+    url(r'^hackconf/', include('hack_conf.urls',)),
 )

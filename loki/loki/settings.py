@@ -42,6 +42,7 @@ INSTALLED_APPS = (
 
     'hack_fmi',
     'base_app',
+    'hack_conf',
 )
 
 MIDDLEWARE_CLASSES = (
