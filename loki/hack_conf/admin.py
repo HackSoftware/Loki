@@ -11,7 +11,7 @@ class HackConfUserAdmin(admin.ModelAdmin):
 
 
 class SpeakerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'title', 'facebook', 'twitter', 'google_plus', 'github')
+    list_display = ('name', 'title', 'description', 'facebook', 'twitter', 'google_plus', 'github')
 
     class Meta:
         model = Speaker
