@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from .forms import HackConfUserForm
+from .models import Speaker
 
 
 def home_page(request):
-    return render(request, 'index-overlay.html')
+    speakers = Speaker.objects.all()
+    return render(request, 'index-overlay.html', {'speakers': speakers})
 
 
 def email_form_view(request):

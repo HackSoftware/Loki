@@ -439,77 +439,47 @@
         <div class="sub-title">The Best annual IT camp hold in New York, NY</div>
         <br />
         <br />
+        {% for speaker in speakers %}
         <section class="row">
           <div class="col-md-3 col-sm-3 col-xs-6">
             <div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="0">
               <div class="img-wrapper">
-                <img src="/static/assets/img/speaker/speaker-1.jpg" class="img-responsive img-circle" alt="speaker-1" />
+                <img src="{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
               </div>
-              <div class="name">Russel Crowe</div>
-              <div class="sub">CEO Dropbox</div>
-              <p class="small">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+              <div class="name">{{ speaker.name }}</div>
+              <div class="sub">{{ speaker.title }}</div>
+              <p class="small">{{ speaker.description }}</p>
               <div class="social-link">
-                <a href="#"><span class="fa fa-facebook"></span></a>
-                <a href="#"><span class="fa fa-twitter"></span></a>
-                <a href="#"><span class="fa fa-google-plus"></span></a>
-                <a href="#"><span class="fa fa-github"></span></a>
+                <a href="{{ speaker.facebook }}"><span class="fa fa-facebook"></span></a>
+                <a href="{{ speaker.twitter }}"><span class="fa fa-twitter"></span></a>
+                <a href="{{ speaker.google.plus }}"><span class="fa fa-google-plus"></span></a>
+                <a href="{{ speaker.github }}"><span class="fa fa-github"></span></a>
               </div>
             </div>
           </div>
-          <div class="col-md-3 col-sm-3 col-xs-6">
-            <div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="500">
-              <div class="img-wrapper">
-                <img src="/static/assets/img/speaker/speaker-2.jpg" class="img-responsive img-circle" alt="speaker-2" />
-              </div>
-              <div class="name">Hugh Laurie</div>
-              <div class="sub">CTO Pinterest</div>
-              <p class="small">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-              <div class="social-link">
-                <a href="#"><span class="fa fa-facebook"></span></a>
-                <a href="#"><span class="fa fa-twitter"></span></a>
-                <a href="#"><span class="fa fa-google-plus"></span></a>
-                <a href="#"><span class="fa fa-github"></span></a>
-              </div>
-            </div>
-          </div>
-          <div class="clearfix visible-xs"></div>
-          <div class="col-md-3 col-sm-3 col-xs-6">
-            <div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="1000">
-              <div class="img-wrapper">
-                <img src="/static/assets/img/speaker/speaker-3.jpg" class="img-responsive img-circle" alt="speaker-3" />
-              </div>
-              <div class="name">Brad Pitt</div>
-              <div class="sub">CEO Yahoo</div>
-              <p class="small">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-              <div class="social-link">
-                <a href="#"><span class="fa fa-facebook"></span></a>
-                <a href="#"><span class="fa fa-twitter"></span></a>
-                <a href="#"><span class="fa fa-google-plus"></span></a>
-                <a href="#"><span class="fa fa-github"></span></a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-3 col-xs-6">
-            <div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="1500">
-              <div class="img-wrapper">
-                <img src="/static/assets/img/speaker/speaker-4.jpg" class="img-responsive img-circle" alt="speaker-4" />
-              </div>
-              <div class="name">Martin Freeman</div>
-              <div class="sub">CFO Google</div>
-              <p class="small">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-              <div class="social-link">
-                <a href="#"><span class="fa fa-facebook"></span></a>
-                <a href="#"><span class="fa fa-twitter"></span></a>
-                <a href="#"><span class="fa fa-google-plus"></span></a>
-                <a href="#"><span class="fa fa-github"></span></a>
-              </div>
-            </div>
-          </div>
-        </section>
-        <div class="btn-wrapper">
-          <a href="#" class="btn btn-sm btn-default">See all speakers</a>
-        </div>
-      </div>
+          {% endfor %}
+          <!--<div class="clearfix visible-xs"></div>-->
+          <!--<div class="col-md-3 col-sm-3 col-xs-6">-->
+            <!--<div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="1500">-->
+              <!--<div class="img-wrapper">-->
+                <!--<img src="/static/assets/img/speaker/speaker-4.jpg" class="img-responsive img-circle" alt="speaker-4" />-->
+              <!--</div>-->
+              <!--<div class="name">Martin Freeman</div>-->
+              <!--<div class="sub">CFO Google</div>-->
+              <!--<p class="small">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>-->
+              <!--<div class="social-link">-->
+                <!--<a href="#"><span class="fa fa-facebook"></span></a>-->
+                <!--<a href="#"><span class="fa fa-twitter"></span></a>-->
+                <!--<a href="#"><span class="fa fa-google-plus"></span></a>-->
+                <!--<a href="#"><span class="fa fa-github"></span></a>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</section>-->
+        <!--<div class="btn-wrapper">-->
+          <!--<a href="#" class="btn btn-sm btn-default">See all speakers</a>-->
+        <!--</div>-->
+      <!--</div>-->
     </section>
     <!-- End Speakers Section -->
 
