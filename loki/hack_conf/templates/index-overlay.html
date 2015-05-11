@@ -40,7 +40,7 @@
     <header id="mobileheader" class="navigation-bar-header light visible-xs"></header>
     <!-- Hero Section -->
     <section id="hero" class="light color">
-	<div class="overlay color"></div>
+      <div class="overlay color"></div>
       <div class="container">
         <div class="home-bg">
           <nav class="navigation navigation-social">
@@ -50,11 +50,10 @@
               <li><a href="#"><span class="fa fa-github"></span></a>
               <li><a href="#"><span class="fa fa-vimeo-square"></span></a>
               <li><a href="#"><span class="fa fa-google-plus"></span></a>
-              <li><a href="#"><span class="fa fa-instagram"></span></a>
             </ul>
           </nav>
           <div class="hero-content text-center ">
-            <div class="hero-small">
+              <div class="hero-small">
               <hr /><span>28.nov in New York, NY</span><hr />
             </div>
             <div class="hero-big">Ventcamp</div>
@@ -216,37 +215,27 @@
               <div class="title">Day 2</div>
               <div class="subtitle">09/10/2013</div>
             </a></li>
-            <li><a href="#DayThree" data-toggle="tab">
-              <div class="title">Day 3</div>
-              <div class="subtitle">10/10/2013</div>
-            </a></li>
           </ul>
 
           <!-- Parent Tab panes -->
           <div class="tab-content">
-            <div class="tab-pane fade in active" id="DayOne">
 
-                <!-- Child 1 Nav Tabs -->
-                <ul class="nav nav-tabs">
-                  <li class="active"><a href="#DayOne-1" data-toggle="tab">Auditorium 1</a></li>
-                  <li><a href="#DayOne-2" data-toggle="tab">Auditorium 2</a></li>
-                  <li><a href="#DayOne-3" data-toggle="tab">Auditorium 3</a></li>
-                  <li><a href="#DayOne-4" data-toggle="tab">Class 2</a></li>
-                </ul>
+            <div class="tab-pane fade in active" id="DayOne">
 
                 <!-- Child 1 Tab panes -->
                 <div class="tab-content">
                   <div class="tab-pane fade in active" id="DayOne-1">
                     <div class="panel-group timeline-schedule" id="panelTimelineOne">
+                      {% for lecture in schedule_day_one %}
                       <div class="panel panel-default">
                         <div class="speaker-wrapper">
-                          <img src="/static/assets/img/speaker/speaker-1.jpg" class="img-responsive img-circle" alt="speaker-1" />
+                          <img src="{{ MEDIA_URL }}{{ lecture.author.picture }}" class="img-responsive img-circle" alt="speaker-1" />
                         </div>
                         <div class="panel-heading">
                           <div class="panel-title">
-                            <div class="time"><i class="fa fa-clock-o"></i> 2:20 PM</div>
+                            <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time }}</div>
                             <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#itemOne">
-                              Starting your own business
+                              {{ lecture.name }}
                               <div class="pull-right fa fa-angle-up"></div>
                               <div class="pull-right fa fa-angle-down"></div>
                             </a>
@@ -255,178 +244,54 @@
                         <div id="itemOne" class="panel-collapse collapse in">
                           <div class="panel-body">
                             <article>
-                              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
-                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i> Michael Lambert</strong></a></p>
+                              <p>{{ lecture.description }}</p>
+                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i>{{ lecture.author }}</strong></a></p>
                             </article>
                           </div>
                         </div>
                       </div>
-                      <div class="panel panel-default">
-                        <div class="speaker-wrapper">
-                          <img src="/static/assets/img/speaker/speaker-2.jpg" class="img-responsive img-circle" alt="speaker-2" />
-                        </div>
-                        <div class="panel-heading">
-                          <div class="panel-title">
-                            <div class="time"><i class="fa fa-clock-o"></i> 5:40 PM</div>
-                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#itemTwo" class="collapsed">
-                              Scaling into crowded space
-                              <div class="pull-right fa fa-angle-up"></div>
-                              <div class="pull-right fa fa-angle-down"></div>
-                            </a>
-                          </div>
-                        </div>
-                        <div id="itemTwo" class="panel-collapse collapse">
-                          <div class="panel-body">
-                            <article>
-                              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
-                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i> Michael Lambert</strong></a></p>
-                            </article>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="panel panel-default">
-                        <div class="speaker-wrapper">
-                          <img src="/static/assets/img/speaker/speaker-3.jpg" class="img-responsive img-circle" alt="speaker-3" />
-                        </div>
-                        <div class="panel-heading">
-                          <div class="panel-title">
-                            <div class="time"><i class="fa fa-clock-o"></i> 5:40 PM</div>
-                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#itemThree" class="collapsed">
-                              Close your eyes around the world
-                              <div class="pull-right fa fa-angle-up"></div>
-                              <div class="pull-right fa fa-angle-down"></div>
-                            </a>
-                          </div>
-                        </div>
-                        <div id="itemThree" class="panel-collapse collapse">
-                          <div class="panel-body">
-                            <article>
-                              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
-                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i> Michael Lambert</strong></a></p>
-                            </article>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="panel panel-default">
-                        <div class="speaker-wrapper">
-                          <img src="/static/assets/img/speaker/speaker-4.jpg" class="img-responsive img-circle" alt="speaker-4" />
-                        </div>
-                        <div class="panel-heading">
-                          <div class="panel-title">
-                            <div class="time"><i class="fa fa-clock-o"></i> 5:40 PM</div>
-                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#itemFour" class="collapsed">
-                              Passion and people
-                              <div class="pull-right fa fa-angle-up"></div>
-                              <div class="pull-right fa fa-angle-down"></div>
-                            </a>
-                          </div>
-                        </div>
-                        <div id="itemFour" class="panel-collapse collapse">
-                          <div class="panel-body">
-                            <article>
-                              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.</p>
-                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i> Michael Lambert</strong></a></p>
-                            </article>
-                          </div>
-                        </div>
-                      </div>
+                      {% endfor %}
                     </div>
                   </div>
-                  <div class="tab-pane fade" id="DayOne-2">
-                    <article>
-                      <p>No schedule yet.</p>
-                    </article>
-                  </div>
-                  <div class="tab-pane fade" id="DayOne-3">
-                    <article>
-                      <p>No schedule yet.</p>
-                    </article>
-                  </div>
-                  <div class="tab-pane fade" id="DayOne-4">
-                    <article>
-                      <p>No schedule yet.</p>
-                    </article>
-                  </div>
                 </div>
-                <div class="clearfix"></div>
-
             </div>
             <div class="tab-pane fade" id="DayTwo">
 
-                <!-- Child 2 Nav Tabs -->
-                <ul class="nav nav-tabs">
-                  <li class="active"><a href="#DayTwo-1" data-toggle="tab">Auditorium 1</a></li>
-                  <li><a href="#DayTwo-2" data-toggle="tab">Auditorium 2</a></li>
-                  <li><a href="#DayTwo-3" data-toggle="tab">Auditorium 3</a></li>
-                  <li><a href="#DayTwo-4" data-toggle="tab">Class 2</a></li>
-                </ul>
-
                 <!-- Child 2 Tab panes -->
                 <div class="tab-content">
-                  <div class="tab-pane fade in active" id="DayTwo-1">
-                    <article>
-                      <p>No schedule yet.</p>
-                    </article>
-                  </div>
-                  <div class="tab-pane fade" id="DayTwo-2">
-                    <article>
-                      <p>No schedule yet.</p>
-                    </article>
-                  </div>
-                  <div class="tab-pane fade" id="DayTwo-3">
-                    <article>
-                      <p>No schedule yet.</p>
-                    </article>
-                  </div>
-                  <div class="tab-pane fade" id="DayTwo-4">
-                    <article>
-                      <p>No schedule yet.</p>
-                    </article>
-                  </div>
-                </div>
-
-            </div>
-            <div class="tab-pane fade" id="DayThree">
-
-                <!-- Child 3 Nav Tabs -->
-                <ul class="nav nav-tabs">
-                  <li class="active"><a href="#DayThree-1" data-toggle="tab">Auditorium 1</a></li>
-                  <li><a href="#DayThree-2" data-toggle="tab">Auditorium 2</a></li>
-                  <li><a href="#DayThree-3" data-toggle="tab">Auditorium 3</a></li>
-                  <li><a href="#DayThree-4" data-toggle="tab">Class 2</a></li>
-                </ul>
-
-                <!-- Child 3 Tab panes -->
-                <div class="tab-content">
-                  <div class="tab-pane fade in active" id="DayThree-1">
-                    <article>
-                      <p>No schedule yet.</p>
-                    </article>
-                  </div>
-                  <div class="tab-pane fade" id="DayThree-2">
-                    <article>
-                      <p>No schedule yet.</p>
-                    </article>
-                  </div>
-                  <div class="tab-pane fade" id="DayThree-3">
-                    <article>
-                      <p>No schedule yet.</p>
-                    </article>
-                  </div>
-                  <div class="tab-pane fade" id="DayThree-4">
-                    <article>
-                      <p>No schedule yet.</p>
-                    </article>
+                  <div class="tab-pane fade in active" id="DayOne-2">
+                    <div class="panel-group timeline-schedule" id="panelTimelineOne">
+                      {% for lecture in schedule_day_two %}
+                      <div class="panel panel-default">
+                        <div class="speaker-wrapper">
+                          <img src="{{ MEDIA_URL }}{{ lecture.author.picture }}" class="img-responsive img-circle" alt="speaker-1" />
+                        </div>
+                        <div class="panel-heading">
+                          <div class="panel-title">
+                            <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time }}</div>
+                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#itemOne">
+                              {{ lecture.name }}
+                              <div class="pull-right fa fa-angle-up"></div>
+                              <div class="pull-right fa fa-angle-down"></div>
+                            </a>
+                          </div>
+                        </div>
+                        <div id="itemOne" class="panel-collapse collapse in">
+                          <div class="panel-body">
+                            <article>
+                              <p>{{ lecture.description }}</p>
+                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i>{{ lecture.author }}</strong></a></p>
+                            </article>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
                   </div>
                 </div>
-
             </div>
           </div>
         </section>
-
-        <div class="btn-wrapper">
-          <a href="#" class="btn btn-xs"><span class="icon icon-filetypes-11 icon-active"></span> <span class="btn-txt">Download schedule</span></a>
-        </div>
       </div>
     </section>
     <!-- End Schedule Section -->
