@@ -60,7 +60,7 @@
             <div class="hero-big">Ventcamp</div>
             <div class="hero-normal">Massive conference about <strong>startups</strong></div>
             <a href="register.html" class="btn btn-lg btn-3d"><i class="fa fa-play-circle fa-2x"></i> <span>Get tickets</span></a>
-			<a href="#" class="btn btn-sm btn-default">Watch video</a>
+            <a href="#" class="btn btn-sm btn-default">Watch video</a>
           </div>
         </div>
       </div>
@@ -439,12 +439,12 @@
         <div class="sub-title">The Best annual IT camp hold in New York, NY</div>
         <br />
         <br />
-        {% for speaker in speakers %}
         <section class="row">
+        {% for speaker in speakers %}
           <div class="col-md-3 col-sm-3 col-xs-6">
             <div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="0">
               <div class="img-wrapper">
-                <img src="{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
+                <img src="{{ MEDIA_URL }}{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
               </div>
               <div class="name">{{ speaker.name }}</div>
               <div class="sub">{{ speaker.title }}</div>
@@ -457,7 +457,8 @@
               </div>
             </div>
           </div>
-          {% endfor %}
+        {% endfor %}
+        </section>
           <!--<div class="clearfix visible-xs"></div>-->
           <!--<div class="col-md-3 col-sm-3 col-xs-6">-->
             <!--<div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="1500">-->
@@ -482,8 +483,7 @@
       <!--</div>-->
     </section>
     <!-- End Speakers Section -->
-
-	<!-- Newsletter Section -->
+	  <!-- Newsletter Section -->
     <section id="newsletter" class="section light">
       <div class="overlay"></div>
       <div class="container">
@@ -504,7 +504,7 @@
       </div>
     </section>
     <!-- End Newsletter Section -->
-	<!-- Elements Section -->
+	  <!-- Elements Section -->
     <section id="elements" class="section dark">
       <div class="container">
 		<!--
@@ -621,16 +621,9 @@
 		<br/>
          <div class="row">
           <ul class="list-inline">
-            <li><a href="#" target="_blank"><img src="/static/assets/img/sponsor/sponsor-logo-1.jpg" alt="sponsor-1" /></a></li>
-            <li><a href="#" target="_blank"><img src="/static/assets/img/sponsor/sponsor-logo-2.jpg" alt="sponsor-2" /></a></li>
-            <li><a href="#" target="_blank"><img src="/static/assets/img/sponsor/sponsor-logo-3.jpg" alt="sponsor-3" /></a></li>
-            <li><a href="#" target="_blank"><img src="/static/assets/img/sponsor/sponsor-logo-4.jpg" alt="sponsor-4" /></a></li>
-            <li><a href="#" target="_blank"><img src="/static/assets/img/sponsor/sponsor-logo-5.jpg" alt="sponsor-5" /></a></li>
-            <li><a href="#" target="_blank"><img src="/static/assets/img/sponsor/sponsor-logo-0.jpg" alt="sponsor-6" /></a></li>
-            <li><a href="#" target="_blank"><img src="/static/assets/img/sponsor/sponsor-logo-7.jpg" alt="sponsor-7" /></a></li>
-            <li><a href="#" target="_blank"><img src="/static/assets/img/sponsor/sponsor-logo-8.jpg" alt="sponsor-8" /></a></li>
-            <li><a href="#" target="_blank"><img src="/static/assets/img/sponsor/sponsor-logo-9.jpg" alt="sponsor-9" /></a></li>
-            <li><a href="#" target="_blank"><img src="/static/assets/img/sponsor/sponsor-logo-0.jpg" alt="sponsor-10" /></a></li>
+            {% for sponsor in sponsors %}
+            <li><a href="{{ sponsor.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ sponsor.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
+            {% endfor %}
           </ul>
 
 		 <div class="btn-wrapper">

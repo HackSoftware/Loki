@@ -15,3 +15,9 @@ class Speaker(models.Model):
     twitter = models.URLField(blank=True)
     google_plus = models.URLField(blank=True)
     github = models.URLField(blank=True)
+
+
+class Sponsor(models.Model):
+    name = models.CharField(max_length=100)
+    website = models.URLField(blank=True)
+    picture = models.ImageField()
