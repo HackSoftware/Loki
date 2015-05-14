@@ -37,7 +37,13 @@ class CompetitorSerializer(serializers.ModelSerializer):
         many=True,
         read_only=False
     )
-    teammembership_set = TeamMembershipSerializer(many=True, read_only=True)
+
+    teammembership_set = serializers.SerializerMethodField('get_active_teams')
+
+    def get_active_teams(self, obj):
+        team_membership_query_set = TeamMembership.objects.filter(team__season__is_active=True)
+        serializer = TeamMembershipSerializer(instance=team_membership_query_set, many=True, context=self.context)
+        return serializer.data
 
     class Meta:
         model = Competitor
