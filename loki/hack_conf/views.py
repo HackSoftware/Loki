@@ -8,11 +8,8 @@ def home_page(request):
     sponsors = Sponsor.objects.all().order_by("?")
     schedule_day_one = Schedule.objects.filter(day=1).order_by("time")
     schedule_day_two = Schedule.objects.filter(day=2).order_by("time")
-    return render(
-        request,
-        'index-overlay.html',
-        locals()
-    )
+
+    return render(request, 'index-overlay.html', locals())
 
 
 def email_form_view(request):
@@ -20,6 +17,5 @@ def email_form_view(request):
     if form.is_valid():
         form.save()
         return render(request, 'thank_you.html')
+
     return render(request, 'register.html')
-
-
