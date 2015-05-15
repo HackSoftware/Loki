@@ -2,7 +2,6 @@ from django.db import models
 
 from hack_fmi.models import BaseUser
 
-from django_resized import ResizedImageField
 from ckeditor.fields import RichTextField
 
 
@@ -18,12 +17,7 @@ class Student(BaseUser):
 
     )
 
-    avatar = ResizedImageField(
-        upload_to='avatar',
-        max_width=200,
-        blank=True,
-    )
-
+    status = models.SmallIntegerField(choices=STATUSES, default=STUDENT)
     courses = models.ManyToManyField('Course', through='CourseAssignment')
     description = models.TextField(blank=True)
     github_account = models.URLField(null=True, blank=True)
@@ -59,7 +53,7 @@ class Course(models.Model):
     git_repository = models.CharField(blank=True, max_length=256)
     image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
     name = models.CharField(blank=False, max_length=64)
-    partner = models.ManyToManyField('Partner', null=True, blank=True)
+    partner = models.ManyToManyField('base_app.Partner', null=True, blank=True)
     short_description = models.CharField(blank=True, max_length=300)
     show_on_index = models.BooleanField(default=False)
     is_free = models.BooleanField(default=True)

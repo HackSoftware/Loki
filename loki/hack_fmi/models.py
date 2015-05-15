@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 from ckeditor.fields import RichTextField
+from django_resized import ResizedImageField
 
 
 class UserManager(BaseUserManager):
@@ -32,9 +33,14 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
-    avatar = models.ImageField(blank=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+
+    avatar = ResizedImageField(
+        upload_to='avatar',
+        max_width=200,
+        blank=True,
+    )
 
     USERNAME_FIELD = 'email'
 

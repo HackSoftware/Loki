@@ -39,10 +39,12 @@ INSTALLED_APPS = (
     'post_office',
     'adminsortable2',
     'django_extensions',
+    'django_resized',
 
     'hack_fmi',
     'base_app',
     'hack_conf',
+    'education',
 )
 
 MIDDLEWARE_CLASSES = (

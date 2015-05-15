@@ -35,4 +35,3 @@ class Schedule(models.Model):
     time = models.TimeField()
     description = models.TextField(blank=True)
     author = models.ForeignKey(Speaker)
-
