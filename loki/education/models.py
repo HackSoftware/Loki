@@ -1,0 +1,77 @@
+from django.db import models
+
+from hack_fmi.models import BaseUser
+
+from django_resized import ResizedImageField
+from ckeditor.fields import RichTextField
+
+
+class Student(BaseUser):
+    STUDENT = 1
+    HR = 2
+    TEACHER = 3
+
+    STATUSES = (
+        (STUDENT, 'Student'),
+        (HR, 'HR'),
+        (TEACHER, 'Teacher'),
+
+    )
+
+    avatar = ResizedImageField(
+        upload_to='avatar',
+        max_width=200,
+        blank=True,
+    )
+
+    courses = models.ManyToManyField('Course', through='CourseAssignment')
+    description = models.TextField(blank=True)
+    github_account = models.URLField(null=True, blank=True)
+    hr_of = models.ForeignKey('base_app.Partner', blank=True, null=True)
+    linkedin_account = models.URLField(null=True, blank=True)
+    mac = models.CharField(max_length=17, null=True, blank=True)
+    studies_at = models.CharField(blank=True, null=True, max_length="110")
+    works_at = models.CharField(null=True, blank=True, max_length='110')
+    phone = models.CharField(null=True, blank=True, max_length='20')
+
+
+class CourseAssignment(models.Model):
+    EARLY = 1
+    LATE = 2
+
+    GROUP_TIME_CHOICES = (
+        (EARLY, 'Early'),
+        (LATE, 'Late'),
+    )
+
+    course = models.ForeignKey('Course')
+    cv = models.FileField(blank=True, null=True, upload_to='cvs')
+    favourite_partners = models.ManyToManyField('base_app.Partner', null=True, blank=True)
+    group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
+    is_attending = models.BooleanField(default=True)
+    points = models.PositiveIntegerField(default=0)
+    user = models.ForeignKey('Student')
+    is_online = models.BooleanField(default=False)
+
+
+class Course(models.Model):
+    description = RichTextField(blank=False)
+    git_repository = models.CharField(blank=True, max_length=256)
+    image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
+    name = models.CharField(blank=False, max_length=64)
+    partner = models.ManyToManyField('Partner', null=True, blank=True)
+    short_description = models.CharField(blank=True, max_length=300)
+    show_on_index = models.BooleanField(default=False)
+    is_free = models.BooleanField(default=True)
+
+    application_until = models.DateField()
+    applications_url = models.URLField(null=True, blank=True)
+    ask_for_favorite_partner = models.BooleanField(default=False)
+    ask_for_feedback = models.BooleanField(default=False)
+    end_time = models.DateField(blank=True, null=True)
+    next_season_mail_list = models.URLField(null=True, blank=True)
+    SEO_description = models.CharField(blank=False, max_length=255)
+    SEO_title = models.CharField(blank=False, max_length=255)
+    start_time = models.DateField(blank=True, null=True)
+    url = models.SlugField(max_length=80, unique=True)
+    video = models.URLField(blank=True)
