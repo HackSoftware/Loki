@@ -43,7 +43,7 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
     serializer_class = TeamSerializer
 
     def get_queryset(self):
-        queryset = Team.objects.all()
+        queryset = Team.objects.filter(season__is_active=True)
         # TODO: Use django filters
         needed_id = self.kwargs.get('pk', None)
         if needed_id:
