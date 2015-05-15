@@ -34,7 +34,7 @@ class SeasonListView(generics.ListAPIView):
 
 class PublicTeamView(generics.ListAPIView):
     permission_classes = (AllowAny,)
-    queryset = Team.objects.all()
+    queryset = Team.objects.filter(season__is_active=True)
     serializer_class = PublicTeamSerializer
 
 
