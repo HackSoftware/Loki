@@ -54,7 +54,7 @@ class LoginTests(APITestCase):
         self.team_membership = TeamMembership.objects.create(
             competitor=self.competitor,
             team=self.team_dummy,
-            is_leader=False,
+            is_leader=True,
         )
 
     def test_get_data_after_login(self):
