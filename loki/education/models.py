@@ -69,3 +69,12 @@ class Course(models.Model):
     start_time = models.DateField(blank=True, null=True)
     url = models.SlugField(max_length=80, unique=True)
     video = models.URLField(blank=True)
+
+
+class CheckIn(models.Model):
+    mac = models.CharField(max_length=17)
+    student = models.ForeignKey('Student', null=True, blank=True)
+    date = models.DateField(auto_now=True)
+
+    class Meta:
+        unique_together = ('student', 'date')
