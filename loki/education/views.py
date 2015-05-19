@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from education.models import CheckIn, Student
 
-from loki import local_settings
+from django.conf import settings
 
 
 @csrf_exempt
@@ -14,7 +14,7 @@ def set_check_in(request):
     mac = request.POST['mac']
     token = request.POST['token']
 
-    if local_settings.CHECKIN_TOKEN != token:
+    if settings.CHECKIN_TOKEN != token:
         return HttpResponse(status=511)
 
     student = Student.objects.filter(mac__iexact=mac).first()
