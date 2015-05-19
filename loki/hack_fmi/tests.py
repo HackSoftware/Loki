@@ -186,7 +186,7 @@ class TeamRegistrationTests(APITestCase):
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
         self.season = Season.objects.create(
-            number=1,
+            name="season",
             topic='TestTopic',
             is_active=True,
             sign_up_deadline="2016-5-1",
@@ -244,7 +244,7 @@ class TeamManagementTests(APITestCase):
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
         self.season = Season.objects.create(
-            number=1,
+            name="HackFMI 1",
             topic='TestTopic',
             is_active=True,
             sign_up_deadline="2016-5-1",
@@ -352,7 +352,7 @@ class LeaveTeamTests(APITestCase):
             content='Лидера на твоя отбор напусна и отбора беше изтрит.',
         )
         self.season = Season.objects.create(
-            number=1,
+            name="HackFMI 10",
             topic='TestTopic',
             is_active=True,
             sign_up_deadline="2016-5-1",
@@ -414,7 +414,7 @@ class InvitationTests(APITestCase):
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
         self.season = Season.objects.create(
-            number=1,
+            name="HackFMI 2",
             topic='TestTopic',
             is_active=True,
             sign_up_deadline="2016-5-1",
@@ -629,7 +629,7 @@ class SeasonTests(APITestCase):
     def setUp(self):
         self.skills = Skill.objects.create(name="C#")
         Season.objects.create(
-            number=1,
+            name="HackFMI 1",
             topic='TestTopic1',
             is_active=True,
             sign_up_deadline="2016-5-1",
@@ -637,7 +637,7 @@ class SeasonTests(APITestCase):
             mentor_pick_end_date="2016-5-1",
         )
         Season.objects.create(
-            number=2,
+            name="HackFMI 2",
             topic='TestTopic2',
             is_active=True,
             sign_up_deadline="2016-5-1",
@@ -651,7 +651,7 @@ class SeasonTests(APITestCase):
         )
 
     def test_season_deactivates_automatically(self):
-        self.assertFalse(Season.objects.filter(number=1).first().is_active)
+        self.assertFalse(Season.objects.get(name="HackFMI 1").is_active)
 
     def test_get_season(self):
         self.client = APIClient()
@@ -667,7 +667,7 @@ class MentorTests(APITestCase):
         self.skills = Skill.objects.create(name="C#")
         # TODO: Fix dates not to be hardcoded
         self.season = Season.objects.create(
-            number=1,
+            name="HackFMI 1",
             topic='TestTopic',
             is_active=True,
             sign_up_deadline="2016-5-1",
@@ -727,9 +727,10 @@ class MentorTests(APITestCase):
 
 
 class RoomTests(APITestCase):
+
     def setUp(self):
         self.season = Season.objects.create(
-            number=1,
+            name="HackFMI 1",
             topic='TestTopic',
             is_active=True,
             sign_up_deadline="2015-5-1",

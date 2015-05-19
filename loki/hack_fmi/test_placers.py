@@ -5,7 +5,7 @@ from .models import Season, Team, Mentor
 class PlacerTests(APITestCase):
     def setUp(self):
         self.season = Season.objects.create(
-            number=1,
+            name="Season 1",
             topic='TestTopic',
             is_active=True,
             sign_up_deadline="2015-5-1",

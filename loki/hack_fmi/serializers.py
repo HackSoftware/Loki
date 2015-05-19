@@ -192,7 +192,7 @@ class SeasonSerializer(serializers.ModelSerializer):
         model = Season
         fields = (
             'id',
-            'number',
+            'name',
             'topic',
             'front_page',
             'min_team_members_count',

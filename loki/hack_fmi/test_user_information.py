@@ -19,7 +19,7 @@ class LoginTests(APITestCase):
         self.competitor.is_active = True
         self.competitor.save()
         self.season_active = Season.objects.create(
-            number=1,
+            name="season",
             topic='TestTopic',
             is_active=True,
             sign_up_deadline="2016-5-1",
@@ -27,7 +27,7 @@ class LoginTests(APITestCase):
             mentor_pick_end_date="2016-5-1",
         )
         self.season_not_active = Season.objects.create(
-            number=2,
+            name="season",
             topic='TestTopic_2',
             is_active=False,
             sign_up_deadline="2016-5-1",
