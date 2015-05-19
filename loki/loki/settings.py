@@ -139,18 +139,17 @@ SUIT_CONFIG = {
     # menu
     'SEARCH_URL': '/admin/hack_fmi/competitor/',
     'MENU_ICONS': {
-        'sites': 'icon-leaf',
         'auth': 'icon-lock',
     },
     'MENU_OPEN_FIRST_CHILD': True,  # Default True
     'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
-        'sites',
-        {'app': 'auth', 'icon': 'icon-lock', 'models': ('user', 'group')},
-        {'label': 'Settings', 'icon': 'icon-cog', 'models': ('auth.user', 'auth.group')},
-        {'label': 'Support', 'icon': 'icon-question-sign', 'url': '/support/'},
+        {'app': 'education', 'icon': 'icon-pencil'},
+        {'app': 'hack_conf', 'icon': 'icon-briefcase'},
+        {'app': 'hack_fmi', 'icon': 'icon-certificate'},
+        {'app': 'post_office', 'icon': 'icon-envelope'},
     ),
 
     # misc
-    'LIST_PER_PAGE': 15
+    'LIST_PER_PAGE': 100
 }
