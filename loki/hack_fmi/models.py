@@ -141,7 +141,7 @@ class Team(models.Model):
 
 
 class Season(models.Model):
-    number = models.SmallIntegerField(default=0)
+    name = models.CharField(max_length=100, null=True)
     topic = models.CharField(max_length=100)
     front_page = RichTextField(blank=True)
     min_team_members_count = models.SmallIntegerField(default=1)

@@ -49,7 +49,7 @@ class MentorAdmin(SortableAdminMixin, admin.ModelAdmin):
 
 
 class SeasonAdmin(admin.ModelAdmin):
-    list_display = ('number', 'is_active')
+    list_display = ('name', 'is_active')
 
     class Meta:
         model = Season
