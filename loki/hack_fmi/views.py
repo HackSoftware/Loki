@@ -176,3 +176,10 @@ def get_schedule(request):
         content = f.read()
 
     return Response(content, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def schedule_json(request):
+    with open("media/placing.json", "r") as f:
+        content = f.read()
+    return Response(content, status=status.HTTP_200_OK)
