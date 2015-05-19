@@ -55,6 +55,7 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
         if season.sign_up_deadline < date.today():
             raise PermissionDenied("You are pass the deadline for creating teams!")
         team = serializer.save()
+        team.season = season
         team.add_member(self.request.user.get_competitor(), is_leader=True)
 
 

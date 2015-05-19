@@ -130,11 +130,6 @@ class TeamSerializer(serializers.ModelSerializer):
             'picture',
         )
 
-    def create(self, validated_data):
-        team = super(TeamSerializer, self).create(validated_data)
-        team.season = Season.objects.get(is_active=True)
-        return team
-
     def validate(self, data):
         """
          Check that number of mentors is less than allowed.
