@@ -357,13 +357,15 @@ class TeamManagementTests(APITestCase):
         data = {
             'name': 'Team name',
             'idea_description': 'lorem',
-            'technologies': [1]
+            'technologies': [self.skills.id]
         }
 
         url_get = reverse('hack_fmi:teams')
         response = self.client.post(url_get, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         team = Team.objects.get(name="Team name")
+
         self.assertEqual(team.season, self.season2)
 
 
