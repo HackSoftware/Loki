@@ -1,11 +1,11 @@
 from django.db import IntegrityError
 from django.http import HttpResponse
-from django.views.decorators.http import require_http_methods
+from django.views.decorators.http import require_POST
 from education.models import CheckIn, Student
 from loki import local_settings
 
 
-@require_http_methods(['POST'])
+@require_POST
 def set_check_in(request):
     mac = request.POST['mac']
     token = request.POST['token']
@@ -13,7 +13,7 @@ def set_check_in(request):
     if local_settings.CHECKIN_TOKEN != token:
         return HttpResponse(status=511)
 
-    student = Student.objects.filter(mac__iexact=mac)
+    student = Student.objects.filter(mac__iexact=mac).first()
     if not student:
         student = None
     try:

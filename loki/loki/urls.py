@@ -8,5 +8,6 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
     url(r'^hackfmi/', include('hack_fmi.urls', namespace='hack_fmi')),
     url(r'^ckeditor/', include('ckeditor.urls')),
-    url(r'^hackconf/', include('hack_conf.urls',)),
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^hackconf/', include('hack_conf.urls')),
+    url(r'^education/', include('education.urls', namespace='education')),
+    ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
