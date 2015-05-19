@@ -65,6 +65,12 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         except:
             return False
 
+    def make_competitor(self):
+        competitor = Competitor(baseuser_ptr_id=self.id)
+        competitor.save()
+        competitor.__dict__.update(self.__dict__)
+        return competitor.save()
+
 
 class Skill(models.Model):
     name = models.CharField(max_length=30)
@@ -88,7 +94,7 @@ class Competitor(BaseUser):
 
     is_vegetarian = models.BooleanField(default=False)
     known_skills = models.ManyToManyField(Skill)
-    faculty_number = models.IntegerField()
+    faculty_number = models.IntegerField(null=True)
     shirt_size = models.SmallIntegerField(choices=SHIRT_SIZE, default=S)
     needs_work = models.BooleanField(default=True)
     social_links = models.TextField(blank=True)

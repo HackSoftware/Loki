@@ -37,6 +37,7 @@ class PasswordResetView(views.PasswordResetView):
 
 
 class Login(views.LoginView):
+
     def action(self, serializer):
         user = serializer.object
         if not user.get_competitor():
