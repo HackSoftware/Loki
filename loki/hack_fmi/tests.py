@@ -251,6 +251,7 @@ class TeamManagementTests(APITestCase):
             mentor_pick_start_date="2016-4-1",
             mentor_pick_end_date="2016-5-1",
         )
+
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
             full_name='Ivo Naidobriq',
@@ -340,6 +341,30 @@ class TeamManagementTests(APITestCase):
         response = self.client.patch(url_get, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(Team.objects.first().name, 'Pandass')
+
+    def test_create_team(self):
+        self.season.is_active = False
+
+        self.season2 = Season.objects.create(
+            name="HackFMI 1",
+            topic='TestTopic',
+            is_active=True,
+            sign_up_deadline="2016-5-1",
+            mentor_pick_start_date="2016-4-1",
+            mentor_pick_end_date="2016-5-1",
+        )
+
+        data = {
+            'name': 'Team name',
+            'idea_description': 'lorem',
+            'technologies': [1]
+        }
+
+        url_get = reverse('hack_fmi:teams')
+        response = self.client.post(url_get, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        team = Team.objects.get(name="Team name")
+        self.assertEqual(team.season, self.season2)
 
 
 class LeaveTeamTests(APITestCase):

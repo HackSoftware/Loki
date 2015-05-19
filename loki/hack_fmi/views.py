@@ -57,6 +57,7 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
         team = serializer.save()
         team.season = season
         team.add_member(self.request.user.get_competitor(), is_leader=True)
+        team.save()
 
 
 @api_view(['POST'])
