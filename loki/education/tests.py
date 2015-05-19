@@ -2,8 +2,9 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 
-from education.models import Student, CheckIn
 
+from education.models import Student, CheckIn
+from loki.settings import CHECKIN_TOKEN
 
 class CheckInTest(TestCase):
     """Set token in your local_settings to 123"""
@@ -18,10 +19,9 @@ class CheckInTest(TestCase):
         )
 
     def test_check_in_with_mac_and_user(self):
-
         data = {
             'mac': '12-34-56-78-9A-BC',
-            'token': '123',
+            'token': CHECKIN_TOKEN,
         }
         url = reverse('education:set_check_in')
         self.client.post(url, data, format='json')
@@ -30,7 +30,7 @@ class CheckInTest(TestCase):
     def test_check_in_with_mac_and_no_user(self):
         data = {
             'mac': '12-34-56-78-9A-BA',
-            'token': '123',
+            'token': CHECKIN_TOKEN,
         }
         url = reverse('education:set_check_in')
         response = self.client.post(url, data, format='json')
@@ -40,7 +40,7 @@ class CheckInTest(TestCase):
     def test_check_macs_command(self):
         data = {
             'mac': '12-34-56-78-9A-BA',
-            'token': '123',
+            'token': CHECKIN_TOKEN,
         }
         url = reverse('education:set_check_in')
         self.client.post(url, data, format='json')
