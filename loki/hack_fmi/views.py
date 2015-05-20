@@ -143,32 +143,38 @@ class AssignMentor(APIView):
     def put(self, request, format=None):
         logged_competitor = request.user.get_competitor()
         mentor = Mentor.objects.get(id=request.data['id'])
-        membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
-        season = membership.team.season
-        if season.mentor_pick_start_date > date.today() or season.mentor_pick_end_date < date.today():
+        season = Season.objects.get(is_active=True)
+        team = Team.objects.get(id=request.data['team_id'])
+
+        today = date.today()
+        if season.mentor_pick_start_date > today or season.mentor_pick_end_date < today:
             error = {"error": "В момента не може да избирате ментор."}
             return Response(error, status.HTTP_403_FORBIDDEN)
-        if membership.is_leader and len(membership.team.mentors.all()) >= season.max_mentor_pick:
+
+        if len(team.mentors.all()) >= season.max_mentor_pick:
             error = {"error": "Този отбор не може да има повече ментори."}
             return Response(error, status.HTTP_403_FORBIDDEN)
-        if membership.is_leader and len(membership.team.mentors.all()) < season.max_mentor_pick:
-            membership.team.mentors.add(mentor)
-            return Response(status=status.HTTP_200_OK)
-        if not membership.is_leader:
+
+        if not team.get_leader() == logged_competitor:
             error = {"error": "Не си лидер на този отбор, за да избираш ментори."}
             return Response(error, status.HTTP_403_FORBIDDEN)
+
+        team.mentors.add(mentor)
+        return Response(status=status.HTTP_200_OK)
+
 
     #TODO: Fix methods
     def post(self, request, format=None):
         logged_competitor = request.user.get_competitor()
         mentor = Mentor.objects.get(id=request.data['id'])
-        membership = TeamMembership.objects.filter(competitor=logged_competitor).first()
-        if membership.is_leader:
-            membership.team.mentors.remove(mentor)
-            return Response(status=status.HTTP_200_OK)
-        else:
+        team = Team.objects.get(id=request.data['team_id'])
+
+        if not team.get_leader() == logged_competitor:
             error = {"error": "Не си лидер на този отбор, за да избираш ментори."}
             return Response(error, status.HTTP_403_FORBIDDEN)
+
+        team.mentors.remove(mentor)
+        return Response(status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])

@@ -745,7 +745,7 @@ class MentorTests(APITestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.competitor_leader)
         url = reverse('hack_fmi:assign_mentor')
-        data = {'id': self.mentor.id}
+        data = {'id': self.mentor.id, 'team_id': self.team.id}
         self.client.put(url, data, format='json')
         name = self.team.mentors.get(id=self.mentor.id)
         self.assertEqual(str(name), "Sten")
@@ -754,10 +754,22 @@ class MentorTests(APITestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.competitor_leader)
         url = reverse('hack_fmi:assign_mentor')
-        data = {'id': self.mentor.id}
+        data = {'id': self.mentor.id, 'team_id': self.team.id}
         self.client.put(url, data, format='json')
-        data = {'id': self.mentor2.id}
+        data = {'id': self.mentor2.id, 'team_id': self.team.id}
         response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_assign_mentor_after_endtime(self):
+        self.season.mentor_pick_end_date = "2013-5-1"
+        self.season.save()
+
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor_leader)
+        url = reverse('hack_fmi:assign_mentor')
+        data = {'id': self.mentor.id, 'team_id': self.team.id}
+        response = self.client.put(url, data, format='json')
+
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
