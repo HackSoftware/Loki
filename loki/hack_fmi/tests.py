@@ -192,6 +192,7 @@ class TeamRegistrationTests(APITestCase):
             sign_up_deadline="2016-5-1",
             mentor_pick_start_date="2016-4-1",
             mentor_pick_end_date="2016-5-1",
+            make_team_dead_line="2016-5-1"
         )
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -250,6 +251,7 @@ class TeamManagementTests(APITestCase):
             sign_up_deadline="2016-5-1",
             mentor_pick_start_date="2016-4-1",
             mentor_pick_end_date="2016-5-1",
+            make_team_dead_line="2016-5-1"
         )
 
         self.competitor = Competitor.objects.create(
@@ -352,6 +354,7 @@ class TeamManagementTests(APITestCase):
             sign_up_deadline="2016-5-1",
             mentor_pick_start_date="2016-4-1",
             mentor_pick_end_date="2016-5-1",
+            make_team_dead_line="2016-5-1",
         )
 
         data = {
@@ -385,6 +388,7 @@ class LeaveTeamTests(APITestCase):
             sign_up_deadline="2016-5-1",
             mentor_pick_start_date="2016-4-1",
             mentor_pick_end_date="2016-5-1",
+            make_team_dead_line="2016-5-1",
         )
         self.competitor1 = Competitor.objects.create(
             email='ivooo@abv.bg',
@@ -447,6 +451,7 @@ class InvitationTests(APITestCase):
             sign_up_deadline="2016-5-1",
             mentor_pick_start_date="2016-4-1",
             mentor_pick_end_date="2016-5-1",
+            make_team_dead_line="2016-5-1",
         )
         self.competitor_leader = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -662,6 +667,7 @@ class SeasonTests(APITestCase):
             sign_up_deadline="2016-5-1",
             mentor_pick_start_date="2016-4-15",
             mentor_pick_end_date="2016-5-1",
+            make_team_dead_line="2016-5-1",
         )
         Season.objects.create(
             name="HackFMI 2",
@@ -670,6 +676,7 @@ class SeasonTests(APITestCase):
             sign_up_deadline="2016-5-1",
             mentor_pick_start_date="2016-4-15",
             mentor_pick_end_date="2016-5-1",
+            make_team_dead_line="2016-5-1",
         )
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -700,6 +707,7 @@ class MentorTests(APITestCase):
             sign_up_deadline="2016-5-1",
             mentor_pick_start_date="2015-4-1",
             mentor_pick_end_date="2016-5-1",
+            make_team_dead_line="2016-5-1",
         )
         self.competitor_leader = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -763,6 +771,7 @@ class RoomTests(APITestCase):
             sign_up_deadline="2015-5-1",
             mentor_pick_start_date="2015-4-1",
             mentor_pick_end_date="2015-5-1",
+            make_team_dead_line="2016-5-1",
         )
         for i in range(10):
             Team.objects.create(

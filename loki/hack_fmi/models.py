@@ -147,6 +147,7 @@ class Season(models.Model):
     min_team_members_count = models.SmallIntegerField(default=1)
     max_team_members_count = models.SmallIntegerField(default=6)
     sign_up_deadline = models.DateField()
+    make_team_dead_line = models.DateField()
     mentor_pick_start_date = models.DateField()
     mentor_pick_end_date = models.DateField()
     max_mentor_pick = models.SmallIntegerField(default=1)

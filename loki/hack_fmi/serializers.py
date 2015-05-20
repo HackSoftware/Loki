@@ -195,4 +195,5 @@ class SeasonSerializer(serializers.ModelSerializer):
             'sign_up_deadline',
             'mentor_pick_start_date',
             'mentor_pick_end_date',
+            'make_team_dead_line'
         )

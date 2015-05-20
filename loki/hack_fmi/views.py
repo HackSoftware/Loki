@@ -52,7 +52,7 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         season = Season.objects.get(is_active=True)
-        if season.sign_up_deadline < date.today():
+        if season.make_team_dead_line < date.today():
             raise PermissionDenied("You are pass the deadline for creating teams!")
         team = serializer.save()
         team.season = season

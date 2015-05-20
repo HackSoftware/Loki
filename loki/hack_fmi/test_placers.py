@@ -3,6 +3,7 @@ from .models import Season, Team, Mentor
 
 
 class PlacerTests(APITestCase):
+
     def setUp(self):
         self.season = Season.objects.create(
             name="Season 1",
@@ -11,6 +12,7 @@ class PlacerTests(APITestCase):
             sign_up_deadline="2015-5-1",
             mentor_pick_start_date="2015-4-1",
             mentor_pick_end_date="2015-5-1",
+            make_team_dead_line="2016-5-1",
         )
         for i in range(1, 5):
             Team.objects.create(

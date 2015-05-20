@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from education.models import Student, CheckIn
 from loki.settings import CHECKIN_TOKEN
 
+
 class CheckInTest(TestCase):
     """Set token in your local_settings to 123"""
 

@@ -25,6 +25,8 @@ class LoginTests(APITestCase):
             sign_up_deadline="2016-5-1",
             mentor_pick_start_date="2016-4-1",
             mentor_pick_end_date="2016-5-1",
+            make_team_dead_line="2016-5-1",
+
         )
         self.season_not_active = Season.objects.create(
             name="season",
@@ -33,6 +35,7 @@ class LoginTests(APITestCase):
             sign_up_deadline="2016-5-1",
             mentor_pick_start_date="2016-4-1",
             mentor_pick_end_date="2016-5-1",
+            make_team_dead_line="2016-5-1",
         )
         self.team = Team.objects.create(
             name='Pandas',
