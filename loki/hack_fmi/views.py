@@ -115,10 +115,11 @@ class InvitationView(APIView):
     def put(self, request, format=None):
         logged_competitor = request.user.get_competitor()
         invitation = Invitation.objects.get(id=request.data['id'])
+        current_season = Season.objects.get(is_active=True)
         if invitation.competitor != logged_competitor:
             error = {"error": "Тази покана не е за теб."}
             return Response(error, status=status.HTTP_403_FORBIDDEN)
-        if logged_competitor.team_set.all():
+        if logged_competitor.team_set.filter(season=current_season):
             error = {"error": "Вече имаш отбор. Напусни го и тогава можеш да приемеш нова покана."}
             return Response(error, status=status.HTTP_403_FORBIDDEN)
 
