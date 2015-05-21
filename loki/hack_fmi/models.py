@@ -38,7 +38,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 
     avatar = ResizedImageField(
         upload_to='avatar',
-        max_width=200,
+        size=[300, 200],
         blank=True,
     )
 
