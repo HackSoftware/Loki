@@ -7,3 +7,5 @@ class BaseUserAdmin(admin.ModelAdmin):
 
     class Meta:
         model = BaseUser
+
+admin.site.register(BaseUser, BaseUserAdmin)

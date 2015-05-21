@@ -47,4 +47,3 @@ class CourseAdmin(admin.ModelAdmin):
     list_display_links = ['name']
 
 admin.site.register(Course, CourseAdmin)
-admin.site.register(BaseUser, BaseUserAdmin)
