@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
-from .models import Skill, Competitor, Season, Team, TeamMembership
+from ..models import Skill, Competitor, Season, Team, TeamMembership
 
 
 class LoginTests(APITestCase):

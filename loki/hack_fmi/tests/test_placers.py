@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
-from .models import Season, Team, Mentor
+from ..models import Season, Team, Mentor
 
 
 class PlacerTests(APITestCase):

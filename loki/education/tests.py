@@ -1,10 +1,8 @@
 from django.core.management import call_command
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-from post_office.models import EmailTemplate
 
 from education.models import Student, CheckIn
-from hack_fmi.models import BaseUser
 from loki.settings import CHECKIN_TOKEN
 
 

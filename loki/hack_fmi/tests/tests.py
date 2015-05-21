@@ -8,8 +8,8 @@ from rest_framework.test import APITestCase, APIClient
 
 from post_office.models import EmailTemplate
 
-from .models import (Skill, Competitor, BaseUser, TeamMembership,
-                     Season, Team, Invitation, Mentor, Room)
+from ..models import (Skill, Competitor, BaseUser, TeamMembership,
+                      Season, Team, Invitation, Mentor, Room)
 
 
 class SkillTests(APITestCase):
