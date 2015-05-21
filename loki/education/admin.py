@@ -4,13 +4,6 @@ from hack_fmi.models import BaseUser
 from .models import Student, Course, CourseAssignment
 
 
-class BaseUserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'first_name', 'last_name')
-
-    class Meta:
-        model = BaseUser
-
-
 class StudentAdmin(admin.ModelAdmin):
     list_display = [
         'id',
