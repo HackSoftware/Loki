@@ -1,6 +1,14 @@
 from django.contrib import admin
+from hack_fmi.models import BaseUser
 
 from .models import Student, Course, CourseAssignment
+
+
+class BaseUserAdmin(admin.ModelAdmin):
+    list_display = ('email', 'first_name', 'last_name')
+
+    class Meta:
+        model = BaseUser
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -46,3 +54,4 @@ class CourseAdmin(admin.ModelAdmin):
     list_display_links = ['name']
 
 admin.site.register(Course, CourseAdmin)
+admin.site.register(BaseUser, BaseUserAdmin)

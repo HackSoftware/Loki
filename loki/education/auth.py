@@ -1,6 +1,3 @@
-from rest_framework.response import Response
-from rest_framework import status
-
 from djoser import views
 from post_office import mail
 

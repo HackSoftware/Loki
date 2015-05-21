@@ -4,6 +4,7 @@ from django.core.urlresolvers import reverse
 
 
 from education.models import Student, CheckIn
+from hack_fmi.models import BaseUser
 from loki.settings import CHECKIN_TOKEN
 
 
@@ -50,3 +51,17 @@ class CheckInTest(TestCase):
         self.student_no_mac.save()
         call_command('check_macs')
         self.assertEqual(CheckIn.objects.first().student, self.student_no_mac)
+
+
+class BaseUserTests(TestCase):
+
+    def test_register_base_user(self):
+        user_mail = 'sten@gmail.com'
+        data = {
+            'email': user_mail,
+            'first_name': 'Stanislav',
+            'last_name': 'Bozhanov'
+        }
+        url = reverse('education:register')
+        self.client.post(url, data, format='json')
+        self.assertEqual(user_mail, BaseUser.objects.first().email)

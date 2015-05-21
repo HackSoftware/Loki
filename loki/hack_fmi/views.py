@@ -1,4 +1,5 @@
 from datetime import date
+from django.shortcuts import redirect
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -191,3 +192,7 @@ def schedule_json(request):
     with open("media/placing.json", "r") as f:
         content = f.read()
     return Response(content, status=status.HTTP_200_OK)
+
+
+def register(request):
+    return redirect('education:register')

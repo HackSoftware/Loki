@@ -3,7 +3,7 @@ from django.conf.urls import url
 from djoser.views import ActivationView, LogoutView, PasswordResetConfirmView
 
 from .views import SkillListView, TeamAPI, leave_team, InvitationView, MentorListView, SeasonListView, AssignMentor, PublicTeamView, get_schedule, \
-    schedule_json
+    schedule_json, register
 from .auth import Login, RegistrationView, me, PasswordResetView
 
 
@@ -20,7 +20,7 @@ urlpatterns = [
 
     url(r'^api/invitation/$', InvitationView.as_view(), name='invitation'),
     # Auth
-    url(r'^api/register/$', RegistrationView.as_view(), name='register'),
+    url(r'^api/register/$', register, name='register'),
     url(r'^api/login/', Login.as_view(), name='login'),
     # url(r'^api/logout/$', LogoutView.as_view(), name='logout'),
     url(r'^api/activate/$', ActivationView.as_view(), name='activate'),
