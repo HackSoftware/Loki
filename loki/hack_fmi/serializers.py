@@ -41,8 +41,15 @@ class CompetitorSerializer(serializers.ModelSerializer):
     teammembership_set = serializers.SerializerMethodField('get_active_teams')
 
     def get_active_teams(self, obj):
-        team_membership_query_set = TeamMembership.objects.filter(team__season__is_active=True, competitor=obj)
-        serializer = TeamMembershipSerializer(instance=team_membership_query_set, many=True, context=self.context)
+        team_membership_query_set = TeamMembership.objects.filter(
+            team__season__is_active=True,
+            competitor=obj
+        )
+
+        serializer = TeamMembershipSerializer(
+            instance=team_membership_query_set,
+            many=True, context=self.context
+        )
         return serializer.data
 
     class Meta:
@@ -60,7 +67,6 @@ class CompetitorSerializer(serializers.ModelSerializer):
             'team_set',
             'needs_work',
             'social_links',
-
         )
         extra_kwargs = {'password': {'write_only': True}}
 

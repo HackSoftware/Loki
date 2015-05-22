@@ -22,34 +22,6 @@ class SkillTests(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-
-class PasswordResetTests(APITestCase):
-
-    def setUp(self):
-        self.skills = Skill.objects.create(name="C#")
-        self.password_reset = EmailTemplate.objects.create(
-            name='password_reset',
-            subject='Смяна на Парола',
-            content='Lorem ipsum dolor sit amet, consectetur adipisicing'
-        )
-        self.competitor = Competitor.objects.create(
-            email='ivo@abv.bg',
-            full_name='Ivo Naidobriq',
-            faculty_number='123',
-        )
-        self.competitor.set_password('123')
-        self.competitor.is_active = True
-        self.competitor.save()
-
-    def test_reset_password_sends_email(self):
-        data = {'email': 'ivo@abv.bg'}
-        url = reverse('hack_fmi:password_reset')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(mail.get_queued()), 1)
-        self.assertIn(self.password_reset.content, mail.get_queued()[0].message)
-
-
 class LoginTests(APITestCase):
 
     def setUp(self):

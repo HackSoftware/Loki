@@ -3,8 +3,10 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.decorators.http import require_POST, require_http_methods
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 from education.models import CheckIn, Student
 
@@ -32,25 +34,16 @@ def set_check_in(request):
     return HttpResponse(status=200)
 
 
-class RegisterStudent(APIView):
-    permission_classes = (AllowAny,)
+class OnBoardStudent(APIView):
+    permission_classes = (IsAuthenticated,)
 
-    def get(self, request, format=None):
-        if not request.user.is_authenticated():
-            return redirect('base_app:register')
-        elif request.user.is_authenticated() and request.user.get_student():
-            pass
-            # връща, че вече си регистриран
-        elif request.user.is_authenticated() and request.user.get_student():
-            pass
-            # формичка за допълване
+    def make_student(self, baseuser):
+        student = Student(baseuser_ptr_id=baseuser.id)
+        student.save()
+        student.__dict__.update(baseuser.__dict__)
+        return student.save()
 
     def post(self, request, format=None):
-        if request.user.is_authenticated() and not request.user.get_student():
-            Student.objects.create(
-                baseuser_ptr_id=self.id
-                # more info
-            )
-        else:
-            pass
-            # нямаш право да постваш
+        if not request.user.get_student():
+            self.make_student(request.user)
+            return Response(status=status.HTTP_200_OK)

@@ -78,13 +78,6 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         competitor.__dict__.update(self.__dict__)
         return competitor.save()
 
-    def make_student(self):
-        student_class = get_model('education', 'Student')
-        student = student_class(baseuser_ptr_id=self.id)
-        student.save()
-        student.__dict__.update(self.__dict__)
-        return student.save()
-
 
 class Skill(models.Model):
     name = models.CharField(max_length=30)

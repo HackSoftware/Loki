@@ -9,31 +9,6 @@ from .serializers import CompetitorSerializer
 from .premissions import IsHackFMIUser
 
 
-class RegistrationView(views.RegistrationView):
-
-    def send_email(self, to_email, from_email, context):
-        mail.send(
-            to_email,
-            from_email,
-            template='user_register',
-            context=context,
-        )
-
-    def get_serializer_class(self):
-        return CompetitorSerializer
-
-
-class PasswordResetView(views.PasswordResetView):
-
-    def send_email(self, to_email, from_email, context):
-        mail.send(
-            to_email,
-            from_email,
-            template='password_reset',
-            context=context,
-        )
-
-
 class Login(views.LoginView):
 
     def action(self, serializer):
