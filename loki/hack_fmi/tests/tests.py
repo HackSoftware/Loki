@@ -8,7 +8,7 @@ from rest_framework.test import APITestCase, APIClient
 
 from post_office.models import EmailTemplate
 
-from ..models import (Skill, Competitor, BaseUser, TeamMembership,
+from ..models import (Skill, Competitor, TeamMembership,
                       Season, Team, Invitation, Mentor, Room)
 
 
@@ -21,67 +21,6 @@ class SkillTests(APITestCase):
         url = reverse('hack_fmi:skills')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-class LoginTests(APITestCase):
-
-    def setUp(self):
-        self.skills = Skill.objects.create(name="C#")
-        self.competitor = Competitor.objects.create(
-            email='ivo@abv.bg',
-            full_name='Ivo Naidobriq',
-            faculty_number='123',
-        )
-        self.competitor.set_password('123')
-        self.competitor.is_active = True
-        self.competitor.save()
-
-    def test_login(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'password': '123',
-        }
-        url = reverse('hack_fmi:login')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_wrong_password(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'password': '123321',
-        }
-        url = reverse('hack_fmi:login')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_wrong_not_competitor(self):
-        self.base_user = BaseUser.objects.create(
-            email='baseuser@abv.bg',
-            full_name='Ivo Naidobriq',
-        )
-        self.base_user.set_password('123')
-        self.base_user.is_active = True
-        self.base_user.save()
-
-        data = {
-            'email': 'baseuser@abv.bg',
-            'password': '123',
-        }
-        url = reverse('hack_fmi:login')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_get_data_after_login(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.competitor)
-        url = reverse('hack_fmi:me')
-        response = self.client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['email'], self.competitor.email)
-
-    def test_get_data_not_login(self):
-        url = reverse('hack_fmi:me')
-        response = self.client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class TeamRegistrationTests(APITestCase):

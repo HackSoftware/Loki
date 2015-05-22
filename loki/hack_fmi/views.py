@@ -5,7 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 
 from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
@@ -194,5 +194,16 @@ def schedule_json(request):
     return Response(content, status=status.HTTP_200_OK)
 
 
-def register(request):
-    return redirect('education:register')
+class OnBoardCompetitor(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def make_competitor(self, baseuser):
+        competitor = Competitor(baseuser_ptr_id=baseuser.id)
+        competitor.save()
+        competitor.__dict__.update(baseuser.__dict__)
+        return competitor.save()
+
+    def post(self, request, format=None):
+        if not request.user.get_competitor():
+            self.make_competitor(request.user)
+            return Response(status=status.HTTP_200_OK)
