@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 from ckeditor.fields import RichTextField
+from django.db.models.loading import get_model
 from django_resized import ResizedImageField
 
 
@@ -65,11 +66,24 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         except:
             return False
 
+    def get_student(self):
+        try:
+            return self.student
+        except:
+            return False
+
     def make_competitor(self):
         competitor = Competitor(baseuser_ptr_id=self.id)
         competitor.save()
         competitor.__dict__.update(self.__dict__)
         return competitor.save()
+
+    def make_student(self):
+        student_class = get_model('education', 'Student')
+        student = student_class(baseuser_ptr_id=self.id)
+        student.save()
+        student.__dict__.update(self.__dict__)
+        return student.save()
 
 
 class Skill(models.Model):
