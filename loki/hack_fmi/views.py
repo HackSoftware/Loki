@@ -64,14 +64,19 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
 @permission_classes((IsHackFMIUser,))
 def leave_team(request):
     logged_competitor = request.user.get_competitor()
-    membership = TeamMembership.objects.get(competitor=logged_competitor)
-    team = Team.objects.get(id=membership.team.id)
-    if membership.is_leader:
+    logged_competitor_teams = logged_competitor.team_set
+    current_season = Season.objects.get(is_active=True)
+    team = logged_competitor_teams.get(season=current_season)
+
+    if team.get_leader() == logged_competitor:
         send_team_delete_email(team)
         team.delete()
         return Response(status=status.HTTP_200_OK)
 
-    TeamMembership.objects.get(competitor=logged_competitor).delete()
+    TeamMembership.objects.get(
+        competitor=logged_competitor,
+        team=team
+    ).delete()
     return Response(status=status.HTTP_200_OK)
 
 
