@@ -203,3 +203,16 @@ class SeasonSerializer(serializers.ModelSerializer):
             'mentor_pick_end_date',
             'make_team_dead_line'
         )
+
+
+class OnBoardingCompetitorSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Competitor
+        fields = (
+            'is_vegetarian',
+            'known_skills',
+            'shirt_size',
+            'needs_work',
+            'social_links',
+        )

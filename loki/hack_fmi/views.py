@@ -1,5 +1,4 @@
 from datetime import date
-from django.shortcuts import redirect
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -197,8 +196,11 @@ def schedule_json(request):
 class OnBoardCompetitor(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def make_competitor(self, baseuser):
-        competitor = Competitor(baseuser_ptr_id=baseuser.id)
+    def make_competitor(self, baseuser, data):
+        competitor = Competitor(
+            baseuser_ptr_id=baseuser.id
+
+        )
         competitor.save()
         competitor.__dict__.update(baseuser.__dict__)
         return competitor.save()
