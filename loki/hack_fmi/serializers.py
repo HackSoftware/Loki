@@ -207,12 +207,32 @@ class SeasonSerializer(serializers.ModelSerializer):
 
 class OnBoardingCompetitorSerializer(serializers.ModelSerializer):
 
+    def __init__(self, *args, **kwargs):
+        self.baseuser = kwargs.pop('baseuser')
+
+        super(OnBoardingCompetitorSerializer, self).__init__(*args, **kwargs)
+
+    def create(self, validated_data):
+        competitor = Competitor(**validated_data)
+        competitor.baseuser_ptr_id = self.baseuser.id
+        competitor.save()
+        competitor.__dict__.update(self.baseuser.__dict__)
+        competitor.save()
+        return competitor
+
     class Meta:
         model = Competitor
+
+        known_skills = serializers.PrimaryKeyRelatedField(
+            queryset=Skill.objects.all(),
+            many=True,
+            read_only=False
+        )
+
         fields = (
             'is_vegetarian',
-            'known_skills',
             'shirt_size',
             'needs_work',
             'social_links',
+            'known_skills',
         )

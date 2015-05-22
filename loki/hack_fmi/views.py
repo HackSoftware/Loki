@@ -9,7 +9,7 @@ from rest_framework.exceptions import PermissionDenied
 
 from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
 from .serializers import (SkillSerializer, TeamSerializer,
-                          Invitation, InvitationSerializer, MentorSerializer, SeasonSerializer, PublicTeamSerializer)
+                          Invitation, InvitationSerializer, MentorSerializer, SeasonSerializer, PublicTeamSerializer, OnBoardingCompetitorSerializer)
 from .premissions import IsHackFMIUser, IsTeamLeaderOrReadOnly
 from .helper import send_team_delete_email
 
@@ -207,5 +207,9 @@ class OnBoardCompetitor(APIView):
 
     def post(self, request, format=None):
         if not request.user.get_competitor():
-            self.make_competitor(request.user)
-            return Response(status=status.HTTP_200_OK)
+            serializer = OnBoardingCompetitorSerializer(data=request.data, baseuser=request.user)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
