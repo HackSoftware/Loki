@@ -30,7 +30,7 @@ class Command(BaseCommand):
                 start += 1
             return None
 
-        SLOTS = ["S{}".format(i) for i in range(1, 15)]
+        SLOTS = ["S{}".format(i) for i in range(1, 8)]
 
         season = Season.objects.filter(is_active=True)
         INPUT = [(team.name,
