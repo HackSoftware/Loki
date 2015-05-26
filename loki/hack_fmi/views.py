@@ -196,15 +196,6 @@ def schedule_json(request):
 class OnBoardCompetitor(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def make_competitor(self, baseuser, data):
-        competitor = Competitor(
-            baseuser_ptr_id=baseuser.id
-
-        )
-        competitor.save()
-        competitor.__dict__.update(baseuser.__dict__)
-        return competitor.save()
-
     def post(self, request, format=None):
         if not request.user.get_competitor():
             serializer = OnBoardingCompetitorSerializer(data=request.data, baseuser=request.user)
