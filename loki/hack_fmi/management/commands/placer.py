@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from hack_fmi.models import Team, Mentor
+from hack_fmi.models import Team, Mentor, Season
 import json
 from tabulate import tabulate
 from os import path
@@ -32,10 +32,10 @@ class Command(BaseCommand):
 
         SLOTS = ["S{}".format(i) for i in range(1, 15)]
 
-
+        season = Season.objects.filter(active=True)
         INPUT = [(team.name,
                   [mentor.name for mentor in Team.objects.filter(name=team.name).first().mentors.all()])
-                 for team in Team.objects.all() if len(team.mentors.all()) != 0]
+                 for team in Team.objects.filter(season=season) if len(team.mentors.all()) != 0]
 
         chosen_mentors = []
         teams_with_choice = []
