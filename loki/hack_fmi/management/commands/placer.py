@@ -32,7 +32,7 @@ class Command(BaseCommand):
 
         SLOTS = ["S{}".format(i) for i in range(1, 15)]
 
-        season = Season.objects.filter(active=True)
+        season = Season.objects.filter(is_active=True)
         INPUT = [(team.name,
                   [mentor.name for mentor in Team.objects.filter(name=team.name).first().mentors.all()])
                  for team in Team.objects.filter(season=season) if len(team.mentors.all()) != 0]
