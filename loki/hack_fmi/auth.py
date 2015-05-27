@@ -14,8 +14,7 @@ class Login(views.LoginView):
         response = super(Login, self).action(serializer)
         user = serializer.object
         if not user.get_competitor():
-            response.status = status.HTTP_206_PARTIAL_CONTENT
-
+            response.status_code = 206
         return response
 
 
