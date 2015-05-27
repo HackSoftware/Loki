@@ -8,6 +8,7 @@ from rest_framework.test import APITestCase, APIClient
 
 from post_office.models import EmailTemplate
 
+from ..helper import date_increase
 from ..models import (Skill, Competitor, TeamMembership,
                       Season, Team, Invitation, Mentor, Room)
 
@@ -31,10 +32,10 @@ class TeamRegistrationTests(APITestCase):
             name="season",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1"
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20)
         )
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -90,10 +91,10 @@ class TeamManagementTests(APITestCase):
             name="HackFMI 1",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1"
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20)
         )
 
         self.competitor = Competitor.objects.create(
@@ -193,10 +194,10 @@ class TeamManagementTests(APITestCase):
             name="HackFMI 1",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20)
         )
 
         data = {
@@ -227,10 +228,10 @@ class LeaveTeamTests(APITestCase):
             name="HackFMI 10",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(10),
+            mentor_pick_end_date=date_increase(10),
+            make_team_dead_line=date_increase(10),
         )
         self.competitor1 = Competitor.objects.create(
             email='ivooo@abv.bg',
@@ -290,10 +291,10 @@ class InvitationTests(APITestCase):
             name="HackFMI 2",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(10),
+            mentor_pick_end_date=date_increase(10),
+            make_team_dead_line=date_increase(10),
         )
         self.competitor_leader = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -506,19 +507,19 @@ class SeasonTests(APITestCase):
             name="HackFMI 1",
             topic='TestTopic1',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-15",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20),
         )
         Season.objects.create(
             name="HackFMI 2",
             topic='TestTopic2',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-15",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20),
         )
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -546,10 +547,10 @@ class MentorTests(APITestCase):
             name="HackFMI 1",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2015-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(-15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20),
         )
         self.competitor_leader = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -622,10 +623,10 @@ class RoomTests(APITestCase):
             name="HackFMI 1",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2015-5-1",
-            mentor_pick_start_date="2015-4-1",
-            mentor_pick_end_date="2015-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20),
         )
         for i in range(10):
             Team.objects.create(
