@@ -63,7 +63,7 @@ class AuthenticationTests(TestCase):
         }
         url = reverse('hack_fmi:login')
         response = self.client.post(url, data, format='json')
-        print(response.status_code)
+        self.assertEqual(response.status_code, 206)
 
     def test_login_competitor(self):
         data = {
