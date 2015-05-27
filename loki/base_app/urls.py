@@ -2,6 +2,7 @@ from django.conf.urls import url
 from djoser.views import ActivationView, PasswordResetConfirmView
 
 from base_app.auth import RegistrationView, Login, PasswordResetView
+from base_app.views import me
 
 
 urlpatterns = [
@@ -10,5 +11,6 @@ urlpatterns = [
     url(r'^api/activate/$', ActivationView.as_view(), name='activate'),
     url(r'^api/password_reset/$', PasswordResetView.as_view(), name='password_reset'),
     url(r'^api/password_reset_confirm/$', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    url(r'^api/me/$', me, name='me'),
 ]
 

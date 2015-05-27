@@ -4,8 +4,9 @@ from post_office import mail
 
 from post_office.models import EmailTemplate
 from rest_framework import status
+from rest_framework.test import APIClient
 
-from hack_fmi.models import BaseUser
+from hack_fmi.models import BaseUser, Skill
 
 
 class BaseUserRegistrationTests(TestCase):
@@ -63,3 +64,25 @@ class BaseUserRegistrationTests(TestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn(self.user_register.content, mail.get_queued()[0].message)
+
+
+class PersonalUserInformationTests(TestCase):
+    def setUp(self):
+        self.competitor = BaseUser.objects.create_user(
+            email="comp@comp.bg",
+            password="123",
+            full_name='Comp compov'
+        )
+        self.competitor.is_active = True
+        self.competitor.make_competitor()
+        self.competitor.save()
+        self.competitor.is_vegetarian = True
+        self.competitor.needs_work = True
+        self.skill = Skill.objects.create(name='C#')
+
+    def test_me_returns_all_info(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.competitor)
+        url_me = reverse('base_app:me')
+        response = self.client.get(url_me, format='json')
+        print(response.data)

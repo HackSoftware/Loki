@@ -2,6 +2,14 @@ from rest_framework import serializers
 from .models import Student
 
 
+class StudentSerializer(serializers.ModelSerializer):
+    model = Student
+    fields = (
+        'studies_at',
+        'works_at',
+    )
+
+
 class OnBoardingStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
