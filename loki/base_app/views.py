@@ -10,5 +10,6 @@ from base_app.serializers import BaseUserMeSerializer
 @permission_classes((IsAuthenticated,))
 def me(request):
     logged_user = request.user
-    serializer = BaseUserMeSerializer(logged_user, many=False)
+    serializer = BaseUserMeSerializer(logged_user)
+
     return Response(serializer.data, status=status.HTTP_200_OK)

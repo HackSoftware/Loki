@@ -3,11 +3,13 @@ from .models import Student
 
 
 class StudentSerializer(serializers.ModelSerializer):
-    model = Student
-    fields = (
-        'studies_at',
-        'works_at',
-    )
+
+    class Meta:
+        model = Student
+        fields = (
+            'studies_at',
+            'works_at',
+        )
 
 
 class OnBoardingStudentSerializer(serializers.ModelSerializer):

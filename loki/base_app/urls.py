@@ -13,4 +13,3 @@ urlpatterns = [
     url(r'^api/password_reset_confirm/$', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     url(r'^api/me/$', me, name='me'),
 ]
-
