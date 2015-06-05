@@ -134,6 +134,7 @@ class TeamSerializer(serializers.ModelSerializer):
             'members_needed_desc',
             'room',
             'picture',
+            'place',
         )
 
     def validate(self, data):
