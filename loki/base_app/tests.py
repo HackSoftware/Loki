@@ -67,6 +67,7 @@ class BaseUserRegistrationTests(TestCase):
 
 
 class PersonalUserInformationTests(TestCase):
+
     def setUp(self):
         self.baseuser = BaseUser.objects.create_user(
             email="comp@comp.bg",
@@ -94,4 +95,5 @@ class PersonalUserInformationTests(TestCase):
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
         # TODO: improve that test
+        resul_teammembership_set = response.data['competitor']['teammembership_set'][0]
         self.assertEqual(response.data['competitor']['teammembership_set'][0]['team']['name'], self.team.name)
