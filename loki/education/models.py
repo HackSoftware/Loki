@@ -62,6 +62,7 @@ class Course(models.Model):
     applications_url = models.URLField(null=True, blank=True)
     ask_for_favorite_partner = models.BooleanField(default=False)
     ask_for_feedback = models.BooleanField(default=False)
+    lecture = models.ForeignKey('Lecture', null=True, blank=True)
     end_time = models.DateField(blank=True, null=True)
     next_season_mail_list = models.URLField(null=True, blank=True)
     SEO_description = models.CharField(blank=False, max_length=255)
@@ -78,3 +79,7 @@ class CheckIn(models.Model):
 
     class Meta:
         unique_together = ('student', 'date')
+
+
+class Lecture(models.Model):
+    date = models.DateField(auto_now=True)
