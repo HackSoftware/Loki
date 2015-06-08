@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Student, Course, CourseAssignment
+from .models import Student, Course, CourseAssignment, Lecture, CheckIn
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -46,3 +46,22 @@ class CourseAdmin(admin.ModelAdmin):
     list_display_links = ['name']
 
 admin.site.register(Course, CourseAdmin)
+
+
+class LectureAdmin(admin.ModelAdmin):
+    list_display = [
+        'date',
+        'course'
+    ]
+
+admin.site.register(Lecture, LectureAdmin)
+
+
+class CheckInAdmin(admin.ModelAdmin):
+    list_display = [
+        'date',
+        'mac',
+        'student'
+    ]
+
+admin.site.register(CheckIn, CheckInAdmin)
