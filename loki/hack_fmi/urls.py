@@ -1,10 +1,9 @@
 from django.conf.urls import url
 
-from djoser.views import ActivationView, LogoutView, PasswordResetConfirmView
-
-from .views import SkillListView, TeamAPI, leave_team, InvitationView, MentorListView, SeasonListView, AssignMentor, PublicTeamView, get_schedule, \
-    schedule_json
-from .auth import Login, RegistrationView, me, PasswordResetView
+from .views import (SkillListView, TeamAPI, leave_team, InvitationView,
+                    MentorListView, SeasonListView, AssignMentor, PublicTeamView,
+                    get_schedule, schedule_json, OnBoardCompetitor)
+from .auth import Login, me
 
 
 urlpatterns = [
@@ -20,13 +19,8 @@ urlpatterns = [
 
     url(r'^api/invitation/$', InvitationView.as_view(), name='invitation'),
     # Auth
-    url(r'^api/register/$', RegistrationView.as_view(), name='register'),
     url(r'^api/login/', Login.as_view(), name='login'),
     # url(r'^api/logout/$', LogoutView.as_view(), name='logout'),
-    url(r'^api/activate/$', ActivationView.as_view(), name='activate'),
-    url(r'^api/password_reset/$', PasswordResetView.as_view(), name='password_reset'),
-    url(r'^api/password_reset_confirm/$', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-
 
     url(r'^api/me/$', me, name='me'),
     url(r'^api/season/$', SeasonListView.as_view(), name='season'),
@@ -34,4 +28,5 @@ urlpatterns = [
 
     url(r'^api/schedule/', get_schedule, name="get_schedule"),
     url(r'^api/schedule_json/', schedule_json, name="schedule_json"),
+    url(r'^api/onboard-competitor/$', OnBoardCompetitor.as_view(), name='onboard_competitor'),
 ]

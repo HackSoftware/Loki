@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 from ckeditor.fields import RichTextField
+from django.db.models.loading import get_model
 from django_resized import ResizedImageField
 
 
@@ -38,7 +39,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 
     avatar = ResizedImageField(
         upload_to='avatar',
-        max_width=200,
+        size=[300, 200],
         blank=True,
     )
 
@@ -62,6 +63,12 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     def get_competitor(self):
         try:
             return self.competitor
+        except:
+            return False
+
+    def get_student(self):
+        try:
+            return self.student
         except:
             return False
 
