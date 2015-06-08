@@ -6,7 +6,7 @@ from post_office.models import EmailTemplate
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from hack_fmi.models import BaseUser, Skill
+from hack_fmi.models import BaseUser, Skill, Team
 
 
 class BaseUserRegistrationTests(TestCase):
@@ -68,21 +68,30 @@ class BaseUserRegistrationTests(TestCase):
 
 class PersonalUserInformationTests(TestCase):
     def setUp(self):
-        self.competitor = BaseUser.objects.create_user(
+        self.baseuser = BaseUser.objects.create_user(
             email="comp@comp.bg",
             password="123",
             full_name='Comp compov'
         )
-        self.competitor.is_active = True
-        self.competitor.make_competitor()
-        self.competitor.save()
-        self.competitor.is_vegetarian = True
-        self.competitor.needs_work = True
+        self.baseuser.is_active = True
+        self.baseuser.make_competitor()
+        self.baseuser.save()
+        self.baseuser.is_vegetarian = True
+        self.baseuser.needs_work = True
         self.skill = Skill.objects.create(name='C#')
 
-    def test_me_returns_all_info(self):
+        self.team = Team.objects.create(
+            name="My Team"
+        )
+        self.team.save()
+        self.team.add_member(
+            self.baseuser.get_competitor(), True
+        )
+
+    def test_me_returns_full_team_membership_set(self):
         self.client = APIClient()
-        self.client.force_authenticate(user=self.competitor)
+        self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
-        print(response.data)
+        # TODO: improve that test
+        self.assertEqual(response.data['competitor']['teammembership_set'][0]['team']['name'], self.team.name)
