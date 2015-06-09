@@ -18,8 +18,6 @@ class Student(BaseUser):
 
     status = models.SmallIntegerField(choices=STATUSES, default=STUDENT)
     courses = models.ManyToManyField('Course', through='CourseAssignment')
-    github_account = models.URLField(null=True, blank=True)
-    linkedin_account = models.URLField(null=True, blank=True)
     hr_of = models.ForeignKey('base_app.Partner', blank=True, null=True)
     mac = models.CharField(max_length=17, null=True, blank=True)
     studies_at = models.CharField(blank=True, null=True, max_length="110")
