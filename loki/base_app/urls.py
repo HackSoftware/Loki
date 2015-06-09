@@ -9,8 +9,8 @@ urlpatterns = [
     url(r'^api/register/$', RegistrationView.as_view(), name='register'),
     url(r'^api/login/', Login.as_view(), name='login'),
     url(r'^api/activate/$', ActivationView.as_view(), name='activate'),
-    url(r'^api/password_reset/$', PasswordResetView.as_view(), name='password_reset'),
-    url(r'^api/password_reset_confirm/$', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    url(r'^api/password-reset/$', PasswordResetView.as_view(), name='password_reset'),
+    url(r'^api/password-reset-confirm/$', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     url(r'^api/me/$', me, name='me'),
-    url(r'^api/update_baseuser', baseuser_update, name='update_baseuser')
+    url(r'^api/update-baseuser', baseuser_update, name='update_baseuser')
 ]
