@@ -1,4 +1,4 @@
-from rest_framework import serializers
+from rest_framework import serializers, generics
 from education.serializers import StudentSerializer
 
 from hack_fmi.models import BaseUser
@@ -39,4 +39,17 @@ class BaseUserMeSerializer(serializers.ModelSerializer):
             'twitter_account',
             'competitor',
             'student',
+        )
+
+
+class UpdateBaseUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BaseUser
+        fields = (
+            'first_name',
+            'last_name',
+            'github_account',
+            'linkedin_account',
+            'twitter_account',
         )

@@ -124,5 +124,18 @@ class PersonalUserInformationTests(TestCase):
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
+        # pp = pprint.PrettyPrinter(indent=2)
+        # pp.pprint(response.data)
         first_courseassignment = response.data['student']['courseassignment_set'][0]
         self.assertEqual(first_courseassignment['course']['name'], self.course.name)
+
+    def test_baseuser_update(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.baseuser)
+        update_url = reverse('base_app:update_baseuser')
+        data = {'github_account': 'http://github.com/Ivo'}
+        self.client.patch(update_url, data, format='json')
+
+        baseuser = BaseUser.objects.get(id=self.baseuser.id)
+
+        self.assertEqual(baseuser.github_account, data['github_account'])
