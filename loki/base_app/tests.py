@@ -7,6 +7,9 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from hack_fmi.models import BaseUser, Skill, Team
+from education.models import Course, CourseAssignment, Student
+
+import pprint
 
 
 class BaseUserRegistrationTests(TestCase):
@@ -81,8 +84,27 @@ class PersonalUserInformationTests(TestCase):
         self.baseuser.needs_work = True
         self.skill = Skill.objects.create(name='C#')
 
+        # make baseuser student
+        self.student = Student(
+            baseuser_ptr_id=self.baseuser.id,
+        )
+
+        self.student.save()
+        self.student.__dict__.update(self.__dict__)
+        self.student.save()
+
+        self.course = Course.objects.create(
+            name='Programming 101',
+            application_until='2015-03-03',
+        )
+
         self.team = Team.objects.create(
-            name="My Team"
+            name='My Team',
+        )
+        self.ca = CourseAssignment.objects.create(
+            course=self.course,
+            user=self.student,
+            group_time=1,
         )
         self.team.save()
         self.team.add_member(
@@ -94,6 +116,13 @@ class PersonalUserInformationTests(TestCase):
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
-        # TODO: improve that test
         resul_teammembership_set = response.data['competitor']['teammembership_set'][0]
-        self.assertEqual(response.data['competitor']['teammembership_set'][0]['team']['name'], self.team.name)
+        self.assertEqual(resul_teammembership_set['team']['name'], self.team.name)
+
+    def test_me_returns_full_courseassignments_set(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.baseuser)
+        url_me = reverse('base_app:me')
+        response = self.client.get(url_me, format='json')
+        first_courseassignment = response.data['student']['courseassignment_set'][0]
+        self.assertEqual(first_courseassignment['course']['name'], self.course.name)

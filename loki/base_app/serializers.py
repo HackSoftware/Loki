@@ -32,7 +32,6 @@ class BaseUserMeSerializer(serializers.ModelSerializer):
         model = BaseUser
         fields = (
             'email',
-            'password',
             'first_name',
             'last_name',
             'competitor',

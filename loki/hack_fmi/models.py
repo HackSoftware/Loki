@@ -37,6 +37,9 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
+    github_account1 = models.URLField(null=True, blank=True)
+    linkedin_account1 = models.URLField(null=True, blank=True)
+
     avatar = ResizedImageField(
         upload_to='avatar',
         size=[300, 200],

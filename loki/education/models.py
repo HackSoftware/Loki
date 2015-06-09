@@ -14,15 +14,13 @@ class Student(BaseUser):
         (STUDENT, 'Student'),
         (HR, 'HR'),
         (TEACHER, 'Teacher'),
-
     )
 
     status = models.SmallIntegerField(choices=STATUSES, default=STUDENT)
     courses = models.ManyToManyField('Course', through='CourseAssignment')
-    description = models.TextField(blank=True)
     github_account = models.URLField(null=True, blank=True)
-    hr_of = models.ForeignKey('base_app.Partner', blank=True, null=True)
     linkedin_account = models.URLField(null=True, blank=True)
+    hr_of = models.ForeignKey('base_app.Partner', blank=True, null=True)
     mac = models.CharField(max_length=17, null=True, blank=True)
     studies_at = models.CharField(blank=True, null=True, max_length="110")
     works_at = models.CharField(null=True, blank=True, max_length='110')
@@ -43,7 +41,6 @@ class CourseAssignment(models.Model):
     favourite_partners = models.ManyToManyField('base_app.Partner', null=True, blank=True)
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
     is_attending = models.BooleanField(default=True)
-    points = models.PositiveIntegerField(default=0)
     user = models.ForeignKey('Student')
     is_online = models.BooleanField(default=False)
 
