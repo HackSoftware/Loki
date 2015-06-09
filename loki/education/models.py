@@ -1,8 +1,9 @@
 from django.db import models
 
-from hack_fmi.models import BaseUser
-
 from ckeditor.fields import RichTextField
+
+from hack_fmi.models import BaseUser
+from .serializers import validate_mac
 
 
 class Student(BaseUser):
@@ -19,7 +20,7 @@ class Student(BaseUser):
     status = models.SmallIntegerField(choices=STATUSES, default=STUDENT)
     courses = models.ManyToManyField('Course', through='CourseAssignment')
     hr_of = models.ForeignKey('base_app.Partner', blank=True, null=True)
-    mac = models.CharField(max_length=17, null=True, blank=True)
+    mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
     studies_at = models.CharField(blank=True, null=True, max_length="110")
     works_at = models.CharField(null=True, blank=True, max_length='110')
     phone = models.CharField(null=True, blank=True, max_length='20')
