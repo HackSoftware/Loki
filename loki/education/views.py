@@ -1,14 +1,16 @@
 from django.db import IntegrityError
 from django.http import HttpResponse
-from django.shortcuts import redirect
-from django.views.decorators.http import require_POST, require_http_methods
+from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from education.models import CheckIn, Student
+from .serializers import UpdateStudentSerializer
+from .premissions import IsStudent
 
 from django.conf import settings
 
@@ -47,3 +49,15 @@ class OnBoardStudent(APIView):
         if not request.user.get_student():
             self.make_student(request.user)
             return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['PATCH'])
+@permission_classes((IsStudent,))
+def student_update(request):
+    baseuser = request.user
+    serializer = UpdateStudentSerializer(baseuser, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors, status=400)

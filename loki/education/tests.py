@@ -9,6 +9,7 @@ from loki.settings import CHECKIN_TOKEN
 
 
 class CheckInTest(TestCase):
+
     def setUp(self):
         self.student = Student.objects.create(
             email='sten@abv.bg',
@@ -74,3 +75,22 @@ class AuthenticationTests(TestCase):
             BaseUser.objects.first().email,
             Student.objects.first().email
         )
+
+
+class UpdateStudentsTests(TestCase):
+
+    def setUp(self):
+        self.student = Student.objects.create(
+            email='sten@abv.bg',
+            mac="12-34-56-78-9A-BC",
+        )
+
+    def test_onboard_student(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student)
+        url = reverse('education:student_update')
+        data = {'mac': '11-11-11-11-11-11'}
+        response = self.client.patch(url, data, format='json')
+
+        student = Student.objects.first()
+        self.assertEqual(student.mac, data['mac'])

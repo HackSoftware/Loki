@@ -2,12 +2,8 @@ from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import generics
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
 
 from base_app.serializers import BaseUserMeSerializer, UpdateBaseUserSerializer
-from hack_fmi.models import BaseUser
 
 
 @api_view(['GET'])
@@ -20,9 +16,10 @@ def me(request):
 
 
 @api_view(['PATCH'])
+@permission_classes((IsAuthenticated,))
 def baseuser_update(request):
-    baseuser = request.user
-    serializer = UpdateBaseUserSerializer(baseuser, data=request.data, partial=True)
+    student = request.user.get_student()
+    serializer = UpdateBaseUserSerializer(student, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

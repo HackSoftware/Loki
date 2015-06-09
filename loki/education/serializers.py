@@ -50,3 +50,14 @@ class OnBoardingStudentSerializer(serializers.ModelSerializer):
             'studies_at',
             'works_at',
         )
+
+
+class UpdateStudentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Student
+        fields = (
+            'studies_at',
+            'works_at',
+            'mac'
+        )
