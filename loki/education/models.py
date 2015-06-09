@@ -70,6 +70,9 @@ class Course(models.Model):
     url = models.SlugField(max_length=80, unique=True)
     video = models.URLField(blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class CheckIn(models.Model):
     mac = models.CharField(max_length=17)
@@ -82,4 +85,4 @@ class CheckIn(models.Model):
 
 class Lecture(models.Model):
     course = models.ForeignKey('Course', null=True, blank=True)
-    date = models.DateField(auto_now=True)
+    date = models.DateField()

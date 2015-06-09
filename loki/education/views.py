@@ -36,13 +36,16 @@ def set_check_in(request):
 @api_view(['GET'])
 # @permission_classes((IsLecturer,))
 def get_lectures(request):
-    lectures = Lecture.objects.filter(course_id=request.GET['id'])
+    course_id = request.GET.get('course_id')
+    lectures = Lecture.objects.filter(course_id=course_id)
     serializer = LectureSerializer(lectures, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @api_view(['GET'])
 # @permission_classes((IsLecturer,))
 def get_check_ins(request):
-    check_ins = CheckIn.objects.filter(student_id=request.GET['id'])
+    student_id = request.GET.get('student_id')
+    check_ins = CheckIn.objects.filter(student_id=student_id)
     serializer = CheckInSerializer(check_ins, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
