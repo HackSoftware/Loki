@@ -25,8 +25,8 @@ class BaseUserSerializer(serializers.ModelSerializer):
 
 
 class BaseUserMeSerializer(serializers.ModelSerializer):
-    competitor = CompetitorSerializer(many=False)
-    student = StudentSerializer(many=False)
+    competitor = CompetitorSerializer(many=False, read_only=True)
+    student = StudentSerializer(many=False, read_only=True)
 
     class Meta:
         model = BaseUser
@@ -34,6 +34,9 @@ class BaseUserMeSerializer(serializers.ModelSerializer):
             'email',
             'first_name',
             'last_name',
+            'github_account',
+            'linkedin_account',
+            'twitter_account',
             'competitor',
-            'student'
+            'student',
         )
