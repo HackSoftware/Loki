@@ -85,11 +85,11 @@ class UpdateStudentsTests(TestCase):
             mac="12-34-56-78-9A-BC",
         )
 
-    def test_onboard_student(self):
+    def test_student_update(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.student)
         url = reverse('education:student_update')
-        data = {'mac': '11-11-11-11-11-11'}
+        data = {'mac': '11:11:11:11:11:11'}
         response = self.client.patch(url, data, format='json')
 
         student = Student.objects.first()

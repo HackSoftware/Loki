@@ -3,7 +3,7 @@ from django.db import models
 from ckeditor.fields import RichTextField
 
 from hack_fmi.models import BaseUser
-from .serializers import validate_mac
+from .validators import validate_mac
 
 
 class Student(BaseUser):
