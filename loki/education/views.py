@@ -54,8 +54,8 @@ class OnBoardStudent(APIView):
 @api_view(['PATCH'])
 @permission_classes((IsStudent,))
 def student_update(request):
-    baseuser = request.user
-    serializer = UpdateStudentSerializer(baseuser, data=request.data, partial=True)
+    student = request.user.get_student()
+    serializer = UpdateStudentSerializer(student, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

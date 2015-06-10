@@ -89,7 +89,7 @@ class UpdateStudentsTests(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.student)
         url = reverse('education:student_update')
-        data = {'mac': '11:11:11:11:11:11'}
+        data = {'mac': '01:23:45:67:ab:ab'}
         response = self.client.patch(url, data, format='json')
 
         student = Student.objects.first()
