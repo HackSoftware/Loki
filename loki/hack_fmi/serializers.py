@@ -57,6 +57,7 @@ class PublicTeamSerializer(serializers.ModelSerializer):
         read_only=True,
         source='technologies',
     )
+    season = SeasonSerializer(many=False, read_only=True)
 
     room = serializers.StringRelatedField()
 
@@ -75,6 +76,8 @@ class PublicTeamSerializer(serializers.ModelSerializer):
             'members_needed_desc',
             'room',
             'picture',
+            'place',
+            'season',
         )
 
 
