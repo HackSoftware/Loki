@@ -12,5 +12,5 @@ urlpatterns = [
     url(r'^api/password-reset/$', PasswordResetView.as_view(), name='password_reset'),
     url(r'^api/password-reset-confirm/$', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     url(r'^api/me/$', me, name='me'),
-    url(r'^api/update-baseuser', baseuser_update, name='update_baseuser')
+    url(r'^api/baseuser-update', baseuser_update, name='update_baseuser')
 ]
