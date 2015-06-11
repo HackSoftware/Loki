@@ -28,12 +28,8 @@ class TeacherAdmin(admin.ModelAdmin):
         'first_name',
         'last_name',
         'mac',
-        'works_at',
-        'status',
     ]
     list_display_links = ['email']
-
-    list_filter = ('works_at')
 
 admin.site.register(Teacher, TeacherAdmin)
 
