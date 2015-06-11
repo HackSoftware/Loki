@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from education.views import set_check_in, get_lectures, get_check_ins
+from education.views import set_check_in, get_lectures, get_check_ins, get_courses
 
 
 urlpatterns = [
