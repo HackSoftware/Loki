@@ -61,3 +61,16 @@ class UpdateStudentSerializer(serializers.ModelSerializer):
             'works_at',
             'mac'
         )
+
+
+class TeacherSerializer(serializers.ModelSerializer):
+
+    teached_courses = CourseSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Student
+        fields = (
+            'phone',
+            'mac',
+            'teached_courses',
+        )
