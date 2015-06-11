@@ -21,8 +21,6 @@ class Student(BaseUser):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
     hr_of = models.ForeignKey('base_app.Partner', blank=True, null=True)
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
-    studies_at = models.CharField(blank=True, null=True, max_length="110")
-    works_at = models.CharField(null=True, blank=True, max_length='110')
     phone = models.CharField(null=True, blank=True, max_length='20')
 
 
