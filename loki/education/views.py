@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
@@ -9,12 +10,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from education.models import CheckIn, Student, Lecture, Course
-from .serializers import UpdateStudentSerializer
+from .models import CheckIn, Student, Lecture, Course
+from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
+                          LectureSerializer, CheckInSerializer, CourseSerializer)
 from .premissions import IsStudent
-
-from django.conf import settings
-from education.serializers import LectureSerializer, CheckInSerializer, CourseSerializer
 
 
 @csrf_exempt
@@ -90,3 +89,12 @@ def student_update(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=400)
+
+
+@api_view(['GET'])
+# @permission_classes((IsLecturer,))
+def get_students_for_course(request):
+    course_id = request.GET.get('course_id')
+    students = Course.objects.filter(id=course_id).student_set.all()
+    serializer = StudentNameSerializer(students, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

@@ -58,6 +58,16 @@ class StudentSerializer(serializers.ModelSerializer):
         )
 
 
+class StudentNameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Student
+        fields = (
+            'id',
+            'name'
+        )
+
+
 class OnBoardingStudentSerializer(serializers.ModelSerializer):
 
     class Meta:
