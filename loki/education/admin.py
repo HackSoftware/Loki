@@ -1,7 +1,7 @@
 from django.contrib import admin
 from hack_fmi.models import BaseUser
 
-from .models import Student, Course, CourseAssignment, Teacher
+from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn
 
 
 class StudentAdmin(admin.ModelAdmin):
@@ -64,3 +64,22 @@ class CourseAdmin(admin.ModelAdmin):
     list_display_links = ['name']
 
 admin.site.register(Course, CourseAdmin)
+
+
+class LectureAdmin(admin.ModelAdmin):
+    list_display = [
+        'date',
+        'course'
+    ]
+
+admin.site.register(Lecture, LectureAdmin)
+
+
+class CheckInAdmin(admin.ModelAdmin):
+    list_display = [
+        'date',
+        'mac',
+        'student'
+    ]
+
+admin.site.register(CheckIn, CheckInAdmin)

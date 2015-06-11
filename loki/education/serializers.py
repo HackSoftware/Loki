@@ -1,5 +1,20 @@
 from rest_framework import serializers
-from .models import Student, Course, CourseAssignment
+
+from .models import Lecture, CheckIn, Course, Student, CourseAssignment
+
+
+class LectureSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Lecture
+        fields = ('id', 'date',)
+
+
+class CheckInSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CheckIn
+        fields = ('id', 'date', 'student')
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -7,6 +22,7 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = (
+            'id',
             'name',
             'start_time',
             'end_time',
@@ -39,6 +55,16 @@ class StudentSerializer(serializers.ModelSerializer):
             'github_account',
             'linkedin_account',
             'mac',
+        )
+
+
+class StudentNameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Student
+        fields = (
+            'id',
+            'name'
         )
 
 

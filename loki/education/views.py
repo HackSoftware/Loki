@@ -1,18 +1,19 @@
+from django.conf import settings
 from django.db import IntegrityError
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from education.models import CheckIn, Student
-from .serializers import UpdateStudentSerializer
+from .models import CheckIn, Student, Lecture, Course
+from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
+                          LectureSerializer, CheckInSerializer, CourseSerializer)
 from .premissions import IsStudent
-
-from django.conf import settings
 
 
 @csrf_exempt
@@ -34,6 +35,33 @@ def set_check_in(request):
         return HttpResponse(status=418)
 
     return HttpResponse(status=200)
+
+
+@api_view(['GET'])
+# @permission_classes((IsLecturer,))
+def get_lectures(request):
+    course_id = request.GET.get('course_id')
+    lectures = Lecture.objects.filter(course_id=course_id)
+    serializer = LectureSerializer(lectures, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+# @permission_classes((IsLecturer,))
+def get_check_ins(request):
+    student_id = request.GET.get('student_id')
+    check_ins = CheckIn.objects.filter(student_id=student_id)
+    serializer = CheckInSerializer(check_ins, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+# @permission_classes((IsLecturer,))
+def get_courses(request):
+    teacher_id = request.user.id
+    courses = Course.objects.filter(id=teacher_id)
+    serializer = CourseSerializer(courses, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class OnBoardStudent(APIView):
@@ -61,3 +89,12 @@ def student_update(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=400)
+
+
+@api_view(['GET'])
+# @permission_classes((IsLecturer,))
+def get_students_for_course(request):
+    course_id = request.GET.get('course_id')
+    students = Course.objects.filter(id=course_id).student_set.all()
+    serializer = StudentNameSerializer(students, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
