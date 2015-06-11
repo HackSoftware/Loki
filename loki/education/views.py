@@ -6,10 +6,10 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from education.models import CheckIn, Student, Lecture
+from education.models import CheckIn, Student, Lecture, Course
 
 from django.conf import settings
-from education.serializers import LectureSerializer, CheckInSerializer
+from education.serializers import LectureSerializer, CheckInSerializer, CourseSerializer
 
 
 @csrf_exempt
@@ -48,4 +48,13 @@ def get_check_ins(request):
     student_id = request.GET.get('student_id')
     check_ins = CheckIn.objects.filter(student_id=student_id)
     serializer = CheckInSerializer(check_ins, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+# @permission_classes((IsLecturer,))
+def get_courses(request):
+    teacher_id = request.user.id
+    courses = Course.objects.filter(id=teacher_id)
+    serializer = CourseSerializer(courses, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
