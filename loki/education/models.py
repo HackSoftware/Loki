@@ -24,6 +24,12 @@ class Student(BaseUser):
     phone = models.CharField(null=True, blank=True, max_length='20')
 
 
+class Teacher(BaseUser):
+    mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
+    phone = models.CharField(null=True, blank=True, max_length='20')
+    teached_courses = models.ManyToManyField('Course')
+
+
 class CourseAssignment(models.Model):
     EARLY = 1
     LATE = 2
