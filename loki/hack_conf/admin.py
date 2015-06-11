@@ -1,13 +1,6 @@
 from django.contrib import admin
 
-from .models import HackConfUser, Speaker, Sponsor, Schedule
-
-
-class HackConfUserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'datetime')
-
-    class Meta:
-        model = HackConfUser
+from .models import Speaker, Sponsor, Schedule
 
 
 class SpeakerAdmin(admin.ModelAdmin):
@@ -28,4 +21,3 @@ class ScheduleAdmin(admin.ModelAdmin):
 admin.site.register(Schedule, ScheduleAdmin)
 admin.site.register(Sponsor, SponsorAdmin)
 admin.site.register(Speaker, SpeakerAdmin)
-admin.site.register(HackConfUser, HackConfUserAdmin)

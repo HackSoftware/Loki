@@ -10,4 +10,5 @@ urlpatterns = patterns(
     url(r'^ckeditor/', include('ckeditor.urls')),
     url(r'^hackconf/', include('hack_conf.urls')),
     url(r'^education/', include('education.urls', namespace='education')),
+    url(r'^base/', include('base_app.urls', namespace='base_app')),
     ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

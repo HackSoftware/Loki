@@ -1,4 +1,5 @@
 from django.contrib import admin
+from hack_fmi.models import BaseUser
 
 from .models import Student, Course, CourseAssignment, Lecture, CheckIn
 

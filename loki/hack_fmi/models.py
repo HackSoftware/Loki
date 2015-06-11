@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 from ckeditor.fields import RichTextField
+from django.db.models.loading import get_model
 from django_resized import ResizedImageField
 
 
@@ -36,9 +37,16 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
+    github_account = models.URLField(null=True, blank=True)
+    linkedin_account = models.URLField(null=True, blank=True)
+    twitter_account = models.URLField(null=True, blank=True)
+
+    studies_at = models.CharField(blank=True, null=True, max_length="110")
+    works_at = models.CharField(null=True, blank=True, max_length='110')
+
     avatar = ResizedImageField(
         upload_to='avatar',
-        max_width=200,
+        size=[300, 200],
         blank=True,
     )
 
@@ -62,6 +70,12 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     def get_competitor(self):
         try:
             return self.competitor
+        except:
+            return False
+
+    def get_student(self):
+        try:
+            return self.student
         except:
             return False
 

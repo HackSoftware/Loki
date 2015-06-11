@@ -8,8 +8,9 @@ from rest_framework.test import APITestCase, APIClient
 
 from post_office.models import EmailTemplate
 
-from .models import (Skill, Competitor, BaseUser, TeamMembership,
-                     Season, Team, Invitation, Mentor, Room)
+from ..helper import date_increase
+from ..models import (Skill, Competitor, TeamMembership,
+                      Season, Team, Invitation, Mentor, Room)
 
 
 class SkillTests(APITestCase):
@@ -23,164 +24,6 @@ class SkillTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-class RegistrationTests(APITestCase):
-
-    def setUp(self):
-        self.skills = Skill.objects.create(name="C#")
-        self.user_register = EmailTemplate.objects.create(
-            name='user_register',
-            subject='Регистриран потребител',
-            content='Lorem ipsum dolor sit amet, consectetur adipisicing'
-        )
-
-    def test_register_user(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'first_name': 'Ivo',
-            'last_name': 'Bachvarov',
-            'faculty_number': '123',
-            'known_skills': [self.skills.id],
-            'password': '123',
-            'needs_work': 'false',
-        }
-        url = reverse('hack_fmi:register')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Competitor.objects.count(), 1)
-        self.assertEqual(BaseUser.objects.count(), 1)
-        self.assertEqual(len(Competitor.objects.first().known_skills.all()), 1)
-        self.assertFalse(Competitor.objects.first().needs_work)
-
-    def test_register_user_no_password(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'first_name': 'Ivo',
-            'last_name': 'Bachvarov',
-            'faculty_number': '123',
-            'known_skills': [self.skills.id],
-        }
-        url = reverse('hack_fmi:register')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_email_sent(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'first_name': 'Ivo',
-            'last_name': ' Bachvarov',
-            'faculty_number': '123',
-            'known_skills': [self.skills.id],
-            'password': '123'
-        }
-        url = reverse('hack_fmi:register')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(len(mail.get_queued()), 1)
-
-    def test_email_sent_new_template(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'first_name': 'Ivo',
-            'last_name': ' Bachvarov',
-            'faculty_number': '123',
-            'known_skills': [self.skills.id],
-            'password': '123'
-        }
-        url = reverse('hack_fmi:register')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIn(self.user_register.content, mail.get_queued()[0].message)
-
-
-class PasswordResetTests(APITestCase):
-
-    def setUp(self):
-        self.skills = Skill.objects.create(name="C#")
-        self.password_reset = EmailTemplate.objects.create(
-            name='password_reset',
-            subject='Смяна на Парола',
-            content='Lorem ipsum dolor sit amet, consectetur adipisicing'
-        )
-        self.competitor = Competitor.objects.create(
-            email='ivo@abv.bg',
-            full_name='Ivo Naidobriq',
-            faculty_number='123',
-        )
-        self.competitor.set_password('123')
-        self.competitor.is_active = True
-        self.competitor.save()
-
-    def test_reset_password_sends_email(self):
-        data = {'email': 'ivo@abv.bg'}
-        url = reverse('hack_fmi:password_reset')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(mail.get_queued()), 1)
-        self.assertIn(self.password_reset.content, mail.get_queued()[0].message)
-
-
-class LoginTests(APITestCase):
-
-    def setUp(self):
-        self.skills = Skill.objects.create(name="C#")
-        self.competitor = Competitor.objects.create(
-            email='ivo@abv.bg',
-            full_name='Ivo Naidobriq',
-            faculty_number='123',
-        )
-        self.competitor.set_password('123')
-        self.competitor.is_active = True
-        self.competitor.save()
-
-    def test_login(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'password': '123',
-        }
-        url = reverse('hack_fmi:login')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_wrong_password(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'password': '123321',
-        }
-        url = reverse('hack_fmi:login')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_wrong_not_competitor(self):
-        self.base_user = BaseUser.objects.create(
-            email='baseuser@abv.bg',
-            full_name='Ivo Naidobriq',
-        )
-        self.base_user.set_password('123')
-        self.base_user.is_active = True
-        self.base_user.save()
-
-        data = {
-            'email': 'baseuser@abv.bg',
-            'password': '123',
-        }
-        url = reverse('hack_fmi:login')
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_get_data_after_login(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.competitor)
-        url = reverse('hack_fmi:me')
-        response = self.client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['email'], self.competitor.email)
-
-    def test_get_data_not_login(self):
-        url = reverse('hack_fmi:me')
-        response = self.client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
 class TeamRegistrationTests(APITestCase):
 
     def setUp(self):
@@ -189,10 +32,10 @@ class TeamRegistrationTests(APITestCase):
             name="season",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1"
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20)
         )
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -248,10 +91,10 @@ class TeamManagementTests(APITestCase):
             name="HackFMI 1",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1"
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20)
         )
 
         self.competitor = Competitor.objects.create(
@@ -351,10 +194,10 @@ class TeamManagementTests(APITestCase):
             name="HackFMI 1",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20)
         )
 
         data = {
@@ -385,10 +228,10 @@ class LeaveTeamTests(APITestCase):
             name="HackFMI 10",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(10),
+            mentor_pick_end_date=date_increase(10),
+            make_team_dead_line=date_increase(10),
         )
         self.competitor1 = Competitor.objects.create(
             email='ivooo@abv.bg',
@@ -448,10 +291,10 @@ class InvitationTests(APITestCase):
             name="HackFMI 2",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(10),
+            mentor_pick_end_date=date_increase(10),
+            make_team_dead_line=date_increase(10),
         )
         self.competitor_leader = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -664,19 +507,19 @@ class SeasonTests(APITestCase):
             name="HackFMI 1",
             topic='TestTopic1',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-15",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20),
         )
         Season.objects.create(
             name="HackFMI 2",
             topic='TestTopic2',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2016-4-15",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20),
         )
         self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -704,10 +547,10 @@ class MentorTests(APITestCase):
             name="HackFMI 1",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2016-5-1",
-            mentor_pick_start_date="2015-4-1",
-            mentor_pick_end_date="2016-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(-15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20),
         )
         self.competitor_leader = Competitor.objects.create(
             email='ivo@abv.bg',
@@ -780,10 +623,10 @@ class RoomTests(APITestCase):
             name="HackFMI 1",
             topic='TestTopic',
             is_active=True,
-            sign_up_deadline="2015-5-1",
-            mentor_pick_start_date="2015-4-1",
-            mentor_pick_end_date="2015-5-1",
-            make_team_dead_line="2016-5-1",
+            sign_up_deadline=date_increase(10),
+            mentor_pick_start_date=date_increase(15),
+            mentor_pick_end_date=date_increase(25),
+            make_team_dead_line=date_increase(20),
         )
         for i in range(10):
             Team.objects.create(
