@@ -80,7 +80,7 @@ class CheckIn(models.Model):
     date = models.DateField(auto_now=True)
 
     class Meta:
-        unique_together = ('student', 'date')
+        unique_together = (('student', 'date'), ('mac', 'date'))
 
 
 class Lecture(models.Model):
