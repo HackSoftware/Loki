@@ -79,6 +79,13 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         except:
             return False
 
+    def get_teacher(self):
+        try:
+            return self.teacher
+        except:
+            return False
+
+
     def make_competitor(self):
         competitor = Competitor(baseuser_ptr_id=self.id)
         competitor.save()

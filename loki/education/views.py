@@ -58,8 +58,8 @@ def get_check_ins(request):
 @api_view(['GET'])
 # @permission_classes((IsLecturer,))
 def get_courses(request):
-    teacher_id = request.user.id
-    courses = Course.objects.filter(id=teacher_id)
+    teacher = request.user.get_teacher()
+    courses = teacher.teached_courses.all()
     serializer = CourseSerializer(courses, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
