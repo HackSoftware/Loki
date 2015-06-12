@@ -145,4 +145,3 @@ class TeachersAPIsTests(TestCase):
         data = {'id': self.course1.id}
         url = reverse('education:get_lectures')
         response = self.client.get(url, data, format='json')
-        print(response.data)
