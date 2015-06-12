@@ -35,6 +35,7 @@ class BaseUserMeSerializer(serializers.ModelSerializer):
             'email',
             'first_name',
             'last_name',
+            'avatar',
             'github_account',
             'linkedin_account',
             'twitter_account',
