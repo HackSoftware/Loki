@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from rest_framework.test import APIClient
 
-from education.models import Student, CheckIn
+from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment
 from hack_fmi.models import BaseUser
 from loki.settings import CHECKIN_TOKEN
 
@@ -94,3 +94,49 @@ class UpdateStudentsTests(TestCase):
 
         student = Student.objects.first()
         self.assertEqual(student.mac, data['mac'])
+
+
+class TeachersAPIsTests(TestCase):
+
+    def setUp(self):
+        self.course1 = Course.objects.create(
+            name="Java",
+            application_until="2015-06-20",
+            url="https://hackbulgaria.com/course/haskell-1/"
+        )
+        self.course2 = Course.objects.create(
+            name="Python",
+            application_until="2015-06-20",
+            url="https://hackbulgaria.com/course/haskell-2/"
+        )
+        Lecture.objects.create(
+            course=self.course1,
+            date="2015-06-8"
+        )
+        Lecture.objects.create(
+            course=self.course1,
+            date="2015-06-10"
+        )
+        self.teacher = Teacher.objects.create(
+            email="ivo@ivo.bg",
+        )
+        self.teacher.teached_courses.add(self.course1)
+        self.teacher.save()
+        self.teacher.teached_courses.add(self.course2)
+        self.teacher.save()
+        self.student = Student.objects.create(
+            email="stud@abv.bg",
+            mac="60:67:20:cc:b1:62"
+        )
+        self.course_assignment = CourseAssignment.objects.create(
+            user=self.student,
+            course=self.course2,
+            group_time=1
+        )
+
+    def test_get_courses_api(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.teacher)
+        url = reverse('education:get_courses')
+        response = self.client.get(url, format='json')
+        self.assertEqual(2, len(response.data))

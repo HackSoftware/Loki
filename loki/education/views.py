@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.db import IntegrityError
 from django.http import HttpResponse
@@ -95,6 +96,6 @@ def student_update(request):
 # @permission_classes((IsLecturer,))
 def get_students_for_course(request):
     course_id = request.GET.get('course_id')
-    students = Course.objects.filter(id=course_id).student_set.all()
+    students = get_object_or_404(Course, id=course_id).student_set
     serializer = StudentNameSerializer(students, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
