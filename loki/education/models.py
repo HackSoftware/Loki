@@ -84,5 +84,15 @@ class CheckIn(models.Model):
 
 
 class Lecture(models.Model):
-    course = models.ForeignKey('Course', null=True, blank=True)
+    course = models.ForeignKey('Course')
     date = models.DateField()
+
+
+class StudentNote(models.Model):
+    text = models.TextField(blank=True)
+    assignment = models.ForeignKey(CourseAssignment)
+    author = models.ForeignKey(Teacher)
+    post_time = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ('post_time',)

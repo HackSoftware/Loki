@@ -11,4 +11,4 @@ urlpatterns = [
     url(r'^api/student-update/$', student_update, name='student_update'),
     url(r'^api/onboard-student/$', OnBoardStudent.as_view(), name='onboard_student'),
     url(r'^api/get-students-for-course/$', get_students_for_course, name='get_students_for_course'),
-    ]
+]
