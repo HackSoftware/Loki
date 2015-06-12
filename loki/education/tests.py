@@ -140,3 +140,9 @@ class TeachersAPIsTests(TestCase):
         url = reverse('education:get_courses')
         response = self.client.get(url, format='json')
         self.assertEqual(2, len(response.data))
+
+    def test_get_lectures(self):
+        data = {'id': self.course1.id}
+        url = reverse('education:get_lectures')
+        response = self.client.get(url, data, format='json')
+        print(response.data)
