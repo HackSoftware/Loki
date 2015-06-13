@@ -30,6 +30,12 @@ class Teacher(BaseUser):
     teached_courses = models.ManyToManyField('Course')
 
 
+class HR(BaseUser):
+    phone = models.CharField(null=True, blank=True, max_length='20')
+    teached_courses = models.ManyToManyField('Course')
+    company = models.ForeignKey('base_app.Partner')
+
+
 class CourseAssignment(models.Model):
     EARLY = 1
     LATE = 2
