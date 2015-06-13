@@ -22,7 +22,6 @@ class Partner(models.Model):
     description = RichTextField(blank=False)
     facebook = models.URLField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
-    logo = models.ImageField(upload_to="partner_logoes", null=True, blank=True)
     money_spent = models.PositiveIntegerField(default=0, blank=False, null=False)
     ordering = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
 
