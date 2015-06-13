@@ -1,5 +1,4 @@
 from django.contrib import admin
-from hack_fmi.models import BaseUser
 
 from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn
 
@@ -12,11 +11,10 @@ class StudentAdmin(admin.ModelAdmin):
         'last_name',
         'mac',
         'works_at',
-        'status',
     ]
     list_display_links = ['email']
 
-    list_filter = ('works_at', 'status')
+    list_filter = ('works_at',)
 
 admin.site.register(Student, StudentAdmin)
 

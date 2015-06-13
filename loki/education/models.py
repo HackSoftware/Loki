@@ -7,17 +7,6 @@ from .validators import validate_mac
 
 
 class Student(BaseUser):
-    STUDENT = 1
-    HR = 2
-    TEACHER = 3
-
-    STATUSES = (
-        (STUDENT, 'Student'),
-        (HR, 'HR'),
-        (TEACHER, 'Teacher'),
-    )
-
-    status = models.SmallIntegerField(choices=STATUSES, default=STUDENT)
     courses = models.ManyToManyField('Course', through='CourseAssignment')
     hr_of = models.ForeignKey('base_app.Partner', blank=True, null=True)
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
