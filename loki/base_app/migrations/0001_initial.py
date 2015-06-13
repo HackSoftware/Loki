@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Company',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
+                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
                 ('name', models.CharField(max_length=100, unique=True)),
                 ('logo', models.URLField(blank=True)),
                 ('jobs_link', models.URLField(blank=True)),
@@ -26,13 +26,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Partner',
             fields=[
-                ('id', models.AutoField(primary_key=True, serialize=False, auto_created=True, verbose_name='ID')),
+                ('comapny', models.OneToOneField(primary_key=True, serialize=False, to='base_app.Company')),
                 ('description', ckeditor.fields.RichTextField()),
                 ('facebook', models.URLField(null=True, blank=True)),
                 ('is_active', models.BooleanField(default=False)),
-                ('logo', models.ImageField(null=True, upload_to='partner_logoes', blank=True)),
                 ('money_spent', models.PositiveIntegerField(default=0)),
-                ('name', models.CharField(max_length=128)),
                 ('ordering', models.PositiveSmallIntegerField(default=0)),
                 ('twitter', models.URLField(null=True, blank=True)),
                 ('website', models.URLField(null=True, blank=True)),
