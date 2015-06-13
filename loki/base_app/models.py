@@ -13,10 +13,12 @@ class Company(models.Model):
         if self.logo:
             return MEDIA_ROOT + 'logos/' + str(self.pk) + '.JPG'
 
+    def __str__(self):
+        return self.name
+
 
 class Partner(models.Model):
     comapny = models.OneToOneField(Company, primary_key=True)
-    name = models.CharField(max_length=128)
     description = RichTextField(blank=False)
     facebook = models.URLField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
@@ -31,4 +33,4 @@ class Partner(models.Model):
         ordering = ('ordering',)
 
     def __str__(self):
-        return self.name
+        return self.comapny.name
