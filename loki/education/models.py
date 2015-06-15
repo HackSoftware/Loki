@@ -66,7 +66,7 @@ class Course(models.Model):
 class CheckIn(models.Model):
     mac = models.CharField(max_length=17)
     student = models.ForeignKey('Student', null=True, blank=True)
-    date = models.DateField(auto_now=True)
+    date = models.DateField()
 
     class Meta:
         unique_together = (('student', 'date'), ('mac', 'date'))
@@ -85,3 +85,17 @@ class StudentNote(models.Model):
 
     class Meta:
         ordering = ('post_time',)
+
+
+class Task(models.Model):
+    course = models.ForeignKey(Course)
+    description = models.URLField()
+    is_exam = models.BooleanField(default=False)
+    name = models.CharField(max_length=128)
+    week = models.SmallIntegerField(default=1)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        unique_together = (('name', 'description'),)
