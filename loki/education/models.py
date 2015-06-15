@@ -66,7 +66,7 @@ class Course(models.Model):
 class CheckIn(models.Model):
     mac = models.CharField(max_length=17)
     student = models.ForeignKey('Student', null=True, blank=True)
-    date = models.DateField()
+    date = models.DateField(auto_now_add=True)
 
     class Meta:
         unique_together = (('student', 'date'), ('mac', 'date'))
