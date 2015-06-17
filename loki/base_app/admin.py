@@ -1,6 +1,6 @@
 from django.contrib import admin
 from hack_fmi.models import BaseUser
-from .models import Company, Partner
+from .models import Company, Partner, Event, Ticket
 
 
 class BaseUserAdmin(admin.ModelAdmin):
@@ -26,3 +26,21 @@ class PartnerAdmin(admin.ModelAdmin):
         model = Partner
 
 admin.site.register(Partner, PartnerAdmin)
+
+
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'start_date')
+
+    class Meta:
+        model = Event
+
+admin.site.register(Event, EventAdmin)
+
+
+class TicketAdmin(admin.ModelAdmin):
+    list_display = ('id', 'event', 'base_user')
+
+    class Meta:
+        model = Ticket
+
+admin.site.register(Ticket, TicketAdmin)

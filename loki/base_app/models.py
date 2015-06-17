@@ -40,6 +40,9 @@ class Event(models.Model):
     start_date = models.DateField()
     url = models.URLField()
 
+    def __str__(self):
+        return self.name
+
 
 class Ticket(models.Model):
     event = models.ForeignKey('Event')
