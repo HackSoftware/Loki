@@ -50,5 +50,6 @@ def buy_ticket(request):
         ticket = Ticket(event=event, base_user=user)
         ticket.save()
     except ValidationError:
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        error = {"error": "Вече си си закупил билет. Имаш право само на един билет."}
+        return Response(error, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_201_CREATED)
