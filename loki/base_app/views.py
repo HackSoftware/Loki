@@ -58,4 +58,4 @@ def buy_ticket(request):
 @api_view(['GET'])
 def get_number_of_sold_tickets(request):
     count = Ticket.objects.count()
-    return Response({'value': count}, status=status.HTTP_200_OK)
+    return Response({'item': [{"value": count}]}, status=status.HTTP_200_OK)
