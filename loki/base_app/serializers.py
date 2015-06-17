@@ -1,4 +1,5 @@
 from rest_framework import serializers, generics
+from base_app.models import Event
 from education.serializers import StudentSerializer, TeacherSerializer
 
 from hack_fmi.models import BaseUser
@@ -55,4 +56,16 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
             'github_account',
             'linkedin_account',
             'twitter_account',
+        )
+
+
+class EventSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Event
+        fields = (
+            'id',
+            'name',
+            'start_date',
+            'url'
         )

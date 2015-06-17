@@ -5,6 +5,7 @@ from post_office import mail
 from post_office.models import EmailTemplate
 from rest_framework import status
 from rest_framework.test import APIClient
+from base_app.models import Event, Ticket
 
 from hack_fmi.models import BaseUser, Skill, Team
 from education.models import Course, CourseAssignment, Student
@@ -139,3 +140,42 @@ class PersonalUserInformationTests(TestCase):
         baseuser = BaseUser.objects.get(id=self.baseuser.id)
 
         self.assertEqual(baseuser.github_account, data['github_account'])
+
+
+class EventTests(TestCase):
+
+    def setUp(self):
+        self.test_user = BaseUser.objects.create_user(
+            email="comp@comp.bg",
+            password="123",
+            full_name='Comp compov'
+        )
+        self.event_conf = Event.objects.create(
+            name='HackConf'
+        )
+        self.event_theater = Event.objects.create(
+            name='Skakalci'
+        )
+
+    def test_get_all_events(self):
+        count = Event.objects.count()
+        url = reverse('base_app:get_events')
+        response = self.client.get(url, format='json')
+        self.assertEqual(count, len(response.data))
+
+    def test_buy_ticket_for_event_not_logged(self):
+        url = reverse('base_app:buy_ticket')
+        data = {'event_id': self.event_conf.id}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 401)
+
+    def test_buy_ticket_for_event_logged_user(self):
+        count = Ticket.objects.count()
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.test_user)
+        url = reverse('base_app:buy_ticket')
+        data = {'event_id': self.event_conf.id}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 201)
+        new_count = Ticket.objects.count()
+        self.assertEqual(count+1, new_count)

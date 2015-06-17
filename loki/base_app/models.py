@@ -33,3 +33,20 @@ class Partner(models.Model):
 
     def __str__(self):
         return self.comapny.name
+
+
+class Event(models.Model):
+    name = models.CharField(max_length=150)
+    start_date = models.DateField(blank=True, null=True)
+    url = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Ticket(models.Model):
+    event = models.ForeignKey('Event')
+    base_user = models.ForeignKey('hack_fmi.BaseUser')
+
+    class Meta:
+        unique_together = ('event', 'base_user')

@@ -3,7 +3,7 @@ from education.models import CheckIn, Student
 
 
 class Command(BaseCommand):
-    help = 'distributes the teams in rooms'
+    help = 'Assign names to nameless macs'
 
     def handle(self, *args, **options):
         all_students = Student.objects.all()
