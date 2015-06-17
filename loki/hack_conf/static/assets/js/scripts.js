@@ -5,7 +5,7 @@
     app.el['window']                   = $(window);
     app.el['document']                 = $(document);
     app.el['back-to-top']              = $('.back-to-top');
-    app.el['html-body']                = $('html,body');	
+    app.el['html-body']                = $('html,body');
     app.el['loader']                   = $('#loader');
     app.el['mask']                     = $('#mask');
 
@@ -19,19 +19,19 @@
 		if (width < 768){$('.animated').removeClass('animated').removeClass('hiding');}
 		// $('#screen').html( size + ' - ' + width );
 		// console.log( size, width );
-	};	
+	};
 
-	
-	
-	$(function() {	
+
+
+	$(function() {
     //Preloader
     app.el['loader'].delay(700).fadeOut();
-    app.el['mask'].delay(1200).fadeOut("slow");    
+    app.el['mask'].delay(1200).fadeOut("slow");
 
 	// Resized based on screen size
 	app.el['window'].resize(function() {
 		app.fn.screenSize();
-	});		
+	});
 
     // fade in .back-to-top
     $(window).scroll(function () {
@@ -56,21 +56,20 @@
         var hero        = jQuery('#hero'),
             winHeight   = jQuery(window).height(),
             heroHeight  = winHeight;
-          
+
             hero.css({height: heroHeight+"px"});
       };
-      
+
     jQuery(window).on("resize", heroInit);
     jQuery(document).on("ready", heroInit);
-    
+
     $('.navigation-bar').onePageNav({
-        currentClass: 'active',
         changeHash: true,
         scrollSpeed: 750,
         scrollThreshold: 0.5,
         easing: 'swing'
     });
-    
+
     $('.animated').appear(function(){
       var element = $(this);
       var animation = element.data('animation');
@@ -89,26 +88,26 @@
         if (element.hasClass('counter')) {
           element.find('.value').countTo();
         }
-      }    
+      }
     },{accY: -150});
-    
+
     $('#header').waypoint('sticky', {
         wrapper: '<div class="sticky-wrapper" />',
         stuckClass: 'sticky'
-    }); 
+    });
 
     $('.fancybox').fancybox();
-    
+
 	});
-	
+
 	// ****** GOOGLE MAP *******
 	var map;
 	var brooklyn = new google.maps.LatLng(42.6847251, 23.3189384);
-				
+
 	var MY_MAPTYPE_ID = 'custom_style';
-				
+
 	function initialize() {
-				
+
 		var featureOpts = [
 			{
 				stylers: [
@@ -132,7 +131,7 @@
 				]
 			}
 		];
-				
+
 		var mapOptions = {
 			zoom: 16,
 			scrollwheel: false,
@@ -145,7 +144,7 @@
 			},
 			mapTypeId: MY_MAPTYPE_ID
 		};
-				
+
 		map = new google.maps.Map(document.getElementById('canvas-map'),mapOptions);
 		var image = '/static/assets/img/pmarker.png';
 		var myLatLng = new google.maps.LatLng(42.6847251, 23.3189384);
@@ -157,12 +156,17 @@
 		var styledMapOptions = {
 			name: 'Custom Style'
 		};
-				
+
 		var customMapType = new google.maps.StyledMapType(featureOpts, styledMapOptions);
-				
+
 		map.mapTypes.set(MY_MAPTYPE_ID, customMapType);
 	}
-				
-	google.maps.event.addDomListener(window, 'load', initialize); 
-	
+
+	google.maps.event.addDomListener(window, 'load', initialize);
+
+    $("#become-partner").click(function(){
+        $("#partner-text").show();
+    });
+
+
 })();

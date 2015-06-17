@@ -42,11 +42,10 @@
             <div class="home-bg">
                 <nav class="navigation navigation-social">
                     <ul class="navigation-bar">
-                        <li><a href="#"><span class="fa fa-twitter"></span></a>
-                        <li><a href="#"><span class="fa fa-facebook"></span></a>
-                        <li><a href="#"><span class="fa fa-github"></span></a>
-                        <li><a href="#"><span class="fa fa-vimeo-square"></span></a>
-                        <li><a href="#"><span class="fa fa-google-plus"></span></a>
+                        <li><a href="https://twitter.com/HackBulgaria" target="_blank"><span class="fa fa-twitter"></span></a>
+                        <li><a href="https://www.facebook.com/HackBulgaria" target="_blank"><span class="fa fa-facebook"></span></a>
+                        <li><a href="https://github.com/hackbulgaria/" target="_blank"><span class="fa fa-github"></span></a>
+                        <li><a href="https://www.youtube.com/user/HackBulgaria" target="_blank"><span class="fa fa-youtube-play"></span></a>
                     </ul>
                 </nav>
                 <div class="hero-content text-center ">
@@ -54,8 +53,10 @@
                         <hr /><span>19 - 20 Септември, НДК София </span><hr />
                     </div>
                     <div class="hero-big">
-                        <img src="{{ STATIC_URL }}/assets/img/conf_logo_1.png" alt="HackConf Logo">
+                        <img src="{{ STATIC_URL }}/assets/img/conf_logo_1.png" id="hackconf-logo" alt="HackConf Logo">
                     </div>
+                    <br><br>
+                    <iframe id="video" width="392" height="250" src="https://www.youtube.com/embed/ypWmNhUUfxo" frameborder="0" allowfullscreen></iframe>
                 </div>
             </div>
         </div>
@@ -77,9 +78,9 @@
                     <!-- <li><a href="#schedule">Schedule</a></li> -->
                     <!-- <li><a href="#speakers">Speakers</a></li> -->
                     <!-- <li><a href="#elements">Shortcodes</a></li> -->
-                    <li><a href="#sponsors">Спонсори</a></li>
+                    <li><a href="#sponsors">Спонсори и партньори</a></li>
                     <li><a href="#map">Контакти</a></li>
-                    <li class="featured"><a href="register.html"><i class="fa fa-ticket fa-1x"></i>Регистрация</a></li>
+                    <li class="featured"><a href="" data-toggle="modal" data-target="#myModal"><i class="fa fa-ticket fa-1x"></i>Регистрация</a></li>
                 </ul>
             </nav>
         </div>
@@ -88,8 +89,8 @@
     <!-- About Section -->
     <section id="about" class="section dark">
         <div class="container">
-        <h3>Business meets Innovation</h3>
-        <div class="sub-title">Starting your own IT business and picking right niche in less then <span class="highlight">29 days</span></div>
+        <h3>Imagine. Learn. Hack. Explore</h3>
+        <div class="sub-title">Безплатна, двудневна конференция за IT образование в НДК.</span></div>
         <br />
         <br />
         <section class="nav-tabs-simple">
@@ -124,10 +125,13 @@
                     </div>
                     <div class="col-md-8 col-sm-8 text-left animated hiding" data-animation="fadeInRight" data-delay="500">
                         <p>
-                            <strong>HackConf</strong> е първата двудневна конференция, организирана от <strong>Хак България</strong>, с една много ясна цел - да мотивира всички хора, които са започнали или пък сега искат да започнат своето развитие в ИТ сектора.
+                            <strong>Hack Conf</strong> е първата двудневна конференция, организирана от <strong>Хак България</strong>, с една много ясна цел - да мотивира всички хора, които са започнали или пък сега искат да започнат своето развитие в ИТ сектора.
                         </p>
                         <p>
-                            Събитието е подходящо за начинаещи програмисти и ИТ специалисти, студенти и ученици, любители и ентусиасти!
+                            Конференцията е <strong>безплатна и отворена за хора от цялата страна!</strong>
+                        </p>
+                        <p>
+                            Подходяща е за начинаещи програмисти и ИТ специалисти, студенти и ученици, любители и ентусиасти.
                         </p>
                     </div>
                 </article>
@@ -171,10 +175,11 @@
         <div class="overlay"></div>
         <div class="container">
             <article class="article-big animated hiding" data-animation="fadeInUp" data-delay="0">
-                <h5>Register to a Ventcamp right now!</h5>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                <br/>
-                <a href="#" class="btn btn-sm btn-tertiary">Register</a>
+                <h5 id="register-title">Запази своето място за HackConf</h5>
+                <p id="register-text">Конференцията е безплатна, но изисква регистрация. Запази своето място, а пък ние обещаваме да ти напомним, когато наближи.
+                </p>
+
+                <a data-toggle="modal" data-target="#myModal" class="btn btn-sm btn-tertiary">Регистрация</a>
             </article>
         </div>
     </section>
@@ -183,7 +188,7 @@
         <div class="container">
             <div class="icon-wrap"><span class="icon icon-active icon-documents-bookmarks-12"></span></div>
             <h3>Спонсори и Партньори</h3>
-            <div class="sub-title">Партньорите ще бъдат обявени скоро...</div>
+            <div class="sub-title">Скоро очаквайте и тях.</div>
             <br/>
             <div class="row">
                 <ul class="list-inline">
@@ -193,7 +198,12 @@
                 </ul>
 
                 <div class="btn-wrapper">
-                    <a href="#" class="btn btn-sm btn-primary">Стани спонсор</a>
+                    <a class="btn btn-sm btn-primary" id="become-partner">Стани спонсор</a>
+
+                    <p id="partner-text">
+                        <br>
+                        Ако проявявате интерес за партниране или спонсорство, моля пишете на: <strong>conf@hackbulgaria.com</strong>
+                    </p>
                 </div>
             </div>
         </div>
@@ -204,18 +214,18 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-5 col-sm-7 animated hiding location" data-animation="fadeInLeft" data-delay="0">
-                    <h3>Локация</h3>
+                    <h4>Локация</h4>
                     <ul itemscope="" itemtype="http://schema.org/PostalAddress">
                         <li itemprop="address"><i class="fa fa-map-marker highlight"></i>
                             <span property="streetAddress">
-                              НДК - бул. "България" 1
+                              Зала 3 на НДК - бул. "България" 1
                           </span>
                         </li>
                         <li itemprop="email"><i class="fa fa-envelope highlight"></i>conf@hackbulgaria.com</li>
                         <!-- <li itemprop="telephone"><i class="fa fa-phone highlight"></i>(518) 457-5181</li> -->
                         <li itemscope="" itemtype="http://schema.org/Event"><i class="fa fa-clock-o highlight"></i>
                             <time itemprop="startDate" datetime="2015-05-25T07:30">9:30</time> -
-                            <time itemprop="endDate" datetime="2015-05-28T22:00">23:00</time>
+                            <time itemprop="endDate" datetime="2015-05-28T22:00">18:30</time>
                         </li>
                     </ul>
                 </div>
@@ -229,12 +239,59 @@
 
     <div class="back-to-top"><i class="fa fa-angle-up fa-3x"></i></div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h5 class="modal-title" id="myModalLabel">Hackconf регистрация</h5>
+          </div>
+          <div class="modal-body">
+            <p>
+                За да се запишеш за участие за Hackconf трябва да имаш HackBulgaria регистрация.
+            </p>
+            <div class="row">
+            <br>
+                <div class="col-md-3"></div>
+                <a href="https://education.hackbulgaria.com/#/login" target="_blank">
+                    <button class="modal-buttons btn btn-primary btn-xs col-md-6">
+                        Вече имам регистрация
+                    </button>
+                </a>
+
+                <div class="col-md-3"></div>
+                <a href="https://education.hackbulgaria.com/#/register" target="_blank">
+                    <button class="modal-buttons btn btn-primary btn-xs col-md-6">
+                        Искам да се регистрирам
+                    </button>
+                </a>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Затвори</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!--[if lt IE 9]>
     <script type="text/javascript" src="/static/assets/js/jquery-1.11.0.min.js?ver=1"></script>
     <![endif]-->
     <!--[if (gte IE 9) | (!IE)]><!-->
     <script type="text/javascript" src="/static/assets/js/jquery-2.1.0.min.js?ver=1"></script>
     <!--<![endif]-->
+
+    <script>
+     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+     ga('create', 'UA-64197920-1', 'auto');
+     ga('send', 'pageview');
+
+    </script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
     <script type="text/javascript" src="/static/assets/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/assets/js/jquery.nav.js"></script>

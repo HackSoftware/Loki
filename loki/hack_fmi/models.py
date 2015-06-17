@@ -85,7 +85,6 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         except:
             return False
 
-
     def make_competitor(self):
         competitor = Competitor(baseuser_ptr_id=self.id)
         competitor.save()
