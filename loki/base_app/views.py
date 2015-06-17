@@ -53,3 +53,9 @@ def buy_ticket(request):
         error = {"error": "Вече си си закупил билет. Имаш право само на един билет."}
         return Response(error, status=status.HTTP_400_BAD_REQUEST)
     return Response(status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET'])
+def get_number_of_sold_tickets(request):
+    count = Ticket.objects.count()
+    return Response(count, status=status.HTTP_200_OK)
