@@ -5,7 +5,7 @@ from education.models import Lecture, Course
 
 
 class Command(BaseCommand):
-    args = '<course_name number_of_weeks dd-mm-yyyy mon tues weds thurs fri sat sun'
+    args = '<course_name number_of_weeks start_date:dd-mm-yyyy or "@" mon tues weds thurs fri sat sun'
     help = 'Generates entries in classes table'
 
     def get_day_number(self, day):
@@ -32,10 +32,14 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         course_id = int(args[0])
         weeks = int(args[1])
-        date = datetime.strptime(args[2], '%Y-%m-%d')
+        course = get_object_or_404(Course, id=course_id)
+
+        if args[2] == '@':
+            date = course.start_time
+        else:
+            date = datetime.strptime(args[2], '%Y-%m-%d')
         days = list(map(self.get_day_number, args[3::]))
 
-        course = get_object_or_404(Course, id=course_id)
         start_date = date
         end_date = date + timedelta(days=weeks*7)
 
