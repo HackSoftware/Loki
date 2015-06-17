@@ -41,8 +41,8 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     linkedin_account = models.URLField(null=True, blank=True)
     twitter_account = models.URLField(null=True, blank=True)
 
-    studies_at = models.CharField(blank=True, null=True, max_length="110")
-    works_at = models.CharField(null=True, blank=True, max_length='110')
+    studies_at = models.CharField(blank=True, null=True, max_length=110)
+    works_at = models.CharField(null=True, blank=True, max_length=110)
 
     avatar = ResizedImageField(
         upload_to='avatar',
