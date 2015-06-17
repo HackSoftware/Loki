@@ -2,8 +2,9 @@ from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from base_app.models import Event
 
-from base_app.serializers import BaseUserMeSerializer, UpdateBaseUserSerializer
+from base_app.serializers import BaseUserMeSerializer, UpdateBaseUserSerializer, EventSerializer
 
 
 @api_view(['GET'])
@@ -25,3 +26,10 @@ def baseuser_update(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=400)
+
+
+@api_view(['GET'])
+def get_events(request):
+    events = Event.objects.all()
+    serializer = EventSerializer(events, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
