@@ -1,5 +1,5 @@
 from rest_framework import serializers, generics
-from base_app.models import Event
+from base_app.models import Event, Ticket
 from education.serializers import StudentSerializer, TeacherSerializer
 
 from hack_fmi.models import BaseUser
@@ -29,6 +29,7 @@ class BaseUserMeSerializer(serializers.ModelSerializer):
     competitor = CompetitorSerializer(many=False, read_only=True)
     student = StudentSerializer(many=False, read_only=True)
     teacher = TeacherSerializer(many=False, read_only=True)
+    ticket_set = TicketSerializer(many=True, read_only=True)
 
     class Meta:
         model = BaseUser
@@ -43,6 +44,7 @@ class BaseUserMeSerializer(serializers.ModelSerializer):
             'competitor',
             'student',
             'teacher',
+            'ticket_set'
         )
 
 
@@ -68,4 +70,16 @@ class EventSerializer(serializers.ModelSerializer):
             'name',
             'start_date',
             'url'
+        )
+
+
+class TicketSerializer(serializers.ModelSerializer):
+    base_user = BaseUserSerializer(many=False, read_only=True)
+    event = EventSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Ticket
+        fields = (
+            'event',
+            'base_user'
         )
