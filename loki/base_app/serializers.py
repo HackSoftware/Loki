@@ -25,6 +25,30 @@ class BaseUserSerializer(serializers.ModelSerializer):
         return user
 
 
+class EventSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Event
+        fields = (
+            'id',
+            'name',
+            'start_date',
+            'url'
+        )
+
+
+class TicketSerializer(serializers.ModelSerializer):
+    base_user = BaseUserSerializer(many=False, read_only=True)
+    event = EventSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = Ticket
+        fields = (
+            'event',
+            'base_user'
+        )
+
+
 class BaseUserMeSerializer(serializers.ModelSerializer):
     competitor = CompetitorSerializer(many=False, read_only=True)
     student = StudentSerializer(many=False, read_only=True)
@@ -58,28 +82,4 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
             'github_account',
             'linkedin_account',
             'twitter_account',
-        )
-
-
-class EventSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Event
-        fields = (
-            'id',
-            'name',
-            'start_date',
-            'url'
-        )
-
-
-class TicketSerializer(serializers.ModelSerializer):
-    base_user = BaseUserSerializer(many=False, read_only=True)
-    event = EventSerializer(many=False, read_only=True)
-
-    class Meta:
-        model = Ticket
-        fields = (
-            'event',
-            'base_user'
         )
