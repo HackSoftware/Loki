@@ -37,8 +37,8 @@ class Partner(models.Model):
 
 class Event(models.Model):
     name = models.CharField(max_length=150)
-    start_date = models.DateField()
-    url = models.URLField()
+    start_date = models.DateField(blank=True, null=True)
+    url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.name
