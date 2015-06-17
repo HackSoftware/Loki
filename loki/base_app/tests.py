@@ -179,3 +179,10 @@ class EventTests(TestCase):
         self.assertEqual(response.status_code, 201)
         new_count = Ticket.objects.count()
         self.assertEqual(count+1, new_count)
+
+    def test_buy_ticket_for_event_no_data(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.test_user)
+        url = reverse('base_app:buy_ticket')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 404)

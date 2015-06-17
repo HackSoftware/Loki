@@ -42,7 +42,7 @@ def get_events(request):
 @api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def buy_ticket(request):
-    event_id = request.POST.get('event_id')
+    event_id = request.data.get('event_id')
     user = request.user
     event = get_object_or_404(Event, id=event_id)
 
