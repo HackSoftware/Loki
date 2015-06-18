@@ -38,7 +38,6 @@ INSTALLED_APPS = (
     'ckeditor',
     'post_office',
     'adminsortable2',
-    'django_extensions',
     'django_resized',
 
     'hack_fmi',
@@ -110,10 +109,6 @@ try:
 except ImportError:
     exit("{}_settings.py not found!".format("travis" if 'TRAVIS' in os.environ else "local"))
 
-
-LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'hack_fmi/locale/')
-)
 
 CKEDITOR_CONFIGS = {
     'default': {
