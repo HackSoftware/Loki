@@ -1,20 +1,31 @@
+from import_export.admin import ImportExportActionModelAdmin
+
 from django.contrib import admin
 
 from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn
+from .modelresource import StudentResource
 
 
-class StudentAdmin(admin.ModelAdmin):
+class StudentAdmin(ImportExportActionModelAdmin):
+    resource_class = StudentResource
+
     list_display = [
         'id',
         'email',
         'first_name',
         'last_name',
         'mac',
-        'works_at',
+        'github_account',
+        'get_courses',
+        'mac',
+        'is_active',
     ]
     list_display_links = ['email']
+    list_filter = ('courses', 'is_active')
+    search_fields = ['email', 'first_name', 'last_name', 'mac', 'github_account']
 
-    list_filter = ('works_at',)
+    def get_courses(self, obj):
+        return obj.courses.all()
 
 admin.site.register(Student, StudentAdmin)
 

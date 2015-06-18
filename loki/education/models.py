@@ -8,7 +8,6 @@ from .validators import validate_mac
 
 class Student(BaseUser):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
-    hr_of = models.ForeignKey('base_app.Partner', blank=True, null=True)
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
     phone = models.CharField(null=True, blank=True, max_length='20')
 
@@ -60,6 +59,9 @@ class Course(models.Model):
     video = models.URLField(blank=True)
 
     def __str__(self):
+        return self.name
+
+    def __repr__(self):
         return self.name
 
 

@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'post_office',
     'adminsortable2',
     'django_resized',
+    'import_export',
 
     'hack_fmi',
     'base_app',

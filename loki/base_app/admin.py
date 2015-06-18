@@ -1,6 +1,10 @@
+from import_export.admin import ImportExportActionModelAdmin
+
 from django.contrib import admin
+
 from hack_fmi.models import BaseUser
 from .models import Company, Partner, Event, Ticket
+from .modelresource import TicketResource
 
 
 class BaseUserAdmin(admin.ModelAdmin):
@@ -37,10 +41,14 @@ class EventAdmin(admin.ModelAdmin):
 admin.site.register(Event, EventAdmin)
 
 
-class TicketAdmin(admin.ModelAdmin):
+class TicketAdmin(ImportExportActionModelAdmin):
+    resource_class = TicketResource
+
     list_display = ('id', 'event', 'base_user')
 
     class Meta:
         model = Ticket
+
+    list_filter = ('event',)
 
 admin.site.register(Ticket, TicketAdmin)
