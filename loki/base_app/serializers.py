@@ -81,6 +81,7 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
         fields = (
             'first_name',
             'last_name',
+            'avatar',
             'github_account',
             'linkedin_account',
             'twitter_account',
