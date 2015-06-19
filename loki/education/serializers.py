@@ -65,7 +65,8 @@ class StudentNameSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'first_name',
-            'last_name'
+            'last_name',
+            'avatar',
         )
 
 
