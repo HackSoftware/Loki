@@ -108,8 +108,11 @@ class CheckInTest(TestCase):
             'course_id': self.course.id
         }
         url = reverse('education:get_check_ins')
-        response = self.client.get(url, data, format='json')
-        print(response.data)
+        self.client.get(url, data, format='json')
+        check_ins = CheckIn.objects.filter(student_id=self.student.id,
+                                           date__gte=self.course.start_time,
+                                           date__lte=self.course.end_time)
+        self.assertEqual(3, len(check_ins))
 
 
 class AuthenticationTests(TestCase):
