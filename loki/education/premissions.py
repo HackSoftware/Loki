@@ -10,6 +10,7 @@ class IsStudent(permissions.BasePermission):
         except:
             return False
 
+
 class IsTeacher(permissions.BasePermission):
 
     def has_permission(self, request, view):

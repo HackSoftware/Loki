@@ -15,6 +15,9 @@ class CheckInTest(TestCase):
             email='sten@abv.bg',
             mac="12-34-56-78-9A-BC",
         )
+        self.teacher = Teacher.objects.create(
+            email='teach@teach.bg'
+        )
         self.student_no_mac = Student.objects.create(
             email='rado@abv.bg',
         )
@@ -103,16 +106,18 @@ class CheckInTest(TestCase):
         self.assertEqual(CheckIn.objects.get(mac='12-34-56-78-9A-BA').student, self.student_no_mac)
 
     def test_get_check_ins_for_specific_course(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.teacher)
         data = {
             'student_id': self.student.id,
             'course_id': self.course.id
         }
         url = reverse('education:get_check_ins')
-        self.client.get(url, data, format='json')
+        response = self.client.get(url, data, format='json')
         check_ins = CheckIn.objects.filter(student_id=self.student.id,
                                            date__gte=self.course.start_time,
                                            date__lte=self.course.end_time)
-        self.assertEqual(3, len(check_ins))
+        self.assertEqual(len(response.data), len(check_ins))
 
 
 class AuthenticationTests(TestCase):
@@ -153,7 +158,7 @@ class UpdateStudentsTests(TestCase):
         self.client.force_authenticate(user=self.student)
         url = reverse('education:student_update')
         data = {'mac': '01:23:45:67:ab:ab'}
-        response = self.client.patch(url, data, format='json')
+        self.client.patch(url, data, format='json')
 
         student = Student.objects.first()
         self.assertEqual(student.mac, data['mac'])
@@ -205,6 +210,10 @@ class TeachersAPIsTests(TestCase):
         self.assertEqual(2, len(response.data))
 
     def test_get_lectures(self):
-        data = {'id': self.course1.id}
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.teacher)
+        data = {'course_id': self.course1.id}
         url = reverse('education:get_lectures')
         response = self.client.get(url, data, format='json')
+        lectures = Lecture.objects.filter(course=self.course1)
+        self.assertEqual(len(response.data), len(lectures))

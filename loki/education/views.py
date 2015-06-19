@@ -48,7 +48,7 @@ def get_lectures(request):
 
 
 @api_view(['GET'])
-@permission_classes((IsTeacher,))
+@permission_classes((IsAuthenticated,))
 def get_check_ins(request):
     student_id = request.GET.get('student_id')
     course_id = request.GET.get('course_id')
@@ -63,7 +63,7 @@ def get_check_ins(request):
 
 
 @api_view(['GET'])
-@permission_classes((IsTeacher,))
+@permission_classes((IsAuthenticated,))
 def get_courses(request):
     teacher = request.user.get_teacher()
     courses = teacher.teached_courses.all()
