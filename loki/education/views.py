@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.db import IntegrityError
@@ -51,7 +52,13 @@ def get_lectures(request):
 # @permission_classes((IsLecturer,))
 def get_check_ins(request):
     student_id = request.GET.get('student_id')
-    check_ins = CheckIn.objects.filter(student_id=student_id)
+    course_id = request.GET.get('course_id')
+    course = Course.objects.get(id=course_id)
+    start_time = course.start_time - timedelta(days=1)
+    end_time = course.end_time + timedelta(days=1)
+    check_ins = CheckIn.objects.filter(student_id=student_id,
+                                       date__gte=start_time,
+                                       date__lte=end_time)
     serializer = CheckInSerializer(check_ins, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
