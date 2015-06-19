@@ -14,7 +14,7 @@ from rest_framework import status
 from .models import CheckIn, Student, Lecture, Course
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer)
-from .premissions import IsStudent
+from .premissions import IsStudent, IsTeacher
 
 
 @csrf_exempt
@@ -39,7 +39,7 @@ def set_check_in(request):
 
 
 @api_view(['GET'])
-# @permission_classes((IsLecturer,))
+@permission_classes((IsTeacher,))
 def get_lectures(request):
     course_id = request.GET.get('course_id')
     lectures = Lecture.objects.filter(course_id=course_id)
@@ -48,7 +48,7 @@ def get_lectures(request):
 
 
 @api_view(['GET'])
-# @permission_classes((IsLecturer,))
+@permission_classes((IsTeacher,))
 def get_check_ins(request):
     student_id = request.GET.get('student_id')
     course_id = request.GET.get('course_id')
@@ -63,7 +63,7 @@ def get_check_ins(request):
 
 
 @api_view(['GET'])
-# @permission_classes((IsLecturer,))
+@permission_classes((IsTeacher,))
 def get_courses(request):
     teacher = request.user.get_teacher()
     courses = teacher.teached_courses.all()
@@ -99,7 +99,7 @@ def student_update(request):
 
 
 @api_view(['GET'])
-# @permission_classes((IsLecturer,))
+@permission_classes((IsTeacher,))
 def get_students_for_course(request):
     course_id = request.GET.get('course_id')
     students = get_object_or_404(Course, id=course_id).student_set
