@@ -18,6 +18,57 @@ class CheckInTest(TestCase):
         self.student_no_mac = Student.objects.create(
             email='rado@abv.bg',
         )
+        self.course = Course.objects.create(
+            description='Test',
+            name='Test',
+            application_until='2015-06-15',
+            SEO_description='Test',
+            SEO_title='Test',
+            url='haskell-12',
+            start_time='2015-06-15',
+            end_time='2015-06-30',
+        )
+
+        self.course_assignment = CourseAssignment.objects.create(
+            group_time=1,
+            course=self.course,
+            user=self.student,
+        )
+
+        self.check_in_on_start = CheckIn.objects.create(
+            mac="12-34-56-78-9A-BE",
+            student=self.student,
+        )
+        self.check_in_on_start.date = '2015-06-15'
+        self.check_in_on_start.save()
+
+        self.check_in_after_start = CheckIn.objects.create(
+            mac="12-34-56-78-9A-BE",
+            student=self.student,
+        )
+        self.check_in_after_start.date = '2015-06-20'
+        self.check_in_after_start.save()
+
+        self.check_in_on_end = CheckIn.objects.create(
+            mac="12-34-56-78-9A-BE",
+            student=self.student,
+        )
+        self.check_in_on_end.date = '2015-06-30'
+        self.check_in_on_end.save()
+
+        self.check_in_after_course = CheckIn.objects.create(
+            mac="12-34-56-78-9A-BE",
+            student=self.student,
+        )
+        self.check_in_after_course.date = '2015-07-01'
+        self.check_in_after_course.save()
+
+        self.check_in_before_course = CheckIn.objects.create(
+            mac="12-34-56-78-9A-BE",
+            student=self.student,
+        )
+        self.check_in_before_course.date = '2015-06-14'
+        self.check_in_before_course.save()
 
     def test_check_in_with_mac_and_user(self):
         data = {
@@ -26,7 +77,7 @@ class CheckInTest(TestCase):
         }
         url = reverse('education:set_check_in')
         self.client.post(url, data, format='json')
-        self.assertIn(self.student.mac, CheckIn.objects.first().student.mac)
+        self.assertIn(self.student.mac, CheckIn.objects.get(mac='12-34-56-78-9A-BC').student.mac)
 
     def test_check_in_with_mac_and_no_user(self):
         data = {
@@ -45,11 +96,20 @@ class CheckInTest(TestCase):
         }
         url = reverse('education:set_check_in')
         self.client.post(url, data, format='json')
-        self.assertIsNone(CheckIn.objects.first().student)
+        self.assertIsNone(CheckIn.objects.get(mac='12-34-56-78-9A-BA').student)
         self.student_no_mac.mac = '12-34-56-78-9A-BA'
         self.student_no_mac.save()
         call_command('check_macs')
-        self.assertEqual(CheckIn.objects.first().student, self.student_no_mac)
+        self.assertEqual(CheckIn.objects.get(mac='12-34-56-78-9A-BA').student, self.student_no_mac)
+
+    def test_get_check_ins_for_specific_course(self):
+        data = {
+            'student_id': self.student.id,
+            'course_id': self.course.id
+        }
+        url = reverse('education:get_check_ins')
+        response = self.client.get(url, data, format='json')
+        print(response.data)
 
 
 class AuthenticationTests(TestCase):
