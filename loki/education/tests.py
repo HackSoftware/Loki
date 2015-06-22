@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from rest_framework.test import APIClient
 
-from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment
+from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote
 from hack_fmi.models import BaseUser
 from loki.settings import CHECKIN_TOKEN
 
@@ -177,6 +177,11 @@ class TeachersAPIsTests(TestCase):
             application_until="2015-06-20",
             url="https://hackbulgaria.com/course/haskell-2/"
         )
+        self.course3 = Course.objects.create(
+            name="Python3",
+            application_until="2015-06-20",
+            url="https://hackbulgaria.com/course/haskell-3/"
+        )
         Lecture.objects.create(
             course=self.course1,
             date="2015-06-8"
@@ -201,6 +206,11 @@ class TeachersAPIsTests(TestCase):
             course=self.course2,
             group_time=1
         )
+        self.course_assignment2 = CourseAssignment.objects.create(
+            user=self.student,
+            course=self.course3,
+            group_time=1
+        )
 
     def test_get_courses_api(self):
         self.client = APIClient()
@@ -217,3 +227,29 @@ class TeachersAPIsTests(TestCase):
         response = self.client.get(url, data, format='json')
         lectures = Lecture.objects.filter(course=self.course1)
         self.assertEqual(len(response.data), len(lectures))
+
+    def test_create_student_note_valid_data(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.teacher)
+        data = {
+            'cas_id': self.course_assignment.id,
+            'text': 'Very good student!'
+        }
+        url = reverse('education:create_student_note')
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        note = StudentNote.objects.filter(assignment=self.course_assignment).first()
+        self.assertEqual(note.text, 'Very good student!')
+
+    def test_create_student_note_invalid_teacher(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.teacher)
+        data = {
+            'cas_id': self.course_assignment2.id,
+            'text': 'Very good student!'
+        }
+        url = reverse('education:create_student_note')
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 401)
+        note = StudentNote.objects.filter(assignment=self.course_assignment2).first()
+        self.assertIsNone(note)
