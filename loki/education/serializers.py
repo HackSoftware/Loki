@@ -3,12 +3,24 @@ from rest_framework import serializers
 from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote
 
 
+class NoteTeacherSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Student
+        fields = (
+            'first_name',
+            'last_name',
+        )
+
+
 class StudentNoteSerializer(serializers.ModelSerializer):
+    author = NoteTeacherSerializer(many=False, read_only=True)
 
     class Meta:
         model = StudentNote
         fields = (
             'text',
+            'author',
         )
 
 
