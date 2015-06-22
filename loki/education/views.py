@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import CheckIn, Student, Lecture, Course, CourseAssignment
+from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer)
 from .premissions import IsStudent, IsTeacher
@@ -116,3 +116,20 @@ def get_cas_for_course(request):
     cas = CourseAssignment.objects.filter(course=course)
     serializer = FullCASerializer(cas, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+@permission_classes((IsTeacher,))
+def create_student_note(request):
+    teacher = request.user.get_teacher()
+    cas = get_object_or_404(CourseAssignment, id=request.data['cas_id'])
+    if cas.course not in teacher.teached_courses.all():
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    text = request.data['text']
+    StudentNote.objects.create(
+        text=text,
+        assignment=cas,
+        author=teacher
+    )
+    message = {"message": "Успешно написахте коментар за студента"}
+    return Response(message, status=status.HTTP_201_CREATED)

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Lecture, CheckIn, Course, Student, CourseAssignment
+from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote
 
 
 class LectureSerializer(serializers.ModelSerializer):
@@ -124,4 +124,18 @@ class TeacherSerializer(serializers.ModelSerializer):
             'phone',
             'mac',
             'teached_courses',
+        )
+
+
+class StudentNoteSerializer(serializers.ModelSerializer):
+
+    assignment = CourseAssignmentSerializer(many=False, read_only=True)
+    author = TeacherSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = StudentNote
+        fields = (
+            'text',
+            'assignment',
+            'author'
         )
