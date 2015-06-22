@@ -3,6 +3,15 @@ from rest_framework import serializers
 from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote
 
 
+class StudentNoteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentNote
+        fields = (
+            'text',
+        )
+
+
 class LectureSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -47,6 +56,10 @@ class SingleStudent(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'avatar',
             'studies_at',
             'works_at',
             'github_account',
@@ -57,11 +70,13 @@ class SingleStudent(serializers.ModelSerializer):
 
 class FullCASerializer(serializers.ModelSerializer):
     user = SingleStudent(many=False, read_only=True)
+    studentnote_set = StudentNoteSerializer(many=True, read_only=True)
 
     class Meta:
         model = CourseAssignment
         fields = (
             'user',
+            'studentnote_set'
         )
 
 
@@ -124,18 +139,4 @@ class TeacherSerializer(serializers.ModelSerializer):
             'phone',
             'mac',
             'teached_courses',
-        )
-
-
-class StudentNoteSerializer(serializers.ModelSerializer):
-
-    assignment = CourseAssignmentSerializer(many=False, read_only=True)
-    author = TeacherSerializer(many=False, read_only=True)
-
-    class Meta:
-        model = StudentNote
-        fields = (
-            'text',
-            'assignment',
-            'author'
         )

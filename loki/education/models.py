@@ -83,7 +83,7 @@ class StudentNote(models.Model):
     text = models.TextField(blank=True)
     assignment = models.ForeignKey(CourseAssignment)
     author = models.ForeignKey(Teacher)
-    post_time = models.DateTimeField(auto_now=True)
+    post_time = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ('post_time',)
