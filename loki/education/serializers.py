@@ -47,6 +47,10 @@ class SingleStudent(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'avatar',
             'studies_at',
             'works_at',
             'github_account',
