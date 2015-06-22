@@ -232,7 +232,7 @@ class TeachersAPIsTests(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.teacher)
         data = {
-            'cas_id': self.course_assignment.id,
+            'ca_id': self.course_assignment.id,
             'text': 'Very good student!'
         }
         url = reverse('education:create_student_note')
@@ -245,7 +245,7 @@ class TeachersAPIsTests(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.teacher)
         data = {
-            'cas_id': self.course_assignment2.id,
+            'ca_id': self.course_assignment2.id,
             'text': 'Very good student!'
         }
         url = reverse('education:create_student_note')

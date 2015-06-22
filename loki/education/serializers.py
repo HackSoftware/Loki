@@ -75,8 +75,9 @@ class FullCASerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseAssignment
         fields = (
+            'id',
             'user',
-            'studentnote_set'
+            'studentnote_set',
         )
 
 

@@ -122,13 +122,13 @@ def get_cas_for_course(request):
 @permission_classes((IsTeacher,))
 def create_student_note(request):
     teacher = request.user.get_teacher()
-    cas = get_object_or_404(CourseAssignment, id=request.data['cas_id'])
-    if cas.course not in teacher.teached_courses.all():
+    ca = get_object_or_404(CourseAssignment, id=request.data['ca_id'])
+    if ca.course not in teacher.teached_courses.all():
         return Response(status=status.HTTP_401_UNAUTHORIZED)
     text = request.data['text']
     StudentNote.objects.create(
         text=text,
-        assignment=cas,
+        assignment=ca,
         author=teacher
     )
     message = {"message": "Успешно написахте коментар за студента"}
