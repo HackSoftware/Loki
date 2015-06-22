@@ -42,6 +42,29 @@ class CourseAssignmentSerializer(serializers.ModelSerializer):
         )
 
 
+class SingleStudent(serializers.ModelSerializer):
+
+    class Meta:
+        model = Student
+        fields = (
+            'studies_at',
+            'works_at',
+            'github_account',
+            'linkedin_account',
+            'mac',
+        )
+
+
+class FullCASerializer(serializers.ModelSerializer):
+    user = SingleStudent(many=False, read_only=True)
+
+    class Meta:
+        model = CourseAssignment
+        fields = (
+            'user',
+        )
+
+
 class StudentSerializer(serializers.ModelSerializer):
 
     courseassignment_set = CourseAssignmentSerializer(many=True, read_only=True)

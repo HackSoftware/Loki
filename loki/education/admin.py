@@ -2,7 +2,7 @@ from import_export.admin import ImportExportActionModelAdmin
 
 from django.contrib import admin
 
-from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn
+from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote
 from .modelresource import StudentResource
 
 
@@ -27,6 +27,18 @@ class StudentAdmin(ImportExportActionModelAdmin):
         return obj.courses.all()
 
 admin.site.register(Student, StudentAdmin)
+
+
+class StudentNoteAdmin(admin.ModelAdmin):
+    list_display = [
+        'assignment',
+        'author',
+        'post_time',
+    ]
+
+    list_display_links = ['assignment']
+
+admin.site.register(StudentNote, StudentNoteAdmin)
 
 
 class TeacherAdmin(admin.ModelAdmin):

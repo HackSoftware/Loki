@@ -11,9 +11,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import CheckIn, Student, Lecture, Course
+from .models import CheckIn, Student, Lecture, Course, CourseAssignment
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
-                          LectureSerializer, CheckInSerializer, CourseSerializer)
+                          LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer)
 from .premissions import IsStudent, IsTeacher
 
 
@@ -104,4 +104,15 @@ def get_students_for_course(request):
     course_id = request.GET.get('course_id')
     students = get_object_or_404(Course, id=course_id).student_set
     serializer = StudentNameSerializer(students, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes((IsTeacher,))
+# TODO: Add IsTeacherForThatCourse
+def get_cas_for_course(request):
+    course_id = request.GET.get('course_id')
+    course = get_object_or_404(Course, id=course_id)
+    cas = CourseAssignment.objects.filter(course=course)
+    serializer = FullCASerializer(cas, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)
