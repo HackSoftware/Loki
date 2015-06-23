@@ -49,6 +49,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         size=[300, 200],
         blank=True,
     )
+    full_image = models.ImageField(blank=True, null=True)
 
     USERNAME_FIELD = 'email'
 

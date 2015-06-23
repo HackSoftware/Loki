@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from hack_fmi.models import BaseUser
 
 from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote
 
@@ -138,7 +139,16 @@ class UpdateStudentSerializer(serializers.ModelSerializer):
         fields = (
             'studies_at',
             'works_at',
-            'mac'
+            'mac',
+        )
+
+
+class UpdateBaseUserSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = BaseUser
+        fields = (
+            'full_image',
         )
 
 

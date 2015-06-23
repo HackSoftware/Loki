@@ -13,7 +13,8 @@ from rest_framework import status
 
 from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
-                          LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer)
+                          LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
+                          UpdateBaseUserSerializer)
 from .premissions import IsStudent, IsTeacher
 
 
@@ -133,3 +134,16 @@ def create_student_note(request):
     )
     message = {"message": "Успешно написахте коментар за студента"}
     return Response(message, status=status.HTTP_201_CREATED)
+
+
+@api_view(['PATCH'])
+@permission_classes((IsAuthenticated,))
+def base_user_update(request):
+    user = request.user
+    data = {'full_image': request.data['file']}
+    serializer = UpdateBaseUserSerializer(user, data=data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    return Response(serializer.errors, status=400)
