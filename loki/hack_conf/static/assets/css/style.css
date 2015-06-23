@@ -847,3 +847,12 @@ label.error { display: block; }
   font-size: 4em;
   font-weight: 300;
 }
+
+.section h3 {
+  font-size: 3em;
+}
+
+#cfs-secondary-title {
+  margin-top: 1.2em;
+  margin-bottom: 1.2em;
+}
