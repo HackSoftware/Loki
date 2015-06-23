@@ -856,3 +856,12 @@ label.error { display: block; }
   margin-top: 1.2em;
   margin-bottom: 1.2em;
 }
+
+#call-for-speakers ol {
+  font-size: 1.5em;
+  font-weight: 300;
+}
+
+#submit-for-speaker {
+  margin-top: 1.2em;
+}
