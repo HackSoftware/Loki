@@ -148,8 +148,9 @@ def base_user_update(request):
     serializer = UpdateBaseUserSerializer(user, data=data, partial=True)
     if serializer.is_valid():
         user = serializer.save()
-        user.avatar = crop_image(int(co[0]), int(co[1]), int(co[3]), int(co[2]) , str(user.full_image))
+        name = crop_image(int(co[0]), int(co[1]), int(co[3]), int(co[2]) , str(user.full_image))
+        user.avatar = name
         user.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(name, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=400)
