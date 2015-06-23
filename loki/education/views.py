@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from ..education.helper import crop_image
 from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
@@ -144,6 +145,7 @@ def base_user_update(request):
     serializer = UpdateBaseUserSerializer(user, data=data, partial=True)
     if serializer.is_valid():
         serializer.save()
+        crop_image(0, 0, 0, 0, user.full_image)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=400)

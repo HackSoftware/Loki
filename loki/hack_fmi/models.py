@@ -44,11 +44,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     studies_at = models.CharField(blank=True, null=True, max_length=110)
     works_at = models.CharField(null=True, blank=True, max_length=110)
 
-    avatar = ResizedImageField(
-        upload_to='avatar',
-        size=[300, 200],
-        blank=True,
-    )
+    avatar = models.ImageField(blank=True, null=True)
     full_image = models.ImageField(blank=True, null=True)
 
     USERNAME_FIELD = 'email'
