@@ -806,10 +806,7 @@ label.error { display: block; }
 
 #register-text {
     font-weight: 400;
-}
-
-#register-title {
-    font-weight: 300;
+    font-size: 1.2em;
 }
 
 #hackconf-logo {
@@ -839,4 +836,14 @@ label.error { display: block; }
 
 #player-button p {
     font-weight: 700;
+}
+
+.section h1 {
+  font-size: 4.5em;
+  font-weight: 300;
+}
+
+.section h2 {
+  font-size: 4em;
+  font-weight: 300;
 }
