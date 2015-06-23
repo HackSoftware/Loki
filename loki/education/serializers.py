@@ -148,6 +148,7 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = BaseUser
         fields = (
+            'avatar',
             'full_image',
         )
 

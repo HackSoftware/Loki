@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.db import IntegrityError
@@ -141,11 +142,14 @@ def create_student_note(request):
 @permission_classes((IsAuthenticated,))
 def base_user_update(request):
     user = request.user
+    co = request.data['selection']
+    co = json.loads(co)
     data = {'full_image': request.data['file']}
     serializer = UpdateBaseUserSerializer(user, data=data, partial=True)
     if serializer.is_valid():
-        serializer.save()
-        crop_image(0, 0, 0, 0, user.full_image)
+        user = serializer.save()
+        user.avatar = crop_image(int(co[0]), int(co[1]), int(co[3]), int(co[2]) , str(user.full_image))
+        user.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=400)
