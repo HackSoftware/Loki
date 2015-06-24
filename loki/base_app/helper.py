@@ -3,7 +3,7 @@ from PIL import Image
 from django.conf import settings
 
 
-def crop_image(user, x1, y1, x2, y2, path):
+def crop_image(x1, y1, x2, y2, path):
     name = settings.MEDIA_ROOT + 'avatar/' + 'cropped_' + path[2:]
     try:
         image = Image.open(os.path.join(settings.MEDIA_ROOT, path[2:]))
