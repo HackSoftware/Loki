@@ -12,7 +12,6 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from .helper import crop_image
 from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
@@ -136,21 +135,3 @@ def create_student_note(request):
     )
     message = {"message": "Успешно написахте коментар за студента"}
     return Response(message, status=status.HTTP_201_CREATED)
-
-
-@api_view(['PATCH'])
-@permission_classes((IsAuthenticated,))
-def base_user_update(request):
-    user = request.user
-    co = request.data['selection']
-    co = json.loads(co)
-    data = {'full_image': request.data['file']}
-    serializer = UpdateBaseUserSerializer(user, data=data, partial=True)
-    if serializer.is_valid():
-        user = serializer.save()
-        name = crop_image(int(co[0]), int(co[1]), int(co[3]), int(co[2]) , str(user.full_image))
-        user.avatar = name
-        user.save()
-        return Response(name, status=status.HTTP_200_OK)
-
-    return Response(serializer.errors, status=400)

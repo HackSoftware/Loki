@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from education.views import (set_check_in, get_lectures, get_check_ins,
                              get_courses, OnBoardStudent, student_update, get_students_for_course, get_cas_for_course,
-                             create_student_note, base_user_update)
+                             create_student_note)
 
 
 urlpatterns = [
@@ -14,5 +14,4 @@ urlpatterns = [
     url(r'^api/get-students-for-course/$', get_students_for_course, name='get_students_for_course'),
     url(r'^api/get-cas-for-course/$', get_cas_for_course, name='get_ca_for_course'),
     url(r'^api/create-student_note/$', create_student_note, name='create_student_note'),
-    url(r'^api/base-user-update/$', base_user_update, name='base_user_update'),
 ]
