@@ -143,16 +143,6 @@ class UpdateStudentSerializer(serializers.ModelSerializer):
         )
 
 
-class UpdateBaseUserSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = BaseUser
-        fields = (
-            'avatar',
-            'full_image',
-        )
-
-
 class TeacherSerializer(serializers.ModelSerializer):
 
     teached_courses = CourseSerializer(many=True, read_only=True)

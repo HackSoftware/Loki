@@ -82,6 +82,7 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'avatar',
+            'full_image',
             'github_account',
             'linkedin_account',
             'twitter_account',

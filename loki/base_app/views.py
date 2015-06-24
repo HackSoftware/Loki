@@ -71,6 +71,7 @@ def base_user_update(request):
     user = request.user
     co = request.data['selection']
     co = json.loads(co)
+
     data = {'full_image': request.data['file']}
     serializer = UpdateBaseUserSerializer(user, data=data, partial=True)
     if serializer.is_valid():
