@@ -14,8 +14,7 @@ from rest_framework import status
 
 from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
-                          LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
-                          UpdateBaseUserSerializer)
+                          LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer)
 from .premissions import IsStudent, IsTeacher
 
 
