@@ -8,4 +8,4 @@ def home_page(request):
     schedule_day_one = Schedule.objects.filter(day=1).order_by("time")
     schedule_day_two = Schedule.objects.filter(day=2).order_by("time")
 
-    return render(request, 'index-overlay.html', locals())
+    return render(request, 'index.html', locals())

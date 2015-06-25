@@ -61,3 +61,5 @@ local_settings.py
 /static/
 media/
 bower_components
+
+*.swp
