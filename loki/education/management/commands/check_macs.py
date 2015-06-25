@@ -12,9 +12,10 @@ class Command(BaseCommand):
         mac_student = {}
         for student in all_students:
             if student.mac:
-                mac_student[student.mac] = student
+                mac_student[student.mac.lower()] = student
+
         for checkin in all_checkins:
             if not checkin.student:
-                if checkin.mac in mac_student.keys():
-                    checkin.student = mac_student[checkin.mac]
+                if checkin.mac.lower() in mac_student.keys():
+                    checkin.student = mac_student[checkin.mac.lower()]
                     checkin.save()
