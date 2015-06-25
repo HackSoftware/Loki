@@ -41,8 +41,6 @@ class CheckInSerializer(serializers.ModelSerializer):
 
 class CourseSerializer(serializers.ModelSerializer):
 
-    teacher_set = TeacherSerializer(many=True, read_only=True)
-
     class Meta:
         model = Course
         fields = (
@@ -51,7 +49,6 @@ class CourseSerializer(serializers.ModelSerializer):
             'start_time',
             'end_time',
             'fb_group',
-            'teacher_set',
             'url',
         )
 
