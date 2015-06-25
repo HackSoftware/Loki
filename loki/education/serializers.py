@@ -48,6 +48,7 @@ class CourseSerializer(serializers.ModelSerializer):
             'name',
             'start_time',
             'end_time',
+            'fb_group',
             'url',
         )
 
