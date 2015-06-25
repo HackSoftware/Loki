@@ -100,7 +100,7 @@ def student_update(request):
 
 
 @api_view(['GET'])
-@permission_classes((IsTeacher,))
+@permission_classes((IsStudent,))
 def get_students_for_course(request):
     course_id = request.GET.get('course_id')
     students = get_object_or_404(Course, id=course_id).student_set
