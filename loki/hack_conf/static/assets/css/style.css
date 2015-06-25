@@ -819,13 +819,13 @@ label.error { display: block; }
         display: none;
     }
 
-    #video {
+    .video {
         display: none;
     }
 }
 
 @media (min-width: 767px) {
-    #player-button {
+    .player-button {
         display: none;
     }
 }
@@ -864,4 +864,8 @@ label.error { display: block; }
 
 #submit-for-speaker {
   margin-top: 1.2em;
+}
+
+#video-row {
+  margin-bottom: 2em;
 }
