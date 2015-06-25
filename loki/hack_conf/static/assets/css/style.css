@@ -839,17 +839,17 @@ label.error { display: block; }
 }
 
 .section h1 {
-  font-size: 4.5em;
-  font-weight: 300;
-}
-
-.section h2 {
   font-size: 4em;
   font-weight: 300;
 }
 
-.section h3 {
+.section h2 {
   font-size: 3em;
+  font-weight: 300;
+}
+
+.section h3 {
+  font-size: 2.5em;
 }
 
 #cfs-secondary-title {
