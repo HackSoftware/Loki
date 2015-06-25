@@ -70,6 +70,7 @@ class SingleStudent(serializers.ModelSerializer):
         model = Student
         fields = (
             'id',
+            'email',
             'first_name',
             'last_name',
             'avatar',
