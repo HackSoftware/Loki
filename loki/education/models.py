@@ -51,6 +51,7 @@ class Course(models.Model):
     ask_for_favorite_partner = models.BooleanField(default=False)
     ask_for_feedback = models.BooleanField(default=False)
     end_time = models.DateField(blank=True, null=True)
+    fb_group = models.URLField(blank=True, null=True)
     next_season_mail_list = models.URLField(null=True, blank=True)
     SEO_description = models.CharField(blank=False, max_length=255)
     SEO_title = models.CharField(blank=False, max_length=255)
