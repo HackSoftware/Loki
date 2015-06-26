@@ -22,6 +22,7 @@ class StudentNoteSerializer(serializers.ModelSerializer):
         fields = (
             'text',
             'author',
+            'post_time',
         )
 
 
