@@ -40,7 +40,7 @@ def set_check_in(request):
 
 
 @api_view(['GET'])
-@permission_classes((IsTeacher,))
+@permission_classes((IsAuthenticated,))
 def get_lectures(request):
     course_id = request.GET.get('course_id')
     lectures = Lecture.objects.filter(course_id=course_id)
