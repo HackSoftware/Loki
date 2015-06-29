@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.core.management import BaseCommand
-from math import floor
+from math import ceil
 from education.models import Course, CheckIn, Lecture
 
 
@@ -30,6 +30,6 @@ class Command(BaseCommand):
                     for check_in in check_ins:
                         if check_in.date in lecture_dates:
                             times_been += 1
-                    student_presence = floor((times_been / len(lecture_dates)) * 100)
+                    student_presence = ceil((times_been / len(lecture_dates)) * 100)
                     ca.student_presence = student_presence
                     ca.save()
