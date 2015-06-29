@@ -33,6 +33,7 @@ class CourseAssignment(models.Model):
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
     is_attending = models.BooleanField(default=True)
     user = models.ForeignKey('Student')
+    student_presence = models.PositiveSmallIntegerField(blank=True, null=True)
     is_online = models.BooleanField(default=False)
 
 

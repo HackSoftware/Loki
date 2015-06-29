@@ -253,3 +253,57 @@ class TeachersAPIsTests(TestCase):
         self.assertEqual(response.status_code, 401)
         note = StudentNote.objects.filter(assignment=self.course_assignment2).first()
         self.assertIsNone(note)
+
+
+class CheckPresenceTests(TestCase):
+    def setUp(self):
+        self.course1 = Course.objects.create(
+            name="Java",
+            application_until="2015-06-20",
+            url="https://hackbulgaria.com/course/haskell-1/",
+            start_time="2015-06-01",
+            end_time="2015-07-01"
+        )
+        self.course2 = Course.objects.create(
+            name="Python",
+            application_until="2015-06-20",
+            url="https://hackbulgaria.com/course/haskell-2/",
+            start_time="2015-06-01",
+            end_time="2015-07-01"
+        )
+        Lecture.objects.create(
+            course=self.course1,
+            date="2015-06-8"
+        )
+        Lecture.objects.create(
+            course=self.course1,
+            date="2015-06-10"
+        )
+        Lecture.objects.create(
+            course=self.course2,
+            date="2015-06-12"
+        )
+        self.student = Student.objects.create(
+            email="stud@abv.bg",
+            mac="60:67:20:cc:b1:62"
+        )
+        self.course_assignment = CourseAssignment.objects.create(
+            user=self.student,
+            course=self.course1,
+            group_time=1
+        )
+        self.check_in_1 = CheckIn.objects.create(
+            mac="12-34-56-78-9A-BE",
+            student=self.student,
+        )
+        self.check_in_1.date = '2015-06-10'
+        self.check_in_1.save()
+        self.check_in_2 = CheckIn.objects.create(
+            mac="12-34-56-78-9A-BE",
+            student=self.student,
+        )
+        self.check_in_2.date = '2015-07-01'
+        self.check_in_2.save()
+
+    def test_command(self):
+        call_command('check_presence')
