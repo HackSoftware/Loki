@@ -1,6 +1,5 @@
 from datetime import datetime
 from django.core.management import BaseCommand
-from django.shortcuts import get_object_or_404
 from math import floor
 from education.models import Course, CheckIn, Lecture
 
@@ -11,10 +10,10 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if len(args) == 0:
-            courses = get_object_or_404(
-                Course,
+            courses = Course.objects.filter(
                 end_time__gte=datetime.now(),
-                start_time__lte=datetime.now())
+                start_time__lte=datetime.now()
+            )
             for course in courses:
                 start_time = course.start_time
                 end_time = course.end_time
@@ -30,7 +29,6 @@ class Command(BaseCommand):
                     for check_in in check_ins:
                         if check_in.date in lecture_dates:
                             times_been += 1
-                    print()
                     student_presence = floor((times_been / len(lecture_dates)) * 100)
-
+                    ca.student_presence = student_presence
                     ca.save()

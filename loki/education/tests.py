@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.core.management import call_command
 from django.test import TestCase
 from django.core.urlresolvers import reverse
@@ -5,6 +6,7 @@ from rest_framework.test import APIClient
 
 from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote
 from hack_fmi.models import BaseUser
+from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
 
 
@@ -261,27 +263,27 @@ class CheckPresenceTests(TestCase):
             name="Java",
             application_until="2015-06-20",
             url="https://hackbulgaria.com/course/haskell-1/",
-            start_time="2015-06-01",
-            end_time="2015-07-01"
+            start_time=date_decrease(30),
+            end_time=date_increase(30)
         )
         self.course2 = Course.objects.create(
             name="Python",
             application_until="2015-06-20",
             url="https://hackbulgaria.com/course/haskell-2/",
-            start_time="2015-06-01",
-            end_time="2015-07-01"
+            start_time=date_decrease(30),
+            end_time=date_increase(30)
         )
         Lecture.objects.create(
             course=self.course1,
-            date="2015-06-8"
+            date=date_decrease(10)
         )
         Lecture.objects.create(
             course=self.course1,
-            date="2015-06-10"
+            date=date_decrease(9)
         )
         Lecture.objects.create(
-            course=self.course2,
-            date="2015-06-12"
+            course=self.course1,
+            date=date_increase(30)
         )
         self.student = Student.objects.create(
             email="stud@abv.bg",
@@ -296,14 +298,16 @@ class CheckPresenceTests(TestCase):
             mac="12-34-56-78-9A-BE",
             student=self.student,
         )
-        self.check_in_1.date = '2015-06-10'
+        self.check_in_1.date = date_decrease(9)
         self.check_in_1.save()
         self.check_in_2 = CheckIn.objects.create(
             mac="12-34-56-78-9A-BE",
             student=self.student,
         )
-        self.check_in_2.date = '2015-07-01'
+        self.check_in_2.date = date_increase(30)
         self.check_in_2.save()
 
     def test_command(self):
+        self.assertIsNone(self.course_assignment.student_presence)
         call_command('check_presence')
+        self.assertEqual(self.course_assignment.student_presence, 66)
