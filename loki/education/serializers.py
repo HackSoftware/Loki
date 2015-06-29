@@ -60,7 +60,6 @@ class CourseAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseAssignment
         fields = (
-            'student_presence',
             'is_attending',
             'is_online',
             'course',
@@ -93,6 +92,7 @@ class FullCASerializer(serializers.ModelSerializer):
         model = CourseAssignment
         fields = (
             'id',
+            'student_presence',
             'user',
             'studentnote_set',
         )
