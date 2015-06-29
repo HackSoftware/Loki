@@ -103,6 +103,7 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = (
+            'id',
             'studies_at',
             'works_at',
             'courseassignment_set',
