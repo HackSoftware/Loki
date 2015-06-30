@@ -22,6 +22,7 @@ class StudentNoteSerializer(serializers.ModelSerializer):
         fields = (
             'text',
             'author',
+            'post_time',
         )
 
 
@@ -91,6 +92,7 @@ class FullCASerializer(serializers.ModelSerializer):
         model = CourseAssignment
         fields = (
             'id',
+            'student_presence',
             'user',
             'studentnote_set',
         )
