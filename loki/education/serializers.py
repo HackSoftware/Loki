@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from hack_fmi.models import BaseUser
 
-from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote
+from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote, Teacher
 
 
 class NoteTeacherSerializer(serializers.ModelSerializer):
@@ -40,7 +40,24 @@ class CheckInSerializer(serializers.ModelSerializer):
         fields = ('id', 'date', 'student')
 
 
+class TeacherSetSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Teacher
+        fields = (
+            'first_name',
+            'last_name',
+            'email',
+            'avatar',
+            'github_account',
+            'linkedin_account',
+            'twitter_account'
+        )
+
+
 class CourseSerializer(serializers.ModelSerializer):
+
+    teacher_set = TeacherSetSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
@@ -49,6 +66,7 @@ class CourseSerializer(serializers.ModelSerializer):
             'name',
             'start_time',
             'end_time',
+            'teacher_set',
             'fb_group',
             'url',
         )
@@ -155,7 +173,7 @@ class TeacherSerializer(serializers.ModelSerializer):
     teached_courses = CourseSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Student
+        model = Teacher
         fields = (
             'phone',
             'mac',
