@@ -110,6 +110,7 @@ class FullCASerializer(serializers.ModelSerializer):
         model = CourseAssignment
         fields = (
             'id',
+            'is_attending',
             'student_presence',
             'user',
             'studentnote_set',
