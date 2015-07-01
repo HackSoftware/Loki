@@ -97,5 +97,6 @@ class CheckInAdmin(admin.ModelAdmin):
         'mac',
         'student'
     ]
+    search_fields = ['mac', 'student__email']
 
 admin.site.register(CheckIn, CheckInAdmin)
