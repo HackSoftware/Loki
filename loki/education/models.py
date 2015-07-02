@@ -36,6 +36,9 @@ class CourseAssignment(models.Model):
     student_presence = models.PositiveSmallIntegerField(blank=True, null=True)
     is_online = models.BooleanField(default=False)
 
+    class Meta:
+        unique_together = ('user', 'course')
+
 
 class Course(models.Model):
     description = RichTextField(blank=False)
