@@ -17,5 +17,8 @@ class Command(BaseCommand):
         for checkin in all_checkins:
             if not checkin.student:
                 if checkin.mac.lower() in mac_student.keys():
-                    checkin.student = mac_student[checkin.mac.lower()]
-                    checkin.save()
+                    try:
+                        checkin.student = mac_student[checkin.mac.lower()]
+                        checkin.save()
+                    except Exception as error:
+                        print(error)
