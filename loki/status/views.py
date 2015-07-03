@@ -22,7 +22,7 @@ def check_ins_sanity_check(request):
     first_period = "13:30:00" <= time <= "14:30:00"
     second_period = "19:30:00" <= time <= "21:30:00"
 
-    if first_period and second_period:
+    if first_period or second_period:
         today_lectures = Lecture.objects.filter(date=date)
         if today_lectures.count():
             group_times = get_group_times(today_lectures)
