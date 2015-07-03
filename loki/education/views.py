@@ -138,7 +138,7 @@ def create_student_note(request):
 
 
 @api_view(['POST'])
-# @permission_classes((IsTeacher,))
+@permission_classes((IsTeacher,))
 def drop_student(request):
     cas = get_object_or_404(CourseAssignment, id=request.data['ca_id'])
     serializer = CourseAssignmentSerializer(cas, data=request.data, partial=True)
