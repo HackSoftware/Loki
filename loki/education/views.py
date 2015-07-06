@@ -10,6 +10,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from education.helper import check_macs_for_student, mac_is_used_by_another_student
 
 from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
@@ -86,16 +87,20 @@ class OnBoardStudent(APIView):
             self.make_student(request.user)
             return Response(status=status.HTTP_200_OK)
 
-
+# TODO: Refactor mac checks
 @api_view(['PATCH'])
 @permission_classes((IsStudent,))
 def student_update(request):
     student = request.user.get_student()
+    if 'mac' in request.data:
+        if mac_is_used_by_another_student(student, request.data['mac']):
+            error = {"error": "Този мак в вече зает"}
+            return Response(error, status=400)
+        check_macs_for_student(student, request.data['mac'])
     serializer = UpdateStudentSerializer(student, data=request.data, partial=True)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
-
     return Response(serializer.errors, status=400)
 
 
