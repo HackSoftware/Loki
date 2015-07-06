@@ -70,7 +70,9 @@ class BaseUserMeSerializer(serializers.ModelSerializer):
             'competitor',
             'student',
             'teacher',
-            'ticket_set'
+            'ticket_set',
+            'works_at',
+            'studies_at',
         )
 
 
@@ -86,4 +88,6 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
             'github_account',
             'linkedin_account',
             'twitter_account',
+            'works_at',
+            'studies_at',
         )
