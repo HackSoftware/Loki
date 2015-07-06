@@ -295,13 +295,13 @@ class CheckPresenceTests(TestCase):
             group_time=1
         )
         self.check_in_1 = CheckIn.objects.create(
-            mac="12-34-56-78-9A-BE",
+            mac="12:34:56:78:9A:BE",
             student=self.student,
         )
         self.check_in_1.date = date_decrease(1)
         self.check_in_1.save()
         self.check_in_2 = CheckIn.objects.create(
-            mac="12-34-56-78-9A-BE",
+            mac="12:34:56:c78:9A:BE",
             student=self.student,
         )
         self.check_in_2.date = date_decrease(2)
@@ -352,3 +352,40 @@ class DropStudentTests(TestCase):
         self.client.patch(url, data, format='json')
         cass = CourseAssignment.objects.get(id=self.course_assignment.id)
         self.assertFalse(cass.is_attending)
+
+
+class CheckMacsTests(TestCase):
+    def setUp(self):
+        self.student = Student.objects.create(
+            email='sten@abv.bg',
+            mac="12:34:56:78:9A:BC",
+        )
+        self.student_no_mac = Student.objects.create(
+            email='rado@abv.bg',
+        )
+        self.check_1 = CheckIn.objects.create(
+            mac="12:34:56:78:9A:BE",
+        )
+        self.check_1.date = date_decrease(1)
+        self.check_1.save()
+
+        self.check_2 = CheckIn.objects.create(
+            mac="12:34:56:78:9A:BE",
+        )
+        self.check_2.date = date_decrease(2)
+        self.check_2.save()
+
+        self.check_3 = CheckIn.objects.create(
+            mac="12:34:56:78:9A:BE",
+        )
+        self.check_3.date = date_decrease(3)
+        self.check_3.save()
+
+    def test_student_enters_mac(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student_no_mac)
+        data = {'mac': '12:34:56:78:9A:BE'}
+        url = reverse('education:student_update')
+        self.client.patch(url, data, format='json')
+        ch = CheckIn.objects.filter(mac='12:34:56:78:9A:BE').first()
+        self.assertEqual(ch.student, self.student_no_mac)
