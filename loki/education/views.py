@@ -1,4 +1,3 @@
-import json
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.db import IntegrityError
@@ -137,7 +136,7 @@ def create_student_note(request):
     return Response(message, status=status.HTTP_201_CREATED)
 
 
-@api_view(['POST'])
+@api_view(['PATCH'])
 @permission_classes((IsTeacher,))
 def drop_student(request):
     cas = get_object_or_404(CourseAssignment, id=request.data['ca_id'])

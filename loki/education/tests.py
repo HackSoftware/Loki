@@ -349,6 +349,6 @@ class DropStudentTests(TestCase):
         }
         url = reverse('education:drop_student')
         self.assertTrue(self.course_assignment.is_attending)
-        self.client.post(url, data, format='json')
+        self.client.patch(url, data, format='json')
         cass = CourseAssignment.objects.get(id=self.course_assignment.id)
         self.assertFalse(cass.is_attending)
