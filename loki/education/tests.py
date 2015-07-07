@@ -301,7 +301,7 @@ class CheckPresenceTests(TestCase):
         self.check_in_1.date = date_decrease(1)
         self.check_in_1.save()
         self.check_in_2 = CheckIn.objects.create(
-            mac="12:34:56:c78:9A:BE",
+            mac="12:34:56:78:9A:BE",
             student=self.student,
         )
         self.check_in_2.date = date_decrease(2)
