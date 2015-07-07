@@ -134,12 +134,14 @@ class AuthenticationTests(TestCase):
     def test_onboard_student(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.user)
+        student_count = Student.objects.count()
+        baseuser_count = BaseUser.objects.count()
         url = reverse('education:onboard_student')
         response = self.client.post(url, format='json')
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(Student.objects.count(), 1)
-        self.assertEqual(BaseUser.objects.count(), 1)
+        self.assertEqual(Student.objects.count() - 1, student_count)
+        self.assertEqual(BaseUser.objects.count(), baseuser_count)
 
         self.assertEqual(
             BaseUser.objects.first().email,
@@ -162,7 +164,7 @@ class UpdateStudentsTests(TestCase):
         data = {'mac': '01:23:45:67:ab:ab'}
         self.client.patch(url, data, format='json')
 
-        student = Student.objects.first()
+        student = Student.objects.filter(email="sten@abv.bg").first()
         self.assertEqual(student.mac, data['mac'])
 
 
@@ -223,9 +225,10 @@ class TeachersAPIsTests(TestCase):
     def test_get_courses_api(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.teacher)
+        course_count = self.teacher.teached_courses.count()
         url = reverse('education:get_courses')
         response = self.client.get(url, format='json')
-        self.assertEqual(2, len(response.data))
+        self.assertEqual(course_count, len(response.data))
 
     def test_get_lectures(self):
         self.client = APIClient()
@@ -285,11 +288,11 @@ class CheckPresenceTests(TestCase):
         )
         Lecture.objects.create(
             course=self.course1,
-            date=date_decrease(9)
+            date=date_decrease(12)
         )
         Lecture.objects.create(
             course=self.course1,
-            date=date_increase(30)
+            date=date_decrease(14)
         )
         self.student = Student.objects.create(
             email="stud@abv.bg",
@@ -304,17 +307,17 @@ class CheckPresenceTests(TestCase):
             mac="12-34-56-78-9A-BE",
             student=self.student,
         )
-        self.check_in_1.date = date_decrease(9)
+        self.check_in_1.date = date_decrease(14)
         self.check_in_1.save()
         self.check_in_2 = CheckIn.objects.create(
             mac="12-34-56-78-9A-BE",
             student=self.student,
         )
-        self.check_in_2.date = date_increase(30)
+        self.check_in_2.date = date_decrease(12)
         self.check_in_2.save()
 
     def test_command(self):
         self.assertIsNone(self.course_assignment.student_presence)
-        call_command('check_presence')
+        call_command('check_presence')  # checks for active courses
         ca = CourseAssignment.objects.get(id=self.course_assignment.id)
         self.assertEqual(ca.student_presence, 67)
