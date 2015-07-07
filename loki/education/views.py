@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.db import IntegrityError
@@ -28,7 +29,14 @@ def set_check_in(request):
     if settings.CHECKIN_TOKEN != token:
         return HttpResponse(status=511)
 
-    RaspberryPing.objects.create()
+    if RaspberryPing.objects.count() == 0:
+        ping = RaspberryPing.objects.create()
+        ping.save()
+    else:
+        ping = RaspberryPing.objects.first()
+        ping.date = timezone.now()
+        ping.save()
+
     student = Student.objects.filter(mac__iexact=mac).first()
     if not student:
         student = None

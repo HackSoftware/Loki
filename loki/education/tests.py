@@ -390,7 +390,7 @@ class CheckMacsTests(TestCase):
         ch = CheckIn.objects.filter(mac='12:34:56:78:9A:BE').first()
         self.assertEqual(ch.student.email, self.student_no_mac.email)
 
-    def test_raspberry_ping(self):
+    def test_raspberry_ping_count(self):
         data = {
             'mac': '12:34:56:78:9A:BE',
             'token': settings.CHECKIN_TOKEN
@@ -399,3 +399,16 @@ class CheckMacsTests(TestCase):
         self.client.post(url, data)
         rasp = RaspberryPing.objects.count()
         self.assertEqual(rasp, 1)
+
+    def test_raspberry_ping_time(self):
+        data = {
+            'mac': '12:34:56:78:9A:BE',
+            'token': settings.CHECKIN_TOKEN
+        }
+        url = reverse('education:set_check_in')
+        self.client.post(url, data)
+        rasp1 = RaspberryPing.objects.all()
+        self.client.post(url, data)
+        rasp2 = RaspberryPing.objects.all()
+        print(rasp1[0].date)
+        print(rasp1[0].date)
