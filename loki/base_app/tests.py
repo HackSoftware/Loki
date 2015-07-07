@@ -10,8 +10,6 @@ from base_app.models import Event, Ticket
 from hack_fmi.models import BaseUser, Skill, Team
 from education.models import Course, CourseAssignment, Student
 
-import pprint
-
 
 class BaseUserRegistrationTests(TestCase):
 
