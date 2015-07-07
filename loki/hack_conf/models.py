@@ -16,6 +16,19 @@ class Speaker(models.Model):
 
 
 class Sponsor(models.Model):
+
+    SPONSOR = 1
+    GENERAL_MEDIA_PARTNER = 2
+    BRANCH_PARTNER = 3
+    MEDIA_PARTNER = 4
+
+    TITLE_TYPE = (
+        (SPONSOR, 'Sponsor'),
+        (GENERAL_MEDIA_PARTNER, 'General Media Partner'),
+        (BRANCH_PARTNER, 'Branch Partner'),
+        (MEDIA_PARTNER, 'Media Partner')
+    )
+    title = models.SmallIntegerField(choices=TITLE_TYPE, default=SPONSOR)
     name = models.CharField(max_length=100)
     website = models.URLField(blank=True)
     picture = models.ImageField()

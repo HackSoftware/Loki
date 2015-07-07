@@ -236,7 +236,7 @@
     <section id="sponsors" class="section dark">
         <div class="container">
             <div class="icon-wrap"><span class="icon icon-active icon-documents-bookmarks-12"></span></div>
-            <h3>Спонсори и Партньори</h3>
+            <h3>Спонсори</h3>
             <div class="sub-title">Скоро очаквайте и тях.</div>
             <br/>
             <div class="row">
@@ -245,15 +245,43 @@
                         <li><a href="{{ sponsor.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ sponsor.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
                     {% endfor %}
                 </ul>
+            </div>
+            <h3>Генерални медийни партньори</h3>
+            <div class="sub-title">Скоро очаквайте и тях.</div>
+            <br/>
+            <div class="row">
+              <ul class="list-inline">
+                {% for gmp in general_media_partners %}
+                  <li><a href="{{ gmp.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ gmp.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
+                {% endfor %}
+              </ul>
+            </div>
+            <h3>Браншови партньори</h3>
+            <br/>
+            <div class="row">
+              <ul class="list-inline">
+                {% for bp in branch_partners %}
+                  <li><a href="{{ bp.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ bp.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
+                {% endfor %}
+              </ul>
+            </div>
+            <h3>Медийни партньори</h3>
+            <br/>
+            <div class="row">
+              <ul class="list-inline">
+                {% for mp in media_partners %}
+                  <li><a href="{{ mp.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ mp.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
+                {% endfor %}
+              </ul>
 
-                <div class="btn-wrapper">
-                    <a class="btn btn-sm btn-primary" id="become-partner">Стани спонсор</a>
+              <div class="btn-wrapper">
+                <a class="btn btn-sm btn-primary" id="become-partner">Стани спонсор</a>
 
-                    <p id="partner-text">
-                        <br>
-                        Ако проявявате интерес за партниране или спонсорство, моля пишете на: <strong>conf@hackbulgaria.com</strong>
-                    </p>
-                </div>
+                <p id="partner-text">
+                  <br>
+                  Ако проявявате интерес за партниране или спонсорство, моля пишете на: <strong>conf@hackbulgaria.com</strong>
+                </p>
+              </div>
             </div>
         </div>
     </section>

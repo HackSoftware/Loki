@@ -11,7 +11,7 @@ class SpeakerAdmin(admin.ModelAdmin):
 
 
 class SponsorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'website')
+    list_display = ('name', 'website', 'title')
 
 
 class ScheduleAdmin(admin.ModelAdmin):
