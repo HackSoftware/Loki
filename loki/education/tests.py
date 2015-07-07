@@ -1,10 +1,10 @@
-from django.conf import settings
+from datetime import datetime
 from django.core.management import call_command
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from rest_framework.test import APIClient
 
-from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, RaspberryPing
+from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -301,7 +301,7 @@ class CheckPresenceTests(TestCase):
         self.check_in_1.date = date_decrease(1)
         self.check_in_1.save()
         self.check_in_2 = CheckIn.objects.create(
-            mac="12:34:56:78:9A:BE",
+            mac="12:34:56:c78:9A:BE",
             student=self.student,
         )
         self.check_in_2.date = date_decrease(2)
@@ -388,27 +388,4 @@ class CheckMacsTests(TestCase):
         url = reverse('education:student_update')
         self.client.patch(url, data, format='json')
         ch = CheckIn.objects.filter(mac='12:34:56:78:9A:BE').first()
-        self.assertEqual(ch.student.email, self.student_no_mac.email)
-
-    def test_raspberry_ping_count(self):
-        data = {
-            'mac': '12:34:56:78:9A:BE',
-            'token': settings.CHECKIN_TOKEN
-        }
-        url = reverse('education:set_check_in')
-        self.client.post(url, data)
-        rasp = RaspberryPing.objects.count()
-        self.assertEqual(rasp, 1)
-
-    def test_raspberry_ping_time(self):
-        data = {
-            'mac': '12:34:56:78:9A:BE',
-            'token': settings.CHECKIN_TOKEN
-        }
-        url = reverse('education:set_check_in')
-        self.client.post(url, data)
-        rasp1 = RaspberryPing.objects.all()
-        self.client.post(url, data)
-        rasp2 = RaspberryPing.objects.all()
-        print(rasp1[0].date)
-        print(rasp1[0].date)
+        self.assertEqual(ch.student, self.student_no_mac)
