@@ -26,12 +26,12 @@ class CheckInTest(TestCase):
         self.course = Course.objects.create(
             description='Test',
             name='Test',
-            application_until='2015-06-15',
+            application_until=date_decrease(30),
             SEO_description='Test',
             SEO_title='Test',
             url='haskell-12',
-            start_time='2015-06-15',
-            end_time='2015-06-30',
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
         )
 
         self.course_assignment = CourseAssignment.objects.create(
@@ -44,35 +44,35 @@ class CheckInTest(TestCase):
             mac="12-34-56-78-9A-BE",
             student=self.student,
         )
-        self.check_in_on_start.date = '2015-06-15'
+        self.check_in_on_start.date = date_decrease(29)
         self.check_in_on_start.save()
 
         self.check_in_after_start = CheckIn.objects.create(
             mac="12-34-56-78-9A-BE",
             student=self.student,
         )
-        self.check_in_after_start.date = '2015-06-20'
+        self.check_in_after_start.date = date_decrease(20)
         self.check_in_after_start.save()
 
         self.check_in_on_end = CheckIn.objects.create(
             mac="12-34-56-78-9A-BE",
             student=self.student,
         )
-        self.check_in_on_end.date = '2015-06-30'
+        self.check_in_on_end.date = date_decrease(2)
         self.check_in_on_end.save()
 
         self.check_in_after_course = CheckIn.objects.create(
             mac="12-34-56-78-9A-BE",
             student=self.student,
         )
-        self.check_in_after_course.date = '2015-07-01'
+        self.check_in_after_course.date = date_decrease(1)
         self.check_in_after_course.save()
 
         self.check_in_before_course = CheckIn.objects.create(
             mac="12-34-56-78-9A-BE",
             student=self.student,
         )
-        self.check_in_before_course.date = '2015-06-14'
+        self.check_in_before_course.date = date_decrease(30)
         self.check_in_before_course.save()
 
     def test_check_in_with_mac_and_user(self):
@@ -171,26 +171,32 @@ class TeachersAPIsTests(TestCase):
     def setUp(self):
         self.course1 = Course.objects.create(
             name="Java",
-            application_until="2015-06-20",
-            url="https://hackbulgaria.com/course/haskell-1/"
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/haskell-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
         )
         self.course2 = Course.objects.create(
             name="Python",
-            application_until="2015-06-20",
-            url="https://hackbulgaria.com/course/haskell-2/"
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/haskell-2/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
         )
         self.course3 = Course.objects.create(
             name="Python3",
-            application_until="2015-06-20",
-            url="https://hackbulgaria.com/course/haskell-3/"
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/haskell-3/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
         )
         Lecture.objects.create(
             course=self.course1,
-            date="2015-06-8"
+            date=date_decrease(8)
         )
         Lecture.objects.create(
             course=self.course1,
-            date="2015-06-10"
+            date=date_decrease(10)
         )
         self.teacher = Teacher.objects.create(
             email="ivo@ivo.bg",
@@ -261,14 +267,14 @@ class CheckPresenceTests(TestCase):
     def setUp(self):
         self.course1 = Course.objects.create(
             name="Java",
-            application_until="2015-06-20",
+            application_until=date_decrease(31),
             url="https://hackbulgaria.com/course/haskell-1/",
             start_time=date_decrease(30),
             end_time=date_increase(30)
         )
         self.course2 = Course.objects.create(
             name="Python",
-            application_until="2015-06-20",
+            application_until=date_decrease(31),
             url="https://hackbulgaria.com/course/haskell-2/",
             start_time=date_decrease(30),
             end_time=date_increase(30)
@@ -310,4 +316,5 @@ class CheckPresenceTests(TestCase):
     def test_command(self):
         self.assertIsNone(self.course_assignment.student_presence)
         call_command('check_presence')
-        # self.assertEqual(self.course_assignment.student_presence, 66)
+        ca = CourseAssignment.objects.get(id=self.course_assignment.id)
+        self.assertEqual(ca.student_presence, 67)
