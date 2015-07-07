@@ -237,7 +237,9 @@
         <div class="container">
             <div class="icon-wrap"><span class="icon icon-active icon-documents-bookmarks-12"></span></div>
             <h3>Спонсори</h3>
-            <div class="sub-title">Скоро очаквайте и тях.</div>
+            {% if not sponsors %}
+              <div class="sub-title">Скоро очаквайте и тях.</div>
+            {% endif %}
             <br/>
             <div class="row">
                 <ul class="list-inline">
@@ -247,7 +249,9 @@
                 </ul>
             </div>
             <h3>Генерални медийни партньори</h3>
-            <div class="sub-title">Скоро очаквайте и тях.</div>
+            {% if not general_media_partners %}
+              <div class="sub-title">Скоро очаквайте и тях.</div>
+            {% endif %}
             <br/>
             <div class="row">
               <ul class="list-inline">
@@ -257,6 +261,9 @@
               </ul>
             </div>
             <h3>Браншови партньори</h3>
+            {% if not branch_partners %}
+              <div class="sub-title">Скоро очаквайте и тях.</div>
+            {% endif %}
             <br/>
             <div class="row">
               <ul class="list-inline">
@@ -266,6 +273,9 @@
               </ul>
             </div>
             <h3>Медийни партньори</h3>
+            {% if not media_partners %}
+              <div class="sub-title">Скоро очаквайте и тях.</div>
+            {% endif %}
             <br/>
             <div class="row">
               <ul class="list-inline">
