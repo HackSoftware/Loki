@@ -2,7 +2,7 @@ from import_export.admin import ImportExportActionModelAdmin
 
 from django.contrib import admin
 
-from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote
+from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote, RaspberryPing
 from .modelresource import StudentResource
 
 
@@ -100,3 +100,9 @@ class CheckInAdmin(admin.ModelAdmin):
     search_fields = ['mac', 'student__email']
 
 admin.site.register(CheckIn, CheckInAdmin)
+
+
+class RaspberryPingAdmin(admin.ModelAdmin):
+    list_display = ['date', 'text']
+
+admin.site.register(RaspberryPing, RaspberryPingAdmin)
