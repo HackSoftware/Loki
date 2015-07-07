@@ -106,11 +106,3 @@ class Task(models.Model):
 
     class Meta:
         unique_together = (('name', 'description'),)
-
-
-class RaspberryPing(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
-    text = models.CharField(max_length=10, default="ping")
-
-    def __str__(self):
-        return self.text
