@@ -1,10 +1,10 @@
-from datetime import datetime
+from django.conf import settings
 from django.core.management import call_command
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from rest_framework.test import APIClient
 
-from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote
+from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, RaspberryPing
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -388,4 +388,14 @@ class CheckMacsTests(TestCase):
         url = reverse('education:student_update')
         self.client.patch(url, data, format='json')
         ch = CheckIn.objects.filter(mac='12:34:56:78:9A:BE').first()
-        self.assertEqual(ch.student, self.student_no_mac)
+        self.assertEqual(ch.student.email, self.student_no_mac.email)
+
+    def test_raspberry_ping(self):
+        data = {
+            'mac': '12:34:56:78:9A:BE',
+            'token': settings.CHECKIN_TOKEN
+        }
+        url = reverse('education:set_check_in')
+        self.client.post(url, data)
+        rasp = RaspberryPing.objects.count()
+        self.assertEqual(rasp, 1)

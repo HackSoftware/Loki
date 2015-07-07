@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from education.helper import check_macs_for_student, mac_is_used_by_another_student
 
-from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote
+from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote, RaspberryPing
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
                           CourseAssignmentSerializer)
@@ -28,6 +28,7 @@ def set_check_in(request):
     if settings.CHECKIN_TOKEN != token:
         return HttpResponse(status=511)
 
+    RaspberryPing.objects.create()
     student = Student.objects.filter(mac__iexact=mac).first()
     if not student:
         student = None
