@@ -586,7 +586,7 @@ label.error { display: block; }
 
 #sponsors .list-inline li { width: 19%; padding-left: 0; padding-right: 0; }
 #sponsors .list-inline { margin-bottom:30px;}
-#sponsors img{ width: 100%;}
+#sponsors img{ width: 100%; margin: 10px;}
 
 #location-gmap { width:100%; height:650px; }
 #location-gmap img { max-width:none; }
