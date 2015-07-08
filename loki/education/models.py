@@ -1,6 +1,7 @@
 from django.db import models
 
 from ckeditor.fields import RichTextField
+from base_app.models import City
 
 from hack_fmi.models import BaseUser
 from .validators import validate_mac
@@ -106,3 +107,18 @@ class Task(models.Model):
 
     class Meta:
         unique_together = (('name', 'description'),)
+
+
+class Company(models.Model):
+    name = models.CharField(max_length=100)
+
+
+class WorkingAt(models.Model):
+    student = models.ForeignKey(Student)
+    company = models.ForeignKey(Company, blank=True, null=True)
+    company_name = models.CharField(max_length=100, blank=True, null=True)
+    location = models.ForeignKey(City)
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True)
+    title = models.CharField(max_length=100)
+    description = models.TextField(blank=True, null=True)
