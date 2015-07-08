@@ -284,16 +284,17 @@ class CheckPresenceTests(TestCase):
         )
         Lecture.objects.create(
             course=self.course1,
-            date=date_decrease(10)
+            date=date_decrease(1)
         )
         Lecture.objects.create(
             course=self.course1,
-            date=date_decrease(12)
+            date=date_decrease(2)
         )
         Lecture.objects.create(
             course=self.course1,
-            date=date_decrease(14)
+            date=date_decrease(3)
         )
+
         self.student = Student.objects.create(
             email="stud@abv.bg",
             mac="60:67:20:cc:b1:62"
@@ -304,20 +305,97 @@ class CheckPresenceTests(TestCase):
             group_time=1
         )
         self.check_in_1 = CheckIn.objects.create(
-            mac="12-34-56-78-9A-BE",
+            mac="12:34:56:78:9A:BE",
             student=self.student,
         )
-        self.check_in_1.date = date_decrease(14)
+        self.check_in_1.date = date_decrease(1)
         self.check_in_1.save()
         self.check_in_2 = CheckIn.objects.create(
-            mac="12-34-56-78-9A-BE",
+            mac="12:34:56:78:9A:BE",
             student=self.student,
         )
-        self.check_in_2.date = date_decrease(12)
+        self.check_in_2.date = date_decrease(2)
         self.check_in_2.save()
 
     def test_command(self):
         self.assertIsNone(self.course_assignment.student_presence)
-        call_command('check_presence')  # checks for active courses
+        call_command('check_presence')
         ca = CourseAssignment.objects.get(id=self.course_assignment.id)
         self.assertEqual(ca.student_presence, 67)
+
+
+class DropStudentTests(TestCase):
+
+    def setUp(self):
+        self.course1 = Course.objects.create(
+            name="Java",
+            application_until="2015-06-20",
+            url="https://hackbulgaria.com/course/haskell-1/",
+            start_time=date_decrease(30),
+            end_time=date_increase(30)
+        )
+        self.student = Student.objects.create(
+            email="stud@abv.bg",
+            mac="60:67:20:cc:b1:62"
+        )
+        self.course_assignment = CourseAssignment.objects.create(
+            user=self.student,
+            course=self.course1,
+            group_time=1,
+            is_attending=True
+        )
+        self.teacher = Teacher.objects.create(
+            email="ivo@ivo.bg",
+        )
+        self.teacher.teached_courses.add(self.course1)
+        self.teacher.save()
+
+    def test_drop_student_who_is_attending(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.teacher)
+        data = {
+            'ca_id': self.course_assignment.id,
+            'is_attending': False
+        }
+        url = reverse('education:drop_student')
+        self.assertTrue(self.course_assignment.is_attending)
+        self.client.patch(url, data, format='json')
+        cass = CourseAssignment.objects.get(id=self.course_assignment.id)
+        self.assertFalse(cass.is_attending)
+
+
+class CheckMacsTests(TestCase):
+    def setUp(self):
+        self.student = Student.objects.create(
+            email='sten@abv.bg',
+            mac="12:34:56:78:9A:BC",
+        )
+        self.student_no_mac = Student.objects.create(
+            email='rado@abv.bg',
+        )
+        self.check_1 = CheckIn.objects.create(
+            mac="12:34:56:78:9A:BE",
+        )
+        self.check_1.date = date_decrease(1)
+        self.check_1.save()
+
+        self.check_2 = CheckIn.objects.create(
+            mac="12:34:56:78:9A:BE",
+        )
+        self.check_2.date = date_decrease(2)
+        self.check_2.save()
+
+        self.check_3 = CheckIn.objects.create(
+            mac="12:34:56:78:9A:BE",
+        )
+        self.check_3.date = date_decrease(3)
+        self.check_3.save()
+
+    def test_student_enters_mac(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student_no_mac)
+        data = {'mac': '12:34:56:78:9A:BE'}
+        url = reverse('education:student_update')
+        self.client.patch(url, data, format='json')
+        ch = CheckIn.objects.filter(mac='12:34:56:78:9A:BE').first()
+        self.assertEqual(ch.student, self.student_no_mac)
