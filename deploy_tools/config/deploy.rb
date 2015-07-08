@@ -26,7 +26,7 @@ set :deploy_to, '/hack/loki/'
 set :linked_files, fetch(:linked_files, []).push('loki/loki/local_settings.py')
 
 # Default value for linked_dirs is []
-# set :linked_dirs, fetch(:linked_dirs, []).push('log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
+set :linked_dirs, fetch(:linked_dirs, []).push('media', 'static')
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -37,7 +37,6 @@ set :linked_files, fetch(:linked_files, []).push('loki/loki/local_settings.py')
 namespace :deploy do
   task :pip_install do
     on roles(:all) do |h|
-      execute "virtualenv -p python3 /hack/loki/shared/virtualenv/"
       execute "/hack/loki/shared/virtualenv/bin/pip install -r /hack/loki/current/requirements.txt"
     end
   end
@@ -50,7 +49,7 @@ namespace :deploy do
 
   task :run_collect_static do
     on roles(:all) do |h|
-      execute "/hack/loki/shared/virtualenv/bin/python3 /hack/loki/current/loki/manage.py collectstatic"
+      execute "/hack/loki/shared/virtualenv/bin/python3 /hack/loki/current/loki/manage.py collectstatic --noinput"
     end
   end
 
@@ -64,5 +63,4 @@ namespace :deploy do
   after :pip_install, :run_migrations
   after :pip_install, :run_collect_static
   after :run_migrations, :restart
-
 end
