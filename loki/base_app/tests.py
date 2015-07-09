@@ -5,7 +5,7 @@ from post_office import mail
 from post_office.models import EmailTemplate
 from rest_framework import status
 from rest_framework.test import APIClient
-from base_app.models import Event, Ticket
+from base_app.models import Event, Ticket, Company, City
 
 from hack_fmi.models import BaseUser, Skill, Team
 from education.models import Course, CourseAssignment, Student
@@ -184,3 +184,37 @@ class EventTests(TestCase):
         url = reverse('base_app:buy_ticket')
         response = self.client.post(url)
         self.assertEqual(response.status_code, 404)
+
+
+class TestGetCompanies(TestCase):
+
+    def setUp(self):
+        Company.objects.create(
+            name="com"
+        )
+        Company.objects.create(
+            name="coma"
+        )
+
+    def test_get_all_companies(self):
+        count = Company.objects.count()
+        url = reverse('base_app:get_companies')
+        response = self.client.get(url, format='json')
+        self.assertEqual(count, len(response.data))
+
+
+class TestGetCities(TestCase):
+
+    def setUp(self):
+        City.objects.create(
+            name="com"
+        )
+        City.objects.create(
+            name="coma"
+        )
+
+    def test_get_all_companies(self):
+        count = City.objects.count()
+        url = reverse('base_app:get_cities')
+        response = self.client.get(url, format='json')
+        self.assertEqual(count, len(response.data))
