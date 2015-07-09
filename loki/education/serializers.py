@@ -1,7 +1,7 @@
 from rest_framework import serializers
-from hack_fmi.models import BaseUser
+from base_app.models import Company
 
-from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote, Teacher, Company
+from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote, Teacher
 
 
 class NoteTeacherSerializer(serializers.ModelSerializer):

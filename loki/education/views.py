@@ -10,9 +10,10 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from education.helper import check_macs_for_student, mac_is_used_by_another_student
 
-from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote, Company
+from base_app.models import Company
+from education.helper import check_macs_for_student, mac_is_used_by_another_student
+from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
                           CourseAssignmentSerializer, CompanySerializer)

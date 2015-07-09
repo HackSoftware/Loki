@@ -1,7 +1,7 @@
 from django.db import models
 
 from ckeditor.fields import RichTextField
-from base_app.models import City
+from base_app.models import City, Company
 
 from hack_fmi.models import BaseUser
 from .validators import validate_mac
@@ -107,10 +107,6 @@ class Task(models.Model):
 
     class Meta:
         unique_together = (('name', 'description'),)
-
-
-class Company(models.Model):
-    name = models.CharField(max_length=100)
 
 
 class WorkingAt(models.Model):
