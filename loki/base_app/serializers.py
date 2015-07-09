@@ -1,5 +1,5 @@
 from rest_framework import serializers, generics
-from base_app.models import Event, Ticket, City
+from base_app.models import Event, Ticket, City, Company
 from education.serializers import StudentSerializer, TeacherSerializer
 
 from hack_fmi.models import BaseUser
@@ -97,4 +97,11 @@ class CitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = City
+        fields = ('name',)
+
+
+class CompanySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Company
         fields = ('name',)

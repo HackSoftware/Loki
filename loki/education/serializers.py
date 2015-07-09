@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from base_app.models import Company
 
 from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote, Teacher
 
@@ -181,10 +180,3 @@ class TeacherSerializer(serializers.ModelSerializer):
             'mac',
             'teached_courses',
         )
-
-
-class CompanySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Company
-        fields = ('name',)

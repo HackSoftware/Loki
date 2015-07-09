@@ -11,12 +11,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from base_app.models import Company
 from education.helper import check_macs_for_student, mac_is_used_by_another_student
 from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
-                          CourseAssignmentSerializer, CompanySerializer)
+                          CourseAssignmentSerializer)
 from .premissions import IsStudent, IsTeacher
 
 
@@ -151,10 +150,3 @@ def drop_student(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET'])
-def get_companies(request):
-    companies = Company.objects.all()
-    serializer = CompanySerializer(companies, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
