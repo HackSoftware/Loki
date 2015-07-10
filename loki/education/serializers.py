@@ -1,6 +1,7 @@
 from rest_framework import serializers
+from base_app.serializers import CompanySerializer, CitySerializer
 
-from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote, Teacher
+from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote, Teacher, WorkingAt
 
 
 class NoteTeacherSerializer(serializers.ModelSerializer):
@@ -116,9 +117,28 @@ class FullCASerializer(serializers.ModelSerializer):
         )
 
 
+class WorkingAtSerializer(serializers.ModelSerializer):
+
+    company = CompanySerializer(many=False, read_only=True)
+    location = CitySerializer(many=False, read_only=True)
+
+    class Meta:
+        models = WorkingAt
+        fields = (
+            'company',
+            'company_name',
+            'location',
+            'start_date',
+            'end_date',
+            'title',
+            'description',
+        )
+
+
 class StudentSerializer(serializers.ModelSerializer):
 
     courseassignment_set = CourseAssignmentSerializer(many=True, read_only=True)
+    workingat_set = WorkingAtSerializer(many=True, read_only=True)
 
     class Meta:
         model = Student
@@ -130,6 +150,7 @@ class StudentSerializer(serializers.ModelSerializer):
             'github_account',
             'linkedin_account',
             'mac',
+            'working_at'
         )
 
 

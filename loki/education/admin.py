@@ -2,7 +2,7 @@ from import_export.admin import ImportExportActionModelAdmin
 
 from django.contrib import admin
 
-from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote
+from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote, WorkingAt
 from .modelresource import StudentResource
 
 
@@ -100,3 +100,19 @@ class CheckInAdmin(admin.ModelAdmin):
     search_fields = ['mac', 'student__email']
 
 admin.site.register(CheckIn, CheckInAdmin)
+
+
+class WorkingAtAdmin(admin.ModelAdmin):
+    list_display = [
+        'student',
+        'company',
+        'company_name',
+        'location',
+        'start_date',
+        'end_date',
+        'title',
+        'description',
+    ]
+    search_fields = ['company', 'location', 'student']
+
+admin.site.register(WorkingAt, WorkingAtAdmin)
