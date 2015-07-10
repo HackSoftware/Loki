@@ -1,8 +1,22 @@
 from rest_framework import serializers
-from base_app.serializers import CompanySerializer, CitySerializer
+from base_app.models import Company, City
 
-from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote, Teacher, WorkingAt
+from .models import (Lecture, CheckIn, Course, Student,
+                     CourseAssignment, StudentNote, Teacher, WorkingAt)
 
+
+class CitySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = City
+        fields = ('name',)
+
+
+class CompanySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Company
+        fields = ('name',)
 
 class NoteTeacherSerializer(serializers.ModelSerializer):
 
@@ -150,7 +164,7 @@ class StudentSerializer(serializers.ModelSerializer):
             'github_account',
             'linkedin_account',
             'mac',
-            'working_at'
+            'workingat_set'
         )
 
 

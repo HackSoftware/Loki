@@ -3,6 +3,8 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from rest_framework.test import APIClient
+from base_app.models import Company
+from base_app.models import City
 
 from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote
 from hack_fmi.models import BaseUser
@@ -399,3 +401,37 @@ class CheckMacsTests(TestCase):
         self.client.patch(url, data, format='json')
         ch = CheckIn.objects.filter(mac='12:34:56:78:9A:BE').first()
         self.assertEqual(ch.student, self.student_no_mac)
+
+
+class TestGetCompanies(TestCase):
+
+    def setUp(self):
+        Company.objects.create(
+            name="com"
+        )
+        Company.objects.create(
+            name="coma"
+        )
+
+    def test_get_all_companies(self):
+        count = Company.objects.count()
+        url = reverse('education:get_companies')
+        response = self.client.get(url, format='json')
+        self.assertEqual(count, len(response.data))
+
+
+class TestGetCities(TestCase):
+
+    def setUp(self):
+        City.objects.create(
+            name="com"
+        )
+        City.objects.create(
+            name="coma"
+        )
+
+    def test_get_all_companies(self):
+        count = City.objects.count()
+        url = reverse('education:get_cities')
+        response = self.client.get(url, format='json')
+        self.assertEqual(count, len(response.data))

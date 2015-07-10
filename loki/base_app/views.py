@@ -5,10 +5,9 @@ from rest_framework.decorators import permission_classes, api_view
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from base_app.models import Event, Ticket, City, Company
+from base_app.models import Event, Ticket
 
-from base_app.serializers import BaseUserMeSerializer, UpdateBaseUserSerializer, EventSerializer, CitySerializer, \
-    CompanySerializer
+from base_app.serializers import BaseUserMeSerializer, UpdateBaseUserSerializer, EventSerializer
 from .helper import crop_image
 
 
@@ -83,17 +82,3 @@ def base_user_update(request):
         return Response(name, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=400)
-
-
-@api_view(['GET'])
-def get_cities(request):
-    cities = City.objects.all()
-    serializer = CitySerializer(cities, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(['GET'])
-def get_companies(request):
-    companies = Company.objects.all()
-    serializer = CompanySerializer(companies, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
