@@ -133,13 +133,11 @@ class FullCASerializer(serializers.ModelSerializer):
 
 class WorkingAtSerializer(serializers.ModelSerializer):
 
-    company = CompanySerializer(many=False, read_only=True)
     location = CitySerializer(many=False, read_only=True)
 
     class Meta:
         models = WorkingAt
         fields = (
-            'company',
             'company_name',
             'location',
             'start_date',
