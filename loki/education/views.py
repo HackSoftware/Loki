@@ -10,12 +10,13 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from education.helper import check_macs_for_student, mac_is_used_by_another_student
+from base_app.models import City, Company
 
+from education.helper import check_macs_for_student, mac_is_used_by_another_student
 from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
-                          CourseAssignmentSerializer)
+                          CourseAssignmentSerializer, WorkingAtSerializer, CitySerializer, CompanySerializer)
 from .premissions import IsStudent, IsTeacher
 
 
@@ -150,3 +151,32 @@ def drop_student(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
     return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@permission_classes((IsAuthenticated,))
+def working_at(request):
+    if request.method == 'POST':
+        serializer = WorkingAtSerializer(data=request.data)
+        if serializer.is_valid():
+            company = Company.objects.filter(name__iexact=serializer.data['company_name']).first()
+            if company:
+                serializer.save(student=request.user.student, company=company)
+            else:
+                serializer.save(student=request.user.student)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def get_cities(request):
+    cities = City.objects.all()
+    serializer = CitySerializer(cities, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_companies(request):
+    companies = Company.objects.all()
+    serializer = CompanySerializer(companies, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)

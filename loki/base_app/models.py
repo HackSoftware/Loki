@@ -50,3 +50,10 @@ class Ticket(models.Model):
 
     class Meta:
         unique_together = ('event', 'base_user')
+
+
+class City(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name

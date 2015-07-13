@@ -1,4 +1,4 @@
-from rest_framework import serializers, generics
+from rest_framework import serializers
 from base_app.models import Event, Ticket
 from education.serializers import StudentSerializer, TeacherSerializer
 

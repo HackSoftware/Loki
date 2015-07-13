@@ -2,7 +2,8 @@ from django.conf.urls import url
 from djoser.views import ActivationView, PasswordResetConfirmView
 
 from base_app.auth import RegistrationView, Login, PasswordResetView
-from base_app.views import me, baseuser_update, get_events, buy_ticket, get_number_of_sold_tickets, base_user_update
+from base_app.views import (me, baseuser_update, get_events, buy_ticket, get_number_of_sold_tickets,
+                            base_user_update)
 
 
 urlpatterns = [

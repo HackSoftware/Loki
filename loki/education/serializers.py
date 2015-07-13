@@ -1,11 +1,23 @@
 from rest_framework import serializers
-from hack_fmi.models import BaseUser
+from base_app.models import Company, City
 
-from .models import Lecture, CheckIn, Course, Student, CourseAssignment, StudentNote, Teacher
+from .models import (Lecture, CheckIn, Course, Student,
+                     CourseAssignment, StudentNote, Teacher, WorkingAt)
+
+
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ('id', 'name')
+
+
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = ('id', 'name')
 
 
 class NoteTeacherSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Student
         fields = (
@@ -27,21 +39,18 @@ class StudentNoteSerializer(serializers.ModelSerializer):
 
 
 class LectureSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Lecture
         fields = ('id', 'date',)
 
 
 class CheckInSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = CheckIn
         fields = ('id', 'date', 'student')
 
 
 class TeacherSetSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Teacher
         fields = (
@@ -56,7 +65,6 @@ class TeacherSetSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
-
     teacher_set = TeacherSetSerializer(many=True, read_only=True)
 
     class Meta:
@@ -85,7 +93,6 @@ class CourseAssignmentSerializer(serializers.ModelSerializer):
 
 
 class SingleStudent(serializers.ModelSerializer):
-
     class Meta:
         model = Student
         fields = (
@@ -117,9 +124,38 @@ class FullCASerializer(serializers.ModelSerializer):
         )
 
 
-class StudentSerializer(serializers.ModelSerializer):
+class WorkingAtSerializer(serializers.HyperlinkedModelSerializer):
+    location = serializers.PrimaryKeyRelatedField(
+        read_only=False,
+        queryset=City.objects.all(),
+    )
 
+    location_full = CitySerializer(
+        many=False,
+        read_only=True,
+        source='location',
+    )
+
+    company = CompanySerializer(many=False, read_only=True)
+
+    class Meta:
+        model = WorkingAt
+        fields = (
+            'id',
+            'company',
+            'company_name',
+            'location',
+            'location_full',
+            'start_date',
+            'end_date',
+            'title',
+            'description',
+        )
+
+
+class StudentSerializer(serializers.ModelSerializer):
     courseassignment_set = CourseAssignmentSerializer(many=True, read_only=True)
+    workingat_set = WorkingAtSerializer(many=True, read_only=True)
 
     class Meta:
         model = Student
@@ -131,11 +167,11 @@ class StudentSerializer(serializers.ModelSerializer):
             'github_account',
             'linkedin_account',
             'mac',
+            'workingat_set'
         )
 
 
 class StudentNameSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Student
         fields = (
@@ -150,7 +186,6 @@ class StudentNameSerializer(serializers.ModelSerializer):
 
 
 class OnBoardingStudentSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Student
         fields = (
@@ -160,7 +195,6 @@ class OnBoardingStudentSerializer(serializers.ModelSerializer):
 
 
 class UpdateStudentSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Student
         fields = (
@@ -171,7 +205,6 @@ class UpdateStudentSerializer(serializers.ModelSerializer):
 
 
 class TeacherSerializer(serializers.ModelSerializer):
-
     teached_courses = CourseSerializer(many=True, read_only=True)
 
     class Meta:
