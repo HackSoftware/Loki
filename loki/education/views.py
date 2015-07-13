@@ -161,9 +161,9 @@ def working_at(request):
         if serializer.is_valid():
             company = Company.objects.filter(name__iexact=serializer.data['company_name']).first()
             if company:
-                serializer.save(student=request.user, company=company)
+                serializer.save(student=request.user.student, company=company)
             else:
-                serializer.save(student=request.user)
+                serializer.save(student=request.user.student)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
