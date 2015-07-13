@@ -112,8 +112,9 @@ class Task(models.Model):
 class WorkingAt(models.Model):
     student = models.ForeignKey(Student)
     company = models.ForeignKey(Company, blank=True, null=True)
-    company_name = models.CharField(max_length=100, blank=True, null=True)
     location = models.ForeignKey(City)
+
+    company_name = models.CharField(max_length=100, blank=True, null=True)
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True)
     title = models.CharField(max_length=100)

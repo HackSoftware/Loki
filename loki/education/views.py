@@ -13,7 +13,7 @@ from rest_framework import status
 from base_app.models import City, Company
 
 from education.helper import check_macs_for_student, mac_is_used_by_another_student
-from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote, WorkingAt
+from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
                           CourseAssignmentSerializer, WorkingAtSerializer, CitySerializer, CompanySerializer)
@@ -153,21 +153,18 @@ def drop_student(request):
     return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['PATCH', 'POST'])
+@api_view(['POST'])
 @permission_classes((IsAuthenticated,))
 def working_at(request):
     if request.method == 'POST':
-        serializer = WorkingAtSerializer(data=request.data, partial=True)
+        serializer = WorkingAtSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            company = Company.objects.filter(name__iexact=serializer.data['company_name']).first()
+            if company:
+                serializer.save(student=request.user, company=company)
+            else:
+                serializer.save(student=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
-    if request.method == 'PATCH':
-        work = get_object_or_404(WorkingAt, id=request.data['working_at_id'])
-        serializer = WorkingAtSerializer(work, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 

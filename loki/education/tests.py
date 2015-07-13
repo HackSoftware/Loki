@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.core.management import call_command
 from django.test import TestCase
 from django.core.urlresolvers import reverse
@@ -435,3 +434,32 @@ class TestGetCities(TestCase):
         url = reverse('education:get_cities')
         response = self.client.get(url, format='json')
         self.assertEqual(count, len(response.data))
+
+
+class WorkingAtTests(TestCase):
+
+    def setUp(self):
+        self.student = Student.objects.create(
+            email='sten@abv.bg',
+            mac="12:34:56:78:9A:BC",
+        )
+        self.company = Company.objects.create(
+            name="HackBulgaria"
+        )
+        self.city = City.objects.create(
+            name="Sofia"
+        )
+
+    def test_post_workingat_creates_instance(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student)
+        url = reverse('education:working_at')
+        data = {
+            'company_name': "Hackbulgaria",
+            'location': self.city.id,
+            'start_date': date_decrease(30),
+            'title': 'Developer'
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(len(response.data['location_full']), 2)
