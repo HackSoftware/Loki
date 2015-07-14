@@ -470,6 +470,7 @@ class WorkingAtTests(TestCase):
             'company_name': "Hackbulgaria",
             'location': self.city.id,
             'start_date': date_decrease(30),
+            'came_working': True,
             'title': 'Developer',
             'course_assignment': self.course_assignment.id
         }

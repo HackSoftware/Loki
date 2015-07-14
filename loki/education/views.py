@@ -165,7 +165,8 @@ def working_at(request):
             else:
                 serializer.save(student=request.user.student)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        errors = serializer.errors
+        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
     if request.method == 'PATCH':
         working_at_entry = get_object_or_404(WorkingAt, id=request.data['working_at_id'])
         serializer = WorkingAtSerializer(working_at_entry, data=request.data, partial=True)
