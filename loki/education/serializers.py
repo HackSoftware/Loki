@@ -136,6 +136,17 @@ class WorkingAtSerializer(serializers.HyperlinkedModelSerializer):
         source='location',
     )
 
+    course_assignment = serializers.PrimaryKeyRelatedField(
+        read_only=False,
+        queryset=CourseAssignment.objects.all(),
+    )
+
+    course_assignment_full = CourseAssignmentSerializer(
+        many=False,
+        read_only=True,
+        source='course_assignment',
+    )
+
     company = CompanySerializer(many=False, read_only=True)
 
     class Meta:
@@ -144,6 +155,7 @@ class WorkingAtSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'company',
             'company_name',
+            'course_assignment',
             'location',
             'location_full',
             'start_date',
