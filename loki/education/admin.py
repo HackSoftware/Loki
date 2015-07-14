@@ -108,6 +108,7 @@ class WorkingAtAdmin(admin.ModelAdmin):
         'company',
         'company_name',
         'course_assignment',
+        'came_working',
         'location',
         'start_date',
         'end_date',
