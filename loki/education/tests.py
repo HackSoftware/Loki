@@ -5,7 +5,7 @@ from rest_framework.test import APIClient
 from base_app.models import Company
 from base_app.models import City
 
-from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote
+from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -476,4 +476,29 @@ class WorkingAtTests(TestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(len(response.data['location_full']), 2)
-        print(response.data)
+        self.assertEqual(len(response.data['course_assignment_full']), 3)
+
+    def test_patch_workingat_updates_instance(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student)
+        work = WorkingAt.objects.create(
+            student=self.student,
+            company_name='HackBulgaria',
+            location=self.city,
+            start_date=date_decrease(30),
+            title='Developer',
+            course_assignment=self.course_assignment
+        )
+        city2 = City.objects.create(
+            name='Plovdiv'
+        )
+        url = reverse('education:working_at')
+        data = {
+            'working_at_id': work.id,
+            'location': city2.id
+        }
+        city_before = WorkingAt.objects.first().location.name
+        self.client.patch(url, data, format='json')
+        city_after = WorkingAt.objects.first().location.name
+        self.assertEqual(city_before, self.city.name)
+        self.assertEqual(city_after, city2.name)
