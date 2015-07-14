@@ -113,6 +113,7 @@ class WorkingAt(models.Model):
     student = models.ForeignKey(Student)
     company = models.ForeignKey(Company, blank=True, null=True)
     location = models.ForeignKey(City)
+    course_assignment = models.ForeignKey(CourseAssignment, blank=True, null=True)
 
     company_name = models.CharField(max_length=100, blank=True, null=True)
     start_date = models.DateField()

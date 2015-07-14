@@ -449,6 +449,18 @@ class WorkingAtTests(TestCase):
         self.city = City.objects.create(
             name="Sofia"
         )
+        self.course = Course.objects.create(
+            name="Java",
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/haskell-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
+        )
+        self.course_assignment = CourseAssignment.objects.create(
+            group_time=1,
+            course=self.course,
+            user=self.student,
+        )
 
     def test_post_workingat_creates_instance(self):
         self.client = APIClient()
@@ -458,8 +470,10 @@ class WorkingAtTests(TestCase):
             'company_name': "Hackbulgaria",
             'location': self.city.id,
             'start_date': date_decrease(30),
-            'title': 'Developer'
+            'title': 'Developer',
+            'course_assignment': self.course_assignment.id
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(len(response.data['location_full']), 2)
+        print(response.data)

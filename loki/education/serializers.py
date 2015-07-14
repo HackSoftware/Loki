@@ -156,6 +156,7 @@ class WorkingAtSerializer(serializers.HyperlinkedModelSerializer):
             'company',
             'company_name',
             'course_assignment',
+            'course_assignment_full',
             'location',
             'location_full',
             'start_date',
