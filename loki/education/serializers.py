@@ -137,15 +137,17 @@ class WorkingAtSerializer(serializers.HyperlinkedModelSerializer):
         source='location',
     )
 
-    course_assignment = serializers.PrimaryKeyRelatedField(
+    course = serializers.PrimaryKeyRelatedField(
         read_only=False,
-        queryset=CourseAssignment.objects.all(),
+        queryset=Course.objects.all(),
+        allow_null=True,
     )
 
-    course_assignment_full = CourseAssignmentSerializer(
+    course_full = CourseSerializer(
         many=False,
         read_only=True,
-        source='course_assignment',
+        source='course',
+        required=False,
     )
 
     company = CompanySerializer(many=False, read_only=True)
@@ -156,8 +158,8 @@ class WorkingAtSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'company',
             'company_name',
-            'course_assignment',
-            'course_assignment_full',
+            'course',
+            'course_full',
             'location',
             'location_full',
             'came_working',

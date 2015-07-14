@@ -472,12 +472,27 @@ class WorkingAtTests(TestCase):
             'start_date': date_decrease(30),
             'came_working': True,
             'title': 'Developer',
-            'course_assignment': self.course_assignment.id
+            'course': self.course.id
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(len(response.data['location_full']), 2)
-        self.assertGreater(len(response.data['course_assignment_full']), 0)
+        self.assertGreater(len(response.data['course_full']), 0)
+
+    def test_post_workingat_creates_instance_without_course(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student)
+        url = reverse('education:working_at')
+        data = {
+            'company_name': "Hackbulgaria",
+            'location': self.city.id,
+            'start_date': date_decrease(30),
+            'came_working': True,
+            'title': 'Developer',
+            'course': ""
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
 
     def test_patch_workingat_updates_instance(self):
         self.client = APIClient()
@@ -488,7 +503,7 @@ class WorkingAtTests(TestCase):
             location=self.city,
             start_date=date_decrease(30),
             title='Developer',
-            course_assignment=self.course_assignment
+            course=self.course
         )
         city2 = City.objects.create(
             name='Plovdiv'

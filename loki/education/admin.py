@@ -107,7 +107,7 @@ class WorkingAtAdmin(admin.ModelAdmin):
         'student',
         'company',
         'company_name',
-        'course_assignment',
+        'course',
         'came_working',
         'location',
         'start_date',
@@ -115,6 +115,6 @@ class WorkingAtAdmin(admin.ModelAdmin):
         'title',
         'description',
     ]
-    search_fields = ['company', 'location', 'student', 'course_assignment']
+    search_fields = ['company', 'location', 'student', 'course']
 
 admin.site.register(WorkingAt, WorkingAtAdmin)
