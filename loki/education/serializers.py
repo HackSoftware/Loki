@@ -169,6 +169,9 @@ class WorkingAtSerializer(serializers.HyperlinkedModelSerializer):
             'description',
         )
 
+    def create(self, validated_data):
+        return WorkingAt.objects.create(**validated_data)
+
 
 class StudentSerializer(serializers.ModelSerializer):
     courseassignment_set = CourseAssignmentSerializer(many=True, read_only=True)
