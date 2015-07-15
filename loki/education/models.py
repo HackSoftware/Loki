@@ -126,15 +126,3 @@ class WorkingAt(models.Model):
 class OldCertificate(models.Model):
     assignment = models.ForeignKey(CourseAssignment)
     url_id = models.PositiveIntegerField()
-
-
-from student.models import Certificate
-
-cas = Certificate.objects.all()
-
-
-for index, ca in enumerate(cas):
-    print("user{} = Student.objects.get(email='{}')".format(index, ca.assignment.user.email))
-    print("course{} = Course.objects.get(name='{}')".format(index, ca.assignment.course.name))
-    print("ca = CourseAssignment.objects.get(user=user{}, course=course{})".format(index, index))
-    print("OldCertificate.objects.create(assignment=ca, url_id={})".format(ca.assignment.id))
