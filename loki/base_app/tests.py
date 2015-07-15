@@ -8,7 +8,7 @@ from rest_framework.test import APIClient
 from base_app.models import Event, Ticket
 
 from hack_fmi.models import BaseUser, Skill, Team
-from education.models import Course, CourseAssignment, Student
+from education.models import Course, CourseAssignment, Student, OldCertificate
 
 
 class BaseUserRegistrationTests(TestCase):
@@ -110,6 +110,11 @@ class PersonalUserInformationTests(TestCase):
             self.baseuser.get_competitor(), True
         )
 
+        self.certificate = OldCertificate.objects.create(
+            assignment=self.ca,
+            url_id=1,
+        )
+
     def test_me_returns_full_team_membership_set(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
@@ -127,6 +132,14 @@ class PersonalUserInformationTests(TestCase):
         # pp.pprint(response.data)
         first_courseassignment = response.data['student']['courseassignment_set'][0]
         self.assertEqual(first_courseassignment['course']['name'], self.course.name)
+
+    def test_me_returns_certificate_url(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.baseuser)
+        url_me = reverse('base_app:me')
+        response = self.client.get(url_me, format='json')
+        certificate_url = response.data['student']['courseassignment_set'][0]['oldcertificate_url']
+        self.assertNotEqual(certificate_url, "")
 
     def test_baseuser_update(self):
         self.client = APIClient()

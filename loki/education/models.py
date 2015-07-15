@@ -124,5 +124,8 @@ class WorkingAt(models.Model):
 
 
 class OldCertificate(models.Model):
-    assignment = models.ForeignKey(CourseAssignment)
-    url_id = models.PositiveIntegerField()
+    assignment = models.OneToOneField(CourseAssignment)
+    url_id = models.PositiveIntegerField(unique=True)
+
+    def get_absolute_url(self):
+        return "https://hackbulgaria.com/certificate/{}/".format(self.url_id)
