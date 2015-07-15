@@ -5,7 +5,7 @@ from rest_framework.test import APIClient
 from base_app.models import Company
 from base_app.models import City
 
-from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote
+from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -449,6 +449,18 @@ class WorkingAtTests(TestCase):
         self.city = City.objects.create(
             name="Sofia"
         )
+        self.course = Course.objects.create(
+            name="Java",
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/haskell-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
+        )
+        self.course_assignment = CourseAssignment.objects.create(
+            group_time=1,
+            course=self.course,
+            user=self.student,
+        )
 
     def test_post_workingat_creates_instance(self):
         self.client = APIClient()
@@ -458,8 +470,51 @@ class WorkingAtTests(TestCase):
             'company_name': "Hackbulgaria",
             'location': self.city.id,
             'start_date': date_decrease(30),
-            'title': 'Developer'
+            'came_working': True,
+            'title': 'Developer',
+            'course': self.course.id
         }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertEqual(len(response.data['location_full']), 2)
+        self.assertGreater(len(response.data['course_full']), 0)
+
+    def test_post_workingat_creates_instance_without_course(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student)
+        url = reverse('education:working_at')
+        data = {
+            'company_name': "Hackbulgaria",
+            'location': self.city.id,
+            'start_date': date_decrease(30),
+            'came_working': True,
+            'title': 'Developer',
+            'course': ""
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+
+    def test_patch_workingat_updates_instance(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student)
+        work = WorkingAt.objects.create(
+            student=self.student,
+            company_name='HackBulgaria',
+            location=self.city,
+            start_date=date_decrease(30),
+            title='Developer',
+            course=self.course
+        )
+        city2 = City.objects.create(
+            name='Plovdiv'
+        )
+        url = reverse('education:working_at')
+        data = {
+            'working_at_id': work.id,
+            'location': city2.id
+        }
+        city_before = WorkingAt.objects.first().location.name
+        self.client.patch(url, data, format='json')
+        city_after = WorkingAt.objects.first().location.name
+        self.assertEqual(city_before, self.city.name)
+        self.assertEqual(city_after, city2.name)

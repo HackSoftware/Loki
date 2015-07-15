@@ -86,6 +86,7 @@ class CourseAssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CourseAssignment
         fields = (
+            'id',
             'is_attending',
             'is_online',
             'course',
@@ -136,6 +137,19 @@ class WorkingAtSerializer(serializers.HyperlinkedModelSerializer):
         source='location',
     )
 
+    course = serializers.PrimaryKeyRelatedField(
+        read_only=False,
+        queryset=Course.objects.all(),
+        allow_null=True,
+    )
+
+    course_full = CourseSerializer(
+        many=False,
+        read_only=True,
+        source='course',
+        required=False,
+    )
+
     company = CompanySerializer(many=False, read_only=True)
 
     class Meta:
@@ -144,8 +158,11 @@ class WorkingAtSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'company',
             'company_name',
+            'course',
+            'course_full',
             'location',
             'location_full',
+            'came_working',
             'start_date',
             'end_date',
             'title',
