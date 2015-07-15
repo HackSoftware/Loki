@@ -178,7 +178,7 @@ def working_at(request):
                 obj = serializer.save(student=request.user.student)
             return Response(WorkingAtSerializer(obj).data, status=status.HTTP_201_CREATED)
         errors = serializer.errors
-        return Response(errors, serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])
