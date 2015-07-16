@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from django.core.exceptions import ObjectDoesNotExist
+
 from base_app.models import Company, City
 
 from .models import (Lecture, CheckIn, Course, Student,
@@ -82,6 +84,13 @@ class CourseSerializer(serializers.ModelSerializer):
 
 class CourseAssignmentSerializer(serializers.ModelSerializer):
     course = CourseSerializer(many=False, read_only=True)
+    oldcertificate_url = serializers.SerializerMethodField()
+
+    def get_oldcertificate_url(self, obj):
+        try:
+            return "http://hackbulgaria.com/certificate/{}/".format(obj.oldcertificate.url_id)
+        except ObjectDoesNotExist:
+            return ""
 
     class Meta:
         model = CourseAssignment
@@ -90,6 +99,7 @@ class CourseAssignmentSerializer(serializers.ModelSerializer):
             'is_attending',
             'is_online',
             'course',
+            'oldcertificate_url',
         )
 
 
