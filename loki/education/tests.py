@@ -499,7 +499,6 @@ class WorkingAtTests(TestCase):
             'course': ""
         }
         response = self.client.post(url, data, format='json')
-        print(response.data)
         self.assertEqual(response.status_code, 201)
 
     def test_patch_workingat_updates_instance(self):
