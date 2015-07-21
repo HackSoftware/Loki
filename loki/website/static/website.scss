@@ -1,0 +1,27 @@
+body {
+	#faces {
+		width: 100%;
+		.person {
+			padding: 0;
+			.person-image {
+				width: 100%;
+			}
+		}
+	}
+	
+	#partners {
+		.partner-image {
+			width: 100%;	
+		}
+		.started-count {
+			font-size: 40px;
+			text-align: center;
+		}
+	}
+
+	#videos {
+		.video {
+		}
+	}
+
+}

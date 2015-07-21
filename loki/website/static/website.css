@@ -1,0 +1,13 @@
+body #faces {
+  width: 100%; }
+  body #faces .person {
+    padding: 0; }
+    body #faces .person .person-image {
+      width: 100%; }
+body #partners .partner-image {
+  width: 100%; }
+body #partners .started-count {
+  font-size: 40px;
+  text-align: center; }
+
+/*# sourceMappingURL=website.css.map */

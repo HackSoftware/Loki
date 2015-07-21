@@ -12,4 +12,5 @@ urlpatterns = patterns(
     url(r'^education/', include('education.urls', namespace='education')),
     url(r'^base/', include('base_app.urls', namespace='base_app')),
     url(r'^status/', include('status.urls', namespace='status')),
+    url(r'^website/', include('website.urls', namespace='website')),
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

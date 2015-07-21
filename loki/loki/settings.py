@@ -46,7 +46,8 @@ INSTALLED_APPS = (
     'hack_conf',
     'education',
     'hr',
-    'status'
+    'status',
+    'website',
 )
 
 MIDDLEWARE_CLASSES = (
