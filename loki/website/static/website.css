@@ -34,5 +34,7 @@ body #partners .partner-image {
 body #partners .started-count {
   font-size: 40px;
   text-align: center; }
+body #videos {
+  padding-top: 30px; }
 
 /*# sourceMappingURL=website.css.map */
