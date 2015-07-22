@@ -1,9 +1,34 @@
+body #header {
+  list-style: none; }
+  body #header #logo {
+    float: left;
+    width: 100%; }
+  body #header #login-form {
+    padding-top: 30px; }
+  body #header #main-navigation {
+    margin-top: 20px;
+    list-style: none; }
+    body #header #main-navigation li {
+      float: left;
+      display: block;
+      padding: 10px; }
 body #faces {
-  width: 100%; }
+  padding-bottom: 30px; }
+  body #faces #moto {
+    text-align: center; }
   body #faces .person {
     padding: 0; }
     body #faces .person .person-image {
       width: 100%; }
+    body #faces .person .name {
+      font-size: 120%;
+      font-weight: 600; }
+body #action-buttons {
+  padding-bottom: 30px; }
+  body #action-buttons #left-action {
+    float: right; }
+  body #action-buttons #right-action {
+    float: left; }
 body #partners .partner-image {
   width: 100%; }
 body #partners .started-count {

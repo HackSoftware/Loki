@@ -1,14 +1,54 @@
 body {
+	#header {
+		list-style: none;
+		#logo {
+			float: left;
+			width: 100%;
+		}
+		#login-form {
+			padding-top: 30px;
+		}
+		#main-navigation {
+			margin-top: 20px;
+			list-style: none;
+			li {
+				float: left;
+				display: block;
+				padding: 10px;
+			}
+		
+		}
+	}
+
 	#faces {
-		width: 100%;
+		padding-bottom: 30px;
+		#moto {
+			text-align: center;
+		}
 		.person {
 			padding: 0;
 			.person-image {
 				width: 100%;
 			}
+			.name {
+				font-size: 120%;
+				font-weight: 600;
+			}	
+			.position {
+			
+			}
 		}
 	}
 	
+	#action-buttons {
+		padding-bottom: 30px;
+		#left-action {
+			float: right;
+		}
+		#right-action {
+			float: left;
+		}
+	}
 	#partners {
 		.partner-image {
 			width: 100%;	

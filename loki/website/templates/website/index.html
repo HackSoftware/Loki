@@ -13,6 +13,7 @@
 
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/website.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/89f2f44ba07ea3fff7e561c2142813b278c2d6c6/devicon.min.css">
 
 
     <!-- Custom styles for this template -->
@@ -55,47 +56,59 @@
         </div>
       </div>
     </nav> -->
-    
-    <h1>Call to action <strong>Counter</strong> did it!</h1>
-    <div id="faces" class="col-md-12">
-      <div class="person col-md-2">
-        <img src="https://data.hackbulgaria.com//media/avatar/cropped_PavlinGergov.jpg" class="person-image">
-        <p>Павлин Мечок <br>
-        JS Developer at Nemetschek</p>
+    <div class="container" id="header">
+      <div class="row">
+        <div class="col-md-5">
+          <img src="https://hackbulgaria.com/static/img/HackBG-logo.png" id="logo">
+        </div>
+        
+        <div class="col-md-6 col-md-offset-1" id="login-form">
+          <form class="form-inline">
+            <div class="form-group">
+              <label class="sr-only" for="exampleInputEmail3">Email address</label>
+              <input type="email" class="form-control" placeholder="Email">
+            </div>
+            <div class="form-group">
+              <label class="sr-only" for="exampleInputPassword3">Password</label>
+              <input type="password" class="form-control" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-default">Sign in</button>
+          </form>
+        
+        </div>
+        <ul id="main-navigation" class="col-md-12">
+          <li><a href="">Начало</a></li>
+          <li><a href="">Курсове</a></li>
+          <li><a href="">За нас</a></li>
+          <li><a href="">Блог</a></li>
+        </ul>
       </div>
-      
-      <div class="person col-md-2">
-        <img src="https://data.hackbulgaria.com//media/avatar/cropped_PavlinGergov.jpg" class="person-image">
-        <p>Павлин Мечок <br>
-        JS Developer at Nemetschek</p>
-      </div>
-
-      <div class="person col-md-2">
-        <img src="https://data.hackbulgaria.com//media/avatar/cropped_PavlinGergov.jpg" class="person-image">
-        <p>Павлин Мечок <br>
-        JS Developer at Nemetschek</p>
-      </div>
-
-      <div class="person col-md-2">
-        <img src="https://data.hackbulgaria.com//media/avatar/cropped_PavlinGergov.jpg" class="person-image">
-        <p>Павлин Мечок <br>
-        JS Developer at Nemetschek</p>
-      </div>
-
-      <div class="person col-md-2">
-        <img src="https://data.hackbulgaria.com//media/avatar/cropped_PavlinGergov.jpg" class="person-image">
-        <p>Павлин Мечок <br>
-        JS Developer at Nemetschek</p>
-      </div>
-
-      <div class="person col-md-2">
-        <img src="https://data.hackbulgaria.com//media/avatar/cropped_PavlinGergov.jpg" class="person-image">
-        <p>Павлин Мечок <br>
-        JS Developer at Nemetschek</p>
+    </div>
+    <div class="row">
+      <div id="faces" class="col-md-12">
+        <h1 id="moto">Call to action <strong>{{success_counter}}</strong> did it!</h1>
+        {% for successor in successors %}
+          <div class="person col-md-2">
+            <img src="/media/{{ successor.picture }}" class="person-image">
+            <p> 
+              <span class="name">{{ successor.name }}</span> <br>
+              <span class="position">{{ successor.title }}</span>
+            </p>
+          </div>
+        {% endfor %}
       </div>
     </div>
     
-    <hr>
+    <div class="row" id="action-buttons">
+      <div class="col-md-6">
+        <button class="btn btn-lg" id="left-action">Запиши курс сега!</button>
+      </div>
+
+      <div class="col-md-6">
+        <button class="btn btn-lg" id="right-action">Подай панда!</button>
+      </div>
+    </div>
+
     <div class="container" id="partners">
       <div class="row">
 
@@ -122,7 +135,7 @@
     </div>
     
     <div class="container" id="videos">
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-3 video">
           <iframe src="https://www.youtube.com/embed/gwpZYABFHCY" frameborder="0" allowfullscreen></iframe>
         </div>
@@ -134,7 +147,7 @@
         </div>
         <div class="col-md-3 video">
           <iframe src="https://www.youtube.com/embed/gwpZYABFHCY" frameborder="0" allowfullscreen></iframe>
-        </div>
+        </div> -->
     </div>
 
     <footer>
