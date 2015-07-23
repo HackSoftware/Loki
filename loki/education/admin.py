@@ -106,7 +106,7 @@ admin.site.register(CheckIn, CheckInAdmin)
 
 class WorkingAtAdmin(admin.ModelAdmin):
     list_display = [
-        'student',
+        'get_full_name',
         'company',
         'company_name',
         'course',
@@ -117,6 +117,15 @@ class WorkingAtAdmin(admin.ModelAdmin):
         'title',
         'description',
     ]
-    search_fields = ['company', 'location', 'student', 'course']
+    search_fields = [
+        'student__email',
+        'company_name',
+        'company__name',
+        'student__first_name',
+        'student__last_name',
+    ]
+
+    def get_full_name(self, obj):
+        return obj.get_full_name()
 
 admin.site.register(WorkingAt, WorkingAtAdmin)
