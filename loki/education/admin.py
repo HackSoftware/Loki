@@ -126,6 +126,6 @@ class WorkingAtAdmin(admin.ModelAdmin):
     ]
 
     def get_full_name(self, obj):
-        return obj.get_full_name()
+        return obj.student.get_full_name()
 
 admin.site.register(WorkingAt, WorkingAtAdmin)
