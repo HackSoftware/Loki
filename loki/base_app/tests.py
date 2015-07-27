@@ -197,3 +197,20 @@ class EventTests(TestCase):
         url = reverse('base_app:buy_ticket')
         response = self.client.post(url)
         self.assertEqual(response.status_code, 404)
+
+
+class BaseUserUpdateTests(TestCase):
+
+    def setUp(self):
+        self.test_user = BaseUser.objects.create_user(
+            email="comp@comp.bg",
+            password="123",
+            full_name='Comp compov'
+        )
+
+    def test_update_avatar_empty_request(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.test_user)
+        url = reverse('base_app:base_user_update')
+        response = self.client.patch(url)
+        self.assertEqual(response.status_code, 400)

@@ -68,6 +68,8 @@ def get_number_of_sold_tickets(request):
 @api_view(['PATCH'])
 @permission_classes((IsAuthenticated,))
 def base_user_update(request):
+    if len(request.data) == 0:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     user = request.user
     co = request.data['selection']
     co = json.loads(co)
