@@ -198,6 +198,19 @@ class EventTests(TestCase):
         response = self.client.post(url)
         self.assertEqual(response.status_code, 404)
 
+    def test_buy_ticket_more_than_once(self):
+        count = Ticket.objects.count()
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.test_user)
+        url = reverse('base_app:buy_ticket')
+        data = {'event_id': self.event_conf.id}
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 201)
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 400)
+        new_count = Ticket.objects.count()
+        self.assertEqual(count+1, new_count)
+
 
 class BaseUserUpdateTests(TestCase):
 
