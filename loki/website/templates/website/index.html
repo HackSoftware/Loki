@@ -14,32 +14,20 @@
     <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/website.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.rawgit.com/konpa/devicon/89f2f44ba07ea3fff7e561c2142813b278c2d6c6/devicon.min.css">
-
-
-    <!-- Custom styles for this template -->
-    <link href="jumbotron.css" rel="stylesheet">
-
-    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
-    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
-    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
   </head>
 
   <body>
-    <div class="container" id="header">
+  <div id="header">
+
+    <div class="container">
       <div class="row">
     
-        <div class="col-md-5">
+        <div class="col-md-3">
           <img src="https://hackbulgaria.com/static/img/HackBG-logo.png" id="logo">
         </div>
         
 
-        <ul id="main-navigation" class="col-md-6 col-md-offset-1">
+        <ul id="main-navigation" class="col-md-7 col-md-offset-2">
           <li><a href="">Начало</a></li> 
           <li><a href="">Филосифия за образование</a></li>
           <li><a href="">Курсове</a></li>
@@ -48,10 +36,11 @@
           <li><a href="">Вход</a></li>
         </ul>
     
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="container" id="header">
+    <div class="container">
       <h2 class="container">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam, similique.</h2>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora quis, cumque magni, id quae, nobis ut pariatur sapiente quas nostrum porro repudiandae. Libero a architecto reiciendis, incidunt possimus quos doloremque.
@@ -59,10 +48,10 @@
     </div>
 
     <div class="row">
-      <div id="faces" class="col-md-12">
+      <div id="faces" class="col-xs-12">
         <h1 id="moto">Call to action <strong>{{success_counter}}</strong> did it!</h1>
         {% for successor in successors %}
-          <div class="person col-md-2">
+          <div class="person col-xs-2">
             <img src="/media/{{ successor.picture }}" class="person-image">
             <p> 
               <span class="name">{{ successor.name }}</span> <br>
@@ -86,36 +75,45 @@
     <div id="partners">
       <div class="row">
         <h2 class="container">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam, similique.</h2>
-        <div class="col-md-2 partner">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
+        <div class="col-md-2">
+          <div class="partner">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
+          </div>
         </div>
         
-        <div class="col-md-2 partner">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
+        <div class="col-md-2">
+          <div class="partner">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
+          </div>
         </div>
-        
-        <div class="col-md-2 partner">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
+        <div class="col-md-2">
+          <div class="partner">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="partner">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="partner">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="partner">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
+          </div>
         </div>
 
-        <div class="col-md-2 partner">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
-        </div>
-
-        <div class="col-md-2 partner">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
-        </div>
-
-        <div class="col-md-2 partner">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/SAP_2011_logo.svg/640px-SAP_2011_logo.svg.png" class="partner-image">
-        </div>
       </div>
     </div>
     
     <div id="videos">
       <div class="row">
         <h2 class="container">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam, similique.</h2>
-
+<!-- 
         <div class="col-md-3 video">
           <iframe src="https://www.youtube.com/embed/gwpZYABFHCY" frameborder="0" allowfullscreen></iframe>
         </div>
@@ -128,7 +126,7 @@
         <div class="col-md-3 video">
           <iframe src="https://www.youtube.com/embed/gwpZYABFHCY" frameborder="0" allowfullscreen></iframe>
         </div>
-    </div>
+ -->    </div>
 
     <footer>
     </footer>

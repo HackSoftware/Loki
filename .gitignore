@@ -61,6 +61,6 @@ local_settings.py
 /static/
 media/
 bower_components
-.sass-cache
+.sass-cache/
 *.map
 *.swp

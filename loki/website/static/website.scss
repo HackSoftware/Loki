@@ -1,8 +1,10 @@
 body {
 	#header {
+		background: black;
 		list-style: none;
 		#logo {
 			float: left;
+			padding-top: 10px;
 			width: 100%;
 		}
 		#login-form {
@@ -15,6 +17,14 @@ body {
 				float: left;
 				display: block;
 				padding: 10px;
+				a {
+					font-size: 120%;
+					color: white;
+					text-decoration: none;
+					&:hover {
+						border-bottom: 2px solid orange;
+					}
+				}
 			}
 		
 		}
@@ -33,9 +43,11 @@ body {
 			.name {
 				font-size: 120%;
 				font-weight: 600;
+				padding: 10px;
 			}	
 			.position {
-			
+				padding: 10px;
+				font-size: 90%;
 			}
 		}
 	}
@@ -50,12 +62,18 @@ body {
 		}
 	}
 	#partners {
-		.partner-image {
-			width: 100%;	
-		}
-		.started-count {
-			font-size: 40px;
-			text-align: center;
+		.partner {
+			border: 1px solid;
+			margin: 10px;
+			padding: 10px;
+
+			.partner-image {
+				width: 100%;	
+			}
+			.started-count {
+				font-size: 40px;
+				text-align: center;
+			}
 		}
 	}
 

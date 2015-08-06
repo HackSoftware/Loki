@@ -1,7 +1,9 @@
 body #header {
+  background: black;
   list-style: none; }
   body #header #logo {
     float: left;
+    padding-top: 10px;
     width: 100%; }
   body #header #login-form {
     padding-top: 30px; }
@@ -12,6 +14,12 @@ body #header {
       float: left;
       display: block;
       padding: 10px; }
+      body #header #main-navigation li a {
+        font-size: 120%;
+        color: white;
+        text-decoration: none; }
+        body #header #main-navigation li a:hover {
+          border-bottom: 2px solid orange; }
 body #faces {
   padding-bottom: 30px; }
   body #faces #moto {
@@ -22,18 +30,26 @@ body #faces {
       width: 100%; }
     body #faces .person .name {
       font-size: 120%;
-      font-weight: 600; }
+      font-weight: 600;
+      padding: 10px; }
+    body #faces .person .position {
+      padding: 10px;
+      font-size: 90%; }
 body #action-buttons {
   padding-bottom: 30px; }
   body #action-buttons #left-action {
     float: right; }
   body #action-buttons #right-action {
     float: left; }
-body #partners .partner-image {
-  width: 100%; }
-body #partners .started-count {
-  font-size: 40px;
-  text-align: center; }
+body #partners .partner {
+  border: 1px solid;
+  margin: 10px;
+  padding: 10px; }
+  body #partners .partner .partner-image {
+    width: 100%; }
+  body #partners .partner .started-count {
+    font-size: 40px;
+    text-align: center; }
 body #videos {
   padding-top: 30px; }
 
