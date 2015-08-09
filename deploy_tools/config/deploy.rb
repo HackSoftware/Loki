@@ -49,7 +49,7 @@ namespace :deploy do
 
   task :bower_install do
     on roles(:all) do |h|
-      execute "cd /hack/loki/current/loki/website/static/ bower install"
+      execute "cd /hack/loki/current/loki/website/static/ && bower install"
     end
   end
 
