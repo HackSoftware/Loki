@@ -62,25 +62,36 @@ body {
       border: 2px solid black; }
   body #partners .partner {
     background: white;
-    padding: 10px; }
+    padding: 10px;
+    margin: 10px;
+    width: 15vw;
+    height: 15vw;
+    float: left; }
     body #partners .partner .partner-image {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
       width: 100%; }
     body #partners .partner .started-count {
       font-size: 40px;
       text-align: center; }
   body #videos {
     background: url("/static/website_images/background_pattern.png");
-    padding-top: 20px;
+    padding-top: 10px;
     padding-bottom: 40px;
     margin-top: 40px; }
-    body #videos .video img {
-      width: 100%; }
-    body #videos .video .play_button {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 84px;
-      margin: -46px; }
+    body #videos .video {
+      box-shadow: 0px 10px 20px #888888;
+      padding: 0;
+      margin: 10px; }
+      body #videos .video img {
+        width: 100%; }
+      body #videos .video .play_button {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 84px;
+        margin: -46px; }
   body #footer {
     height: 100px;
     background: #F7931E;

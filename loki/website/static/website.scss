@@ -90,10 +90,18 @@ body {
 		.partner {
 			background: white;
 			padding: 10px;
-			
+			margin: 10px;
+			width: 15vw;
+    		height: 15vw;
+			float: left;
+
 			.partner-image {
-				width: 100%;	
+				position: relative;
+				top: 50%;
+				transform: translateY(-50%);				
+				width: 100%;
 			}
+
 			.started-count {
 				font-size: 40px;
 				text-align: center;
@@ -103,11 +111,14 @@ body {
 
 	#videos {
 		background: url('/static/website_images/background_pattern.png');
-		padding-top: 20px;
+		padding-top: 10px;
 		padding-bottom: 40px;
 		margin-top: 40px;
-
+		
 		.video {
+			box-shadow: 0px 10px 20px #888888;
+			padding: 0;
+			margin: 10px;
 			img {
 				width: 100%;
 			}
