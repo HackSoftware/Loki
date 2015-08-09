@@ -1,0 +1,25 @@
+{
+  "name": "hackbg website",
+  "version": "0.0.0",
+  "homepage": "https://github.com/HackSoftware/Loki",
+  "authors": [
+    "Ivaylo Bachvarof <bachvarof@gmail.com>"
+  ],
+  "moduleType": [
+    "amd"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "font-awesome": "~4.4.0",
+    "bootstrap": "~3.3.5",
+    "jquery": "~2.1.4",
+    "swipebox": "~1.4.1"
+  }
+}

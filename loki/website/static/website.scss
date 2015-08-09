@@ -1,10 +1,17 @@
+$yellow: #FFCB57;
+$orange: #F7931E;
+$gray: #F2F2F2;
+
 body {
+	padding: 0;
+	margin: 0;
+	background: $gray;
 	#header {
 		background: black;
 		list-style: none;
 		#logo {
 			float: left;
-			padding-top: 10px;
+			padding-top: 25px;
 			width: 100%;
 		}
 		#login-form {
@@ -22,7 +29,7 @@ body {
 					color: white;
 					text-decoration: none;
 					&:hover {
-						border-bottom: 2px solid orange;
+						border-bottom: 2px solid $orange;
 					}
 				}
 			}
@@ -31,14 +38,20 @@ body {
 	}
 
 	#faces {
-		padding-bottom: 30px;
+		display: inline;
 		#moto {
 			text-align: center;
 		}
 		.person {
+			background: white;
 			padding: 0;
+			box-shadow: 0px 10px 20px #888888;
+			&:hover {
+				box-shadow: 0px 10px 20px #666666;
+			}
 			.person-image {
 				width: 100%;
+				padding-bottom: 5px;
 			}
 			.name {
 				font-size: 120%;
@@ -53,20 +66,31 @@ body {
 	}
 	
 	#action-buttons {
+		padding-top: 20px;
 		padding-bottom: 30px;
+		button {
+			font-size: 120%;
+		}
+
 		#left-action {
 			float: right;
+			padding: 16px;
+			background: $orange;
+			border: none;
+			color: white;
 		}
 		#right-action {
 			float: left;
+			padding: 14px;
+			background: white;
+			border: 2px solid black;
 		}
 	}
 	#partners {
 		.partner {
-			border: 1px solid;
-			margin: 10px;
+			background: white;
 			padding: 10px;
-
+			
 			.partner-image {
 				width: 100%;	
 			}
@@ -78,8 +102,39 @@ body {
 	}
 
 	#videos {
-		padding-top: 30px;
+		background: url('/static/website_images/background_pattern.png');
+		padding-top: 20px;
+		padding-bottom: 40px;
+		margin-top: 40px;
+
 		.video {
+			img {
+				width: 100%;
+			}
+
+			.play_button {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 84px;
+				margin: -46px;
+			}
+		}
+	}
+
+	#footer {
+		height: 100px;
+		background: $orange;
+		color: white;
+		text-align: center;
+
+		#socials {
+			padding: 10px 0 10px 0;
+			a {
+				padding: 5px;
+				text-decoration: none;
+				color: white;
+			}
 		}
 	}
 

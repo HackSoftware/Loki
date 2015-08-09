@@ -47,6 +47,12 @@ namespace :deploy do
     end
   end
 
+  task :bower_install do
+    on roles(:all) do |h|
+      execute "cd /hack/loki/website/static/ bower install"
+    end
+  end
+
   task :run_collect_static do
     on roles(:all) do |h|
       execute "/hack/loki/shared/virtualenv/bin/python3 /hack/loki/current/loki/manage.py collectstatic --noinput"
@@ -61,6 +67,7 @@ namespace :deploy do
 
   after :published, :pip_install
   after :pip_install, :run_migrations
-  after :pip_install, :run_collect_static
+  after :pip_install, :bower_install
+  after :bower_install, :run_collect_static
   after :run_migrations, :restart
 end

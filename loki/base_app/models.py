@@ -1,12 +1,13 @@
-from loki.settings import MEDIA_ROOT
 from django.db import models
+from loki.settings import MEDIA_ROOT
 
 from ckeditor.fields import RichTextField
 
 
 class Company(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    logo = models.URLField(blank=True)
+    logo_url = models.URLField(blank=True)
+    logo = models.ImageField(upload_to="partners_logoes", null=True, blank=True)
     jobs_link = models.URLField(blank=True)
 
     def get_logo(self):
