@@ -4,7 +4,13 @@ from django.core.exceptions import ObjectDoesNotExist
 from base_app.models import Company, City
 
 from .models import (Lecture, CheckIn, Course, Student,
-                     CourseAssignment, StudentNote, Teacher, WorkingAt)
+                     CourseAssignment, StudentNote, Teacher, WorkingAt, Task)
+
+
+class TaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Task
+        fields = ('description', 'name', 'week')
 
 
 class CitySerializer(serializers.ModelSerializer):

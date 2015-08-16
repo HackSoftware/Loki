@@ -109,6 +109,18 @@ class Task(models.Model):
         unique_together = (('name', 'description'),)
 
 
+class Solution(models.Model):
+    task = models.ForeignKey(Task)
+    user = models.ForeignKey(Student)
+    url = models.URLField()
+
+    def get_assignment(self):
+        return CourseAssignment.objects.get(user=self.user, course=self.task.course)
+
+    class Meta:
+        unique_together = (('user', 'task'),)
+
+
 class WorkingAt(models.Model):
     student = models.ForeignKey(Student)
     company = models.ForeignKey(Company, blank=True, null=True)

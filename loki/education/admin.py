@@ -2,7 +2,7 @@ from import_export.admin import ImportExportActionModelAdmin
 
 from django.contrib import admin
 
-from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote, WorkingAt
+from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote, WorkingAt, Task, Solution
 from .modelresource import StudentResource, CourseAssignmentResource
 
 
@@ -129,3 +129,6 @@ class WorkingAtAdmin(admin.ModelAdmin):
         return obj.student.full_name
 
 admin.site.register(WorkingAt, WorkingAtAdmin)
+
+admin.site.register(Task)
+admin.site.register(Solution)

@@ -13,10 +13,10 @@ from rest_framework import status
 from base_app.models import City, Company
 
 from education.helper import check_macs_for_student, mac_is_used_by_another_student
-from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote, WorkingAt
+from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote, WorkingAt, Task
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
-                          CourseAssignmentSerializer, WorkingAtSerializer, CitySerializer, CompanySerializer)
+                          CourseAssignmentSerializer, WorkingAtSerializer, CitySerializer, CompanySerializer, TaskSerializer)
 from .premissions import IsStudent, IsTeacher
 
 
@@ -192,4 +192,14 @@ def get_cities(request):
 def get_companies(request):
     companies = Company.objects.all()
     serializer = CompanySerializer(companies, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@permission_classes((IsStudent,))
+def get_tasks(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    tasks = Task.objects.filter(course=course)
+    serializer = TaskSerializer(tasks, many=True)
+
     return Response(serializer.data, status=status.HTTP_200_OK)
