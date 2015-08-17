@@ -1,7 +1,7 @@
 from django.conf.urls import url
-from education.views import (set_check_in, get_lectures, get_check_ins,
+from education.views import (set_check_in, get_lectures, get_check_ins, StudentNoteAPI,
                              get_courses, OnBoardStudent, student_update, get_students_for_course, get_cas_for_course,
-                             create_student_note, drop_student, working_at, get_cities, get_companies, get_tasks)
+                             drop_student, working_at, get_cities, get_companies, get_tasks)
 
 urlpatterns = [
     url(r'^api/set-check-in/$', set_check_in, name='set_check_in'),
@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^api/onboard-student/$', OnBoardStudent.as_view(), name='onboard_student'),
     url(r'^api/get-students-for-course/$', get_students_for_course, name='get_students_for_course'),
     url(r'^api/get-cas-for-course/$', get_cas_for_course, name='get_ca_for_course'),
-    url(r'^api/create-student_note/$', create_student_note, name='create_student_note'),
+    url(r'^api/create-student_note/$', StudentNoteAPI.as_view(), name='create_student_note'),
     url(r'^api/drop-student/$', drop_student, name='drop_student'),
     url(r'^api/working_at/$', working_at, name='working_at'),
     url(r'^api/get-cities/$', get_cities, name='get_cities'),

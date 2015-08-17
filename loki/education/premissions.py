@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from .models import CourseAssignment
 
 
 class IsStudent(permissions.BasePermission):
@@ -12,6 +13,7 @@ class IsStudent(permissions.BasePermission):
 
 
 class IsTeacher(permissions.BasePermission):
+    message = 'You dont teach that course!'
 
     def has_permission(self, request, view):
         try:
@@ -19,3 +21,14 @@ class IsTeacher(permissions.BasePermission):
             return request.user and request.user.is_authenticated and is_teacher
         except:
             return False
+
+
+class IsTeacherForCA(permissions.BasePermission):
+    message = 'You dont teach that course!'
+
+    def has_permission(self, request, view):
+        ca_id = request.data['assignment']
+        assignment = CourseAssignment.objects.get(id=ca_id)
+        teacher = request.user.get_teacher()
+
+        return assignment.course in teacher.teached_courses.all()

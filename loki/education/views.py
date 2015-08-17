@@ -10,14 +10,15 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import generics
 from base_app.models import City, Company
 
 from education.helper import check_macs_for_student, mac_is_used_by_another_student
 from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote, WorkingAt, Task
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
-                          CourseAssignmentSerializer, WorkingAtSerializer, CitySerializer, CompanySerializer, TaskSerializer)
-from .premissions import IsStudent, IsTeacher
+                          CourseAssignmentSerializer, WorkingAtSerializer, CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer)
+from .premissions import IsStudent, IsTeacher, IsTeacherForCA
 
 
 @csrf_exempt
@@ -125,21 +126,12 @@ def get_cas_for_course(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
-@permission_classes((IsTeacher,))
-def create_student_note(request):
-    teacher = request.user.get_teacher()
-    ca = get_object_or_404(CourseAssignment, id=request.data['ca_id'])
-    if ca.course not in teacher.teached_courses.all():
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
-    text = request.data['text']
-    StudentNote.objects.create(
-        text=text,
-        assignment=ca,
-        author=teacher
-    )
-    message = {"message": "Успешно написахте коментар за студента"}
-    return Response(message, status=status.HTTP_201_CREATED)
+class StudentNoteAPI(generics.CreateAPIView):
+    permission_classes = (IsTeacher, IsTeacherForCA)
+    serializer_class = StudentNoteSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user.get_teacher())
 
 
 @api_view(['PATCH'])
