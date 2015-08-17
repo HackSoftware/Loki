@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from education.views import (set_check_in, get_lectures, get_check_ins,
                              get_courses, OnBoardStudent, student_update, get_students_for_course, get_cas_for_course,
-                             create_student_note, drop_student, working_at, get_cities, get_companies, get_tasks)
+                             create_student_note, drop_student, working_at, get_cities, get_companies, TasksAPI)
 
 urlpatterns = [
     url(r'^api/set-check-in/$', set_check_in, name='set_check_in'),
@@ -17,5 +17,5 @@ urlpatterns = [
     url(r'^api/working_at/$', working_at, name='working_at'),
     url(r'^api/get-cities/$', get_cities, name='get_cities'),
     url(r'^api/get-companies/$', get_companies, name='get_companies'),
-    url(r'^api/get-tasks/$', get_tasks, name='get_tasks'),
+    url(r'^api/task/(?P<course>[0-9]+)$', TasksAPI.as_view(), name='task'),
 ]

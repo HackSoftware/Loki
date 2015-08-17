@@ -9,7 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from base_app.models import City, Company
 
 from education.helper import check_macs_for_student, mac_is_used_by_another_student
@@ -195,11 +195,12 @@ def get_companies(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-@permission_classes((IsStudent,))
-def get_tasks(request, course_id):
-    course = get_object_or_404(Course, id=course_id)
-    tasks = Task.objects.filter(course=course)
-    serializer = TaskSerializer(tasks, many=True)
+class TasksAPI(generics.ListAPIView):
+    model = Task
+    serializer_class = TaskSerializer
+    permission_classes = (IsStudent,)
 
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        course = self.kwargs['course']
+        tasks = Task.objects.filter(course=course)
+        return tasks

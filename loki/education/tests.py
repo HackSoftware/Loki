@@ -5,7 +5,7 @@ from rest_framework.test import APIClient
 from base_app.models import Company
 from base_app.models import City
 
-from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt
+from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt, Task
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -551,3 +551,53 @@ class WorkingAtTests(TestCase):
         city_after = WorkingAt.objects.first().location.name
         self.assertEqual(city_before, self.city.name)
         self.assertEqual(city_after, city2.name)
+
+
+class TasksTests(TestCase):
+
+    def setUp(self):
+        self.student = Student.objects.create(
+            email='sten@abv.bg',
+            mac="12:34:56:78:9A:BC",
+        )
+
+        self.course = Course.objects.create(
+            name="Java",
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/haskell-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
+        )
+
+        self.course2 = Course.objects.create(
+            name="Java2",
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/asd-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
+        )
+
+        self.task = Task.objects.create(
+            course=self.course,
+            description="https://github.com/lqlq/README.md",
+            name="Task Name",
+            week=1,
+        )
+
+        self.task2 = Task.objects.create(
+            course=self.course2,
+            description="https://github.com/lololo/README.md",
+            name="Task Name 2",
+            week=1,
+        )
+
+    def test_get_tasks(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student)
+
+        url = reverse('education:task', kwargs={'course': self.course.id})
+
+        response = self.client.get(url, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
