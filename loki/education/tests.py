@@ -5,7 +5,7 @@ from rest_framework.test import APIClient
 from base_app.models import Company
 from base_app.models import City
 
-from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt, Task
+from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt, Task, Solution
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -594,10 +594,94 @@ class TasksTests(TestCase):
     def test_get_tasks(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.student)
+        data = {
+            "course__id": self.course.id
+        }
+        url = reverse('education:task')
 
-        url = reverse('education:task', kwargs={'course': self.course.id})
-
-        response = self.client.get(url, format='json')
-
+        response = self.client.get(url, data, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
+
+
+class SolutionsTests(TestCase):
+
+    def setUp(self):
+        self.student = Student.objects.create(
+            email='sten@abv.bg',
+            mac="12:34:56:78:9A:BC",
+        )
+
+        self.student2 = Student.objects.create(
+            email='ivo@abv.bg',
+            mac="12:34:56:78:9A:B1",
+        )
+
+        self.course = Course.objects.create(
+            name="Java",
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/haskell-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
+        )
+
+        self.task = Task.objects.create(
+            course=self.course,
+            description="https://github.com/lqlq/README.md",
+            name="Task Name",
+            week=1,
+        )
+
+        self.task_with_no_solutions = Task.objects.create(
+            course=self.course,
+            description="https://github.com/lqlnkmbq/README.md",
+            name="Task Name 1",
+            week=1,
+        )
+
+        self.solution = Solution.objects.create(
+            student=self.student,
+            task=self.task,
+            url='https://github.com/lqdsadaslq/solution.py'
+        )
+
+        self.solution2 = Solution.objects.create(
+            student=self.student2,
+            task=self.task,
+            url='https://github.com/lololo/solution.py'
+        )
+
+    def test_get_solutions(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student)
+
+        url = reverse('education:solution')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+
+    def test_get_solutions_only_yours(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student2)
+
+        url = reverse('education:solution')
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 1)
+
+    def test_post_solutions(self):
+        logged_student = self.student2
+        self.client = APIClient()
+        self.client.force_authenticate(user=logged_student)
+
+        url = reverse('education:solution')
+        data = {
+            'task': self.task_with_no_solutions.id,
+            'url': 'https://github.com/lolo/solution.py'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+
+        solution = Solution.objects.get(task=self.task_with_no_solutions, student=logged_student)
+        self.assertEqual(solution.student, logged_student)

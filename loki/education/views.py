@@ -5,18 +5,19 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics
+from rest_framework import status, generics, mixins
 from base_app.models import City, Company
 
 from education.helper import check_macs_for_student, mac_is_used_by_another_student
-from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote, WorkingAt, Task
+from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote, WorkingAt, Task, Solution
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
-                          CourseAssignmentSerializer, WorkingAtSerializer, CitySerializer, CompanySerializer, TaskSerializer)
+                          CourseAssignmentSerializer, WorkingAtSerializer, CitySerializer, CompanySerializer, TaskSerializer, SolutionSerializer)
 from .premissions import IsStudent, IsTeacher
 
 
@@ -197,10 +198,26 @@ def get_companies(request):
 
 class TasksAPI(generics.ListAPIView):
     model = Task
+    queryset = Task.objects.all()
     serializer_class = TaskSerializer
     permission_classes = (IsStudent,)
+    filter_fields = ('course__id',)
+
+
+class SolutionsAPI(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+    model = Solution
+    serializer_class = SolutionSerializer
+    permission_classes = (IsStudent,)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(student=self.request.user.get_student())
 
     def get_queryset(self):
-        course = self.kwargs['course']
-        tasks = Task.objects.filter(course=course)
-        return tasks
+        student = self.request.user.get_student()
+        return student.solution_set

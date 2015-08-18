@@ -3,8 +3,19 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from base_app.models import Company, City
 
-from .models import (Lecture, CheckIn, Course, Student,
+from .models import (Lecture, CheckIn, Course, Student, Solution,
                      CourseAssignment, StudentNote, Teacher, WorkingAt, Task)
+
+
+class SolutionSerializer(serializers.ModelSerializer):
+    task = serializers.PrimaryKeyRelatedField(
+        read_only=False,
+        queryset=Task.objects.all(),
+    )
+
+    class Meta:
+        model = Solution
+        fields = ('task', 'url')
 
 
 class TaskSerializer(serializers.ModelSerializer):

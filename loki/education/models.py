@@ -111,14 +111,14 @@ class Task(models.Model):
 
 class Solution(models.Model):
     task = models.ForeignKey(Task)
-    user = models.ForeignKey(Student)
+    student = models.ForeignKey(Student)
     url = models.URLField()
 
     def get_assignment(self):
-        return CourseAssignment.objects.get(user=self.user, course=self.task.course)
+        return CourseAssignment.objects.get(user=self.student, course=self.task.course)
 
     class Meta:
-        unique_together = (('user', 'task'),)
+        unique_together = (('student', 'task'),)
 
 
 class WorkingAt(models.Model):
