@@ -41,6 +41,9 @@ body {
 		display: inline;
 		#moto {
 			text-align: center;
+			* {
+				display: inline;
+			}
 		}
 		.person {
 			background: white;

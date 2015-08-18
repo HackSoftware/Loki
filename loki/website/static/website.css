@@ -28,6 +28,8 @@ body {
     display: inline; }
     body #faces #moto {
       text-align: center; }
+      body #faces #moto * {
+        display: inline; }
     body #faces .person {
       background: white;
       padding: 0;

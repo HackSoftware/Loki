@@ -48,7 +48,7 @@
   </div>
     
   <div id="faces" class="row">
-    <h2 id="moto">{{ snippets.index_call_to_action.text }} <strong>{{success_counter}}</strong></h2>
+    <h2 id="moto"><strong>{{success_counter}}</strong> {{ snippets.index_call_to_action.text }}</h2>
     {% for successor in successors %}
       <div class="person col-xs-2">
         <img src="/media/{{ successor.picture }}" class="person-image">
