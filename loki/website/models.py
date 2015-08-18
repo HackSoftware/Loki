@@ -27,7 +27,7 @@ class SuccessViedeo(models.Model):
 
 
 class Snippet(models.Model):
-    label = models.CharField(max_length=30, unique=True)
+    label = models.CharField(max_length=80, unique=True)
     text = RichTextField(blank=True)
 
     def __str__(self):
