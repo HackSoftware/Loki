@@ -642,7 +642,7 @@ class SolutionsTests(TestCase):
         self.solution = Solution.objects.create(
             student=self.student,
             task=self.task,
-            url='https://github.com/lqdsadaslq/solution.py'
+            url='https://github.com/lqdsadaslsq/solution.py'
         )
 
         self.solution2 = Solution.objects.create(
@@ -685,3 +685,41 @@ class SolutionsTests(TestCase):
 
         solution = Solution.objects.get(task=self.task_with_no_solutions, student=logged_student)
         self.assertEqual(solution.student, logged_student)
+
+    def test_post_solutions_filter(self):
+        logged_student = self.student
+
+        course2 = Course.objects.create(
+            name="Java2",
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/Javata-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
+        )
+
+        task2 = Task.objects.create(
+            course=course2,
+            description="https://github.com/lqddlq/README.md",
+            name="Task3 Name",
+            week=1,
+        )
+
+        Solution.objects.create(
+            student=logged_student,
+            task=task2,
+            url='https://github.com/lqdddsadaslsq/solution.py'
+        )
+
+        self.client = APIClient()
+        self.client.force_authenticate(user=logged_student)
+
+        url = reverse('education:solution')
+        data = {
+            'task__course__id': course2.id
+        }
+
+        response = self.client.get(url, data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Solution.objects.filter(student=logged_student).count(), 2)
+        self.assertEqual(len(response.data), 1)

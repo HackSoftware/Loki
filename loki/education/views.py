@@ -208,6 +208,7 @@ class SolutionsAPI(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Gene
     model = Solution
     serializer_class = SolutionSerializer
     permission_classes = (IsStudent,)
+    filter_fields = ('task__course__id',)
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
