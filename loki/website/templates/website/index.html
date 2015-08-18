@@ -39,15 +39,16 @@
     </div>
   </div>
 
+{% autoescape off %}
   <div class="container">
-    <h2 class="container">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam, similique.</h2>
+    <h1 class="container">{{ snippets.index_primary_description.text }}</h1>
     <p>
-      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempora quis, cumque magni, id quae, nobis ut pariatur sapiente quas nostrum porro repudiandae. Libero a architecto reiciendis, incidunt possimus quos doloremque.
+      {{ snippets.index_secondary_description.text }}
     </p>
   </div>
     
   <div id="faces" class="row">
-    <h1 id="moto">Call to action <strong>{{success_counter}}</strong> did it!</h1>
+    <h2 id="moto">{{ snippets.index_call_to_action.text }} <strong>{{success_counter}}</strong></h2>
     {% for successor in successors %}
       <div class="person col-xs-2">
         <img src="/media/{{ successor.picture }}" class="person-image">
@@ -62,18 +63,18 @@
   <div class="container-fluid">
     <div class="row" id="action-buttons">
       <div class="col-md-6">
-        <button id="left-action">Запиши курс сега!</button>
+        <button id="left-action">{{ snippets.index_left_button.text }}</button>
       </div>
 
       <div class="col-md-6">
-        <button id="right-action">Подай панда!</button>
+        <button id="right-action">{{ snippets.index_right_button.text }}</button>
       </div>
     </div>
   </div>
 
   <div class="container-fluid" id="partners">
     <div class="row">
-      <h2 class="container">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam, similique.</h2>
+      <h2 class="container">{{ snippets.index_partners_description.text }}</h2>
 
       {% for partner in partners %}
         <div class="partner">
@@ -86,7 +87,7 @@
     
   <div class="container-fluid" id="videos">
     <div class="row">
-      <h2 class="container">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam, similique.</h2>
+      <h2 class="container">{{ snippets.index_success_stories_description.text }}</h2>
 
       {% for video in videos %}
         <div class="col-md-3 video">
@@ -99,6 +100,7 @@
 
     </div>
   </div>
+{% endautoescape %}
 
   <footer id="footer">
     <div id="socials">

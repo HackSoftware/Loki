@@ -1,6 +1,9 @@
 from django.db import models
 
 
+from ckeditor.fields import RichTextField
+
+
 class Successor(models.Model):
     name = models.CharField(max_length=100)
     picture = models.ImageField(blank=True)
@@ -21,3 +24,11 @@ class SuccessViedeo(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class Snippet(models.Model):
+    label = models.CharField(max_length=30, unique=True)
+    text = RichTextField(blank=True)
+
+    def __str__(self):
+        return self.label
