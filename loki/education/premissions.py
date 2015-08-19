@@ -3,6 +3,7 @@ from .models import CourseAssignment
 
 
 class IsStudent(permissions.BasePermission):
+    message = 'You are not a student!'
 
     def has_permission(self, request, view):
         try:
@@ -13,7 +14,7 @@ class IsStudent(permissions.BasePermission):
 
 
 class IsTeacher(permissions.BasePermission):
-    message = 'You dont teach that course!'
+    message = 'You are not a teacher!'
 
     def has_permission(self, request, view):
         try:
