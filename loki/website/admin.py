@@ -1,16 +1,16 @@
 from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
-from .models import Successor, SuccessViedeo, Snippet
+from .models import SuccessStoryPerson, SuccessVideo, Snippet
 
 
-class SuccessorAdmin(SortableAdminMixin, admin.ModelAdmin):
+class SuccessStoryPersonAdmin(SortableAdminMixin, admin.ModelAdmin):
     pass
-admin.site.register(Successor, SuccessorAdmin)
+admin.site.register(SuccessStoryPerson, SuccessStoryPersonAdmin)
 
 
-class SuccessViedeoAdmin(admin.ModelAdmin):
+class SuccessVideoAdmin(admin.ModelAdmin):
     pass
-admin.site.register(SuccessViedeo, SuccessViedeoAdmin)
+admin.site.register(SuccessVideo, SuccessVideoAdmin)
 
 
 class SnippetAdmin(admin.ModelAdmin):
