@@ -244,10 +244,10 @@ class TeachersAPIsTests(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.teacher)
         data = {
-            'ca_id': self.course_assignment.id,
+            'assignment': self.course_assignment.id,
             'text': 'Very good student!'
         }
-        url = reverse('education:create_student_note')
+        url = reverse('education:note')
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 201)
         note = StudentNote.objects.filter(assignment=self.course_assignment).first()
@@ -257,12 +257,12 @@ class TeachersAPIsTests(TestCase):
         self.client = APIClient()
         self.client.force_authenticate(user=self.teacher)
         data = {
-            'ca_id': self.course_assignment2.id,
+            'assignment': self.course_assignment2.id,
             'text': 'Very good student!'
         }
-        url = reverse('education:create_student_note')
+        url = reverse('education:note')
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.status_code, 403)
         note = StudentNote.objects.filter(assignment=self.course_assignment2).first()
         self.assertIsNone(note)
 

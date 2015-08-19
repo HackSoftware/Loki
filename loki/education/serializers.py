@@ -7,6 +7,13 @@ from .models import (Lecture, CheckIn, Course, Student, Solution,
                      CourseAssignment, StudentNote, Teacher, WorkingAt, Task)
 
 
+class StudentNoteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = StudentNote
+        fields = ('text', 'assignment')
+
+
 class SolutionSerializer(serializers.ModelSerializer):
     task = serializers.PrimaryKeyRelatedField(
         read_only=False,
@@ -46,16 +53,16 @@ class NoteTeacherSerializer(serializers.ModelSerializer):
         )
 
 
-class StudentNoteSerializer(serializers.ModelSerializer):
-    author = NoteTeacherSerializer(many=False, read_only=True)
+# class StudentNoteSerializer(serializers.ModelSerializer):
+#     author = NoteTeacherSerializer(many=False, read_only=True)
 
-    class Meta:
-        model = StudentNote
-        fields = (
-            'text',
-            'author',
-            'post_time',
-        )
+#     class Meta:
+#         model = StudentNote
+#         fields = (
+#             'text',
+#             'author',
+#             'post_time',
+#         )
 
 
 class LectureSerializer(serializers.ModelSerializer):
