@@ -4,7 +4,7 @@ from django.db import models
 from ckeditor.fields import RichTextField
 
 
-class Successor(models.Model):
+class SuccessStoryPerson(models.Model):
     name = models.CharField(max_length=100)
     picture = models.ImageField(blank=True)
     title = models.CharField(max_length=100, blank=True)
@@ -17,7 +17,7 @@ class Successor(models.Model):
         return self.name
 
 
-class SuccessViedeo(models.Model):
+class SuccessVideo(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(blank=True)
     youtube_link = models.URLField(blank=True)
