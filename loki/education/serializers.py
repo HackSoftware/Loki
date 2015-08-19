@@ -15,7 +15,7 @@ class SolutionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Solution
-        fields = ('task', 'url')
+        fields = ('id', 'task', 'url')
 
 
 class TaskSerializer(serializers.ModelSerializer):
