@@ -204,7 +204,7 @@ class TasksAPI(generics.ListAPIView):
     filter_fields = ('course__id',)
 
 
-class SolutionsAPI(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class SolutionsAPI(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
     model = Solution
     serializer_class = SolutionSerializer
     permission_classes = (IsStudent,)
@@ -215,6 +215,9 @@ class SolutionsAPI(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Gene
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+
+    def patch(self, request, *args, **kwargs):
+        return self.partial_update(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(student=self.request.user.get_student())

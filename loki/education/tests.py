@@ -723,3 +723,18 @@ class SolutionsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Solution.objects.filter(student=logged_student).count(), 2)
         self.assertEqual(len(response.data), 1)
+
+    def test_patch_solutions(self):
+        logged_student = self.student
+        self.client = APIClient()
+        self.client.force_authenticate(user=logged_student)
+
+        url = reverse('education:solution_edit', kwargs={'pk': self.solution.id})
+
+        data = {
+            'url': 'https://github.com/lolo/new_solution.py'
+        }
+
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Solution.objects.get(pk=self.solution.id).url, data['url'])
