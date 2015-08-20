@@ -43,7 +43,7 @@ namespace :deploy do
 
   task :run_migrations do
     on roles(:all) do |h|
-      execute "/hack/loki/shared/virtualenv/bin/python3 /hack/loki/current/loki/manage.py migrate"
+      execute "/hack/loki/shared/virtualenv/bin/python3 /hack/loki/current/loki/manage.py migrate --noinput"
     end
   end
 
