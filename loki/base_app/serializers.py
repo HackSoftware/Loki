@@ -43,14 +43,15 @@ class EventSerializer(serializers.ModelSerializer):
 
 
 class TicketSerializer(serializers.ModelSerializer):
-    base_user = BaseUserSerializer(many=False, read_only=True)
-    event = EventSerializer(many=False, read_only=True)
+    event = serializers.PrimaryKeyRelatedField(
+        read_only=False,
+        queryset=Event.objects.all()
+    )
 
     class Meta:
         model = Ticket
         fields = (
             'event',
-            'base_user'
         )
 
 
