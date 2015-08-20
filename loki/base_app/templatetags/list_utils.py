@@ -12,7 +12,6 @@ def split_in_groups(items, n):
     groups = []
     
     while len(items) != 0:
-        print(items)
         next_group = items[:n]
         groups.append(next_group)
 
