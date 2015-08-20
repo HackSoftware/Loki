@@ -200,39 +200,39 @@
         </section>
 
         <!-- Speakers Section -->
-        <section id="speakers" class="section light">
+    <section id="speakers" class="section light">
     <div class="overlay"></div>
     <div class="container">
       <div class="icon-wrap"><span class="icon icon-active icon-multimedia-12"></span></div>
       <h3>Лекторите на HackConf 2015</h3>
       <!-- <div class="sub-title">Това са всички лектори, които ще вземат участие в HackConf 2015:</div> -->
       {% for speaker in speakers %}
-      <section class="row">
-        <div class="col-md-3 col-sm-3 col-xs-6">
-          <div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="0">
-            <div class="img-wrapper">
-              <img src="{{MEDIA_URL}}/{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
-            </div>
-            <div class="name">{{ speaker.name }}</div>
-            <div class="sub">{{ speaker.title }}</div>
-            <p class="small">{{ speaker.description }}</p>
-            <div class="social-link">
-              {% if speaker.facebook %}
-              <a href="{{ speaker.facebook }}"><span class="fa fa-facebook"></span></a>
-              {% endif %}
+        <section class="row">
+          <div class="col-md-3 col-sm-3 col-xs-6">
+            <div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="0">
+              <div class="img-wrapper">
+                <img src="{{MEDIA_URL}}/{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
+              </div>
+              <div class="name">{{ speaker.name }}</div>
+              <div class="sub">{{ speaker.title }}</div>
+              <p class="small">{{ speaker.description }}</p>
+              <div class="social-link">
+                {% if speaker.facebook %}
+                <a href="{{ speaker.facebook }}"><span class="fa fa-facebook"></span></a>
+                {% endif %}
 
-              {% if speaker.twitter %}
-              <a href="{{ speaker.twitter }}"><span class="fa fa-twitter"></span></a>
-              {% endif %}
+                {% if speaker.twitter %}
+                <a href="{{ speaker.twitter }}"><span class="fa fa-twitter"></span></a>
+                {% endif %}
 
-              {% if speaker.github %}
-              <a href="{{ speaker.github }}"><span class="fa fa-github"></span></a>
-              {% endif %}
+                {% if speaker.github %}
+                <a href="{{ speaker.github }}"><span class="fa fa-github"></span></a>
+                {% endif %}
+              </div>
             </div>
           </div>
-        </div>
-        {% endfor %}
-      </section>
+        </section>
+      {% endfor %}
     </section>
 
     <!-- Sponsors Section -->
