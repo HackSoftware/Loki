@@ -1,5 +1,6 @@
 import json
 from django.shortcuts import get_object_or_404
+from django.db.utils import IntegrityError
 from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.exceptions import ValidationError
@@ -66,8 +67,7 @@ class TicketAPI(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
-        try:
-            serializer.save(base_user=self.request.user)
+        serializer.save(base_user=self.request.user)
 
 
 @api_view(['GET'])
