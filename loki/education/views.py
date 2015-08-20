@@ -14,10 +14,12 @@ from rest_framework import status, generics, mixins
 from base_app.models import City, Company
 
 from education.helper import check_macs_for_student, mac_is_used_by_another_student
-from .models import CheckIn, Student, Lecture, Course, CourseAssignment, StudentNote, WorkingAt, Task, Solution
+from .models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
+                     Task, Solution)
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
-                          LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer, SolutionSerializer,
-                          CourseAssignmentSerializer, WorkingAtSerializer, CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer)
+                          LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
+                          SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
+                          CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer)
 from .premissions import IsStudent, IsTeacher, IsTeacherForCA
 
 
@@ -88,6 +90,7 @@ class OnBoardStudent(APIView):
         if not request.user.get_student():
             self.make_student(request.user)
             return Response(status=status.HTTP_200_OK)
+
 
 # TODO: Refactor mac checks
 @api_view(['PATCH'])
@@ -195,7 +198,11 @@ class TasksAPI(generics.ListAPIView):
     filter_fields = ('course__id',)
 
 
-class SolutionsAPI(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin, generics.GenericAPIView):
+class SolutionsAPI(
+        mixins.ListModelMixin,
+        mixins.CreateModelMixin,
+        mixins.UpdateModelMixin,
+        generics.GenericAPIView):
     model = Solution
     serializer_class = SolutionSerializer
     permission_classes = (IsStudent,)
