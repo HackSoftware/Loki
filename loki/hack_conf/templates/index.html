@@ -207,7 +207,7 @@
       <div class="icon-wrap"><span class="icon icon-active icon-multimedia-12"></span></div>
       <h3 id="speakers-header">Лекторите на HackConf 2015</h3>
       <!-- <div class="sub-title">Това са всички лектори, които ще вземат участие в HackConf 2015:</div> -->
-      {% for speaker_row in speakers|split_in_groups:"4" %}
+      {% for speaker_row in speakers|split_in_groups:'4' %}
           <section class="row">
            {% for speaker in speaker_row %}
           <div class="col-md-3 col-sm-3 col-xs-6">
