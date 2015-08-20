@@ -869,3 +869,7 @@ label.error { display: block; }
 #video-row {
   margin-bottom: 2em;
 }
+
+#speakers-header {
+  margin-bottom: 2em;
+}
