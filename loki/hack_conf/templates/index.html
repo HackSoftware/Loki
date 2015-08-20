@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8">
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
@@ -23,339 +23,304 @@
     <link rel="stylesheet" href="/static/assets/css/jquery.fancybox.css" type="text/css" media="all" />
     <link rel="stylesheet" href="/static/assets/css/style.css" id="mainstyle" type="text/css" media="all" />
     <!--[if lt IE 9]>
-        <script src="/static/assets/js/html5.js"></script>
-        <script src="/static/assets/js/respond.min.js"></script>
-        <![endif]-->
-</head>
+            <script src="/static/assets/js/html5.js"></script>
+            <script src="/static/assets/js/respond.min.js"></script>
+            <![endif]-->
+  </head>
 
-<body id="index">
+  <body id="index">
 
     <!-- Preloader -->
     <div id="mask">
-        <div id="loader"><img src="/static/assets/img/preloader.gif" alt="preloader" /></div>
+      <div id="loader"><img src="/static/assets/img/preloader.gif" alt="preloader" /></div>
     </div>
     <header id="mobileheader" class="navigation-bar-header light visible-xs"></header>
     <!-- Hero Section -->
     <section id="hero" class="light color">
-        <div class="overlay color"></div>
-        <div class="container">
-            <div class="home-bg">
-                <nav class="navigation navigation-social">
-                    <ul class="navigation-bar">
-                        <li><a href="https://twitter.com/HackBulgaria" target="_blank"><span class="fa fa-twitter"></span></a>
-                        <li><a href="https://www.facebook.com/HackBulgaria" target="_blank"><span class="fa fa-facebook"></span></a>
-                        <li><a href="https://github.com/hackbulgaria/" target="_blank"><span class="fa fa-github"></span></a>
-                        <li><a href="https://www.youtube.com/user/HackBulgaria" target="_blank"><span class="fa fa-youtube-play"></span></a>
-                    </ul>
-                </nav>
-                <div class="hero-content text-center ">
-                    <div class="hero-small">
-                        <hr /><span>19 - 20 Септември, НДК София </span><hr />
-                    </div>
-                    <div class="hero-big">
-                        <img src="{{ STATIC_URL }}/assets/img/conf_logo_1.png" id="hackconf-logo" alt="HackConf Logo">
-                    </div>
-                   <iframe class="video" width="516" height="290" src="https://www.youtube.com/embed/3PmqawSIFpA" frameborder="0" allowfullscreen></iframe>
-                    <div class="player-button">
-                        <a href="https://www.youtube.com/watch?v=3PmqawSIFpA"><span class="fa fa-youtube-play fa-5x"></span></a>
-                        <p>
-                            Гледайте видеото в Youtube!
-                        </p>
-                    </div>
-                </div>
+      <div class="overlay color"></div>
+      <div class="container">
+        <div class="home-bg">
+          <nav class="navigation navigation-social">
+            <ul class="navigation-bar">
+              <li><a href="https://twitter.com/HackBulgaria" target="_blank"><span class="fa fa-twitter"></span></a>
+              <li><a href="https://www.facebook.com/HackBulgaria" target="_blank"><span class="fa fa-facebook"></span></a>
+              <li><a href="https://github.com/hackbulgaria/" target="_blank"><span class="fa fa-github"></span></a>
+              <li><a href="https://www.youtube.com/user/HackBulgaria" target="_blank"><span class="fa fa-youtube-play"></span></a>
+            </ul>
+          </nav>
+          <div class="hero-content text-center ">
+            <div class="hero-small">
+              <hr /><span>19 - 20 Септември, НДК София </span><hr />
             </div>
+            <div class="hero-big">
+              <img src="{{ STATIC_URL }}/assets/img/conf_logo_1.png" id="hackconf-logo" alt="HackConf Logo">
+            </div>
+            <iframe class="video" width="516" height="290" src="https://www.youtube.com/embed/3PmqawSIFpA" frameborder="0" allowfullscreen></iframe>
+            <div class="player-button">
+              <a href="https://www.youtube.com/watch?v=3PmqawSIFpA"><span class="fa fa-youtube-play fa-5x"></span></a>
+              <p>
+              Гледайте видеото в Youtube!
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
     </section>
     <!-- End Hero Section -->
     <!-- Header -->
     <header id="header" class="navigation-bar-header light hidden-xs">
-        <div class="container">
-            <nav class="navigation">
-                <div class="navigation-txt visible-xs" data-toggle="dropdown">Home</div>
-                <button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <ul class="navigation-bar navigation-bar-left">
-                  <!--
-                  <li><a href="#call-for-speakers"><strong><i class="fa fa-microphone"></i> Call For Speakers</strong></a></li>
-                    -->
-                    <li><a href="#about">За конференцията</a></li>
-                    <!--<li><a href="#stat">Number Facts</a></li>-->
-                    <!-- <li><a href="#schedule">Schedule</a></li> -->
-                    <li><a href="#speakers"><i class="fa fa-microphone"></i> Лектори</a></li>
-                    <!-- <li><a href="#elements">Shortcodes</a></li> -->
-                    <li><a href="#sponsors">Спонсори и партньори</a></li>
-                    <li><a href="#map">Контакти</a></li>
-                    <li class="featured"><a href="" data-toggle="modal" data-target="#myModal"><i class="fa fa-ticket fa-1x"></i>Регистрация</a></li>
-                </ul>
-            </nav>
-        </div>
+      <div class="container">
+        <nav class="navigation">
+          <div class="navigation-txt visible-xs" data-toggle="dropdown">Home</div>
+          <button class="navigation-toggle visible-xs" type="button" data-toggle="dropdown">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <ul class="navigation-bar navigation-bar-left">
+            <!--
+                      <li><a href="#call-for-speakers"><strong><i class="fa fa-microphone"></i> Call For Speakers</strong></a></li>
+                        -->
+            <li><a href="#about">За конференцията</a></li>
+            <!--<li><a href="#stat">Number Facts</a></li>-->
+            <!-- <li><a href="#schedule">Schedule</a></li> -->
+            <li><a href="#speakers"><i class="fa fa-microphone"></i> Лектори</a></li>
+            <!-- <li><a href="#elements">Shortcodes</a></li> -->
+            <li><a href="#sponsors">Спонсори и партньори</a></li>
+            <li><a href="#map">Контакти</a></li>
+            <li class="featured"><a href="" data-toggle="modal" data-target="#myModal"><i class="fa fa-ticket fa-1x"></i>Регистрация</a></li>
+          </ul>
+        </nav>
+      </div>
     </header>
     <!-- End Header -->
     <!-- About Section -->
     <section id="about" class="section dark">
-        <div class="container">
+      <div class="container">
         <h1>Imagine. Learn. Hack. Explore</h1>
         <div class="sub-title">Безплатна, двудневна конференция за IT образование в НДК.</span></div>
-        <br />
-        <br />
-        <section class="nav-tabs-simple">
-          <!-- Nav tabs -->
+      <br />
+      <br />
+      <section class="nav-tabs-simple">
+        <!-- Nav tabs -->
         <ul class="nav nav-tabs nav-justified">
-            <li class="active">
-                <a href="#about-hackconf2015" data-toggle="tab">
-                    <i class="icon icon-chat-messages-01"></i>
-                    За конференцията
-                </a>
-            </li>
-            <li>
-                <a href="#topics" data-toggle="tab">
-                    <i class="icon icon-education-science-02"></i>
-                    Теми
-                </a>
-            </li>
-            <li>
-                <a href="#about-hackbulgaria" data-toggle="tab">
-                    <i class="icon icon-documents-bookmarks-12"></i>
-                    За нас
-                </a>
-            </li>
+          <li class="active">
+          <a href="#about-hackconf2015" data-toggle="tab">
+            <i class="icon icon-chat-messages-01"></i>
+            За конференцията
+          </a>
+          </li>
+          <li>
+          <a href="#topics" data-toggle="tab">
+            <i class="icon icon-education-science-02"></i>
+            Теми
+          </a>
+          </li>
+          <li>
+          <a href="#about-hackbulgaria" data-toggle="tab">
+            <i class="icon icon-documents-bookmarks-12"></i>
+            За нас
+          </a>
+          </li>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div class="tab-pane fade in active" id="about-hackconf2015">
-                <article class="row">
-                    <div class="col-md-4 col-sm-4 animated hiding" data-animation="fadeInLeft" data-delay="500">
-                        <img class="img-responsive" src="/static/assets/img/hackman_stroke.png" alt="hackman"/>
-                    </div>
-                    <div class="col-md-8 col-sm-8 text-left animated hiding" data-animation="fadeInRight" data-delay="500">
-                        <p>
-                            <strong>Hack Conf</strong> е първата двудневна конференция, организирана от <strong>Хак България</strong>, с една много ясна цел - да мотивира всички хора, които са започнали или пък сега искат да започнат своето развитие в ИТ сектора.
-                        </p>
-                        <p>
-                            Конференцията е <strong>безплатна и отворена за хора от цялата страна!</strong>
-                        </p>
-                        <p>
-                            Подходяща е за начинаещи програмисти и ИТ специалисти, студенти и ученици, любители и ентусиасти.
-                        </p>
-                    </div>
-                </article>
-            </div>
-            <div class="tab-pane fade" id="topics">
-                <article class="row">
-                    <div class="col-md-12 col-sm-12 text-left animated hiding" data-animation="fadeInLeft" data-delay="500">
-                        <h6>В рамките на 2 дни ще присъствате на презентации включващи теми за:</h6>
-                        <ul class="sub-list">
-                            <li><i class="icon icon-documents-bookmarks-16"></i>Програмиране</li>
-                            <li><i class="icon icon-documents-bookmarks-16"></i>Research &amp; Development</li>
-                            <li><i class="icon icon-documents-bookmarks-16"></i>Quality Assurance и тестване</li>
-                            <li><i class="icon icon-documents-bookmarks-16"></i>Game Development</li>
-                            <li><i class="icon icon-documents-bookmarks-16"></i>Учене за ученето</li>
-                            <li><i class="icon icon-documents-bookmarks-11"></i>Математика и Алгоритми</li>
-                            <li><i class="icon icon-documents-bookmarks-10"></i>Hardware и IoT</li>
-                            <li><i class="icon icon-documents-bookmarks-16"></i>Системна администрация</li>
-                            <li><i class="icon icon-documents-bookmarks-10"></i>Кариерно развитие</li>
-                            <li><i class="icon icon-documents-bookmarks-10"></i>Маркетинг</li>
-                            <li><i class="icon icon-documents-bookmarks-10"></i>Предприемачество</li>
-                            <li><i class="icon icon-documents-bookmarks-10"></i>Soft Skills и комуникация с други човешки същества</li>
-                        </ul>
-                    </div>
-                </article>
-            </div>
-            <div class="tab-pane fade" id="about-hackbulgaria">
-
-                <article class="row">
-                    <div class="col-md-4 col-sm-4 animated hiding" data-animation="fadeInLeft" data-delay="500">
-                        <img class="img-responsive" src="/static/assets/img/hackman.png" alt="hackman" />
-                    </div>
-                    <div class="col-md-8 col-sm-8 text-left animated hiding" data-animation="fadeInRight" data-delay="500">
-                        <h6>Хак България е главен организатор на тази конференция!</h6>
-                        <p>
-                            Хак България е школа по програмиране, чиято главна цел е да учи хората да мислят, да програмират и да се справят с различни проблеми, които ще им поднесе светът на софтуера.
-                            <br>
-                            Повече вижте тук: <a href="https://hackbulgaria.com/about-us/">https://hackbulgaria.com/about-us/</a>
-                        </p>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
-</div>
-  
-
-    <section id="register" class="section light">
-        <div class="overlay"></div>
-        <div class="container">
-            <article class="article-big animated hiding" data-animation="fadeInUp" data-delay="0">
-                <h2 id="register-title">Запази своето място за HackConf 2015</h2>
-                <p id="register-text">Конференцията е безплатна, но изисква регистрация. Запази своето място, а пък ние обещаваме да ти напомним, когато наближи.
+          <div class="tab-pane fade in active" id="about-hackconf2015">
+            <article class="row">
+              <div class="col-md-4 col-sm-4 animated hiding" data-animation="fadeInLeft" data-delay="500">
+                <img class="img-responsive" src="/static/assets/img/hackman_stroke.png" alt="hackman"/>
+              </div>
+              <div class="col-md-8 col-sm-8 text-left animated hiding" data-animation="fadeInRight" data-delay="500">
+                <p>
+                <strong>Hack Conf</strong> е първата двудневна конференция, организирана от <strong>Хак България</strong>, с една много ясна цел - да мотивира всички хора, които са започнали или пък сега искат да започнат своето развитие в ИТ сектора.
                 </p>
-
-                <a data-toggle="modal" data-target="#myModal" class="btn btn-sm btn-tertiary">Регистрация</a>
+                <p>
+                Конференцията е <strong>безплатна и отворена за хора от цялата страна!</strong>
+                </p>
+                <p>
+                Подходяща е за начинаещи програмисти и ИТ специалисти, студенти и ученици, любители и ентусиасти.
+                </p>
+              </div>
             </article>
-        </div>
-    </section>
-    
-    <!-- Speakers Section -->
-    <section id="speakers" class="section light">
-      <div class="overlay"></div>
-      <div class="container">
-        <div class="icon-wrap"><span class="icon icon-active icon-multimedia-12"></span></div>
-        <h3>Лекторите на HackConf 2015</h3>
-        <!-- <div class="sub-title">Това са всички лектори, които ще вземат участие в HackConf 2015:</div> -->
-        {% for speaker in speakers %}
-        <section class="row">
-          <div class="col-md-3 col-sm-3 col-xs-6">
-            <div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="0">
-              <div class="img-wrapper">
-                <img src="{{MEDIA_URL}}/{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
-              </div>
-              <div class="name">{{ speaker.name }}</div>
-              <div class="sub">{{ speaker.title }}</div>
-              <p class="small">{{ speaker.description }}</p>
-              <div class="social-link">
-                {% if speaker.facebook %}
-                  <a href="{{ speaker.facebook }}"><span class="fa fa-facebook"></span></a>
-                {% endif %}
-
-                {% if speaker.twitter %}
-                  <a href="{{ speaker.twitter }}"><span class="fa fa-twitter"></span></a>
-                {% endif %}
-                
-                {% if speaker.github %}
-                  <a href="{{ speaker.github }}"><span class="fa fa-github"></span></a>
-                {% endif %}
-              </div>
-            </div>
           </div>
-          {% endfor %}
-      </section>
-<!-- CFS did the job right.
-    <section id="call-for-speakers" class="section light">
-      <div class="overlay">
-      </div>
-      <div class="container">
-        <h2 id="register-title"><i class="fa fa-microphone"></i> Call For Speakers за HackConf 2015</h2>
-
-        <h3 id="cfs-secondary-title">Търсим надъхващи и мотивиращи лектори.</h3>
-        
-        <div class="row" id="video-row">
-          <div class="col-lg-12">
-            <iframe class="video" width="516" height="290" src="https://www.youtube.com/embed/aOU6W4ZtsNQ" frameborder="0" allowfullscreen></iframe>
-              <div class="player-button">
-                  <a href="https://www.youtube.com/watch?v=aOU6W4ZtsNQ"><span class="fa fa-youtube-play fa-5x"></span></a>
-                  <p>
-                      Гледайте видеото в Youtube!
-                  </p>
-              </div>
-          </div>
-        </div>
-
-        <div class="row"> 
-          <div class="col-lg-2"></div>
-          <div class="col-lg-8">
-            <ol>
-              <li><a href="http://blog.hackbulgaria.com/call-for-speakers-hackconf2015/">Прочети повече за темите, по които търсим лектори и насоки за презентациите.</a></li>
-              <li><a href="http://weareallaweso.me/">Вдъхнови се - вярваме, че си страхотен презентатор!</a></li>
-            </ol>
-        </div>
-        <div class="col-lg-2"></div>
-      </div>
-      <div id="submit-for-speaker" class="row">
-        <a href="https://docs.google.com/forms/d/1Q5g6LKSZiynwQxXYNpQVJ7-5pg83rRRihYW6XUUKRvA/viewform?c=0&w=1" class="btn btn-sm btn-primary">3. Пусни своето предложение за лекция!</a>
-      </div>
-      </div>
-    </section>
-
--->
-    <section id="sponsors" class="section dark">
-        <div class="container">
-            <div class="icon-wrap"><span class="icon icon-active icon-documents-bookmarks-12"></span></div>
-            <h3>Спонсори</h3>
-            {% if not sponsors %}
-              <div class="sub-title">Скоро очаквайте и тях.</div>
-            {% endif %}
-            <br/>
-            <div class="row">
-                <ul class="list-inline">
-                    {% for sponsor in sponsors %}
-                        <li><a href="{{ sponsor.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ sponsor.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
-                    {% endfor %}
+          <div class="tab-pane fade" id="topics">
+            <article class="row">
+              <div class="col-md-12 col-sm-12 text-left animated hiding" data-animation="fadeInLeft" data-delay="500">
+                <h6>В рамките на 2 дни ще присъствате на презентации включващи теми за:</h6>
+                <ul class="sub-list">
+                  <li><i class="icon icon-documents-bookmarks-16"></i>Програмиране</li>
+                  <li><i class="icon icon-documents-bookmarks-16"></i>Research &amp; Development</li>
+                  <li><i class="icon icon-documents-bookmarks-16"></i>Quality Assurance и тестване</li>
+                  <li><i class="icon icon-documents-bookmarks-16"></i>Game Development</li>
+                  <li><i class="icon icon-documents-bookmarks-16"></i>Учене за ученето</li>
+                  <li><i class="icon icon-documents-bookmarks-11"></i>Математика и Алгоритми</li>
+                  <li><i class="icon icon-documents-bookmarks-10"></i>Hardware и IoT</li>
+                  <li><i class="icon icon-documents-bookmarks-16"></i>Системна администрация</li>
+                  <li><i class="icon icon-documents-bookmarks-10"></i>Кариерно развитие</li>
+                  <li><i class="icon icon-documents-bookmarks-10"></i>Маркетинг</li>
+                  <li><i class="icon icon-documents-bookmarks-10"></i>Предприемачество</li>
+                  <li><i class="icon icon-documents-bookmarks-10"></i>Soft Skills и комуникация с други човешки същества</li>
                 </ul>
-            </div>
-            <h3>Генерални медийни партньори</h3>
-            {% if not general_media_partners %}
-              <div class="sub-title">Скоро очаквайте и тях.</div>
-            {% endif %}
-            <br/>
-            <div class="row">
-              <ul class="list-inline">
-                {% for gmp in general_media_partners %}
-                  <li><a href="{{ gmp.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ gmp.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
-                {% endfor %}
-              </ul>
-            </div>
-            <h3>Браншови партньори</h3>
-            {% if not branch_partners %}
-              <div class="sub-title">Скоро очаквайте и тях.</div>
-            {% endif %}
-            <br/>
-            <div class="row">
-              <ul class="list-inline">
-                {% for bp in branch_partners %}
-                  <li><a href="{{ bp.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ bp.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
-                {% endfor %}
-              </ul>
-            </div>
-            <h3>Медийни партньори</h3>
-            {% if not media_partners %}
-              <div class="sub-title">Скоро очаквайте и тях.</div>
-            {% endif %}
-            <br/>
-            <div class="row">
-              <ul class="list-inline">
-                {% for mp in media_partners %}
-                  <li><a href="{{ mp.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ mp.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
-                {% endfor %}
-              </ul>
+              </div>
+            </article>
+          </div>
+          <div class="tab-pane fade" id="about-hackbulgaria">
 
-              <div class="btn-wrapper">
-                <a class="btn btn-sm btn-primary" id="become-partner">Стани спонсор</a>
-
-                <p id="partner-text">
-                  <br>
-                  Ако проявявате интерес за партниране или спонсорство, моля пишете на: <strong>conf@hackbulgaria.com</strong>
+            <article class="row">
+              <div class="col-md-4 col-sm-4 animated hiding" data-animation="fadeInLeft" data-delay="500">
+                <img class="img-responsive" src="/static/assets/img/hackman.png" alt="hackman" />
+              </div>
+              <div class="col-md-8 col-sm-8 text-left animated hiding" data-animation="fadeInRight" data-delay="500">
+                <h6>Хак България е главен организатор на тази конференция!</h6>
+                <p>
+                Хак България е школа по програмиране, чиято главна цел е да учи хората да мислят, да програмират и да се справят с различни проблеми, които ще им поднесе светът на софтуера.
+                <br>
+                Повече вижте тук: <a href="https://hackbulgaria.com/about-us/">https://hackbulgaria.com/about-us/</a>
                 </p>
               </div>
-            </div>
+            </article>
+          </div>
         </div>
+      </section>
+    </div>
+     </section> 
+
+        <section id="register" class="section light">
+    <div class="overlay"></div>
+    <div class="container">
+      <article class="article-big animated hiding" data-animation="fadeInUp" data-delay="0">
+        <h2 id="register-title">Запази своето място за HackConf 2015</h2>
+        <p id="register-text">Конференцията е безплатна, но изисква регистрация. Запази своето място, а пък ние обещаваме да ти напомним, когато наближи.
+        </p>
+
+        <a data-toggle="modal" data-target="#myModal" class="btn btn-sm btn-tertiary">Регистрация</a>
+      </article>
+    </div>
+        </section>
+
+        <!-- Speakers Section -->
+        <section id="speakers" class="section light">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="icon-wrap"><span class="icon icon-active icon-multimedia-12"></span></div>
+      <h3>Лекторите на HackConf 2015</h3>
+      <!-- <div class="sub-title">Това са всички лектори, които ще вземат участие в HackConf 2015:</div> -->
+      {% for speaker in speakers %}
+      <section class="row">
+        <div class="col-md-3 col-sm-3 col-xs-6">
+          <div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="0">
+            <div class="img-wrapper">
+              <img src="{{MEDIA_URL}}/{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
+            </div>
+            <div class="name">{{ speaker.name }}</div>
+            <div class="sub">{{ speaker.title }}</div>
+            <p class="small">{{ speaker.description }}</p>
+            <div class="social-link">
+              {% if speaker.facebook %}
+              <a href="{{ speaker.facebook }}"><span class="fa fa-facebook"></span></a>
+              {% endif %}
+
+              {% if speaker.twitter %}
+              <a href="{{ speaker.twitter }}"><span class="fa fa-twitter"></span></a>
+              {% endif %}
+
+              {% if speaker.github %}
+              <a href="{{ speaker.github }}"><span class="fa fa-github"></span></a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </section>
+    </section>
+
+    <!-- Sponsors Section -->
+    <section id="sponsors" class="section dark">
+      <div class="container">
+        <div class="icon-wrap"><span class="icon icon-active icon-documents-bookmarks-12"></span></div>
+        <h3>Спонсори</h3>
+        {% if not sponsors %}
+        <div class="sub-title">Скоро очаквайте и тях.</div>
+        {% endif %}
+        <br/>
+        <div class="row">
+          <ul class="list-inline">
+            {% for sponsor in sponsors %}
+            <li><a href="{{ sponsor.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ sponsor.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <h3>Генерални медийни партньори</h3>
+        {% if not general_media_partners %}
+        <div class="sub-title">Скоро очаквайте и тях.</div>
+        {% endif %}
+        <br/>
+        <div class="row">
+          <ul class="list-inline">
+            {% for gmp in general_media_partners %}
+            <li><a href="{{ gmp.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ gmp.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <h3>Браншови партньори</h3>
+        {% if not branch_partners %}
+        <div class="sub-title">Скоро очаквайте и тях.</div>
+        {% endif %}
+        <br/>
+        <div class="row">
+          <ul class="list-inline">
+            {% for bp in branch_partners %}
+            <li><a href="{{ bp.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ bp.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <h3>Медийни партньори</h3>
+        {% if not media_partners %}
+        <div class="sub-title">Скоро очаквайте и тях.</div>
+        {% endif %}
+        <br/>
+        <div class="row">
+          <ul class="list-inline">
+            {% for mp in media_partners %}
+            <li><a href="{{ mp.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ mp.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
+            {% endfor %}
+          </ul>
+
+          <div class="btn-wrapper">
+            <a class="btn btn-sm btn-primary" id="become-partner">Стани спонсор</a>
+
+            <p id="partner-text">
+            <br>
+            Ако проявявате интерес за партниране или спонсорство, моля пишете на: <strong>conf@hackbulgaria.com</strong>
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="map" class="dark">
-        <div id="canvas-map"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-5 col-sm-7 animated hiding location" data-animation="fadeInLeft" data-delay="0">
-                    <h4>Локация</h4>
-                    <ul itemscope="" itemtype="http://schema.org/PostalAddress">
-                        <li itemprop="address"><i class="fa fa-map-marker highlight"></i>
-                            <span property="streetAddress">
-                              Зала 3 на НДК - бул. "България" 1
-                          </span>
-                        </li>
-                        <li itemprop="email"><i class="fa fa-envelope highlight"></i>conf@hackbulgaria.com</li>
-                        <!-- <li itemprop="telephone"><i class="fa fa-phone highlight"></i>(518) 457-5181</li> -->
-                        <li itemscope="" itemtype="http://schema.org/Event"><i class="fa fa-clock-o highlight"></i>
-                            <time itemprop="startDate" datetime="2015-05-25T07:30">9:30</time> -
-                            <time itemprop="endDate" datetime="2015-05-28T22:00">18:30</time>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+      <div id="canvas-map"></div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-5 col-sm-7 animated hiding location" data-animation="fadeInLeft" data-delay="0">
+            <h4>Локация</h4>
+            <ul itemscope="" itemtype="http://schema.org/PostalAddress">
+              <li itemprop="address"><i class="fa fa-map-marker highlight"></i>
+              <span property="streetAddress">
+                Зала 3 на НДК - бул. "България" 1
+              </span>
+              </li>
+              <li itemprop="email"><i class="fa fa-envelope highlight"></i>conf@hackbulgaria.com</li>
+              <!-- <li itemprop="telephone"><i class="fa fa-phone highlight"></i>(518) 457-5181</li> -->
+              <li itemscope="" itemtype="http://schema.org/Event"><i class="fa fa-clock-o highlight"></i>
+              <time itemprop="startDate" datetime="2015-05-25T07:30">9:30</time> -
+              <time itemprop="endDate" datetime="2015-05-28T22:00">18:30</time>
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
     </section>
 
     <footer id="footer">
@@ -374,23 +339,23 @@
           </div>
           <div class="modal-body">
             <p>
-                За да се запишеш за участие за Hackconf трябва да имаш HackBulgaria регистрация.
+            За да се запишеш за участие за Hackconf трябва да имаш HackBulgaria регистрация.
             </p>
             <div class="row">
-            <br>
-                <div class="col-md-3"></div>
-                <a href="https://education.hackbulgaria.com/#/login" target="_blank">
-                    <button class="modal-buttons btn btn-primary btn-xs col-md-6">
-                        Вече имам регистрация
-                    </button>
-                </a>
+              <br>
+              <div class="col-md-3"></div>
+              <a href="https://education.hackbulgaria.com/#/login" target="_blank">
+                <button class="modal-buttons btn btn-primary btn-xs col-md-6">
+                  Вече имам регистрация
+                </button>
+              </a>
 
-                <div class="col-md-3"></div>
-                <a href="https://education.hackbulgaria.com/#/register" target="_blank">
-                    <button class="modal-buttons btn btn-primary btn-xs col-md-6">
-                        Искам да се регистрирам
-                    </button>
-                </a>
+              <div class="col-md-3"></div>
+              <a href="https://education.hackbulgaria.com/#/register" target="_blank">
+                <button class="modal-buttons btn btn-primary btn-xs col-md-6">
+                  Искам да се регистрирам
+                </button>
+              </a>
             </div>
           </div>
           <div class="modal-footer">
@@ -401,20 +366,20 @@
     </div>
 
     <!--[if lt IE 9]>
-    <script type="text/javascript" src="/static/assets/js/jquery-1.11.0.min.js?ver=1"></script>
-    <![endif]-->
+        <script type="text/javascript" src="/static/assets/js/jquery-1.11.0.min.js?ver=1"></script>
+        <![endif]-->
     <!--[if (gte IE 9) | (!IE)]><!-->
-    <script type="text/javascript" src="/static/assets/js/jquery-2.1.0.min.js?ver=1"></script>
-    <!--<![endif]-->
+        <script type="text/javascript" src="/static/assets/js/jquery-2.1.0.min.js?ver=1"></script>
+        <!--<![endif]-->
 
     <script>
-     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-     ga('create', 'UA-64197920-1', 'auto');
-     ga('send', 'pageview');
+    ga('create', 'UA-64197920-1', 'auto');
+    ga('send', 'pageview');
 
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
@@ -426,5 +391,5 @@
     <script type="text/javascript" src="/static/assets/js/waypoints-sticky.min.js"></script>
     <script type="text/javascript" src="/static/assets/js/jquery.fancybox.js"></script>
     <script type="text/javascript" src="/static/assets/js/scripts.js"></script>
-    </body>
-    </html>
+  </body>
+  </html>
