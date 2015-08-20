@@ -20,7 +20,7 @@ from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
                           SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
                           CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer)
-from .premissions import IsStudent, IsTeacher, IsTeacherForCA
+from .premissions import IsStudent, IsTeacher, IsTeacherForCA, IsTeacherForThisCourse
 
 
 @csrf_exempt
@@ -118,15 +118,23 @@ def get_students_for_course(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
-@permission_classes((IsTeacher,))
-# TODO: Add IsTeacherForThatCourse
-def get_cas_for_course(request):
-    course_id = request.GET.get('course_id')
-    course = get_object_or_404(Course, id=course_id)
-    cas = CourseAssignment.objects.filter(course=course)
-    serializer = FullCASerializer(cas, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+# @api_view(['GET'])
+# @permission_classes((IsTeacher,))
+# # TODO: Add IsTeacherForThisCourse
+# def get_cas_for_course(request):
+#     course_id = request.GET.get('course_id')
+#     course = get_object_or_404(Course, id=course_id)
+#     cas = CourseAssignment.objects.filter(course=course)
+#     serializer = FullCASerializer(cas, many=True)
+#     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CourseAssignmentAPI(generics.ListAPIView):
+    model = CourseAssignment
+    queryset = CourseAssignment.objects.all()
+    serializer_class = FullCASerializer
+    permission_classes = (IsTeacher, IsTeacherForThisCourse)
+    filter_fields = ('course__id',)
 
 
 class StudentNoteAPI(generics.CreateAPIView):
