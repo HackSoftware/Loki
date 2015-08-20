@@ -63,9 +63,11 @@ class TicketAPI(generics.CreateAPIView):
     model = Ticket
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
+    permission_classes = (IsAuthenticated,)
 
     def perform_create(self, serializer):
-        serializer.save(base_user=self.request.user)
+        try:
+            serializer.save(base_user=self.request.user)
 
 
 @api_view(['GET'])

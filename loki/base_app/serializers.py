@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from base_app.models import Event, Ticket
 from education.serializers import StudentSerializer, TeacherSerializer
 
