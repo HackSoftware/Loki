@@ -5,6 +5,7 @@ from rest_framework.decorators import permission_classes, api_view
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import status, generics
 from base_app.models import Event, Ticket
 
 from base_app.serializers import BaseUserMeSerializer, UpdateBaseUserSerializer, EventSerializer
@@ -36,11 +37,10 @@ def baseuser_update(request):
     return Response(serializer.errors, status=400)
 
 
-@api_view(['GET'])
-def get_events(request):
-    events = Event.objects.all()
-    serializer = EventSerializer(events, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+class EventAPI(generics.ListAPIView):
+    model = Event
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
 
 
 @api_view(['POST'])

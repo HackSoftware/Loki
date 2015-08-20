@@ -35,7 +35,10 @@ class EventSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'start_date',
-            'url'
+            'end_date',
+            'location',
+            'description',
+            'url',
         )
 
 

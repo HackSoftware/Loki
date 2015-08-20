@@ -162,15 +162,23 @@ class EventTests(TestCase):
             full_name='Comp compov'
         )
         self.event_conf = Event.objects.create(
+            start_date="2012-01-01",
+            end_date="2012-01-01",
+            location="location text",
+            description="Desc!",
             name='HackConf'
         )
         self.event_theater = Event.objects.create(
-            name='Skakalci'
+            start_date="2012-01-01",
+            end_date="2012-01-01",
+            location="location theater text",
+            description="theater desc!",
+            name='Theater!'
         )
 
     def test_get_all_events(self):
         count = Event.objects.count()
-        url = reverse('base_app:get_events')
+        url = reverse('base_app:events')
         response = self.client.get(url, format='json')
         self.assertEqual(count, len(response.data))
 
