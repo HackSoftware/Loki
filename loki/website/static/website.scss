@@ -49,6 +49,7 @@ body {
 			background: white;
 			padding: 0;
 			box-shadow: 0px 10px 20px #888888;
+			float: left;
 			&:hover {
 				box-shadow: 0px 10px 20px #666666;
 			}
@@ -64,6 +65,10 @@ body {
 			.position {
 				padding: 10px;
 				font-size: 90%;
+			}
+			.person-description {
+				height: 3vw;
+				font-size: 1vw; 
 			}
 		}
 	}
@@ -93,15 +98,20 @@ body {
 		.partner {
 			background: white;
 			padding: 10px;
-			margin: 10px;
-			width: 15vw;
-    		height: 15vw;
+			margin: 4vw;
+			width: 40vw;
+			height: 40vw;
+			@media screen and (min-width: 970px) {
+				width: 14vw;
+    			height: 14vw;
+    			margin: 10px;
+    		}
 			float: left;
 
 			.partner-image {
 				position: relative;
 				top: 50%;
-				transform: translateY(-50%);				
+				transform: translateY(-50%);
 				width: 100%;
 			}
 
@@ -120,17 +130,16 @@ body {
 		
 		.video {
 			padding: 10px;
-			img {
-				box-shadow: 0px 10px 20px #888888;
-					width: 100%;
-			}
-
 			.play_button {
 				position: absolute;
 				top: 50%;
 				left: 50%;
 				width: 84px;
 				margin: -46px;
+			}
+			.video-thumb {
+				box-shadow: 0px 10px 20px #888888;
+				width: 100%;
 			}
 		}
 	}
