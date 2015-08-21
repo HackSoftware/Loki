@@ -96,10 +96,11 @@ body {
     body #partners .partner:hover {
       opacity: 1.0; }
     body #partners .partner .partner-image {
-      position: relative;
+      position: absolute;
       top: 50%;
-      transform: translateY(-50%);
-      width: 100%; }
+      left: 0;
+      width: 100%;
+      transform: translateY(-50%); }
     body #partners .partner .partners_play_button {
       width: 4vmax;
       height: 4vmax;

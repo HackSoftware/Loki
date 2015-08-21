@@ -127,10 +127,11 @@ body {
 				opacity:1.0;
 			}
 		    .partner-image {
-				position: relative;
+				position: absolute;
 				top: 50%;
-				transform: translateY(-50%);
+        left: 0;
 				width: 100%;
+				transform: translateY(-50%);
 			}
 			.partners_play_button {
 			    width: 4vmax;
