@@ -39,13 +39,11 @@
     <div class="row">
       <h2 class="container">{{ snippets.index_partners_description.text }}</h2>
 
-      {% for i in "12345"|make_list %}
         {% for partner in partners %}
           <div class="partner col-sm-2">
             <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" class="partner-image">
           </div>
         {% endfor %}
-      {% endfor %}
     </div>
   </div>
     
