@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from base_app.models import Event, Ticket
-from education.serializers import StudentSerializer, TeacherSerializer
+from education.serializers import StudentSerializer, TeacherSerializer, CitySerializer
 
 from hack_fmi.models import BaseUser
 from hack_fmi.serializers import CompetitorSerializer
+from base_app.models import City
 
 
 class BaseUserSerializer(serializers.ModelSerializer):
@@ -62,6 +63,7 @@ class BaseUserMeSerializer(serializers.ModelSerializer):
     student = StudentSerializer(many=False, read_only=True)
     teacher = TeacherSerializer(many=False, read_only=True)
     ticket_set = TicketSerializer(many=True, read_only=True)
+    birth_place = CitySerializer(read_only=True)
 
     class Meta:
         model = BaseUser
@@ -79,10 +81,16 @@ class BaseUserMeSerializer(serializers.ModelSerializer):
             'ticket_set',
             'works_at',
             'studies_at',
+            'description',
+            'birth_place',
         )
 
 
 class UpdateBaseUserSerializer(serializers.ModelSerializer):
+    birth_place = serializers.PrimaryKeyRelatedField(
+        read_only=False,
+        queryset=City.objects.all(),
+    )
 
     class Meta:
         model = BaseUser
@@ -96,4 +104,6 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
             'twitter_account',
             'works_at',
             'studies_at',
+            'description',
+            'birth_place',
         )
