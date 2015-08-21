@@ -152,3 +152,54 @@ body {
 	}
 
 }
+
+// about page
+$FutureSeniors: #E22A37;
+$QualityEducation: #FEB300;
+$InformalAndFriendly: #5080AD;
+$EngagingTeachers: #FE8700;
+$Math: #5A4385;
+$MorePractice: #548000;
+$RealWorldPractice: #FE4E00;
+$TeamWork: #B453C8;
+$ModerateCompetition: #56CB00;
+
+.text-card {
+  padding-top: 100px;
+}
+
+#future-seniors-card {
+  background-color: $FutureSeniors;
+}
+
+#quality-education-card {
+  background-color: $QualityEducation;
+}
+
+#informal-and-friendly-card {
+  background-color: $InformalAndFriendly;
+}
+
+#engaging-teachers-card {
+  background-color: $EngagingTeachers;
+}
+
+#math-card {
+  background-color: $Math;
+}
+
+#more-practice-card {
+  background-color: $MorePractice;
+}
+
+#real-world-practice-card {
+  background-color: $RealWorldPractice;
+}
+
+#team-work-card {
+  background-color: $TeamWork;
+}
+
+#moderate-competiton-card {
+  background-color: $ModerateCompetition;
+}

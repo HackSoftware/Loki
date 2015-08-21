@@ -3,7 +3,7 @@ from django.db import models
 
 class Speaker(models.Model):
     name = models.CharField(max_length=100)
-    title = models.CharField(max_length=100, blank=True)
+    title = models.CharField(max_length=140, blank=True)
     description = models.TextField(blank=True)
     picture = models.ImageField(blank=True)
     facebook = models.URLField(blank=True)
