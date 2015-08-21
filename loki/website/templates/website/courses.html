@@ -1,22 +1,23 @@
 {% extends 'website/base.html' %}
 
 {% block 'page-content' %}
+{% autoescape off %}
   <div class="container">
     <section class="row">
       <div class="col-lg-12 col-md-12 col-sm-12">
-        <h1>Курсовете на Хак България</h1>
+        {{ snippets.courses_first_header.text }}
       </div>
     </section>
     
     <section class="row">
       <div class="col-lg-12">
-        <p class="lead">Курсовете от следващия сезон на Хак България ще започнат на <strong>26ти октомври, 2015-та</strong></p>
+        <p class="lead">{{ snippets.courses_first_paragraph.text }}</p>
       </div>
     </section>
     
     <section class="row">
       <div class="col-lg-12">
-        <h2>През октомври, oчаквайте от нас:</h2>
+        {{ snippets.courses_second_header.text }}
       </div>
     </section>
     <hr /> 
@@ -66,4 +67,5 @@
       </div>
     </section>
   </div>
+{% endautoescape %}
 {% endblock %}

@@ -26,12 +26,16 @@
   <div class="container-fluid">
     <div class="row" id="action-buttons">
       <div class="col-md-6">
-        <button id="left-action">{{ snippets.index_left_button.text }}</button>
+        <a href="{% url 'website:courses' %}">
+          <button id="left-action">{{ snippets.index_left_button.text }}</button>
+        </a>
       </div>
 
-      <div class="col-md-6">
-        <button id="right-action">{{ snippets.index_right_button.text }}</button>
-      </div>
+      <a href="{% url 'website:partners' %}">
+        <div class="col-md-6">
+          <button id="right-action">{{ snippets.index_right_button.text }}</button>
+        </div>
+      </a>
     </div>
   </div>
 
