@@ -42,7 +42,7 @@ class EventAPI(generics.ListAPIView):
     serializer_class = EventSerializer
 
 
-class TicketAPI(generics.CreateAPIView):
+class TicketAPI(generics.ListCreateAPIView):
     model = Ticket
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
@@ -50,6 +50,10 @@ class TicketAPI(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(base_user=self.request.user)
+
+    def get_queryset(self):
+        user = self.request.user
+        return Ticket.objects.filter(base_user=user)
 
 
 @api_view(['GET'])
