@@ -19,8 +19,12 @@
 
         {% for partner in partners %}
           <div class="partner col-sm-2">
-            <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" class="partner-image">
-            <img src="{{ STATIC_URL }}/website_images/play_button.png" class="partners_play_button">
+            <a class="swipebox-video" rel="youtube" href="{{ partner.video_presentation }}">
+
+              <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" class="partner-image">
+              <img src="{{ STATIC_URL }}/website_images/play_button.png" class="partners_play_button">
+
+            </a>
           </div>
         {% endfor %}
     </div>
