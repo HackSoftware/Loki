@@ -81,11 +81,7 @@ body {
 				height: 3vw;
 				font-size: 1vw; 
 			}
-			-webkit-transition: all 1s ease;
-			-moz-transition: all 1s ease;
-			-ms-transition: all 1s ease;
-			-o-transition: all 1s ease;
-			transition: all 1s ease;
+			@extend .ease1s;
 		}
 	}
 	
@@ -125,11 +121,7 @@ body {
 			float: none;
 			display:inline-block;
 			opacity: 0.6;
-		   	-webkit-transition: all 1s ease;
-			-moz-transition: all 1s ease;
-			-ms-transition: all 1s ease;
-			-o-transition: all 1s ease;
-			transition: all 1s ease;
+		   	@extend .ease1s;
 			cursor:pointer;
 			&:hover{
 				opacity:1.0;
