@@ -1,0 +1,28 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+
+
+{% autoescape off %}
+  <div class="container" id="partners">
+    <div class"row">
+      <div class="col-lg-12">
+        <h1>
+          Стани наш партньор
+        </h1>
+        <p class="lead">Пиши ни на <strong>partnership@hackbulgaria.com</strong></p>
+      </div>
+    </div>
+    
+    <div class="row">
+      <h2 class="container">{{ snippets.index_partners_description.text }}</h2>
+
+        {% for partner in partners %}
+          <div class="partner col-sm-2">
+            <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" class="partner-image">
+          </div>
+        {% endfor %}
+    </div>
+  </div>
+{% endautoescape %}
+{% endblock %}

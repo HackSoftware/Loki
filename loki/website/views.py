@@ -20,3 +20,10 @@ def about(request):
 
 def courses(request):
     return render(request, "website/courses.html", locals())
+
+
+def partners(request):
+    partners = Partner.objects.all()
+    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
+
+    return render(request, "website/partners.html", locals())
