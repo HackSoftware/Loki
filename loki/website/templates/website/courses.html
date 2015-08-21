@@ -1,0 +1,69 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+  <div class="container">
+    <section class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        <h1>Курсовете на Хак България</h1>
+      </div>
+    </section>
+    
+    <section class="row">
+      <div class="col-lg-12">
+        <p class="lead">Курсовете от следващия сезон на Хак България ще започнат на <strong>26ти октомври, 2015-та</strong></p>
+      </div>
+    </section>
+    
+    <section class="row">
+      <div class="col-lg-12">
+        <h2>През октомври, oчаквайте от нас:</h2>
+      </div>
+    </section>
+    <hr /> 
+    <section class="row">
+      <div class="col-xs-12 col-sm-6 col-lg-3">
+        {% include 'website/ruby_icon.html' %} 
+      </div>
+      <div class="col-xs-12 col-sm-6 col-lg-3">
+        {% include 'website/python_icon.html' %} 
+      </div>
+      <div class="col-xs-12 col-sm-6 col-lg-3">
+        {% include 'website/java_icon.html' %} 
+      </div>
+      <div class="col-xs-12 col-sm-6 col-lg-3">
+        {% include 'website/csharp_icon.html' %} 
+      </div>
+    </section>
+    <section class="row">
+      <div class="col-lg-12">
+        <h2>За повече информация:</h2>
+        </h2>
+      </div>
+    </section>
+
+    <hr />
+
+    <section style="font-size: 3em;" class="row">
+      <div class="col-xs-12 col-sm-6 col-lg-3 text-center">
+      <a href="https://www.facebook.com/HackBulgaria" target="_blank">
+        <i class="fa fa-facebook-square fa-3x"></i>
+      </a>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-lg-3 text-center">
+      <a href="https://twitter.com/hackbulgaria" target="_blank">
+        <i class="fa fa-twitter fa-3x"></i>
+      </a>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-lg-3 text-center">
+      <a href="https://github.com/HackBulgaria/" target="_blank">
+        <i class="fa fa-github fa-3x"></i>
+      </a>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-lg-3 text-center">
+      <a href="https://www.youtube.com/user/HackBulgaria/feed" target="_blank">
+        <i class="fa fa-youtube-play fa-3x"></i>
+      </a>
+      </div>
+    </section>
+  </div>
+{% endblock %}
