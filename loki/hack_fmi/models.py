@@ -37,7 +37,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    birth_place = models.ForeignKey(City, null=True)
+    birth_place = models.ForeignKey(City, null=True,  blank=True)
 
     github_account = models.URLField(null=True, blank=True)
     linkedin_account = models.URLField(null=True, blank=True)
