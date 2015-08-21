@@ -38,8 +38,8 @@ class Partner(models.Model):
 
 class Event(models.Model):
     name = models.CharField(max_length=150)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
     url = models.URLField(blank=True, null=True)
     location = models.CharField(max_length=255)
     description = models.TextField()
