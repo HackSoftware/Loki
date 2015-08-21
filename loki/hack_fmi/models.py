@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, Permis
 from ckeditor.fields import RichTextField
 from django.db.models.loading import get_model
 from django_resized import ResizedImageField
+from base_app.models import City
 
 
 class UserManager(BaseUserManager):
@@ -36,10 +37,12 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+    birth_place = models.ForeignKey(City, null=True)
 
     github_account = models.URLField(null=True, blank=True)
     linkedin_account = models.URLField(null=True, blank=True)
     twitter_account = models.URLField(null=True, blank=True)
+    description = models.TextField(null=True, blank=True)
 
     studies_at = models.CharField(blank=True, null=True, max_length=110)
     works_at = models.CharField(null=True, blank=True, max_length=110)
