@@ -1,0 +1,47 @@
+{% extends 'website/base.html' %}
+{% load list_utils %}
+
+{% block 'page-content' %}
+
+
+{% autoescape off %}
+  <div class="container" id="partners">
+    <div class"row">
+      <div class="col-lg-12">
+        <h1>
+          Стани наш партньор
+        </h1>
+        <p class="lead">Пиши ни на <strong>partnership@hackbulgaria.com</strong></p>
+      </div>
+    </div>
+    
+    <div id="partners" class="row">
+      <h2 class="container">{{ snippets.index_partners_description.text }}</h2>
+
+        {% for partner_row in partners|split_in_groups:'4'%}
+          <div class="row">
+            {% for partner in partner_row %}
+            <div class="partner col-sm-3">
+              <a class="swipebox-video" rel="youtube" href="{{ partner.video_presentation }}">
+
+                <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" class="partner-image">
+                <img src="{{ STATIC_URL }}/website_images/play_button.png" class="partners_play_button">
+
+              </a>
+            </div>
+            {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+  </div>
+{% endautoescape %}
+    <script src="/static/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/static/bower_components/swipebox/src/js/jquery.swipebox.js"></script>
+    <script type="text/javascript">
+    ;( function( $ ) {
+
+      $( '.swipebox-video' ).swipebox();
+
+    } )( jQuery );
+    </script>
+{% endblock %}

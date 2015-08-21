@@ -24,6 +24,8 @@ body {
           text-decoration: none; }
           body #header #main-navigation li a:hover {
             border-bottom: 2px solid #F7931E; }
+        body #header #main-navigation li .active {
+          border-bottom: 2px solid #F7931E; }
   body #faces {
     display: inline; }
     body #faces #moto {
@@ -34,9 +36,14 @@ body {
       background: white;
       padding: 0;
       box-shadow: 0px 10px 20px #888888;
-      float: left; }
+      float: left;
+      -webkit-transition: all 1s ease;
+      -moz-transition: all 1s ease;
+      -ms-transition: all 1s ease;
+      -o-transition: all 1s ease;
+      transition: all 1s ease; }
       body #faces .person:hover {
-        box-shadow: 0px 10px 20px #666666; }
+        box-shadow: 0px 10px 20px #222222; }
       body #faces .person .person-image {
         width: 100%;
         padding-bottom: 5px; }
@@ -72,17 +79,35 @@ body {
     margin: 4vw;
     width: 40vw;
     height: 40vw;
-    float: left; }
+    float: left;
+    opacity: 0.6;
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -ms-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    transition: all 1s ease;
+    cursor: pointer; }
     @media screen and (min-width: 970px) {
       body #partners .partner {
         width: 14vw;
         height: 14vw;
         margin: 10px; } }
+    body #partners .partner:hover {
+      opacity: 1.0; }
     body #partners .partner .partner-image {
       position: relative;
       top: 50%;
       transform: translateY(-50%);
       width: 100%; }
+    body #partners .partner .partners_play_button {
+      width: 4vmax;
+      height: 4vmax;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      position: absolute;
+      margin-left: -2vmax;
+      margin-top: -2vmax; }
     body #partners .partner .started-count {
       font-size: 40px;
       text-align: center; }

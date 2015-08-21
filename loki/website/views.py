@@ -15,8 +15,17 @@ def index(request):
 
 
 def about(request):
+    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
     return render(request, "website/about.html", locals())
 
 
 def courses(request):
+    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
     return render(request, "website/courses.html", locals())
+
+
+def partners(request):
+    partners = Partner.objects.all().order_by('?')
+    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
+
+    return render(request, "website/partners.html", locals())
