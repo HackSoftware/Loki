@@ -105,4 +105,34 @@ body {
         text-decoration: none;
         color: white; }
 
+.text-card {
+  padding-top: 100px; }
+
+#future-seniors-card {
+  background-color: #E22A37; }
+
+#quality-education-card {
+  background-color: #FEB300; }
+
+#informal-and-friendly-card {
+  background-color: #5080AD; }
+
+#engaging-teachers-card {
+  background-color: #FE8700; }
+
+#math-card {
+  background-color: #5A4385; }
+
+#more-practice-card {
+  background-color: #548000; }
+
+#real-world-practice-card {
+  background-color: #FE4E00; }
+
+#team-work-card {
+  background-color: #B453C8; }
+
+#moderate-competiton-card {
+  background-color: #56CB00; }
+
 /*# sourceMappingURL=website.css.map */
