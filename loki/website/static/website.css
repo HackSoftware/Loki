@@ -24,6 +24,8 @@ body {
           text-decoration: none; }
           body #header #main-navigation li a:hover {
             border-bottom: 2px solid #F7931E; }
+        body #header #main-navigation li .active {
+          border-bottom: 2px solid #F7931E; }
   body #faces {
     display: inline; }
     body #faces #moto {

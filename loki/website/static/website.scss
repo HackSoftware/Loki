@@ -28,9 +28,12 @@ body {
 					font-size: 120%;
 					color: white;
 					text-decoration: none;
-					&:hover {
+					&:hover, {
 						border-bottom: 2px solid $orange;
 					}
+				}
+				.active {
+					border-bottom: 2px solid $orange;
 				}
 			}
 		
