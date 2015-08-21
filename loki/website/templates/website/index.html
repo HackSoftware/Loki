@@ -13,9 +13,9 @@
   <div id="faces" class="row">
     <h2 id="moto"><strong>{{success_counter}}</strong> {{ snippets.index_call_to_action.text }}</h2>
     {% for successor in successors %}
-      <div class="person col-xs-2">
+      <div class="person col-sm-2">
         <img src="/media/{{ successor.picture }}" class="person-image">
-        <p> 
+        <p class="person-description" > 
           <span class="name">{{ successor.name }}</span> <br>
           <span class="position">{{ successor.title }}</span>
         </p>
@@ -39,12 +39,13 @@
     <div class="row">
       <h2 class="container">{{ snippets.index_partners_description.text }}</h2>
 
-      {% for partner in partners %}
-        <div class="partner">
-          <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" class="partner-image">
-        </div>
+      {% for i in "12345"|make_list %}
+        {% for partner in partners %}
+          <div class="partner col-sm-2">
+            <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" class="partner-image">
+          </div>
+        {% endfor %}
       {% endfor %}
-
     </div>
   </div>
     
@@ -55,7 +56,7 @@
       {% for video in videos %}
         <div class="col-md-3 video">
           <a class="swipebox-video" rel="youtube" href="{{ video.youtube_link }}">
-            <img src="{{ MEDIA_URL }}{{ video.image }}">
+            <img class="video-thumb" src="{{ MEDIA_URL }}{{ video.image }}">
             <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
           </a>
         </div>
