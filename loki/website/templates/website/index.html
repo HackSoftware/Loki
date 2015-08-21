@@ -40,9 +40,8 @@
   </div>
 
   <div class="container-fluid" id="partners">
-    <div class="row">
+    <div class="row" align="center">
       <h2 class="container">{{ snippets.index_partners_description.text }}</h2>
-
         {% for partner in partners %}
           <div class="partner col-sm-2">
             <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" class="partner-image">

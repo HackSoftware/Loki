@@ -15,9 +15,8 @@
       </div>
     </div>
     
-    <div id="partners" class="row">
+    <div id="partners" class="row" align="center">
       <h2 class="container">{{ snippets.index_partners_description.text }}</h2>
-
         {% for partner_row in partners|split_in_groups:'4'%}
           <div class="row">
             {% for partner in partner_row %}

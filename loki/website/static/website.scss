@@ -114,7 +114,8 @@ body {
     			height: 14vw;
     			margin: 10px;
     		}
-			float: left;
+			float: none;
+			display:inline-block;
 			opacity: 0.6;
 		   	-webkit-transition: all 1s ease;
 			-moz-transition: all 1s ease;
