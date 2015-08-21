@@ -28,6 +28,8 @@ class Partner(models.Model):
 
     twitter = models.URLField(null=True, blank=True)
     website = models.URLField(null=True, blank=True)
+    
+    video_presentation = models.URLField(null=True, blank=True)
 
     class Meta:
         ordering = ('ordering',)
