@@ -54,7 +54,7 @@ body {
 			box-shadow: 0px 10px 20px #888888;
 			float: left;
 			&:hover {
-				box-shadow: 0px 10px 20px #666666;
+				box-shadow: 0px 10px 20px #222222;
 			}
 			.person-image {
 				width: 100%;
@@ -73,6 +73,11 @@ body {
 				height: 3vw;
 				font-size: 1vw; 
 			}
+			-webkit-transition: all 1s ease;
+			-moz-transition: all 1s ease;
+			-ms-transition: all 1s ease;
+			-o-transition: all 1s ease;
+			transition: all 1s ease;
 		}
 	}
 	
@@ -110,12 +115,31 @@ body {
     			margin: 10px;
     		}
 			float: left;
-
-			.partner-image {
+			opacity: 0.6;
+		   	-webkit-transition: all 1s ease;
+			-moz-transition: all 1s ease;
+			-ms-transition: all 1s ease;
+			-o-transition: all 1s ease;
+			transition: all 1s ease;
+			cursor:pointer;
+			&:hover{
+				opacity:1.0;
+			}
+		    .partner-image {
 				position: relative;
 				top: 50%;
 				transform: translateY(-50%);
 				width: 100%;
+			}
+			.partners_play_button {
+			    width: 4vmax;
+			    height: 4vmax;
+			    left: 50%;
+			    top: 50%;
+			    z-index: 1;
+			    position: absolute;
+			    margin-left: -2vmax;
+			    margin-top: -2vmax;
 			}
 
 			.started-count {
