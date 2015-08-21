@@ -15,6 +15,7 @@ def index(request):
 
 
 def about(request):
+    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
     return render(request, "website/about.html", locals())
 
 
