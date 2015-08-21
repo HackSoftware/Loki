@@ -1,8 +1,9 @@
 import json
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import ValidationError
+
 from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
-from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from base_app.models import Event, Ticket
@@ -49,9 +50,9 @@ def buy_ticket(request):
     event_id = request.data.get('event_id')
     user = request.user
     event = get_object_or_404(Event, id=event_id)
-
     try:
         ticket = Ticket(event=event, base_user=user)
+        ticket.full_clean()
         ticket.save()
     except ValidationError:
         error = {"error": "Вече си си закупил билет. Имаш право само на един билет."}
@@ -68,6 +69,8 @@ def get_number_of_sold_tickets(request):
 @api_view(['PATCH'])
 @permission_classes((IsAuthenticated,))
 def base_user_update(request):
+    if len(request.data) == 0:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     user = request.user
     co = request.data['selection']
     co = json.loads(co)
