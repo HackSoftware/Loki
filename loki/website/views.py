@@ -16,3 +16,7 @@ def index(request):
 
 def about(request):
     return render(request, "website/about.html", locals())
+
+
+def courses(request):
+    return render(request, "website/courses.html", locals())
