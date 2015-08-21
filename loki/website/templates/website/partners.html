@@ -14,7 +14,7 @@
       </div>
     </div>
     
-    <div class="row">
+    <div id="partners" class="row">
       <h2 class="container">{{ snippets.index_partners_description.text }}</h2>
 
         {% for partner in partners %}
@@ -25,4 +25,13 @@
     </div>
   </div>
 {% endautoescape %}
+    <script src="/static/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/static/bower_components/swipebox/src/js/jquery.swipebox.js"></script>
+    <script type="text/javascript">
+    ;( function( $ ) {
+
+      $( '.swipebox-video' ).swipebox();
+
+    } )( jQuery );
+    </script>
 {% endblock %}
