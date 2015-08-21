@@ -25,7 +25,7 @@ def courses(request):
 
 
 def partners(request):
-    partners = Partner.objects.all()
+    partners = Partner.objects.all().order_by('?')
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
     return render(request, "website/partners.html", locals())
