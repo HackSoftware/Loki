@@ -147,7 +147,6 @@ class PersonalUserInformationTests(TestCase):
         update_url = reverse('base_app:update_baseuser')
         data = {'github_account': 'http://github.com/Ivo'}
         response = self.client.patch(update_url, data, format='json')
-        print(response.data)
         baseuser = BaseUser.objects.get(id=self.baseuser.id)
 
         self.assertEqual(baseuser.github_account, data['github_account'])
