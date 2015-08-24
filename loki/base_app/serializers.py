@@ -92,6 +92,8 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
         queryset=City.objects.all(),
     )
 
+    birth_place_full = CitySerializer(read_only=True)
+
     class Meta:
         model = BaseUser
         fields = (
@@ -106,4 +108,5 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
             'studies_at',
             'description',
             'birth_place',
+            'birth_place_full',
         )
