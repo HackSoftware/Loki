@@ -2,7 +2,7 @@ from import_export.admin import ImportExportActionModelAdmin
 
 from django.contrib import admin
 
-from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote, WorkingAt, Task, Solution
+from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote, WorkingAt, Task, Solution, OldCertificate
 from .modelresource import StudentResource, CourseAssignmentResource
 
 
@@ -132,3 +132,4 @@ admin.site.register(WorkingAt, WorkingAtAdmin)
 
 admin.site.register(Task)
 admin.site.register(Solution)
+admin.site.register(OldCertificate)
