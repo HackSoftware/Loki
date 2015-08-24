@@ -1,11 +1,11 @@
 <html>
     <head>
-        <title>HackBulgaria {{ }} Certificate</title>
-        <link rel="stylesheet" href="{{ STATIC_URL }}/css/certificate.css">
-        <meta property="og:title" content="HackBulgaria {{ }} Certificate"/>
+        <title>HackBulgaria {{ full_name }} Certificate</title>
+        <link rel="stylesheet" href="{{ STATIC_URL }}certificates/certificate.css">
+        <meta property="og:title" content="HackBulgaria {{ full_name }} Certificate"/>
         <meta property="og:image" content="https://hackbulgaria.com/static/img/certificate_screen.png"/>
         <meta property="og:site_name" content="Hack Bulgaria"/>
-        <meta property="og:description" content="Certificate for being {{  }} awesome in the {{ }} course in HackBulgaria"/>
+        <meta property="og:description" content="Certificate for being {{ percent_awesome }} awesome in the {{ course_name }} course in HackBulgaria"/>
         <link rel="shortcut icon" href="/static//img/favicon.ico">
     </head>
     <body>
@@ -19,9 +19,9 @@
         <a href="http://hackbulgaria.com/">
             <img id="logo" src="/static/img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
         </a>
-        <h2 id="title">Certificate for being <span id="percent">{{ }}% </span> awesome in {{  }} </h2>
+        <h2 id="title">Certificate for being <span id="percent">{{ percent_awesome }}% </span> awesome in {{ course_name }} </h2>
         <div>
-            <p id="name"><a href="{{ }}">{{  }}</a></p>
+            <p id="name"><a href="{{ git_hub_url }}">{{ full_name }}</a></p>
         </div>
 
         <fieldset id='github-statistics'>
@@ -34,14 +34,23 @@
         <div>
             <fieldset id='projects'>
                 <legend>Projects:</legend>
-                
+                    {% for task in tasks %}
                     <div>
-                        <a href="https://github.com/HackBulgaria/Programming101-3/tree/master/week1/1-Warmups/">Week <Week 1> Task &lt;1&gt; Warmups</a> -
+                        <!-- <a href="https://github.com/HackBulgaria/Programming101-3/tree/master/week1/1-Warmups/">Week <Week 1> Task &lt;1&gt; Warmups</a> -
                         
                         <a class="code-sent" href="https://github.com/animilh/Programming-101/tree/master/week1/1-Warmups">Source Link</a>
-                        
+                         -->
+                        <a href="{{ task.description }}" target="_blank">Week <Week 1>
+                            {{ task.name }}
+                        </a> -
+                        {% if tasks_solutions.task %}
+                            <a class="code-sent" href="{{ tasks_solutions.task.url }}">Source Link
+                            </a>
+                        {% else %}
+                            <span class="code-not-sent">Not sent</span>
+                        {% endif %}
                     </div>
-                
+                    {% endfor %}
                  
                 
             </fieldset>

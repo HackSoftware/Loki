@@ -235,5 +235,21 @@ class SolutionsAPI(
 
 def certificate(request, pk):
     certificate = get_object_or_404(OldCertificate, id=pk)
+    ca = certificate.assignment
+
+    full_name = ca.user.full_name
+
+    tasks_count = Task.objects.filter(course=ca.course).count()
+    tasks_completed = Solution.objects.filter(student=ca.user).count()
+    percent_awesome = (tasks_completed / tasks_count)*100
+
+    course_name = ca.course.name
+
+    git_hub_url = ca.user.github_account
+
+    tasks = Task.objects.filter(course=ca.course)
+    solutions = Solution.objects.filter(task__in=tasks, student=ca.user)
+
+    tasks_solutions = {solution.task: solution for solution in solutions}
 
     return render(request, "certificate.html", locals())
