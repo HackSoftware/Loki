@@ -63,6 +63,7 @@ class Course(models.Model):
     start_time = models.DateField(blank=True, null=True)
     url = models.SlugField(max_length=80, unique=True)
     video = models.URLField(blank=True)
+    generate_certificates_until = models.DateField()
 
     def __str__(self):
         return self.name
