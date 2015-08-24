@@ -92,7 +92,7 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
         queryset=City.objects.all(),
     )
 
-    birth_place_full = CitySerializer(read_only=True)
+    birth_place_full = CitySerializer(read_only=True, source='birth_place')
 
     class Meta:
         model = BaseUser
