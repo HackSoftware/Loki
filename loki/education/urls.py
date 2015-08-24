@@ -1,7 +1,8 @@
 from django.conf.urls import url
 from education.views import (set_check_in, get_lectures, get_check_ins, StudentNoteAPI,
-                             get_courses, OnBoardStudent, student_update, get_students_for_course, get_cas_for_course,
-                             drop_student, working_at, get_cities, get_companies, TasksAPI, SolutionsAPI)
+                             get_courses, OnBoardStudent, student_update, get_students_for_course,
+                             drop_student, working_at, get_cities, get_companies, TasksAPI,
+                             SolutionsAPI, get_cas_for_course)
 
 urlpatterns = [
     url(r'^api/set-check-in/$', set_check_in, name='set_check_in'),

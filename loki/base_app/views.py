@@ -1,13 +1,13 @@
 import json
-from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
-from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import generics
 from base_app.models import Event, Ticket
 
-from base_app.serializers import BaseUserMeSerializer, UpdateBaseUserSerializer, EventSerializer
+from base_app.serializers import (BaseUserMeSerializer, UpdateBaseUserSerializer,
+                                  EventSerializer, TicketSerializer)
 from .helper import crop_image
 
 
@@ -36,27 +36,24 @@ def baseuser_update(request):
     return Response(serializer.errors, status=400)
 
 
-@api_view(['GET'])
-def get_events(request):
-    events = Event.objects.all()
-    serializer = EventSerializer(events, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+class EventAPI(generics.ListAPIView):
+    model = Event
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
 
 
-@api_view(['POST'])
-@permission_classes((IsAuthenticated,))
-def buy_ticket(request):
-    event_id = request.data.get('event_id')
-    user = request.user
-    event = get_object_or_404(Event, id=event_id)
+class TicketAPI(generics.ListCreateAPIView):
+    model = Ticket
+    queryset = Ticket.objects.all()
+    serializer_class = TicketSerializer
+    permission_classes = (IsAuthenticated,)
 
-    try:
-        ticket = Ticket(event=event, base_user=user)
-        ticket.save()
-    except ValidationError:
-        error = {"error": "Вече си си закупил билет. Имаш право само на един билет."}
-        return Response(error, status=status.HTTP_400_BAD_REQUEST)
-    return Response(status=status.HTTP_201_CREATED)
+    def perform_create(self, serializer):
+        serializer.save(base_user=self.request.user)
+
+    def get_queryset(self):
+        user = self.request.user
+        return Ticket.objects.filter(base_user=user)
 
 
 @api_view(['GET'])

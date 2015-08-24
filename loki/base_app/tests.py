@@ -146,8 +146,8 @@ class PersonalUserInformationTests(TestCase):
         self.client.force_authenticate(user=self.baseuser)
         update_url = reverse('base_app:update_baseuser')
         data = {'github_account': 'http://github.com/Ivo'}
-        self.client.patch(update_url, data, format='json')
-
+        response = self.client.patch(update_url, data, format='json')
+        print(response.data)
         baseuser = BaseUser.objects.get(id=self.baseuser.id)
 
         self.assertEqual(baseuser.github_account, data['github_account'])
@@ -162,21 +162,29 @@ class EventTests(TestCase):
             full_name='Comp compov'
         )
         self.event_conf = Event.objects.create(
+            start_date="2012-01-01",
+            end_date="2012-01-01",
+            location="location text",
+            description="Desc!",
             name='HackConf'
         )
         self.event_theater = Event.objects.create(
-            name='Skakalci'
+            start_date="2012-01-01",
+            end_date="2012-01-01",
+            location="location theater text",
+            description="theater desc!",
+            name='Theater!'
         )
 
     def test_get_all_events(self):
         count = Event.objects.count()
-        url = reverse('base_app:get_events')
+        url = reverse('base_app:event')
         response = self.client.get(url, format='json')
         self.assertEqual(count, len(response.data))
 
     def test_buy_ticket_for_event_not_logged(self):
-        url = reverse('base_app:buy_ticket')
-        data = {'event_id': self.event_conf.id}
+        url = reverse('base_app:ticket')
+        data = {'event': self.event_conf.id}
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 401)
 
@@ -184,8 +192,8 @@ class EventTests(TestCase):
         count = Ticket.objects.count()
         self.client = APIClient()
         self.client.force_authenticate(user=self.test_user)
-        url = reverse('base_app:buy_ticket')
-        data = {'event_id': self.event_conf.id}
+        url = reverse('base_app:ticket')
+        data = {'event': self.event_conf.id}
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 201)
         new_count = Ticket.objects.count()
@@ -194,6 +202,16 @@ class EventTests(TestCase):
     def test_buy_ticket_for_event_no_data(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.test_user)
-        url = reverse('base_app:buy_ticket')
+        url = reverse('base_app:ticket')
         response = self.client.post(url)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 400)
+
+# TODO: Find a nice way to do this!
+    # def test_buy_two_tickets(self):
+    #     self.client = APIClient()
+    #     self.client.force_authenticate(user=self.test_user)
+    #     url = reverse('base_app:ticket')
+    #     data = {'event': self.event_conf.id}
+    #     response = self.client.post(url, data)
+    #     response = self.client.post(url, data)
+    #     self.assertEqual(response.status_code, 400)

@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from base_app.models import Event, Ticket
 from education.serializers import StudentSerializer, TeacherSerializer, CitySerializer
 
@@ -36,19 +37,24 @@ class EventSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'start_date',
-            'url'
+            'end_date',
+            'location',
+            'description',
+            'url',
         )
 
 
 class TicketSerializer(serializers.ModelSerializer):
-    base_user = BaseUserSerializer(many=False, read_only=True)
-    event = EventSerializer(many=False, read_only=True)
+    event = serializers.PrimaryKeyRelatedField(
+        read_only=False,
+        queryset=Event.objects.all()
+    )
 
     class Meta:
         model = Ticket
         fields = (
+            'id',
             'event',
-            'base_user'
         )
 
 
@@ -85,6 +91,7 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
         read_only=False,
         queryset=City.objects.all(),
     )
+    birth_place_full = CitySerializer(read_only=True, source='birth_place')
 
     class Meta:
         model = BaseUser
@@ -100,4 +107,5 @@ class UpdateBaseUserSerializer(serializers.ModelSerializer):
             'studies_at',
             'description',
             'birth_place',
+            'birth_place_full',
         )

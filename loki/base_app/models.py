@@ -28,7 +28,7 @@ class Partner(models.Model):
 
     twitter = models.URLField(null=True, blank=True)
     website = models.URLField(null=True, blank=True)
-    
+
     video_presentation = models.URLField(null=True, blank=True)
 
     class Meta:
@@ -40,8 +40,11 @@ class Partner(models.Model):
 
 class Event(models.Model):
     name = models.CharField(max_length=150)
-    start_date = models.DateField(blank=True, null=True)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
     url = models.URLField(blank=True, null=True)
+    location = models.CharField(max_length=255)
+    description = models.TextField()
 
     def __str__(self):
         return self.name
