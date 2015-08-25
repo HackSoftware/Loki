@@ -6,12 +6,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <title>HackBulgaria - Курсове по програмиране</title>
+    <meta name="description" content="Курсове по програмиране, в които писането на код е задължение, а лекциите са за домашно.">
     <link rel="icon" href="{{ STATIC_URL }}website_images/favicon.ico">
-
-    <title>Hack Bulgaria</title>
+  
+    <meta property="og:title" content="HackBulgaria - Курсове по програмиране"/>
+    <meta property="og:site_name" content="Hack Bulgaria"/>
+    <meta property="og:description" content="Курсове по програмиране, в които писането на код е задължение, а лекциите са за домашно."/>
+    <meta property="og:image" content="{{ STATIC_URL }}website_images/og_image.png"/>
 
     <link href="/static/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="/static/website.css" rel="stylesheet">
@@ -21,31 +23,33 @@
   </head>
 
   <body>
-  <div id="header">
-    <div class="container">
-      <div class="row">
-    
-        <div class="col-md-3">
-          <img src="{{ STATIC_URL }}website_images/hackbulgaria_logo.png" id="logo">
-        </div>
-       
-        <!-- Navigation -->
-        <ul id="main-navigation" class="col-md-7 col-md-offset-2">
-          <li><a class="{% menu_active 'website:index' %}" href="{% url 'website:index' %}">Начало</a></li> 
-          <li><a class="{% menu_active 'website:about' %}" href="{% url 'website:about' %}">Философия за образование</a></li>
-          <li><a class="{% menu_active 'website:courses' %}" href="{% url 'website:courses' %}">Курсове</a></li>
-          <li><a class="{% menu_active 'website:partners' %}" href="{% url 'website:partners' %}">Партньори</a></li>
-          <!-- <li><a href="">Екип</a></li> -->
-          <li><a href="http://blog.hackbulgaria.com/" target="_blank">Блог</a></li>
-          <li><a href="https://education.hackbulgaria.com/" target="_blank">Вход</a></li>
-        </ul>
+  <div id="page-wrap">
+    <div id="header">
+      <div class="container">
+        <div class="row">
+      
+          <div class="col-md-3">
+            <a href="/"><img src="{{ STATIC_URL }}website_images/hackbulgaria_logo.png" id="logo"></a>
+          </div>
+         
+          <!-- Navigation -->
+          <ul id="main-navigation" class="col-md-7 col-md-offset-2">
+            <li><a class="{% menu_active 'website:index' %}" href="{% url 'website:index' %}">Начало</a></li> 
+            <li><a class="{% menu_active 'website:about' %}" href="{% url 'website:about' %}">Философия за образование</a></li>
+            <li><a class="{% menu_active 'website:courses' %}" href="{% url 'website:courses' %}">Курсове</a></li>
+            <li><a class="{% menu_active 'website:partners' %}" href="{% url 'website:partners' %}">Партньори</a></li>
+            <!-- <li><a href="">Екип</a></li> -->
+            <li><a href="http://blog.hackbulgaria.com/" target="_blank">Блог</a></li>
+            <li><a href="https://education.hackbulgaria.com/" target="_blank">Вход</a></li>
+          </ul>
 
+        </div>
       </div>
     </div>
-  </div>
-  {% block 'page-content' %}
+    {% block 'page-content' %}
 
-  {% endblock %}
+    {% endblock %}
+  </div>
 
   <footer id="footer">
     <div id="socials">
@@ -70,4 +74,13 @@
 
   </footer>
   </body>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-47118692-1', 'hackbulgaria.com');
+    ga('send', 'pageview');
+  </script>
 </html>

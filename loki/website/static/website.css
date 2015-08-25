@@ -1,133 +1,145 @@
-.ease1s, body #faces .person, body #partners .partner, body #videos .video .video-thumb {
+.ease1s, body #page-wrap #faces .person, body #page-wrap #partners .partner, body #page-wrap #videos .video .video-thumb {
   -webkit-transition: all 1s ease;
   -moz-transition: all 1s ease;
   -ms-transition: all 1s ease;
   -o-transition: all 1s ease;
   transition: all 1s ease; }
 
+html {
+  height: 100%; }
+
 body {
   padding: 0;
   margin: 0;
-  background: #F2F2F2; }
-  body #header {
-    background: black;
-    list-style: none; }
-    body #header #logo {
-      float: left;
-      padding-top: 25px;
-      width: 100%; }
-    body #header #login-form {
-      padding-top: 30px; }
-    body #header #main-navigation {
-      margin-top: 20px;
+  background: #F2F2F2;
+  height: 100%; }
+  body #page-wrap {
+    min-height: 100%;
+    /* equal to footer height */
+    margin-bottom: -100px; }
+    body #page-wrap:after {
+      content: "";
+      display: block;
+      height: 100px; }
+    body #page-wrap #header {
+      background: black;
       list-style: none; }
-      body #header #main-navigation li {
+      body #page-wrap #header #logo {
         float: left;
-        display: block;
-        padding: 10px; }
-        body #header #main-navigation li a {
-          font-size: 120%;
-          color: white;
-          text-decoration: none; }
-          body #header #main-navigation li a:hover {
+        padding-top: 25px;
+        width: 100%; }
+      body #page-wrap #header #login-form {
+        padding-top: 30px; }
+      body #page-wrap #header #main-navigation {
+        margin-top: 20px;
+        list-style: none; }
+        body #page-wrap #header #main-navigation li {
+          float: left;
+          display: block;
+          padding: 10px; }
+          body #page-wrap #header #main-navigation li a {
+            font-size: 120%;
+            color: white;
+            text-decoration: none; }
+            body #page-wrap #header #main-navigation li a:hover {
+              border-bottom: 2px solid #F7931E; }
+          body #page-wrap #header #main-navigation li .active {
             border-bottom: 2px solid #F7931E; }
-        body #header #main-navigation li .active {
-          border-bottom: 2px solid #F7931E; }
-  body #faces {
-    display: inline; }
-    body #faces #moto {
-      text-align: center; }
-      body #faces #moto * {
-        display: inline; }
-    body #faces .person {
+    body #page-wrap #faces {
+      display: inline; }
+      body #page-wrap #faces #moto {
+        text-align: center; }
+        body #page-wrap #faces #moto * {
+          display: inline; }
+      body #page-wrap #faces .person {
+        background: white;
+        padding: 0;
+        box-shadow: 0px 10px 20px #888888;
+        float: left; }
+        body #page-wrap #faces .person:hover {
+          box-shadow: 0px 10px 20px #222222; }
+        body #page-wrap #faces .person .person-image {
+          width: 100%;
+          padding-bottom: 5px; }
+        body #page-wrap #faces .person .name {
+          font-size: 120%;
+          font-weight: 600;
+          padding: 10px; }
+        body #page-wrap #faces .person .position {
+          padding: 10px;
+          font-size: 90%; }
+        body #page-wrap #faces .person .person-description {
+          height: 3vw;
+          font-size: 1vw; }
+    body #page-wrap #action-buttons {
+      padding-top: 20px;
+      padding-bottom: 30px; }
+      body #page-wrap #action-buttons button {
+        font-size: 120%; }
+      body #page-wrap #action-buttons #left-action {
+        float: right;
+        padding: 16px;
+        background: #F7931E;
+        border: none;
+        color: white; }
+      body #page-wrap #action-buttons #right-action {
+        float: left;
+        padding: 14px;
+        background: white;
+        border: 2px solid black; }
+    body #page-wrap #partners .partner {
       background: white;
-      padding: 0;
-      box-shadow: 0px 10px 20px #888888;
-      float: left; }
-      body #faces .person:hover {
-        box-shadow: 0px 10px 20px #222222; }
-      body #faces .person .person-image {
-        width: 100%;
-        padding-bottom: 5px; }
-      body #faces .person .name {
-        font-size: 120%;
-        font-weight: 600;
-        padding: 10px; }
-      body #faces .person .position {
-        padding: 10px;
-        font-size: 90%; }
-      body #faces .person .person-description {
-        height: 3vw;
-        font-size: 1vw; }
-  body #action-buttons {
-    padding-top: 20px;
-    padding-bottom: 30px; }
-    body #action-buttons button {
-      font-size: 120%; }
-    body #action-buttons #left-action {
-      float: right;
-      padding: 16px;
-      background: #F7931E;
-      border: none;
-      color: white; }
-    body #action-buttons #right-action {
-      float: left;
-      padding: 14px;
-      background: white;
-      border: 2px solid black; }
-  body #partners .partner {
-    background: white;
-    padding: 10px;
-    margin: 4vw;
-    width: 40vw;
-    height: 40vw;
-    float: none;
-    display: inline-block;
-    opacity: 0.6;
-    cursor: pointer; }
-    @media screen and (min-width: 970px) {
-      body #partners .partner {
-        width: 14vw;
-        height: 14vw;
-        margin: 10px; } }
-    body #partners .partner:hover {
-      opacity: 1.0; }
-    body #partners .partner .partner-image {
-      position: absolute;
-      top: 50%;
-      left: 4%;
-      width: 92%;
-      transform: translateY(-50%); }
-    body #partners .partner .partners_play_button {
-      width: 4vmax;
-      height: 4vmax;
-      left: 50%;
-      top: 50%;
-      z-index: 1;
-      position: absolute;
-      margin-left: -2vmax;
-      margin-top: -2vmax; }
-    body #partners .partner .started-count {
-      font-size: 40px;
-      text-align: center; }
-  body #videos {
-    background: url("/static/website_images/background_pattern.png");
-    padding-top: 10px;
-    padding-bottom: 40px;
-    margin-top: 40px; }
-    body #videos .video {
-      padding: 10px; }
-      body #videos .video:hover .video-thumb {
-        box-shadow: 0px 10px 20px #222222; }
-      body #videos .video .play_button {
+      padding: 10px;
+      margin: 4vw;
+      width: 40vw;
+      height: 40vw;
+      float: none;
+      display: inline-block;
+      opacity: 0.6;
+      cursor: pointer; }
+      @media screen and (min-width: 970px) {
+        body #page-wrap #partners .partner {
+          width: 14vw;
+          height: 14vw;
+          margin: 10px; } }
+      body #page-wrap #partners .partner:hover {
+        opacity: 1.0; }
+      body #page-wrap #partners .partner .partner-image {
         position: absolute;
         top: 50%;
+        left: 4%;
+        width: 92%;
+        transform: translateY(-50%); }
+      body #page-wrap #partners .partner .partners_play_button {
+        width: 4vmax;
+        height: 4vmax;
         left: 50%;
-        width: 84px;
-        margin: -46px; }
-      body #videos .video .video-thumb {
-        box-shadow: 0px 10px 20px #888888;
-        width: 100%; }
+        top: 50%;
+        z-index: 1;
+        position: absolute;
+        margin-left: -2vmax;
+        margin-top: -2vmax; }
+      body #page-wrap #partners .partner .started-count {
+        font-size: 40px;
+        text-align: center; }
+    body #page-wrap #videos {
+      background: url("/static/website_images/background_pattern.png");
+      padding-top: 10px;
+      padding-bottom: 40px;
+      margin-top: 40px; }
+      body #page-wrap #videos .video {
+        padding: 10px; }
+        body #page-wrap #videos .video:hover .video-thumb {
+          box-shadow: 0px 10px 20px #222222; }
+        body #page-wrap #videos .video .play_button {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 84px;
+          margin: -46px; }
+        body #page-wrap #videos .video .video-thumb {
+          box-shadow: 0px 10px 20px #888888;
+          width: 100%; }
   body #footer {
     height: 100px;
     background: #F7931E;

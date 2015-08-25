@@ -8,6 +8,7 @@ from rest_framework.test import APIClient
 from base_app.models import Event, Ticket
 
 from hack_fmi.models import BaseUser, Skill, Team
+from .models import City
 from education.models import Course, CourseAssignment, Student, OldCertificate
 
 
@@ -115,6 +116,9 @@ class PersonalUserInformationTests(TestCase):
             url_id=1,
         )
 
+        self.city = City.objects.create(
+            name="Sofia"
+        )
     def test_me_returns_full_team_membership_set(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
@@ -150,6 +154,16 @@ class PersonalUserInformationTests(TestCase):
         baseuser = BaseUser.objects.get(id=self.baseuser.id)
 
         self.assertEqual(baseuser.github_account, data['github_account'])
+
+    def test_patch_empty_birth_place(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.baseuser)
+        update_url = reverse('base_app:update_baseuser')
+        data = {'birth_place': self.city.id}
+
+        self.client.patch(update_url, data, format='json')
+        baseuser = BaseUser.objects.get(id=self.baseuser.id)
+        self.assertEqual(baseuser.birth_place, self.city)
 
 
 class EventTests(TestCase):
