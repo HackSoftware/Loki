@@ -240,10 +240,9 @@ def certificate(request, pk):
     course = ca.course
 
     tasks = Task.objects.filter(course=ca.course)
-    tasks_completed = Solution.objects.filter(student=ca.user)
-    percent_awesome = (tasks_completed.count() / tasks.count()) * 100
-
     solutions = Solution.objects.filter(task__in=tasks, student=ca.user)
+    percent_awesome = (solutions.count() / tasks.count()) * 100
+
     tasks_solutions = {solution.task: solution for solution in solutions}
 
     return render(request, "certificate.html", locals())

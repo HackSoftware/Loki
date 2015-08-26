@@ -29,7 +29,7 @@
                 <legend>Projects:</legend>
                     {% for task in tasks %}
                     <div>
-                        <a href="{{ task.description }}" target="_blank">Week <Week 1>
+                        <a href="{{ task.description }}" target="_blank">Week {{ task.week }}
                             {{ task.name }}
                         </a> -
                         {% if tasks_solutions.task %}
