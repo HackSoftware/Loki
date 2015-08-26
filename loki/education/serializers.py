@@ -4,7 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from base_app.models import Company, City
 
 from .models import (Lecture, CheckIn, Course, Student, Solution,
-                     CourseAssignment, StudentNote, Teacher, WorkingAt, Task)
+                     CourseAssignment, StudentNote, Teacher, WorkingAt, Task, Certificate)
 
 
 class StudentNoteSerializer(serializers.ModelSerializer):
@@ -12,6 +12,13 @@ class StudentNoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentNote
         fields = ('text', 'assignment')
+
+
+class CertificateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Certificate
+        fields = ('id')
 
 
 class SolutionSerializer(serializers.ModelSerializer):
@@ -109,13 +116,7 @@ class CourseSerializer(serializers.ModelSerializer):
 
 class CourseAssignmentSerializer(serializers.ModelSerializer):
     course = CourseSerializer(many=False, read_only=True)
-    oldcertificate_url = serializers.SerializerMethodField()
-
-    def get_oldcertificate_url(self, obj):
-        try:
-            return "http://hackbulgaria.com/certificate/{}/".format(obj.oldcertificate.url_id)
-        except ObjectDoesNotExist:
-            return ""
+    certificate = CertificateSerializer(read_only=True)
 
     class Meta:
         model = CourseAssignment
@@ -124,7 +125,7 @@ class CourseAssignmentSerializer(serializers.ModelSerializer):
             'is_attending',
             'is_online',
             'course',
-            'oldcertificate_url',
+            'certificate',
         )
 
 

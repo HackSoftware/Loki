@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from rest_framework.test import APIClient
 from base_app.models import Company
 from base_app.models import City
-from education.models import Student, OldCertificate, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt, Task, Solution
+from education.models import Student, Certificate, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt, Task, Solution
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -669,9 +669,8 @@ class SolutionsTests(TestCase):
             url='https://github.com/lololo/solution.py'
         )
 
-        self.certificate = OldCertificate.objects.create(
+        self.certificate = Certificate.objects.create(
             assignment=self.assignment,
-            url_id=1,
         )
 
     def test_get_solutions(self):

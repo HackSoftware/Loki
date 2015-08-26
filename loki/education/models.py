@@ -136,9 +136,5 @@ class WorkingAt(models.Model):
     description = models.TextField(blank=True, null=True)
 
 
-class OldCertificate(models.Model):
+class Certificate(models.Model):
     assignment = models.OneToOneField(CourseAssignment)
-    url_id = models.PositiveIntegerField(unique=True)
-
-    def get_absolute_url(self):
-        return "https://hackbulgaria.com/certificate/{}/".format(self.url_id)

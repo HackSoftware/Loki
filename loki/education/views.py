@@ -15,7 +15,7 @@ from base_app.models import City, Company
 
 from education.helper import check_macs_for_student, mac_is_used_by_another_student
 from .models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
-                     Task, Solution, OldCertificate)
+                     Task, Solution, Certificate)
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
                           SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
@@ -234,7 +234,7 @@ class SolutionsAPI(
 
 
 def certificate(request, pk):
-    certificate = get_object_or_404(OldCertificate, id=pk)
+    certificate = get_object_or_404(Certificate, id=pk)
     ca = certificate.assignment
     student = ca.user
     course = ca.course

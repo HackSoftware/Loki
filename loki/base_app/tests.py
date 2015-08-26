@@ -10,7 +10,7 @@ from base_app.models import Event, Ticket
 from hack_fmi.models import BaseUser, Skill, Team
 from .models import City
 from hack_fmi.helper import date_decrease
-from education.models import Course, CourseAssignment, Student, OldCertificate
+from education.models import Course, CourseAssignment, Student, Certificate
 
 
 class BaseUserRegistrationTests(TestCase):
@@ -113,9 +113,8 @@ class PersonalUserInformationTests(TestCase):
             self.baseuser.get_competitor(), True
         )
 
-        self.certificate = OldCertificate.objects.create(
+        self.certificate = Certificate.objects.create(
             assignment=self.ca,
-            url_id=1,
         )
 
         self.city = City.objects.create(
