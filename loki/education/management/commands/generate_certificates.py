@@ -9,4 +9,4 @@ class Command(BaseCommand):
         courses = Course.objects.filter(generate_certificates_until__lt=timezone.now())
         for course in courses:
             for assignment in course.courseassignment_set.all():
-                cert, is_new = Certificate.object.get_or_create(assignment=assignment)
+                cert, is_new = Certificate.objects.get_or_create(assignment=assignment)
