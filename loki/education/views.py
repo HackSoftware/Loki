@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.db import IntegrityError
 from django.http import HttpResponse
@@ -15,7 +15,7 @@ from base_app.models import City, Company
 
 from education.helper import check_macs_for_student, mac_is_used_by_another_student
 from .models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
-                     Task, Solution)
+                     Task, Solution, OldCertificate)
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
                           SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
@@ -231,3 +231,19 @@ class SolutionsAPI(
     def get_queryset(self):
         student = self.request.user.get_student()
         return student.solution_set
+
+
+def certificate(request, pk):
+    certificate = get_object_or_404(OldCertificate, id=pk)
+    ca = certificate.assignment
+    student = ca.user
+    course = ca.course
+
+    tasks = Task.objects.filter(course=ca.course)
+    tasks_completed = Solution.objects.filter(student=ca.user)
+    percent_awesome = (tasks_completed.count() / tasks.count()) * 100
+
+    solutions = Solution.objects.filter(task__in=tasks, student=ca.user)
+    tasks_solutions = {solution.task: solution for solution in solutions}
+
+    return render(request, "certificate.html", locals())

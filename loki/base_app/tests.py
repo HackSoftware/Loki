@@ -9,6 +9,7 @@ from base_app.models import Event, Ticket
 
 from hack_fmi.models import BaseUser, Skill, Team
 from .models import City
+from hack_fmi.helper import date_decrease
 from education.models import Course, CourseAssignment, Student, OldCertificate
 
 
@@ -96,6 +97,7 @@ class PersonalUserInformationTests(TestCase):
         self.course = Course.objects.create(
             name='Programming 101',
             application_until='2015-03-03',
+            generate_certificates_until=date_decrease(1),
         )
 
         self.team = Team.objects.create(

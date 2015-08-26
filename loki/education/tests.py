@@ -33,6 +33,7 @@ class CheckInTest(TestCase):
             url='haskell-12',
             start_time=date_decrease(29),
             end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
         )
 
         self.course_assignment = CourseAssignment.objects.create(
@@ -178,6 +179,7 @@ class TeachersAPIsTests(TestCase):
             url="https://hackbulgaria.com/course/haskell-1/",
             start_time=date_decrease(29),
             end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
         )
         self.course2 = Course.objects.create(
             name="Python",
@@ -185,6 +187,7 @@ class TeachersAPIsTests(TestCase):
             url="https://hackbulgaria.com/course/haskell-2/",
             start_time=date_decrease(29),
             end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
         )
         self.course3 = Course.objects.create(
             name="Python3",
@@ -192,6 +195,7 @@ class TeachersAPIsTests(TestCase):
             url="https://hackbulgaria.com/course/haskell-3/",
             start_time=date_decrease(29),
             end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
         )
         Lecture.objects.create(
             course=self.course1,
@@ -274,14 +278,16 @@ class CheckPresenceTests(TestCase):
             application_until=date_decrease(31),
             url="https://hackbulgaria.com/course/haskell-1/",
             start_time=date_decrease(30),
-            end_time=date_increase(30)
+            end_time=date_increase(30),
+            generate_certificates_until=date_decrease(1),
         )
         self.course2 = Course.objects.create(
             name="Python",
             application_until=date_decrease(31),
             url="https://hackbulgaria.com/course/haskell-2/",
             start_time=date_decrease(30),
-            end_time=date_increase(30)
+            end_time=date_increase(30),
+            generate_certificates_until=date_decrease(1),
         )
         Lecture.objects.create(
             course=self.course1,
@@ -333,7 +339,8 @@ class DropStudentTests(TestCase):
             application_until="2015-06-20",
             url="https://hackbulgaria.com/course/haskell-1/",
             start_time=date_decrease(30),
-            end_time=date_increase(30)
+            end_time=date_increase(30),
+            generate_certificates_until=date_decrease(1),
         )
         self.student = Student.objects.create(
             email="stud@abv.bg",
@@ -455,6 +462,7 @@ class WorkingAtTests(TestCase):
             url="https://hackbulgaria.com/course/haskell-1/",
             start_time=date_decrease(29),
             end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
         )
         self.course2 = Course.objects.create(
             name="Python",
@@ -462,6 +470,7 @@ class WorkingAtTests(TestCase):
             url="https://hackbulgaria.com/course/haskell-2/",
             start_time=date_decrease(29),
             end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
         )
         self.course_assignment = CourseAssignment.objects.create(
             group_time=1,
@@ -567,6 +576,7 @@ class TasksTests(TestCase):
             url="https://hackbulgaria.com/course/haskell-1/",
             start_time=date_decrease(29),
             end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
         )
 
         self.course2 = Course.objects.create(
@@ -575,6 +585,7 @@ class TasksTests(TestCase):
             url="https://hackbulgaria.com/course/asd-1/",
             start_time=date_decrease(29),
             end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
         )
 
         self.task = Task.objects.create(
@@ -623,6 +634,7 @@ class SolutionsTests(TestCase):
             url="https://hackbulgaria.com/course/haskell-1/",
             start_time=date_decrease(29),
             end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
         )
 
         self.task = Task.objects.create(
@@ -695,6 +707,7 @@ class SolutionsTests(TestCase):
             url="https://hackbulgaria.com/course/Javata-1/",
             start_time=date_decrease(29),
             end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
         )
 
         task2 = Task.objects.create(
@@ -738,3 +751,51 @@ class SolutionsTests(TestCase):
         response = self.client.patch(url, data, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Solution.objects.get(pk=self.solution.id).url, data['url'])
+
+
+class CourseAsignmentTests(TestCase):
+
+    def setUp(self):
+        self.student = Student.objects.create(
+            email='kosta@abv.bg',
+            mac="12:34:56:78:9A:BC",
+        )
+        self.course = Course.objects.create(
+            name="Java2",
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/Javata-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
+        )
+
+    def test_if_data_not_full(self):
+        logged_student = self.student
+        self.client = APIClient()
+        self.client.force_authenticate(user=logged_student)
+
+        url = reverse('education:course_assignment')
+
+        data = {
+            'course__id': self.course.id
+        }
+
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, 403)
+
+    # def test_if_data_is_full(self):
+    #     logged_student = self.student
+    #     self.client = APIClient()
+    #     self.client.force_authenticate(user=logged_student)
+
+    #     url = reverse('education:course_assignment')
+
+    #     data = {
+    #         'student_presence': 1,
+    #         'user': self.student.id,
+    #         'studentnote_set': "",
+    #     }
+
+    #     response = self.client.patch(url, data, format='json')
+    #     print(response.data)
+    #     self.assertEqual(response.status_code, 200)

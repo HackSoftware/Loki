@@ -151,6 +151,8 @@ body {
         padding: 5px;
         text-decoration: none;
         color: white; }
+  body .cards img {
+    width: 100%; }
 
 .text-card {
   padding-top: 100px; }

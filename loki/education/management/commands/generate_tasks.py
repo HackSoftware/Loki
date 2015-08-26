@@ -1,4 +1,5 @@
 import re
+import datetime
 
 from django.core.management.base import BaseCommand
 from django.conf import settings
@@ -15,20 +16,24 @@ class Command(BaseCommand):
     '''
 
     def handle(self, *args, **options):
-        arg_course_id = args[0]
-        course = Course.objects.get(id=arg_course_id)
-        course_github_url = course.git_repository
+        now = datetime.datetime.now()
+        courses = Course.objects.filter(start_time__lt=now, end_time__gt=now)
+        for course in courses:
+            course_github_url = course.git_repository
 
-        github_parameters = get_user_and_repo_names(course_github_url)
-        api_repo = get_api_repo(github_parameters)
-        api_repo_tree = api_repo.get_git_tree(sha='master', recursive=True)
+            github_parameters = get_user_and_repo_names(course_github_url)
+            api_repo = get_api_repo(github_parameters)
+            api_repo_tree = api_repo.get_git_tree(sha='master', recursive=True)
 
-        # filters tree elements by depth of 2, when base is considered 0
-        blob_tree_elements = filter(
-            lambda x: 'README.md' in x.path and x.path.count('/') > 1 and x.type == 'blob', api_repo_tree.tree)
+            # filters tree elements by depth of 2, when base is considered 0
+            blob_tree_elements = filter(
+                lambda x:
+                    'README.md' in x.path
+                    and x.path.count('/') > 1 and x.type == 'blob', api_repo_tree.tree
+            )
 
-        for element in blob_tree_elements:
-            create_db_task(course, element)
+            for element in blob_tree_elements:
+                create_db_task(course, element)
 
 
 def get_api_repo(github_parameters):
