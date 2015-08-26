@@ -245,4 +245,8 @@ def certificate(request, pk):
 
     tasks_solutions = {solution.task: solution for solution in solutions}
 
+    for task in tasks:
+        if task in tasks_solutions:
+            task.solution = tasks_solutions[task]
+
     return render(request, "certificate.html", locals())

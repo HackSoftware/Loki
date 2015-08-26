@@ -32,8 +32,8 @@
                         <a href="{{ task.description }}" target="_blank">Week {{ task.week }}
                             {{ task.name }}
                         </a> -
-                        {% if tasks_solutions.task %}
-                            <a class="code-sent" href="{{ tasks_solutions.task.url }}">Source Link
+                        {% if task.solution %}
+                            <a class="code-sent" href="{{ task.solution.url }}">Source Link
                             </a>
                         {% else %}
                             <span class="code-not-sent">Not sent</span>

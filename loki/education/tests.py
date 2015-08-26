@@ -1,11 +1,11 @@
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
+
 from rest_framework.test import APIClient
 from base_app.models import Company
 from base_app.models import City
-
-from education.models import Student, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt, Task, Solution
+from education.models import Student, OldCertificate, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt, Task, Solution
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -637,6 +637,12 @@ class SolutionsTests(TestCase):
             generate_certificates_until=date_decrease(1),
         )
 
+        self.assignment = CourseAssignment.objects.create(
+            user=self.student,
+            course=self.course,
+            group_time=1,
+        )
+
         self.task = Task.objects.create(
             course=self.course,
             description="https://github.com/lqlq/README.md",
@@ -661,6 +667,11 @@ class SolutionsTests(TestCase):
             student=self.student2,
             task=self.task,
             url='https://github.com/lololo/solution.py'
+        )
+
+        self.certificate = OldCertificate.objects.create(
+            assignment=self.assignment,
+            url_id=1,
         )
 
     def test_get_solutions(self):
@@ -752,6 +763,13 @@ class SolutionsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Solution.objects.get(pk=self.solution.id).url, data['url'])
 
+    def test_certificate(self):
+        c = Client()
+        url = reverse('education:certificate', kwargs={'pk': self.certificate.id})
+        response = c.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Source Link')
+        self.assertContains(response, 'Not sent')
 
 # class CourseAsignmentTests(TestCase):
 
