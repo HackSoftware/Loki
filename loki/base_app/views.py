@@ -1,5 +1,5 @@
 import json
-from rest_framework import status
+from rest_framework import status, mixins
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -42,11 +42,24 @@ class EventAPI(generics.ListAPIView):
     serializer_class = EventSerializer
 
 
-class TicketAPI(generics.ListCreateAPIView):
+class TicketAPI(mixins.ListModelMixin,
+                mixins.CreateModelMixin,
+                mixins.DestroyModelMixin,
+                generics.GenericAPIView):
+
     model = Ticket
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
     permission_classes = (IsAuthenticated,)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(base_user=self.request.user)

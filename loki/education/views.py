@@ -241,7 +241,7 @@ def certificate(request, pk):
 
     tasks = Task.objects.filter(course=ca.course)
     solutions = Solution.objects.filter(task__in=tasks, student=ca.user)
-    percent_awesome = (solutions.count() / tasks.count()) * 100
+    percent_awesome = round((solutions.count() / tasks.count()) * 100, 2)
 
     tasks_solutions = {solution.task: solution for solution in solutions}
 

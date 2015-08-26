@@ -16,6 +16,8 @@ urlpatterns = [
     url(r'^api/baseuser-update', baseuser_update, name='update_baseuser'),
     url(r'^api/event/$', EventAPI.as_view(), name='event'),
     url(r'^api/ticket/$', TicketAPI.as_view(), name='ticket'),
+    url(r'^api/ticket/(?P<pk>[0-9]+)/$', TicketAPI.as_view(), name='ticket_edit'),
+
     url(r'^api/get_number_of_sold_tickets/$', get_number_of_sold_tickets, name='get_number_of_sold_tickets'),
     url(r'^api/base-user-update/$', base_user_update, name='base_user_update'),
 ]
