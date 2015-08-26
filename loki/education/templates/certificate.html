@@ -1,11 +1,11 @@
 <html>
     <head>
-        <title>HackBulgaria {{ full_name }} Certificate</title>
+        <title>HackBulgaria {{ student.full_name }} Certificate</title>
         <link rel="stylesheet" href="{{ STATIC_URL }}certificates/certificate.css">
-        <meta property="og:title" content="HackBulgaria {{ full_name }} Certificate"/>
+        <meta property="og:title" content="HackBulgaria {{ student.full_name }} Certificate"/>
         <meta property="og:image" content="https://hackbulgaria.com/static/img/certificate_screen.png"/>
         <meta property="og:site_name" content="Hack Bulgaria"/>
-        <meta property="og:description" content="Certificate for being {{ percent_awesome }} awesome in the {{ course_name }} course in HackBulgaria"/>
+        <meta property="og:description" content="Certificate for being {{ percent_awesome }} awesome in the {{ course.name }} course in HackBulgaria"/>
         <link rel="shortcut icon" href="/static/img/favicon.ico">
     </head>
     <body>
@@ -19,9 +19,9 @@
         <a href="http://hackbulgaria.com/">
             <img id="logo" src="/static/img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
         </a>
-        <h2 id="title">Certificate for being <span id="percent">{{ percent_awesome }}% </span> awesome in {{ course_name }} </h2>
+        <h2 id="title">Certificate for being <span id="percent">{{ percent_awesome }}% </span> awesome in {{ course.name }} </h2>
         <div>
-            <p id="name"><a href="{{ git_hub_url }}">{{ full_name }}</a></p>
+            <p id="name"><a href="{{ user.github_account }}">{{ user.full_name }}</a></p>
         </div>
 
         <div>
