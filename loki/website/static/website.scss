@@ -263,3 +263,18 @@ $ModerateCompetition: #56CB00;
 	}
 }
 
+@media screen and (max-width: 995px) {
+	.text-card{
+		padding-top: 0px;
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.cards{
+		width:100% !important;
+	}
+	.text-card{
+		width:100% !important;
+		padding-top: 0px;
+	}
+}
