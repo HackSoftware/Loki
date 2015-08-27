@@ -138,13 +138,13 @@ class PersonalUserInformationTests(TestCase):
         first_courseassignment = response.data['student']['courseassignment_set'][0]
         self.assertEqual(first_courseassignment['course']['name'], self.course.name)
 
-    def test_me_returns_certificate_url(self):
+    def test_me_returns_certificate(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
-        certificate_url = response.data['student']['courseassignment_set'][0]['oldcertificate_url']
-        self.assertNotEqual(certificate_url, "")
+        certificate_id = response.data['student']['courseassignment_set'][0]['certificate']['id']
+        self.assertEqual(certificate_id, self.certificate.id)
 
     def test_baseuser_update(self):
         self.client = APIClient()
