@@ -6,7 +6,7 @@ from education.models import Course, Certificate
 class Command(BaseCommand):
 
     def handle(self, *args, **options):
-        courses = Course.objects.filter(generate_certificates_until__lt=timezone.now())
+        courses = Course.objects.filter(generate_certificates_until__gt=timezone.now())
         for course in courses:
             for assignment in course.courseassignment_set.all():
                 cert, is_new = Certificate.objects.get_or_create(assignment=assignment)
