@@ -59,7 +59,7 @@
       <h2 class="container text-center">{{ snippets.index_success_stories_description.text }}</h2>
 
       {% for video in videos %}
-        <div class="col-sm-6 col-md-3 video">
+        <div class="col-sm-6 col-xs-6 col-md-3 video">
           <a class="swipebox-video" rel="youtube" href="{{ video.youtube_link }}">
             <img class="video-thumb" src="{{ MEDIA_URL }}{{ video.image }}">
             <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
