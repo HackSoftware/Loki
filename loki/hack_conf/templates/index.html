@@ -285,6 +285,20 @@
             <li><a href="{{ mp.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ mp.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
             {% endfor %}
           </ul>
+        </div>
+
+        <h3>Училиша и университети партньори</h3>
+        {% if not school_partners %}
+          <div class="sub-title">Скоро очаквайте и тях.</div>
+        {% endif %}
+        <br/>
+        <div class="row">
+          <ul class="list-inline">
+            {% for sp in school_partners %}
+            <li><a href="{{ sp.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ sp.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
+            {% endfor %}
+          </ul>
+        </div>
 
           <div class="btn-wrapper">
             <a class="btn btn-sm btn-primary" id="become-partner">Стани спонсор</a>
@@ -295,6 +309,7 @@
             </p>
           </div>
         </div>
+
       </div>
     </section>
 
