@@ -72,6 +72,11 @@ body {
             width: 33.33%; }
             body #page-wrap #faces .person:nth-last-of-type(3) {
               display: none; } }
+        @media screen and (max-width: 400px) {
+          body #page-wrap #faces .person {
+            width: 50%; }
+            body #page-wrap #faces .person:nth-last-of-type(4) {
+              display: none; } }
         body #page-wrap #faces .person:hover {
           box-shadow: 0px 10px 20px #222222; }
         body #page-wrap #faces .person .person-image {
