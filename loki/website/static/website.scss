@@ -290,11 +290,30 @@ $ModerateCompetition: #56CB00;
 #moderate-competiton-card {
   background-color: $ModerateCompetition;
 }
+
+.container section {
+    &:nth-of-type(2n + 1) {
+        div.cards {
+            float: left;
+        }
+        div.text-card {
+            float: right;
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .text-card, .card {
+        float: right !important;
+    }
+}
+
 .cards{
     img{
         width:100%;
     }
 }
+
 
 @media screen and (max-width: 995px) {
     .text-card{
@@ -308,6 +327,7 @@ $ModerateCompetition: #56CB00;
     }
     .text-card{
         width:100% !important;
+        height: 300px;
         padding-top: 0px;
     }
 }
