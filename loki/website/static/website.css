@@ -55,7 +55,23 @@ body {
         background: white;
         padding: 0;
         box-shadow: 0px 10px 20px #888888;
-        float: left; }
+        float: left;
+        width: 16.66%; }
+        @media screen and (max-width: 980px) {
+          body #page-wrap #faces .person {
+            width: 20%; }
+            body #page-wrap #faces .person:last-of-type {
+              display: none; } }
+        @media screen and (max-width: 750px) {
+          body #page-wrap #faces .person {
+            width: 25%; }
+            body #page-wrap #faces .person:nth-last-of-type(2) {
+              display: none; } }
+        @media screen and (max-width: 470px) {
+          body #page-wrap #faces .person {
+            width: 33.33%; }
+            body #page-wrap #faces .person:nth-last-of-type(3) {
+              display: none; } }
         body #page-wrap #faces .person:hover {
           box-shadow: 0px 10px 20px #222222; }
         body #page-wrap #faces .person .person-image {
@@ -68,9 +84,9 @@ body {
         body #page-wrap #faces .person .position {
           padding: 10px;
           font-size: 90%; }
-        body #page-wrap #faces .person .person-description {
-          height: 3vw;
-          font-size: 1vw; }
+        @media screen and (max-width: 980px) {
+          body #page-wrap #faces .person .person-description {
+            font-size: 0.7em; } }
     body #page-wrap #action-buttons {
       padding-top: 20px;
       padding-bottom: 30px; }

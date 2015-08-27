@@ -13,9 +13,9 @@
   <div id="faces" class="row">
     <h2 id="moto"><strong>{{success_counter}}</strong> {{ snippets.index_call_to_action.text }}</h2>
     {% for successor in successors %}
-      <div class="person col-sm-2">
+      <div class="person">
         <img src="/media/{{ successor.picture }}" class="person-image">
-        <p class="person-description" > 
+        <p class="person-description " > 
           <span class="name">{{ successor.name }}</span> <br>
           <span class="position">{{ successor.title }}</span>
         </p>
@@ -25,17 +25,19 @@
 
   <div class="container-fluid">
     <div class="row" id="action-buttons">
-      <div class="col-md-6">
+
+      <div class="col-xs-6">
         <a href="{% url 'website:courses' %}">
           <button id="left-action">{{ snippets.index_left_button.text }}</button>
         </a>
       </div>
 
-      <a href="{% url 'website:partners' %}">
-        <div class="col-md-6">
+      <div class="col-xs-6">
+        <a href="{% url 'website:partners' %}">
           <button id="right-action">{{ snippets.index_right_button.text }}</button>
-        </div>
-      </a>
+        </a>
+      </div>
+
     </div>
   </div>
 
