@@ -46,7 +46,7 @@ body {
           body #page-wrap #header #main-navigation li .active {
             border-bottom: 2px solid #F7931E; }
     body #page-wrap #faces {
-      display: inline; }
+      margin: 0; }
       body #page-wrap #faces #moto {
         text-align: center; }
         body #page-wrap #faces #moto * {
@@ -104,6 +104,7 @@ body {
         border: none;
         color: white; }
       body #page-wrap #action-buttons #right-action {
+        color: #F7931E;
         float: left;
         padding: 14px;
         background: white;

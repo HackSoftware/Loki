@@ -61,7 +61,7 @@ body {
         }
 
         #faces {
-            display: inline;
+            margin: 0;
             #moto {
                 text-align: center;
                 * {
@@ -145,6 +145,7 @@ body {
                 color: white;
             }
             #right-action {
+                color: $orange;
                 float: left;
                 padding: 14px;
                 background: white;
