@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import SuccessVideo, SuccessStoryPerson, Snippet
 
-from education.models import WorkingAt
+from education.models import WorkingAt, Student
 from base_app.models import Partner
 
 
@@ -10,7 +10,9 @@ def index(request):
     partners = Partner.objects.all().order_by('?')
     videos = SuccessVideo.objects.all()[:4]
 
-    success_counter = WorkingAt.objects.filter(came_working=False).count()
+    success = WorkingAt.objects.filter(came_working=False)
+    success_students = map(lambda x: x.student, success)
+    success_students_count = len(set(success_students))
 
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
