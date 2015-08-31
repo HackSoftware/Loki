@@ -44,7 +44,16 @@ admin.site.register(Event, EventAdmin)
 class TicketAdmin(ImportExportActionModelAdmin):
     resource_class = TicketResource
 
-    list_display = ('id', 'event', 'base_user')
+    def full_name(self, obj):
+        return obj.base_user.full_name
+
+    def birth_place(self, obj):
+        return obj.base_user.birth_place
+
+    def description(self, obj):
+        return obj.base_user.description
+
+    list_display = ('id', 'event', 'full_name', 'birth_place', 'description')
 
     class Meta:
         model = Ticket
