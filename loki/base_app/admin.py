@@ -50,10 +50,13 @@ class TicketAdmin(ImportExportActionModelAdmin):
     def birth_place(self, obj):
         return obj.base_user.birth_place
 
+    def studies_at(self, obj):
+        return obj.base_user.studies_at
+
     def description(self, obj):
         return obj.base_user.description
 
-    list_display = ('id', 'event', 'full_name', 'birth_place', 'description')
+    list_display = ('id', 'event', 'full_name', 'birth_place', 'studies_at', 'description')
 
     class Meta:
         model = Ticket
