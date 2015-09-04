@@ -326,6 +326,7 @@ hr.white { border-color: #F3AE9B; }
 .table-striped > tbody > tr:nth-child(even) > td,
 .table-striped > tbody > tr:nth-child(even) > th { background: #ECECEC; }
 
+.img-responsive { margin: auto; }
 .thumb-wrapper { position: relative; display: table; }
 .thumb-wrapper .img-responsive { width: 100%; z-index: 0; }
 .thumb-wrapper .overlay {
@@ -495,8 +496,8 @@ label.error { display: block; }
 #schedule .panel .panel-title a .fa.fa-angle-down { display: none; }
 #schedule .panel .panel-title a .fa.fa-angle-up { display: block; }
 
-#speakers { background-image: url('../img/sound-wave.jpg'); background-repeat: no-repeat; background-position: center; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; }
-#speakers .speaker-item { padding-bottom: 50px; }
+#speakers { background-image: url('../img/sound-wave.jpg'); background-repeat: no-repeat; background-position: center; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;  }
+#speakers .speaker-item { padding-bottom: 50px; height: 500px;}
 #speakers .img-wrapper { text-align: center; }
 #speakers .img-wrapper img { margin: 0 auto; }
 #speakers .name { font-size: 25px; margin: 10px 0 2px; }

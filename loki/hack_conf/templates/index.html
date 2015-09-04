@@ -206,8 +206,8 @@
       {% for speaker_row in speakers|split_in_groups:'4' %}
           <section class="row">
            {% for speaker in speaker_row %}
-          <div class="col-md-3 col-sm-3 col-xs-6">
-            <div class="speaker-item animated hiding" data-animation="fadeInUp" data-delay="0">
+          <div class="col-md-3 col-sm-3 col-xs-6 speaker-item">
+            <div class="animated hiding" data-animation="fadeInUp" data-delay="0">
               <div class="img-wrapper">
                 <img src="{{MEDIA_URL}}/{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
               </div>
