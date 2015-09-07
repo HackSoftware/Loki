@@ -4,7 +4,7 @@ from .models import Speaker, Sponsor, Schedule
 
 
 class SpeakerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'title', 'description', 'facebook', 'twitter', 'google_plus', 'github')
+    list_display = ('name', 'title', 'description', 'facebook', 'twitter', 'google_plus', 'github', 'video_presentation')
 
     class Meta:
         model = Speaker

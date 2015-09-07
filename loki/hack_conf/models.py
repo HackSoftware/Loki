@@ -10,6 +10,7 @@ class Speaker(models.Model):
     twitter = models.URLField(blank=True)
     google_plus = models.URLField(blank=True)
     github = models.URLField(blank=True)
+    video_presentation = models.URLField(blank=True)
 
     def __str__(self):
         return self.name
