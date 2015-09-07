@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="/static/assets/css/font-awesome.min.css" type="text/css" media="all" />
     <link rel="stylesheet" href="/static/assets/css/font-lineicons.css" type="text/css" media="all" />
     <link rel="stylesheet" href="/static/assets/css/jquery.fancybox.css" type="text/css" media="all" />
+    <link rel="stylesheet" href="/static/assets/css/swipebox.css" type="text/css" media="all" />
     <link rel="stylesheet" href="/static/assets/css/style.css" id="mainstyle" type="text/css" media="all" />
   </head>
 
@@ -206,16 +207,23 @@
       {% for speaker_row in speakers|split_in_groups:'4' %}
           <section class="row">
            {% for speaker in speaker_row %}
-          <div class="col-md-3 col-sm-3 col-xs-6 speaker-item">
-            <div class="animated hiding" data-animation="fadeInUp" data-delay="0">
-              <div class="img-wrapper speaker-image-container">
-                <img src="{{MEDIA_URL}}/{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
-                <span class="fa fa-youtube-play fa-5x speaker_play_button"></span>
-              </div>
-              <div class="name">{{ speaker.name }}</div>
-              <div class="sub">{{ speaker.title }}</div>
-              <p class="small">{{ speaker.description }}</p>
-              <div class="social-link">
+           <div class="col-md-3 col-sm-3 col-xs-6 speaker-item">
+             <div class="animated hiding" data-animation="fadeInUp" data-delay="0">
+
+               <div class="img-wrapper speaker-image-container">
+                 {% if speaker.video_presentation %}
+                 <a class="swipebox-video" rel="youtube" href="{{speaker.video_presentation}}">
+                   <img src="{{MEDIA_URL}}/{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
+                   <span class="fa fa-youtube-play fa-5x speaker_play_button"></span>
+                 </a>
+                 {% else %}
+                 <img src="{{MEDIA_URL}}/{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
+                 {% endif %}
+               </div>
+               <div class="name">{{ speaker.name }}</div>
+               <div class="sub">{{ speaker.title }}</div>
+               <p class="small">{{ speaker.description }}</p>
+               <div class="social-link">
                 {% if speaker.facebook %}
                 <a href="{{ speaker.facebook }}"><span class="fa fa-facebook"></span></a>
                 {% endif %}
@@ -288,7 +296,7 @@
           </ul>
         </div>
 
-        <h3>Училиша и университети партньори</h3>
+        <h3>Училища и университети партньори</h3>
         {% if not school_partners %}
           <div class="sub-title">Скоро очаквайте и тях.</div>
         {% endif %}
@@ -397,6 +405,7 @@
     ga('send', 'pageview');
 
     </script>
+    
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false"></script>
     <script type="text/javascript" src="/static/assets/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/assets/js/jquery.nav.js"></script>
@@ -405,6 +414,14 @@
     <script type="text/javascript" src="/static/assets/js/waypoints.min.js"></script>
     <script type="text/javascript" src="/static/assets/js/waypoints-sticky.min.js"></script>
     <script type="text/javascript" src="/static/assets/js/jquery.fancybox.js"></script>
+    <script type="text/javascript" src="/static/assets/js/jquery.swipebox.js"></script>
     <script type="text/javascript" src="/static/assets/js/scripts.js"></script>
+    <script type="text/javascript">
+    ;( function( $ ) {
+
+      $( '.swipebox-video' ).swipebox();
+
+    } )( jQuery );
+    </script>
   </body>
   </html>
