@@ -16,8 +16,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='HR',
             fields=[
-                ('baseuser_ptr', models.OneToOneField(primary_key=True, auto_created=True, serialize=False, to=settings.AUTH_USER_MODEL, parent_link=True)),
-                ('phone', models.CharField(max_length='20', null=True, blank=True)),
+                ('baseuser_ptr', models.OneToOneField(serialize=False, primary_key=True, parent_link=True, to=settings.AUTH_USER_MODEL, auto_created=True)),
+                ('phone', models.CharField(null=True, blank=True, max_length='20')),
                 ('company', models.ForeignKey(to='base_app.Partner')),
             ],
             options={

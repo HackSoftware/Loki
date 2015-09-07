@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
-import django_resized.forms
 import django.utils.timezone
 import ckeditor.fields
 
@@ -11,6 +10,7 @@ import ckeditor.fields
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('base_app', '0001_initial'),
         ('auth', '0001_initial'),
     ]
 
@@ -18,10 +18,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BaseUser',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(verbose_name='last login', default=django.utils.timezone.now)),
-                ('is_superuser', models.BooleanField(help_text='Designates that this user has all permissions without explicitly assigning them.', verbose_name='superuser status', default=False)),
+                ('last_login', models.DateTimeField(default=django.utils.timezone.now, verbose_name='last login')),
+                ('is_superuser', models.BooleanField(help_text='Designates that this user has all permissions without explicitly assigning them.', default=False, verbose_name='superuser status')),
                 ('first_name', models.CharField(max_length=20)),
                 ('last_name', models.CharField(max_length=20)),
                 ('email', models.EmailField(max_length=75, unique=True)),
@@ -30,9 +30,11 @@ class Migration(migrations.Migration):
                 ('github_account', models.URLField(null=True, blank=True)),
                 ('linkedin_account', models.URLField(null=True, blank=True)),
                 ('twitter_account', models.URLField(null=True, blank=True)),
-                ('studies_at', models.CharField(max_length='110', null=True, blank=True)),
-                ('works_at', models.CharField(max_length='110', null=True, blank=True)),
-                ('avatar', django_resized.forms.ResizedImageField(upload_to='avatar', blank=True)),
+                ('description', models.TextField(null=True, blank=True)),
+                ('studies_at', models.CharField(null=True, blank=True, max_length=110)),
+                ('works_at', models.CharField(null=True, blank=True, max_length=110)),
+                ('avatar', models.ImageField(null=True, blank=True, upload_to='')),
+                ('full_image', models.ImageField(null=True, blank=True, upload_to='')),
             ],
             options={
                 'abstract': False,
@@ -42,7 +44,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Competitor',
             fields=[
-                ('baseuser_ptr', models.OneToOneField(primary_key=True, auto_created=True, serialize=False, to=settings.AUTH_USER_MODEL, parent_link=True)),
+                ('baseuser_ptr', models.OneToOneField(serialize=False, primary_key=True, parent_link=True, to=settings.AUTH_USER_MODEL, auto_created=True)),
                 ('is_vegetarian', models.BooleanField(default=False)),
                 ('faculty_number', models.IntegerField(null=True)),
                 ('shirt_size', models.SmallIntegerField(choices=[(1, 'S'), (2, 'M'), (3, 'L'), (4, 'XL')], default=1)),
@@ -58,7 +60,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Invitation',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('competitor', models.ForeignKey(to='hack_fmi.Competitor')),
             ],
             options={
@@ -68,10 +70,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Mentor',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
                 ('description', ckeditor.fields.RichTextField()),
-                ('picture', models.ImageField(upload_to='', blank=True)),
+                ('picture', models.ImageField(blank=True, upload_to='')),
                 ('order', models.PositiveIntegerField(default=0)),
             ],
             options={
@@ -82,7 +84,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Partner',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=60)),
             ],
             options={
@@ -92,7 +94,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Room',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('number', models.IntegerField()),
                 ('capacity', models.SmallIntegerField()),
             ],
@@ -103,8 +105,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Season',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
-                ('name', models.CharField(max_length=100, null=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(null=True, max_length=100)),
                 ('topic', models.CharField(max_length=100)),
                 ('front_page', ckeditor.fields.RichTextField(blank=True)),
                 ('min_team_members_count', models.SmallIntegerField(default=1)),
@@ -123,7 +125,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Skill',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=30)),
             ],
             options={
@@ -133,13 +135,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Team',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100, unique=True)),
                 ('idea_description', models.TextField()),
                 ('repository', models.URLField(blank=True)),
                 ('need_more_members', models.BooleanField(default=True)),
-                ('members_needed_desc', models.CharField(max_length=255, blank=True)),
-                ('picture', models.ImageField(upload_to='', blank=True)),
+                ('members_needed_desc', models.CharField(blank=True, max_length=255)),
+                ('picture', models.ImageField(blank=True, upload_to='')),
                 ('place', models.SmallIntegerField(null=True)),
             ],
             options={
@@ -149,7 +151,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TeamMembership',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('is_leader', models.BooleanField(default=False)),
                 ('competitor', models.ForeignKey(to='hack_fmi.Competitor')),
                 ('team', models.ForeignKey(to='hack_fmi.Team')),
@@ -167,25 +169,25 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='team',
             name='mentors',
-            field=models.ManyToManyField(to='hack_fmi.Mentor', blank=True),
+            field=models.ManyToManyField(blank=True, to='hack_fmi.Mentor'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='team',
             name='room',
-            field=models.ForeignKey(null=True, to='hack_fmi.Room', blank=True),
+            field=models.ForeignKey(null=True, blank=True, to='hack_fmi.Room'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='team',
             name='season',
-            field=models.ForeignKey(default=1, to='hack_fmi.Season'),
+            field=models.ForeignKey(to='hack_fmi.Season', default=1),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='team',
             name='technologies',
-            field=models.ManyToManyField(to='hack_fmi.Skill', blank=True),
+            field=models.ManyToManyField(blank=True, to='hack_fmi.Skill'),
             preserve_default=True,
         ),
         migrations.AddField(
@@ -230,14 +232,20 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='baseuser',
+            name='birth_place',
+            field=models.ForeignKey(null=True, blank=True, to='base_app.City'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='baseuser',
             name='groups',
-            field=models.ManyToManyField(help_text='The groups this user belongs to. A user will get all permissions granted to each of his/her group.', related_name='user_set', to='auth.Group', verbose_name='groups', related_query_name='user', blank=True),
+            field=models.ManyToManyField(blank=True, related_name='user_set', help_text='The groups this user belongs to. A user will get all permissions granted to each of his/her group.', to='auth.Group', related_query_name='user', verbose_name='groups'),
             preserve_default=True,
         ),
         migrations.AddField(
             model_name='baseuser',
             name='user_permissions',
-            field=models.ManyToManyField(help_text='Specific permissions for this user.', related_name='user_set', to='auth.Permission', verbose_name='user permissions', related_query_name='user', blank=True),
+            field=models.ManyToManyField(blank=True, related_name='user_set', help_text='Specific permissions for this user.', to='auth.Permission', related_query_name='user', verbose_name='user permissions'),
             preserve_default=True,
         ),
     ]
