@@ -906,3 +906,11 @@ label.error { display: block; }
   padding-right: 5vw;
   max-width: 135vh !important;
 }
+
+ul.platinum-sponsors-list li{
+  width:25% !important;
+}
+
+ul.gold-sponsors-list li{
+  width:22% !important;
+}

@@ -255,7 +255,7 @@
         <br/>
         
         <div class="row">
-          <ul class="list-inline">
+          <ul class="list-inline platinum-sponsors-list">
             {% for sponsor in sponsors_platinum %}
             <li><a href="{{ sponsor.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ sponsor.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
             {% endfor %}
@@ -269,7 +269,7 @@
         <br/>
         
         <div class="row">
-          <ul class="list-inline">
+          <ul class="list-inline gold-sponsors-list">
             {% for sponsor in sponsors_gold %}
             <li><a href="{{ sponsor.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ sponsor.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
             {% endfor %}
