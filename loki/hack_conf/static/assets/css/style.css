@@ -880,7 +880,7 @@ label.error { display: block; }
   cursor:pointer;
 }
 
-.speaker-image-container:hover>.speaker_play_button{
+.swipebox-video:hover>.speaker_play_button{
   opacity: 1.0;
   font-size:60px;
 }
