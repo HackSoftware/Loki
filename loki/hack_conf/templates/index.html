@@ -247,18 +247,49 @@
     <section id="sponsors" class="section dark">
       <div class="container">
         <div class="icon-wrap"><span class="icon icon-active icon-documents-bookmarks-12"></span></div>
-        <h3>Спонсори</h3>
-        {% if not sponsors %}
+        
+        <h3>Платинени Спонсори</h3>
+        {% if not sponsors_platinum %}
         <div class="sub-title">Скоро очаквайте и тях.</div>
         {% endif %}
         <br/>
+        
         <div class="row">
           <ul class="list-inline">
-            {% for sponsor in sponsors %}
+            {% for sponsor in sponsors_platinum %}
             <li><a href="{{ sponsor.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ sponsor.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
             {% endfor %}
           </ul>
         </div>
+
+        <h3>Златни Спонсори</h3>
+        {% if not sponsors_gold %}
+        <div class="sub-title">Скоро очаквайте и тях.</div>
+        {% endif %}
+        <br/>
+        
+        <div class="row">
+          <ul class="list-inline">
+            {% for sponsor in sponsors_gold %}
+            <li><a href="{{ sponsor.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ sponsor.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <h3>Сребърни Спонсори</h3>
+        {% if not sponsors_silver %}
+        <div class="sub-title">Скоро очаквайте и тях.</div>
+        {% endif %}
+        <br/>
+        
+        <div class="row">
+          <ul class="list-inline">
+            {% for sponsor in sponsors_silver %}
+            <li><a href="{{ sponsor.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ sponsor.picture }}" alt="sponsor-{{ forloop.counter }}" /></a></li>
+            {% endfor %}
+          </ul>
+        </div>
+
         <h3>Генерални медийни партньори</h3>
         {% if not general_media_partners %}
         <div class="sub-title">Скоро очаквайте и тях.</div>
