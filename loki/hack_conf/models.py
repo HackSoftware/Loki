@@ -22,12 +22,19 @@ class Sponsor(models.Model):
     BRANCH_PARTNER = 3
     MEDIA_PARTNER = 4
     SCHOOL_PARTNER = 5
+    SPONSOR_SILVER = 6
+    SPONSOR_GOLD = 7
+    SPONSOR_PLATINUM = 8
 
     TITLE_TYPE = (
         (SPONSOR, 'Sponsor'),
         (GENERAL_MEDIA_PARTNER, 'General Media Partner'),
         (BRANCH_PARTNER, 'Branch Partner'),
-        (SCHOOL_PARTNER, 'School Partner')
+        (SCHOOL_PARTNER, 'School Partner'),
+        (SPONSOR_SILVER, 'Silver Sponsor'),
+        (SPONSOR_GOLD, 'Gold Sponsor'),
+        (SPONSOR_PLATINUM, 'Platinum Sponsor'),
+
     )
     title = models.SmallIntegerField(choices=TITLE_TYPE, default=SPONSOR)
     name = models.CharField(max_length=100)
