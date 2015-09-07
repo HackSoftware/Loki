@@ -209,10 +209,11 @@
            {% for speaker in speaker_row %}
            <div class="col-md-3 col-sm-3 col-xs-6 speaker-item">
              <div class="animated hiding" data-animation="fadeInUp" data-delay="0">
+
                <div class="img-wrapper speaker-image-container">
                  <a class="swipebox-video" rel="youtube" href="{{speaker.video_presentation}}">
                    <img src="{{MEDIA_URL}}/{{ speaker.picture}}" class="img-responsive img-circle" alt="speaker-{{ forloop.counter}}" />
-                     <span class="fa fa-youtube-play fa-5x speaker_play_button"></span>
+                   <span class="fa fa-youtube-play fa-5x speaker_play_button"></span>
                  </a>
                </div>
                <div class="name">{{ speaker.name }}</div>
