@@ -200,9 +200,9 @@
 
 		scrollTo: function(target, callback) {
 			var offset = $(target).offset().top;
-
 			$('html, body').animate({
-				scrollTop: offset
+				// $('#header').height() is added to support the fixed header
+				scrollTop: offset - $('#header').height()
 			}, this.config.scrollSpeed, this.config.easing, callback);
 		},
 
