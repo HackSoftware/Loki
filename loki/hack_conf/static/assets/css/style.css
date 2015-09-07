@@ -898,3 +898,11 @@ label.error { display: block; }
   font-size: 40px;
   opacity:0.6;
 }
+
+.swipebox-video-container-custom{
+  padding-top: 3vh;
+  padding-bottom: 3vh;
+  padding-left: 5vw;
+  padding-right: 5vw;
+  max-width: 135vh !important;
+}
