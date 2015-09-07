@@ -874,3 +874,27 @@ label.error { display: block; }
 #speakers-header {
   margin-bottom: 2em;
 }
+
+.speaker-image-container{
+  position:relative;
+  cursor:pointer;
+}
+
+.speaker-image-container:hover>.speaker_play_button{
+  opacity: 1.0;
+  font-size:60px;
+}
+
+.speaker_play_button{
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  transition: all 1s ease;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: #F0A91D;
+  font-size: 40px;
+  opacity:0.6;
+}
