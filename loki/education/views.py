@@ -20,7 +20,7 @@ from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
                           SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
                           CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer)
-from .premissions import IsStudent, IsTeacher, IsTeacherForCA, IsTeacherForThisCourse
+from .premissions import IsStudent, IsTeacher, IsTeacherForCA
 
 
 @csrf_exempt
@@ -120,10 +120,13 @@ def get_students_for_course(request):
 
 class CourseAssignmentAPI(generics.ListAPIView):
     model = CourseAssignment
-    queryset = CourseAssignment.objects.all()
     serializer_class = FullCASerializer
-    permission_classes = (IsTeacher, IsTeacherForThisCourse)
+    permission_classes = (IsTeacher,)
     filter_fields = ('course__id',)
+
+    def get_queryset(self):
+        teached_courses = self.request.user.teacher.teached_courses.all()
+        return CourseAssignment.objects.filter(course__in=teached_courses)
 
 
 class StudentNoteAPI(generics.CreateAPIView):

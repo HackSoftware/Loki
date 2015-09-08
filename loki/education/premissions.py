@@ -1,6 +1,5 @@
 from rest_framework import permissions
 from .models import CourseAssignment, Course
-from django.shortcuts import get_object_or_404
 
 
 class IsStudent(permissions.BasePermission):
@@ -34,12 +33,3 @@ class IsTeacherForCA(permissions.BasePermission):
         teacher = request.user.get_teacher()
 
         return assignment.course in teacher.teached_courses.all()
-
-
-class IsTeacherForThisCourse(permissions.BasePermission):
-    message = 'You are not the teacher of this course'
-
-    def has_permission(self, request, view):
-        teacher = request.user.get_teacher()
-        course = get_object_or_404(Course, id=request.data['course__id'])
-        return course in teacher.teached_courses.all()
