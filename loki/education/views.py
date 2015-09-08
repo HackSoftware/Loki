@@ -121,11 +121,10 @@ def get_students_for_course(request):
 class CourseAssignmentAPI(generics.ListAPIView):
     model = CourseAssignment
     serializer_class = FullCASerializer
-    permission_classes = (IsTeacher)
     filter_fields = ('course__id',)
 
     def get_queryset(self):
-        teached_courses = self.request.user.teacher.teached_courses
+        teached_courses = self.request.user.teacher.teached_courses.all()
         return CourseAssignment.objects.filter(course__in=teached_courses)
 
 
