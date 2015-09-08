@@ -7,13 +7,6 @@ from .models import (Lecture, CheckIn, Course, Student, Solution,
                      CourseAssignment, StudentNote, Teacher, WorkingAt, Task, Certificate)
 
 
-class StudentNoteSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = StudentNote
-        fields = ('text', 'assignment')
-
-
 class CertificateSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -60,18 +53,6 @@ class NoteTeacherSerializer(serializers.ModelSerializer):
         )
 
 
-# class StudentNoteSerializer(serializers.ModelSerializer):
-#     author = NoteTeacherSerializer(many=False, read_only=True)
-
-#     class Meta:
-#         model = StudentNote
-#         fields = (
-#             'text',
-#             'author',
-#             'post_time',
-#         )
-
-
 class LectureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lecture
@@ -96,6 +77,14 @@ class TeacherSetSerializer(serializers.ModelSerializer):
             'linkedin_account',
             'twitter_account'
         )
+
+
+class StudentNoteSerializer(serializers.ModelSerializer):
+    author = TeacherSetSerializer(many=False, read_only=True)
+
+    class Meta:
+        model = StudentNote
+        fields = ('text', 'assignment', 'post_time', 'author')
 
 
 class CourseSerializer(serializers.ModelSerializer):
