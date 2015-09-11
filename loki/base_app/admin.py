@@ -65,6 +65,7 @@ class TicketAdmin(ImportExportActionModelAdmin):
         model = Ticket
 
     list_filter = ('event',)
+    search_fields = ['base_user__first_name', 'base_user__last_name']
 
 admin.site.register(Ticket, TicketAdmin)
 

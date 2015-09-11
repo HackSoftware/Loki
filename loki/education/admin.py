@@ -3,7 +3,7 @@ from import_export.admin import ImportExportActionModelAdmin
 from django.contrib import admin
 
 from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote, WorkingAt, Task, Solution, Certificate
-from .modelresource import StudentResource, CourseAssignmentResource
+from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
 
 
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -104,7 +104,9 @@ class CheckInAdmin(admin.ModelAdmin):
 admin.site.register(CheckIn, CheckInAdmin)
 
 
-class WorkingAtAdmin(admin.ModelAdmin):
+class WorkingAtAdmin(ImportExportActionModelAdmin):
+    resource_class = WorkingAtResource
+
     list_display = [
         'full_name',
         'company',
