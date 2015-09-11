@@ -22,11 +22,11 @@ class WorkingAtResource(resources.ModelResource):
             'student__email',
             'student__first_name',
             'student__last_name',
-            'course',
+            'course__name',
             'came_working',
             'start_date',
             'title',
             'description',
-            'company',
+            'company__name',
             'company_name'
         )
