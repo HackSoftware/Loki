@@ -73,7 +73,7 @@ class TicketAPI(mixins.ListModelMixin,
 
 @api_view(['GET'])
 def get_number_of_sold_tickets(request):
-    users = BaseUser.objects.filter(ticket__isnull=True)
+    users = BaseUser.objects.filter(ticket__isnull=False)
     return Response({'item': [{"value": users.count()}]}, status=status.HTTP_200_OK)
 
 
