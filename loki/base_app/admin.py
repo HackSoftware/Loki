@@ -8,7 +8,10 @@ from .modelresource import TicketResource
 
 
 class BaseUserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'first_name', 'last_name')
+    list_display = ('email', 'first_name', 'last_name', 'studies_at', 'works_at')
+
+    list_filter = ('is_active',)
+    search_fields = ['email', 'first_name', 'last_name', 'studies_at', 'works_at']
 
     class Meta:
         model = BaseUser
