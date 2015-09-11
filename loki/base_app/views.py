@@ -8,6 +8,8 @@ from base_app.models import Event, Ticket
 
 from base_app.serializers import (BaseUserMeSerializer, UpdateBaseUserSerializer,
                                   EventSerializer, TicketSerializer)
+from hack_fmi.models import BaseUser
+
 from .helper import crop_image
 
 
@@ -71,8 +73,8 @@ class TicketAPI(mixins.ListModelMixin,
 
 @api_view(['GET'])
 def get_number_of_sold_tickets(request):
-    count = Ticket.objects.count()
-    return Response({'item': [{"value": count}]}, status=status.HTTP_200_OK)
+    users = BaseUser.objects.filter(ticket__isnull=True)
+    return Response({'item': [{"value": users.count()}]}, status=status.HTTP_200_OK)
 
 
 @api_view(['PATCH'])
