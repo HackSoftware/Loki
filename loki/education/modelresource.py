@@ -18,3 +18,15 @@ class WorkingAtResource(resources.ModelResource):
 
     class Meta:
         model = WorkingAt
+        fields = (
+            'student__email',
+            'student__first_name',
+            'student__last_name',
+            'course',
+            'came_working',
+            'start_date',
+            'title',
+            'description',
+            'company',
+            'company_name'
+        )
