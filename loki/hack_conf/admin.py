@@ -15,7 +15,7 @@ class SponsorAdmin(admin.ModelAdmin):
 
 
 class ScheduleAdmin(admin.ModelAdmin):
-    list_display = ('day', 'name', 'time', 'description', 'author')
+    list_display = ('day', 'name', 'time', 'description', 'speaker', 'co_speaker')
 
 
 admin.site.register(Schedule, ScheduleAdmin)

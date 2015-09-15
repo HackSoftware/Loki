@@ -52,4 +52,5 @@ class Schedule(models.Model):
     name = models.CharField(max_length=150)
     time = models.TimeField()
     description = models.TextField(blank=True)
-    author = models.ForeignKey(Speaker)
+    speaker = models.ForeignKey(Speaker)
+    co_speaker = models.ForeignKey(Speaker, null=True, blank=True, related_name='co_schedule')

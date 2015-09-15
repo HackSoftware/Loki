@@ -226,13 +226,17 @@
                       {% for lecture in schedule_day_one %}
                       <div class="panel panel-default">
                         <div class="speaker-wrapper">
-                          <img src="{{ MEDIA_URL }}{{ lecture.author.picture }}" class="img-responsive img-circle" alt="speaker-1" />
+                          <img src="{{ MEDIA_URL }}{{ lecture.speaker.picture }}" class="img-responsive img-circle" alt="speaker-1" />
+                          {% if lecture.co_speaker %}
+                          <img src="{{ MEDIA_URL }}{{ lecture.speaker.picture }}" class="co-speaker img-responsive img-circle" alt="speaker-1" />
+                          {% endif %}
                         </div>
                         <div class="panel-heading">
                           <div class="panel-title">
                             <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time|time:"H:i"  }}</div>
                             <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#itemOne">
                               {{ lecture.name }}
+
                               <div class="pull-right fa fa-angle-up"></div>
                               <div class="pull-right fa fa-angle-down"></div>
                             </a>
@@ -242,7 +246,12 @@
                           <div class="panel-body">
                             <article>
                               <p>{{ lecture.description }}</p>
-                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i>{{ lecture.author }}</strong></a></p>
+                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i>{{ lecture.speaker }}</strong></a></p>
+
+                              {% if lecture.co_speaker %}
+                                <p class="author"><a href="#"><strong><i class="fa fa-user"></i>{{ lecture.co_speaker }}</strong></a></p>
+                              {% endif %}
+
                             </article>
                           </div>
                         </div>
@@ -261,7 +270,7 @@
                       {% for lecture in schedule_day_two %}
                       <div class="panel panel-default">
                         <div class="speaker-wrapper">
-                          <img src="{{ MEDIA_URL }}{{ lecture.author.picture }}" class="img-responsive img-circle" alt="speaker-1" />
+                          <img src="{{ MEDIA_URL }}{{ lecture.speaker.picture }}" class="img-responsive img-circle" alt="speaker-1" />
                         </div>
                         <div class="panel-heading">
                           <div class="panel-title">
@@ -277,7 +286,7 @@
                           <div class="panel-body">
                             <article>
                               <p>{{ lecture.description }}</p>
-                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i>{{ lecture.author }}</strong></a></p>
+                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i>{{ lecture.speaker }}</strong></a></p>
                             </article>
                           </div>
                         </div>
