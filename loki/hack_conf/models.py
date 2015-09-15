@@ -31,6 +31,7 @@ class Sponsor(models.Model):
         (SPONSOR, 'Sponsor'),
         (GENERAL_MEDIA_PARTNER, 'General Media Partner'),
         (BRANCH_PARTNER, 'Branch Partner'),
+        (MEDIA_PARTNER, 'Media Partner'),
         (SCHOOL_PARTNER, 'School Partner'),
         (SPONSOR_SILVER, 'Silver Sponsor'),
         (SPONSOR_GOLD, 'Gold Sponsor'),
