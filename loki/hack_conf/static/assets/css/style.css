@@ -918,3 +918,7 @@ ul.gold-sponsors-list li{
 img.co-speaker {
   margin-top: 1em;
 }
+
+.schedule-panel {
+  min-height: 150px;
+}

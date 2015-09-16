@@ -201,7 +201,7 @@
         <div class="icon-wrap"><span class="icon icon-active icon-text-hierarchy-07"></span></div>
         <h3>Програма</h3>
         <br />
-        <section class="nav-tabs-default hidden-xs">
+        <section class="nav-tabs-default">
           <!-- Parent Nav Tabs -->
           <ul class="nav nav-tabs">
             <li class="active"><a href="#DayOne" data-toggle="tab">
@@ -224,7 +224,7 @@
                   <div class="tab-pane fade in active" id="DayOne-1">
                     <div class="panel-group timeline-schedule" id="panelTimelineOne">
                       {% for lecture in schedule_day_one %}
-                      <div class="panel panel-default">
+                      <div class="panel panel-default schedule-panel">
                         <div class="speaker-wrapper">
                           <img src="{{ MEDIA_URL }}{{ lecture.speaker.picture }}" class="img-responsive img-circle" alt="speaker-1" />
                           {% if lecture.co_speaker %}
@@ -234,7 +234,7 @@
                         <div class="panel-heading">
                           <div class="panel-title">
                             <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time|time:"H:i"  }}</div>
-                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#itemOne">
+                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#item{{ forloop.counter }}">
                               {{ lecture.name }}
 
                               <div class="pull-right fa fa-angle-up"></div>
@@ -242,7 +242,7 @@
                             </a>
                           </div>
                         </div>
-                        <div id="itemOne" class="panel-collapse collapse in">
+                        <div id="item{{ forloop.counter }}" class="panel-collapse collapse in">
                           <div class="panel-body">
                             <article>
                               <p>{{ lecture.description }}</p>
@@ -268,21 +268,21 @@
                   <div class="tab-pane fade in active" id="DayOne-2">
                     <div class="panel-group timeline-schedule" id="panelTimelineOne">
                       {% for lecture in schedule_day_two %}
-                      <div class="panel panel-default">
+                      <div class="panel panel-default schedule-panel">
                         <div class="speaker-wrapper">
                           <img src="{{ MEDIA_URL }}{{ lecture.speaker.picture }}" class="img-responsive img-circle" alt="speaker-1" />
                         </div>
                         <div class="panel-heading">
                           <div class="panel-title">
                             <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time }}</div>
-                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#itemOne">
+                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#item{{ forloop.counter }}">
                               {{ lecture.name }}
                               <div class="pull-right fa fa-angle-up"></div>
                               <div class="pull-right fa fa-angle-down"></div>
                             </a>
                           </div>
                         </div>
-                        <div id="itemOne" class="panel-collapse collapse in">
+                        <div id="item{{ forloop.counter }}" class="panel-collapse collapse in">
                           <div class="panel-body">
                             <article>
                               <p>{{ lecture.description }}</p>
