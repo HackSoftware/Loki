@@ -234,7 +234,7 @@
                         <div class="panel-heading">
                           <div class="panel-title">
                             <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time|time:"H:i"  }}</div>
-                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#item{{ forloop.counter }}">
+                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#item-day-one{{ forloop.counter }}">
                               {{ lecture.name }}
 
                               <div class="pull-right fa fa-angle-up"></div>
@@ -242,14 +242,15 @@
                             </a>
                           </div>
                         </div>
-                        <div id="item{{ forloop.counter }}" class="panel-collapse collapse in">
+                        <div id="item-day-one{{ forloop.counter }}" class="panel-collapse collapse">
                           <div class="panel-body">
                             <article>
                               <p>{{ lecture.description }}</p>
-                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i>{{ lecture.speaker }}</strong></a></p>
+
+                              <p class="author"><strong><i class="fa fa-user"></i>{{ lecture.speaker }}</strong></p>
 
                               {% if lecture.co_speaker %}
-                                <p class="author"><a href="#"><strong><i class="fa fa-user"></i>{{ lecture.co_speaker }}</strong></a></p>
+                                <p class="author"><strong><i class="fa fa-user"></i>{{ lecture.co_speaker }}</strong></p>
                               {% endif %}
 
                             </article>
@@ -275,18 +276,18 @@
                         <div class="panel-heading">
                           <div class="panel-title">
                             <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time }}</div>
-                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#item{{ forloop.counter }}">
+                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#item-day-two{{ forloop.counter }}">
                               {{ lecture.name }}
                               <div class="pull-right fa fa-angle-up"></div>
                               <div class="pull-right fa fa-angle-down"></div>
                             </a>
                           </div>
                         </div>
-                        <div id="item{{ forloop.counter }}" class="panel-collapse collapse in">
+                        <div id="item-day-two{{ forloop.counter }}" class="panel-collapse collapse">
                           <div class="panel-body">
                             <article>
                               <p>{{ lecture.description }}</p>
-                              <p class="author"><a href="#"><strong><i class="fa fa-user"></i>{{ lecture.speaker }}</strong></a></p>
+                              <p class="author"><strong><i class="fa fa-user"></i>{{ lecture.speaker }}</strong></p>
                             </article>
                           </div>
                         </div>
