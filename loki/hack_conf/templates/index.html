@@ -221,7 +221,7 @@
 
                 <!-- Child 1 Tab panes -->
                 <div class="tab-content">
-                  <div class="tab-pane fade in active" id="DayOne-1">
+                  <div class="tab-pane fade in active" id="DayOne">
                     <div class="panel-group timeline-schedule" id="panelTimelineOne">
                       {% for lecture in schedule_day_one %}
                       <div class="panel panel-default schedule-panel">
@@ -242,7 +242,7 @@
                             </a>
                           </div>
                         </div>
-                        <div id="item{{ forloop.counter }}" class="panel-collapse collapse in">
+                        <div id="item{{ forloop.counter }}" class="panel-collapse collapse">
                           <div class="panel-body">
                             <article>
                               <p>{{ lecture.description }}</p>
@@ -265,8 +265,8 @@
 
                 <!-- Child 2 Tab panes -->
                 <div class="tab-content">
-                  <div class="tab-pane fade in active" id="DayOne-2">
-                    <div class="panel-group timeline-schedule" id="panelTimelineOne">
+                  <div class="tab-pane fade" id="DayTwo">
+                    <div class="panel-group timeline-schedule" id="panelTimelineTwo">
                       {% for lecture in schedule_day_two %}
                       <div class="panel panel-default schedule-panel">
                         <div class="speaker-wrapper">
@@ -275,14 +275,14 @@
                         <div class="panel-heading">
                           <div class="panel-title">
                             <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time }}</div>
-                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#item{{ forloop.counter }}">
+                            <a data-toggle="collapse" data-parent="#panelTimelineTwo" href="#item{{ forloop.counter }}">
                               {{ lecture.name }}
                               <div class="pull-right fa fa-angle-up"></div>
                               <div class="pull-right fa fa-angle-down"></div>
                             </a>
                           </div>
                         </div>
-                        <div id="item{{ forloop.counter }}" class="panel-collapse collapse in">
+                        <div id="item{{ forloop.counter }}" class="panel-collapse collapse">
                           <div class="panel-body">
                             <article>
                               <p>{{ lecture.description }}</p>
