@@ -233,7 +233,7 @@
                         </div>
                         <div class="panel-heading">
                           <div class="panel-title">
-                            <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time|time:"H:i"  }}</div>
+                            <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time|time:"H:i" }}</div>
                             <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#item-day-one{{ forloop.counter }}">
                               {{ lecture.name }}
 
@@ -275,7 +275,7 @@
                         </div>
                         <div class="panel-heading">
                           <div class="panel-title">
-                            <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time }}</div>
+                            <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time|time:"H:i" }}</div>
                             <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#item-day-two{{ forloop.counter }}">
                               {{ lecture.name }}
                               <div class="pull-right fa fa-angle-up"></div>
