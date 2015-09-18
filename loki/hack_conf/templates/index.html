@@ -77,14 +77,16 @@
           </button>
           <ul class="navigation-bar navigation-bar-left">
             <!--
-              <li><a href="#call-for-speakers"><strong><i class="fa fa-microphone"></i> Call For Speakers</strong></a></li>
-            -->
-            <li><a href="#schedule">Програма</a></li>
+                      <li><a href="#call-for-speakers"><strong><i class="fa fa-microphone"></i> Call For Speakers</strong></a></li>
+                        -->
             <li><a href="#about">За конференцията</a></li>
+            <!--<li><a href="#stat">Number Facts</a></li>-->
+            <!-- <li><a href="#schedule">Schedule</a></li> -->
             <li><a href="#speakers"><i class="fa fa-microphone"></i> Лектори</a></li>
-            <li><a href="#sponsors">Спонсори</a></li>
+            <!-- <li><a href="#elements">Shortcodes</a></li> -->
+            <li><a href="#sponsors">Спонсори и партньори</a></li>
             <li><a href="#map">Контакти</a></li>
-            <li class="featured"><a href="https://www.eventbrite.com/e/hackconf-2015-tickets-18562365535" target="_blank" data-toggle="modal"><i class="fa fa-ticket fa-1x"></i>Регистрация</a></li>
+            <li class="featured"><a href="" data-toggle="modal" data-target="#myModal"><i class="fa fa-ticket fa-1x"></i>Регистрация</a></li>
           </ul>
         </nav>
       </div>
@@ -172,7 +174,7 @@
                 <p>
                 Хак България е школа по програмиране, чиято главна цел е да учи хората да мислят, да програмират и да се справят с различни проблеми, които ще им поднесе светът на софтуера.
                 <br>
-                Повече вижте тук: <a href="https://hackbulgaria.com/about">https://hackbulgaria.com/about</a>
+                Повече вижте тук: <a href="https://hackbulgaria.com/about-us/">https://hackbulgaria.com/about-us/</a>
                 </p>
               </div>
             </article>
@@ -182,126 +184,18 @@
     </div>
      </section> 
 
-    <section id="register" class="section light">
-      <div class="overlay"></div>
-      <div class="container">
-        <article class="article-big animated hiding" data-animation="fadeInUp" data-delay="0">
-          <h2 id="register-title">Запази своето място за HackConf 2015</h2>
-          <p id="register-text">Конференцията е безплатна, но изисква регистрация. Запази своето място, а пък ние обещаваме да ти напомним, когато наближи.
-          </p>
+        <section id="register" class="section light">
+    <div class="overlay"></div>
+    <div class="container">
+      <article class="article-big animated hiding" data-animation="fadeInUp" data-delay="0">
+        <h2 id="register-title">Запази своето място за HackConf 2015</h2>
+        <p id="register-text">Конференцията е безплатна, но изисква регистрация. Запази своето място, а пък ние обещаваме да ти напомним, когато наближи.
+        </p>
 
-          <a data-toggle="modal" href="https://www.eventbrite.com/e/hackconf-2015-tickets-18562365535" target="_blank" class="btn btn-sm btn-tertiary">Регистрация</a>
-        </article>
-      </div>
-    </section>
-
-    <!-- Schedule Section -->
-    <section id="schedule" class="section dark">
-      <div class="container">
-        <div class="icon-wrap"><span class="icon icon-active icon-text-hierarchy-07"></span></div>
-        <h3>Програма</h3>
-        <br />
-        <section class="nav-tabs-default">
-          <!-- Parent Nav Tabs -->
-          <ul class="nav nav-tabs">
-            <li class="active"><a href="#DayOne" data-toggle="tab">
-              <div class="title">Ден 1</div>
-              <div class="subtitle">19/09/2015</div>
-            </a></li>
-            <li><a href="#DayTwo" data-toggle="tab">
-              <div class="title">Ден 2</div>
-              <div class="subtitle">20/09/2015</div>
-            </a></li>
-          </ul>
-
-          <!-- Parent Tab panes -->
-          <div class="tab-content">
-
-            <div class="tab-pane fade in active" id="DayOne">
-
-                <!-- Child 1 Tab panes -->
-                <div class="tab-content">
-                  <div class="tab-pane fade in active" id="DayOne-1">
-                    <div class="panel-group timeline-schedule" id="panelTimelineOne">
-                      {% for lecture in schedule_day_one %}
-                      <div class="panel panel-default schedule-panel">
-                        <div class="speaker-wrapper">
-                          <img src="{{ MEDIA_URL }}{{ lecture.speaker.picture }}" class="img-responsive img-circle" alt="speaker-1" />
-                          {% if lecture.co_speaker %}
-                          <img src="{{ MEDIA_URL }}{{ lecture.co_speaker.picture }}" class="co-speaker img-responsive img-circle" alt="speaker-1" />
-                          {% endif %}
-                        </div>
-                        <div class="panel-heading">
-                          <div class="panel-title">
-                            <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time|time:"H:i" }}</div>
-                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#item-day-one{{ forloop.counter }}">
-                              {{ lecture.name }}
-
-                              <div class="pull-right fa fa-angle-up"></div>
-                              <div class="pull-right fa fa-angle-down"></div>
-                            </a>
-                          </div>
-                        </div>
-                        <div id="item-day-one{{ forloop.counter }}" class="panel-collapse collapse">
-                          <div class="panel-body">
-                            <article>
-                              <p>{{ lecture.description }}</p>
-
-                              <p class="author"><strong><i class="fa fa-user"></i>{{ lecture.speaker }}</strong></p>
-
-                              {% if lecture.co_speaker %}
-                                <p class="author"><strong><i class="fa fa-user"></i>{{ lecture.co_speaker }}</strong></p>
-                              {% endif %}
-
-                            </article>
-                          </div>
-                        </div>
-                      </div>
-                      {% endfor %}
-                    </div>
-                  </div>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="DayTwo">
-
-                <!-- Child 2 Tab panes -->
-                <div class="tab-content">
-                  <div class="tab-pane fade in active" id="DayOne-2">
-                    <div class="panel-group timeline-schedule" id="panelTimelineOne">
-                      {% for lecture in schedule_day_two %}
-                      <div class="panel panel-default schedule-panel">
-                        <div class="speaker-wrapper">
-                          <img src="{{ MEDIA_URL }}{{ lecture.speaker.picture }}" class="img-responsive img-circle" alt="speaker-1" />
-                        </div>
-                        <div class="panel-heading">
-                          <div class="panel-title">
-                            <div class="time"><i class="fa fa-clock-o"></i>{{ lecture.time|time:"H:i" }}</div>
-                            <a data-toggle="collapse" data-parent="#panelTimelineOne" href="#item-day-two{{ forloop.counter }}">
-                              {{ lecture.name }}
-                              <div class="pull-right fa fa-angle-up"></div>
-                              <div class="pull-right fa fa-angle-down"></div>
-                            </a>
-                          </div>
-                        </div>
-                        <div id="item-day-two{{ forloop.counter }}" class="panel-collapse collapse">
-                          <div class="panel-body">
-                            <article>
-                              <p>{{ lecture.description }}</p>
-                              <p class="author"><strong><i class="fa fa-user"></i>{{ lecture.speaker }}</strong></p>
-                            </article>
-                          </div>
-                        </div>
-                      </div>
-                      {% endfor %}
-                    </div>
-                  </div>
-                </div>
-            </div>
-          </div>
+        <a data-toggle="modal" data-target="#myModal" class="btn btn-sm btn-tertiary">Регистрация</a>
+      </article>
+    </div>
         </section>
-      </div>
-    </section>
-    <!-- End Schedule Section -->
 
         <!-- Speakers Section -->
     <section id="speakers" class="section light">
@@ -353,7 +247,21 @@
     <section id="sponsors" class="section dark">
       <div class="container">
         <div class="icon-wrap"><span class="icon icon-active icon-documents-bookmarks-12"></span></div>
+    
+        <h3>Генерални партньори</h3>
+        {% if not general_partners %}
+        <div class="sub-title">Скоро очаквайте и тях.</div>
+        {% endif %}
+        <br/>
         
+        <div class="row">
+          <ul class="list-inline platinum-sponsors-list">
+            {% for partner in general_partners %}
+            <li><a href="{{ partner.website }}" target="_blank"><img src="{{ MEDIA_URL }}{{ partner.picture }}" alt="partner-{{ forloop.counter }}" /></a></li>
+            {% endfor %}
+          </ul>
+        </div>
+
         <h3>Платинени Спонсори</h3>
         {% if not sponsors_platinum %}
         <div class="sub-title">Скоро очаквайте и тях.</div>
@@ -488,6 +396,42 @@
     </footer>
 
     <div class="back-to-top"><i class="fa fa-angle-up fa-3x"></i></div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h5 class="modal-title" id="myModalLabel">Hackconf регистрация</h5>
+          </div>
+          <div class="modal-body">
+            <p>
+            За да се запишеш за участие за Hackconf трябва да имаш HackBulgaria регистрация.
+            </p>
+            <div class="row">
+              <br>
+              <div class="col-md-3"></div>
+              <a href="https://education.hackbulgaria.com/#/login" target="_blank">
+                <button class="modal-buttons btn btn-primary btn-xs col-md-6">
+                  Вече имам регистрация
+                </button>
+              </a>
+
+              <div class="col-md-3"></div>
+              <a href="https://education.hackbulgaria.com/#/register" target="_blank">
+                <button class="modal-buttons btn btn-primary btn-xs col-md-6">
+                  Искам да се регистрирам
+                </button>
+              </a>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Затвори</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!--[if lt IE 9]>
         <script type="text/javascript" src="/static/assets/js/jquery-1.11.0.min.js?ver=1"></script>

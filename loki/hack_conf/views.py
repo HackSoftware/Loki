@@ -14,7 +14,8 @@ def home_page(request):
     ).order_by("?")
     branch_partners = Sponsor.objects.filter(title=Sponsor.BRANCH_PARTNER).order_by("?")
     media_partners = Sponsor.objects.filter(title=Sponsor.MEDIA_PARTNER).order_by("?")
-    school_partners = Sponsor.objects.filter(title=Sponsor.SCHOOL_PARTNER).order_by("?")
+    school = Sponsor.objects.filter(title=Sponsor.SCHOOL_PARTNER).order_by("?")
+    general_partners = Sponsor.objects.filter(title=Sponsor.GENERAL_PARTNER).order_by("?")
 
     schedule_day_one = Schedule.objects.filter(day=1).order_by("time")
     schedule_day_two = Schedule.objects.filter(day=2).order_by("time")

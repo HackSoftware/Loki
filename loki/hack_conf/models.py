@@ -26,17 +26,17 @@ class Sponsor(models.Model):
     SPONSOR_SILVER = 6
     SPONSOR_GOLD = 7
     SPONSOR_PLATINUM = 8
+    GENERAL_PARTNER = 9
 
     TITLE_TYPE = (
         (SPONSOR, 'Sponsor'),
         (GENERAL_MEDIA_PARTNER, 'General Media Partner'),
         (BRANCH_PARTNER, 'Branch Partner'),
-        (MEDIA_PARTNER, 'Media Partner'),
         (SCHOOL_PARTNER, 'School Partner'),
         (SPONSOR_SILVER, 'Silver Sponsor'),
         (SPONSOR_GOLD, 'Gold Sponsor'),
         (SPONSOR_PLATINUM, 'Platinum Sponsor'),
-
+        (GENERAL_PARTNER, 'General Partner'),
     )
     title = models.SmallIntegerField(choices=TITLE_TYPE, default=SPONSOR)
     name = models.CharField(max_length=100)
@@ -52,5 +52,4 @@ class Schedule(models.Model):
     name = models.CharField(max_length=150)
     time = models.TimeField()
     description = models.TextField(blank=True)
-    speaker = models.ForeignKey(Speaker)
-    co_speaker = models.ForeignKey(Speaker, null=True, blank=True, related_name='co_schedule')
+    author = models.ForeignKey(Speaker)
