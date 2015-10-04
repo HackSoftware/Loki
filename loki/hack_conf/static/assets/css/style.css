@@ -829,6 +829,11 @@ label.error { display: block; }
     .player-button {
         display: none;
     }
+    
+    #thank-you-note {
+      margin-top: 5%;
+      margin-bottom: 5%; 
+    }
 }
 
 #player-button {
