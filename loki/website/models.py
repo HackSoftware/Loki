@@ -1,6 +1,7 @@
 from django.db import models
+from education.models import Course
 
-
+from decimal import Decimal
 from ckeditor.fields import RichTextField
 
 
@@ -32,3 +33,30 @@ class Snippet(models.Model):
 
     def __str__(self):
         return self.label
+
+class CourseDescription(models.Model):
+  course = models.OneToOneField(Course)
+  title = models.CharField(blank=True, max_length=255)
+  url = models.SlugField(max_length=80, unique=True)
+  video_image = models.ImageField(blank=True)
+  video_url = models.URLField(blank=True)
+  # start_time = Course.start_time
+  # end_time = Course.end_time
+  
+  # Is this a number or percentage??????????
+  # course_intensity = models.IntegerField(max_digits=8, default=0)
+  # course_days = ? each day as a field (true/false)??
+
+  application_deadline = models.DateField(blank=True, null=True)
+  github = models.URLField(blank=True, null=True)
+  course_summary = RichTextField(blank=False)
+
+  # teachers = Course.teachers_set
+  realization = RichTextField(blank=False)
+  # partners = Course.partner_set
+
+  price = RichTextField(blank=False)
+
+  # Do we need these fields
+  SEO_description = models.CharField(blank=False, max_length=255)
+  SEO_title = models.CharField(blank=False, max_length=255) 

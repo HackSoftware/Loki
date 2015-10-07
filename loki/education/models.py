@@ -42,6 +42,9 @@ class CourseAssignment(models.Model):
 
 
 class Course(models.Model):
+    # TODO: 
+    # Moved to website.models.CourseDescription
+    # Delete (comment) the fields after you migrade the info too!
     description = RichTextField(blank=False)
     git_repository = models.CharField(blank=True, max_length=256)
     image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
