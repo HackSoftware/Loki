@@ -233,7 +233,9 @@ body {
   cursor: pointer; }
 
 .aplly-button-container {
-  text-align: center; }
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px; }
 
 .apply-button {
   font-size: 24px; }
