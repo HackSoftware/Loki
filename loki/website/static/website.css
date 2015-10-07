@@ -209,6 +209,9 @@ body {
 .container section:nth-of-type(2n + 1) div.text-card {
   float: right; }
 
+.breadcrumb {
+  margin-top: 20px; }
+
 .teacher-avatars-container {
   padding: 10px;
   margin: 30px;

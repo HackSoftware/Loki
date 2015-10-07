@@ -36,7 +36,6 @@ class Snippet(models.Model):
 
 class CourseDescription(models.Model):
     course = models.OneToOneField(Course)
-    title = models.CharField(blank=True, max_length=255)
     url = models.SlugField(max_length=80, unique=True)
     video_image = models.ImageField(blank=True)
     course_intensity = models.PositiveIntegerField(default=0, blank=False, null=False)
@@ -44,6 +43,9 @@ class CourseDescription(models.Model):
     course_summary = RichTextField(blank=True, null=True)
     realization = RichTextField(blank=True, null=True)
     price = RichTextField(blank=True, null=True)
+    SEO_description = models.CharField(blank=False, max_length=255)
+    SEO_title = models.CharField(blank=False, max_length=255)
+    # title = Course.name
     # video_url = Course.video
     # start_time = Course.start_time
     # end_time = Course.end_time
@@ -51,10 +53,6 @@ class CourseDescription(models.Model):
     # github = Course.git_repository
     # teachers = Course.teachers_set
     # partners = Course.partner_set
-
-    # Do we need these fields?
-    SEO_description = models.CharField(blank=False, max_length=255)
-    SEO_title = models.CharField(blank=False, max_length=255)
 
     def __str__(self):
         return self.title

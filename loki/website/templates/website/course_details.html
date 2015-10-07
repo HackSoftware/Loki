@@ -2,113 +2,130 @@
 
 {% block 'page-content' %}
 {% autoescape off %}
-	<div class="container" id="course">
-		<br>
-		<ol class="breadcrumb">
-		  <li><a href="{% url 'website:courses' %}">Курсове</a></li>
-		  <li class="active">{{ cd.title }}</li>
-		</ol>
-		<h2>{{ cd.title }}</h2>
-		<div class="row">
-			<div class="container-fluid">
-				<div class="col-md-7">
+  <div class="container" id="course">
+
+    <ol class="breadcrumb">
+      <li><a href="{% url 'website:courses' %}">Курсове</a></li>
+      <li class="active">{{ cd.course.name }}</li>
+    </ol>
+
+    <h1>{{ cd.course.name }}</h1>
+
+    <div class="row">
+      <div class="container-fluid">
+        
+        <div class="col-md-7">
           <a class="swipebox-video" rel="youtube" href="{{ cd.course.video }}">
             <img class="video-thumb" src="{{ MEDIA_URL }}{{ cd.video_image }}">
             <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
           </a>
-				</div>
-				<div class="col-md-4 col-md-offset-1">
-					<div class="course-details-container">
-						<h3>Бързи детайли за курса</h3>
-						<br>
-						<p>Започва: {{ cd.course.start_time }} </p>
-						<p>Приключва: {{ cd.course.end_time }} </p>
-						<p>Интензивност: {{ cd.course_intensity }}</p>
-						<p>Дни в седмицата: {{ course_days }}</p>
-						<p>Кандидатстване до: {{ cd.course.application_until }} </p>
-						<p>Цена: {{ cd.price }}</p>
-						<p>Програма на курса: <a href="">{{ cd.course.git_repository }}</a> </p>
-					</div>
-				</div>
-			</div>
-		</div>	
-		<div class="row">
-			<div class="container-fluid">
-				<div class="col-md-12">
-					<h1>Course Summary</h1>
-					<p>{{ cd.course_summary }}</p>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="container-fluid">
-				<div class="col-md-12">
-					<h1>Преподаватели</h1>
-		      {% for teacher in teachers %}
-						<div class="teacher-avatars-container col-sm-2">
-						  <a data-teacherid="{{ teacher.id }}" class="teacher-avatar thumbnail">
-						    <img class="asd" src="{{ MEDIA_URL }}{{ teacher.avatar }}" alt="">
-						  </a>
-						</div>
-		      	{% if forloop.first %}
-							<div id="teacher-{{ teacher.id }}" class="teacher-info col-md-12">
-			      		<p>{{ teacher.first_name }}</p>
-							</div>
-						{% else %}
-							<div id="teacher-{{ teacher.id }}" class="teacher-info teacher-info-hidden col-md-12">
-			      		<p>{{ teacher.first_name }}</p>
-							</div>
-						{% endif %}
-		      {% endfor %}
-		      <p>
-		      	TODO: Add other teacher info..
-		      </p>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="container-fluid">
-				<div class="col-md-12">
-					<h1>Възможност за реализация след курса - партньори</h1>
-					<br>
-					<p>Курсът е работно ориентиран и има за цел освен да даде нужните теоретични и практични знания на курсисите, да им намери работа. Затова работим с партньори от IT индустрията:</p>
-					{% for partner in partners %}
-						<div class="partner-logos-container col-sm-6 col-md-3">
-						  <a class="thumbnail">
-						    <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" alt="">
-						  </a>
-						</div>
-		      {% endfor %}
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="container-fluid">
-				<div class="col-md-12">
-					<h1>Цена на курса</h1>
-					<p>{{ cd.price }}</p>
-				</div>
-			</div>
-		</div>
-		<br>
-		<div class="aplly-button-container">
-			<button class="apply-button btn btn-lg btn-warning">Кандидатствай</button>
-		</div>
-		<br>
+        </div>
+
+        <div class="col-md-4 col-md-offset-1">
+          <div class="course-details-container">
+            <h3>Бързи детайли за курса</h3>
+            <br>
+            <p>Започва: {{ cd.course.start_time }} </p>
+            <p>Приключва: {{ cd.course.end_time }} </p>
+            <p>Интензивност: {{ cd.course_intensity }}</p>
+            <p>Дни в седмицата: {{ course_days }}</p>
+            <p>Кандидатстване до: {{ cd.course.application_until }} </p>
+            <p>Цена: {{ cd.price }}</p>
+            <p>Програма на курса: <a href="">{{ cd.course.git_repository }}</a> </p>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="container-fluid">
+        <div class="col-md-12">
+          <h2>Course Summary</h2>
+          <p>{{ cd.course_summary }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="container-fluid">
+
+        <div class="col-md-12">
+          <h2>Преподаватели</h2>
+          {% for teacher in teachers %}
+            <div class="teacher-avatars-container col-sm-2">
+              <a data-teacherid="{{ teacher.id }}" class="teacher-avatar thumbnail">
+                <img class="asd" src="{{ MEDIA_URL }}{{ teacher.avatar }}" alt="">
+              </a>
+            </div>
+            {% if forloop.first %}
+              <div id="teacher-{{ teacher.id }}" class="teacher-info col-md-12">
+                <p>{{ teacher.first_name }}</p>
+              </div>
+            {% else %}
+              <div id="teacher-{{ teacher.id }}" class="teacher-info teacher-info-hidden col-md-12">
+                <p>{{ teacher.first_name }}</p>
+              </div>
+            {% endif %}
+          {% endfor %}
+      
+          <p>
+            TODO: Add other teacher info..
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="container-fluid">
+
+        <div class="col-md-12">
+          <h2>Възможност за реализация след курса - партньори</h2>
+
+          <p>Курсът е работно ориентиран и има за цел освен да даде нужните теоретични и практични знания на курсисите, да им намери работа. Затова работим с партньори от IT индустрията:</p>
+          {% for partner in partners %}
+            <div class="partner-logos-container col-sm-6 col-md-3">
+              <a class="thumbnail">
+                <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" alt="">
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="container-fluid">
+
+        <div class="col-md-12">
+          <h2>Цена на курса</h2>
+          <p>{{ cd.price }}</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="aplly-button-container">
+      <button class="apply-button btn btn-lg btn-warning">Кандидатствай</button>
+    </div>
+
   </div>
-{% endautoescape %}
-    <script src="/static/bower_components/jquery/dist/jquery.js"></script>
-    <script src="/static/bower_components/swipebox/src/js/jquery.swipebox.js"></script>
-    <script type="text/javascript">
-    (function($) {
-      $('.swipebox-video').swipebox();
-    })(jQuery);
-    </script>
-    <script type="text/javascript">
-    	$('.teacher-avatar').click(function(teacher){
-    		var teacherId = '#teacher-' + $(this).data('teacherid')
-    		$('.teacher-info').css('display', 'none');
-    		$(teacherId).css('display', 'block');
-    	})
-    </script>
-{% endblock %}
+  {% endautoescape %}
+
+  <script src="/static/bower_components/jquery/dist/jquery.js"></script>
+  <script src="/static/bower_components/swipebox/src/js/jquery.swipebox.js"></script>
+  <script type="text/javascript">
+  (function($) {
+    $('.swipebox-video').swipebox();
+  })(jQuery);
+  </script>
+  <script type="text/javascript">
+    $('.teacher-avatar').click(function(teacher){
+      var teacherId = '#teacher-' + $(this).data('teacherid')
+      $('.teacher-info').css('display', 'none');
+      $(teacherId).css('display', 'block');
+    })
+  </script>
+{% endblock 'page-content' %}
