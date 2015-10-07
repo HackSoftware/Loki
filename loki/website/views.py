@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
 
-from education.models import WorkingAt, Student
+from education.models import WorkingAt
 from base_app.models import Partner
 
 
@@ -35,8 +35,11 @@ def partners(request):
 
     return render(request, "website/partners.html", locals())
 
+
 def course_details(request, course_url):
     # cd refers to course_description
     cd = get_object_or_404(CourseDescription, url=course_url)
-    
+    teachers = cd.course.teacher_set.all()
+    partners = Partner.objects.all()
+
     return render(request, "website/course_details.html", locals())

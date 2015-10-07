@@ -3,29 +3,31 @@
 {% block 'page-content' %}
 {% autoescape off %}
 	<div class="container" id="course">
+		<br>
 		<ol class="breadcrumb">
-		  <li><a href="#">Курсове</a></li>
-		  <li class="active">{{ course.short_description }}</li>
+		  <li><a href="{% url 'website:courses' %}">Курсове</a></li>
+		  <li class="active">{{ cd.title }}</li>
 		</ol>
-		<h2>{{ course.short_description }}</h2>
+		<h2>{{ cd.title }}</h2>
 		<div class="row">
 			<div class="container-fluid">
 				<div style="border: 1px solid black;" class="col-md-7">
-          <a class="swipebox-video" rel="youtube" href="{{ cd.video_url }}">
-            <img src="{{ MEDIA_URL }}{{ cd.video_image }}">
-            <img src="{{ STATIC_URL }}/website_images/play_button.png">
+          <a class="swipebox-video" rel="youtube" href="{{ cd.course.video }}">
+            <img class="video-thumb" src="{{ MEDIA_URL }}{{ cd.video_image }}">
+            <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
           </a>
 				</div>
 				<div style="border: 1px solid black;" class="col-md-4 col-md-offset-1">
 					<div class="course-details-container">
 						<h3>Бързи детайли за курса</h3>
+						<br>
 						<p>Започва: {{ cd.course.start_time }} </p>
 						<p>Приключва: {{ cd.course.end_time }} </p>
 						<p>Интензивност: TODO</p>
 						<p>Дни в седмицата: TODO</p>
-						<p>Кандидатстване до: {{ cd.application_deadline }} </p>
+						<p>Кандидатстване до: {{ cd.course.application_until }} </p>
 						<p>Цена: {{ cd.price }}</p>
-						<p>Програма на курса: TODO</p>
+						<p>Програма на курса: {{ cd.course.git_repository }}</p>
 					</div>
 				</div>
 			</div>
@@ -35,7 +37,7 @@
 			<div class="container-fluid">
 				<div style="border: 1px solid black;" class="col-md-12">
 					<h1>Course Summary</h1>
-					<p>example text</p>
+					<br>
 					<p>{{ cd.course_summary }}</p>
 				</div>
 			</div>
@@ -45,8 +47,15 @@
 			<div class="container-fluid">
 				<div style="border: 1px solid black;" class="col-md-12">
 					<h1>Преподаватели</h1>
-					<p>TODO: снимки на преподаватели</p>
-					<p>TODO: инфо за избрания преподавател</p>
+					<br>
+		      {% for teacher in teachers %}
+						<div class="col-xs-6 col-md-3">
+						  <a href="" class="thumbnail">
+						    <img src="{{ MEDIA_URL }}{{ teacher.avatar }}" alt="">
+						  </a>
+						  <p style="text-align: center">{{ teacher.first_name }}</p>
+						</div>
+		      {% endfor %}
 				</div>
 			</div>
 		</div>
@@ -55,8 +64,15 @@
 			<div class="container-fluid">
 				<div style="border: 1px solid black;" class="col-md-12">
 					<h1>Възможност за реализация след курса - партньори</h1>
+					<br>
 					<p>Курсът е работно ориентиран и има за цел освен да даде нужните теоретични и практични знания на курсисите, да им намери работа. Затова работим с партньори от IT индустрията:</p>
-					<p>TODO: снимки на партньорите</p>
+					{% for partner in partners %}
+						<div class="col-xs-6 col-md-3">
+						  <a href="" class="thumbnail">
+						    <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" alt="">
+						  </a>
+						</div>
+		      {% endfor %}
 				</div>
 			</div>
 		</div>
@@ -65,7 +81,7 @@
 			<div class="container-fluid">
 				<div style="border: 1px solid black;" class="col-md-12">
 					<h1>Цена на курса</h1>
-					<p>example text</p>
+					<br>
 					<p>{{ cd.price }}</p>
 				</div>
 			</div>
