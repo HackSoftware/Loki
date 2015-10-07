@@ -303,6 +303,37 @@ $ModerateCompetition: #56CB00;
     }
 }
 
+.teacher-avatars-container {
+    padding: 10px;
+    margin: 30px;
+    width: 150px;
+    height: 150px;
+    float: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.teacher-info-hidden {
+    display: none;
+}
+
+.partner-logos-container {
+    margin: 35px;
+    width: 200px;
+    height: 200px;
+    float: none;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.aplly-button-container {
+    text-align: center;
+}
+
+.apply-button {
+    font-size: 24px;
+}
+
 @media screen and (max-width: 600px) {
     .text-card, .card {
         float: right !important;

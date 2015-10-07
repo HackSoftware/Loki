@@ -39,30 +39,22 @@ class CourseDescription(models.Model):
     title = models.CharField(blank=True, max_length=255)
     url = models.SlugField(max_length=80, unique=True)
     video_image = models.ImageField(blank=True)
-
-    # There are such fields in Course:
-    # video_url = models.URLField(blank=True)
+    course_intensity = models.PositiveIntegerField(default=0, blank=False, null=False)
+    course_days = models.CharField(blank=True, max_length=255)
+    course_summary = RichTextField(blank=True, null=True)
+    realization = RichTextField(blank=True, null=True)
+    price = RichTextField(blank=True, null=True)
     # video_url = Course.video
     # start_time = Course.start_time
     # end_time = Course.end_time
-
-    # Is this a number or percentage??????????
-    # course_intensity = models.IntegerField(max_digits=8, default=0)
-    # course_days = ? each day as a field (true/false)??
-
-    # There is such field in Course - Course.application_until
-    # application_deadline = models.DateField(blank=True, null=True)
-
-    # Theere is such field in Course - Course.git_repository
-    # github = models.URLField(blank=True, null=True)
-    course_summary = RichTextField(blank=True, null=True)
-
+    # application_deadline = Course.application_until
+    # github = Course.git_repository
     # teachers = Course.teachers_set
-    realization = RichTextField(blank=True, null=True)
     # partners = Course.partner_set
 
-    price = RichTextField(blank=True, null=True)
-
-    # Do we need these fields
+    # Do we need these fields?
     SEO_description = models.CharField(blank=False, max_length=255)
     SEO_title = models.CharField(blank=False, max_length=255)
+
+    def __str__(self):
+        return self.title
