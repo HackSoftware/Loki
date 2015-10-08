@@ -303,8 +303,46 @@ $ModerateCompetition: #56CB00;
     }
 }
 
+// courses
+.course-logo {
+    font-size: 22em;
+}
+
+.course-logo-container{
+    a {
+        text-decoration: none;
+    }
+}
+// end of courses css
+
+// course_details
 .breadcrumb {
     margin-top: 20px;
+}
+
+#course-details-breadcrumb {
+    font-size: 26px;
+}
+
+#course_video {
+    .video {
+        padding: 10px;
+        &:hover .video-thumb{
+            box-shadow: 0px 10px 20px #222222;
+        }
+        .play_button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 84px;
+            margin: -46px;
+        }
+        .video-thumb {
+            box-shadow: 0px 10px 20px #888888;
+            width: 100%;
+            @extend .ease1s;
+        }
+    }
 }
 
 .teacher-avatars-container {
@@ -339,6 +377,7 @@ $ModerateCompetition: #56CB00;
 .apply-button {
     font-size: 24px;
 }
+// end of course_details css
 
 @media screen and (max-width: 600px) {
     .text-card, .card {

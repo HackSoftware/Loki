@@ -4,7 +4,7 @@
 {% autoescape off %}
   <div class="container" id="course">
 
-    <ol class="breadcrumb">
+    <ol id="course-details-breadcrumb" class="breadcrumb">
       <li><a href="{% url 'website:courses' %}">Курсове</a></li>
       <li class="active">{{ cd.course.name }}</li>
     </ol>
@@ -13,24 +13,28 @@
 
     <div class="row">
       <div class="container-fluid">
-        
-        <div class="col-md-7">
-          <a class="swipebox-video" rel="youtube" href="{{ cd.course.video }}">
-            <img class="video-thumb" src="{{ MEDIA_URL }}{{ cd.video_image }}">
-            <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
-          </a>
+        <div id="course_video">
+          <div class="col-md-5 col-md-offset-1 video">
+            <a class="swipebox-video" rel="youtube" href="{{ cd.course.video }}">
+              <img class="video-thumb" src="{{ MEDIA_URL }}{{ cd.video_image }}">
+              <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
+            </a>
+          </div>
         </div>
 
-        <div class="col-md-4 col-md-offset-1">
+        <div class="col-md-5 col-md-offset-1">
           <div class="course-details-container">
             <h3>Бързи детайли за курса</h3>
             <br>
             <p>Започва: {{ cd.course.start_time }} </p>
             <p>Приключва: {{ cd.course.end_time }} </p>
-            <p>Интензивност: {{ cd.course_intensity }}</p>
+            <p>Интензивност: {{ cd.course_intensity }} дни седмично</p>
             <p>Дни в седмицата: {{ course_days }}</p>
             <p>Кандидатстване до: {{ cd.course.application_until }} </p>
-            <p>Цена: {{ cd.price }}</p>
+            <!-- 
+              We have price twice (see below)
+              <p>Цена: {{ cd.price }}</p>
+            -->
             <p>Програма на курса: <a href="">{{ cd.course.git_repository }}</a> </p>
           </div>
         </div>

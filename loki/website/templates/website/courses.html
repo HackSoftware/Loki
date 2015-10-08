@@ -20,29 +20,21 @@
         {{ snippets.courses_second_header.text }}
       </div>
     </section>
-    <hr /> 
+
+    <hr />
+
     <section class="row">
-      <div class="col-xs-3">
-      <!--
-        {% include 'website/ruby_icon.html' %} 
-      -->
-      </div>
-      <div class="col-xs-3">
-        <a href="programming101-with-java">
-          {% include 'website/java_icon.html' %} 
-        </a>
-      </div>
-      <div class="col-xs-3">
-        <a href="#">
-          {% include 'website/csharp_icon.html' %} 
-        </a>
-      </div>
-      <div class="col-xs-3">
-      <!--
-        {% include 'website/python_icon.html' %} 
-      -->
+      <div class="container-fluid">
+        {% for course in courses %}
+          <div class="course-logo-container col-md-4">
+            <a href="{{ course.url }}">
+              <i class="course-logo {{ course.logo }}"></i>
+            </a>
+          </div>
+        {% endfor %}
       </div>
     </section>
+
     <section class="row">
       <div class="col-lg-12">
         {{ snippets.courses_for_more_info.text }}

@@ -36,6 +36,10 @@ class Snippet(models.Model):
 
 class CourseDescription(models.Model):
     course = models.OneToOneField(Course)
+    logo = models.CharField(
+        blank=True,
+        max_length=255,
+        help_text='Add class from <a href="http://devicon.fr/" target="_blank">www.devicon.fr</a>')
     url = models.SlugField(max_length=80, unique=True)
     video_image = models.ImageField(blank=True)
     course_intensity = models.PositiveIntegerField(default=0, blank=False, null=False)
@@ -55,4 +59,4 @@ class CourseDescription(models.Model):
     # partners = Course.partner_set
 
     def __str__(self):
-        return self.title
+        return self.course.name
