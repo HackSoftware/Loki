@@ -41,9 +41,9 @@
           <nav class="navigation navigation-social">
             <ul class="navigation-bar">
               <li><a href="https://twitter.com/HackBulgaria" target="_blank"><span class="fa fa-twitter"></span></a>
-              <li><a href="https://www.facebook.com/HackBulgaria" target="_blank"><span class="fa fa-facebook"></span></a>
+              <li><a href="https://www.facebook.com/HackConference" target="_blank"><span class="fa fa-facebook"></span></a>
               <li><a href="https://github.com/hackbulgaria/" target="_blank"><span class="fa fa-github"></span></a>
-              <li><a href="https://www.youtube.com/user/HackBulgaria" target="_blank"><span class="fa fa-youtube-play"></span></a>
+              <li><a href="https://www.youtube.com/user/HackBulgaria/hackconf2015" target="_blank"><span class="fa fa-youtube-play"></span></a>
             </ul>
           </nav>
           <div class="hero-content text-center ">
@@ -53,6 +53,45 @@
             <div class="hero-big">
               <img src="{{ STATIC_URL }}/assets/img/conf_logo_1.png" id="hackconf-logo" alt="HackConf Logo">
             </div>
+            <p id="thank-you-note">Благодарим ви, че бяхте част от HackConf 2015 - Imagine.Learn.Hack.Explore! Ще се видим на HackConf 2016.</p>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="col-md-4">
+                    <p class="hidden-xs conf-info">
+                      <a href="https://blog.hackbulgaria.com/tag/hackconf2015/" target="_blank">
+                        <i class="fa fa-book fa-custom-size"></i>
+                      </a>
+                    </p>
+                    <p>
+                      <a href="https://blog.hackbulgaria.com/tag/hackconf2015/" class="btn btn-warning header-fa-buttons-text" target="_blank">Mатериалите</a>
+                    </p>
+                  </div>
+                  <div class="col-md-4">
+                    <p class="hidden-xs conf-info">
+                      <a href="https://www.youtube.com/user/HackBulgaria/hackconf2015" target="_blank">
+                        <i class="fa fa-youtube-play fa-custom-size"></i>
+                      </a>
+                    </p>
+                    <p>
+                      <a href="https://www.youtube.com/user/HackBulgaria/hackconf2015" class="btn btn-warning header-fa-buttons-text" target="_blank">Видеата</a>
+                    </p>
+                  </div>
+                  <div class="col-md-4">
+                    <p class="hidden-xs conf-info">
+                      <a href="https://www.facebook.com/media/set/?set=a.897335820315851.1073741860.635671173148985&type=3" target="_blank">
+                        <i class="fa fa-picture-o fa-custom-size"></i>
+                      </a>
+                    </p>
+                    <p>
+                      <a href="https://www.facebook.com/media/set/?set=a.897335820315851.1073741860.635671173148985&type=3" class="btn btn-warning header-fa-buttons-text" target="_blank">Снимките</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Used for live stream or videos -->
+            <!--
             <iframe class="video" width="516" height="290" src="https://www.youtube.com/embed/INJE6uk3iqs" frameborder="0" allowfullscreen></iframe>
             <div class="player-button">
               <a href="https://youtu.be/INJE6uk3iqs"><span class="fa fa-youtube-play fa-5x"></span></a>
@@ -60,6 +99,7 @@
               Гледайте видеото в Youtube!
               </p>
             </div>
+            -->
           </div>
         </div>
       </div>
@@ -75,7 +115,8 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <ul class="navigation-bar navigation-bar-left">
+          <ul class="navigation-bar">
+          <!-- Removed navigation-bar-left from the ul -> items are centered in the container-->
             <!--
               <li><a href="#call-for-speakers"><strong><i class="fa fa-microphone"></i> Call For Speakers</strong></a></li>
             -->
@@ -83,8 +124,11 @@
             <li><a href="#about">За конференцията</a></li>
             <li><a href="#speakers"><i class="fa fa-microphone"></i> Лектори</a></li>
             <li><a href="#sponsors">Спонсори</a></li>
+            <li><a href="#register">Бюлетин</a></li>
             <li><a href="#map">Контакти</a></li>
+            <!--
             <li class="featured"><a href="https://www.eventbrite.com/e/hackconf-2015-tickets-18562365535" target="_blank" data-toggle="modal"><i class="fa fa-ticket fa-1x"></i>Регистрация</a></li>
+            -->
           </ul>
         </nav>
       </div>
@@ -186,11 +230,12 @@
       <div class="overlay"></div>
       <div class="container">
         <article class="article-big animated hiding" data-animation="fadeInUp" data-delay="0">
-          <h2 id="register-title">Запази своето място за HackConf 2015</h2>
-          <p id="register-text">Конференцията е безплатна, но изисква регистрация. Запази своето място, а пък ние обещаваме да ти напомним, когато наближи.
+          <h2 id="register-title">Не пропускай новините за HackConf 2016! </h2>
+          <p style="font-weight: 500;" id="register-text">Запиши се за бюлетина, за да се информираш за всичко свързано с HackConf:
           </p>
+          
 
-          <a data-toggle="modal" href="https://www.eventbrite.com/e/hackconf-2015-tickets-18562365535" target="_blank" class="btn btn-sm btn-tertiary">Регистрация</a>
+          <a data-toggle="modal" href="https://my.sendinblue.com/users/subscribe/js_id/26ky4/id/1" target="_blank" class="btn btn-sm btn-tertiary">Записване</a>
         </article>
       </div>
     </section>
