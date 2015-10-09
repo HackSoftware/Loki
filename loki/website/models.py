@@ -47,8 +47,14 @@ class CourseDescription(models.Model):
     course_intensity = models.PositiveIntegerField(default=0, blank=False, null=False)
     course_days = models.CharField(blank=True, max_length=255)
     course_summary = RichTextField(blank=True, null=True)
+    teacher_preview = RichTextField(blank=True, null=True)
     realization = RichTextField(blank=True, null=True)
     price = RichTextField(blank=True, null=True)
+    address = models.CharField(
+        blank=True,
+        max_length=255,
+        help_text='Add <a href="http://www.google.com/maps" target="_blank">google maps</a>'\
+        ' link to HackBulgaria location')
     SEO_description = models.CharField(blank=False, max_length=255)
     SEO_title = models.CharField(blank=False, max_length=255)
     # title = Course.name

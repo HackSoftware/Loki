@@ -24,11 +24,15 @@
     <hr />
 
     <section class="row">
-      <div class="container-fluid">
+      <div class="active-courses-container container-fluid">
         {% for course in courses %}
           <div class="course-logo-container col-md-4">
             <a href="{{ course.url }}">
               <i class="course-logo {{ course.logo }}"></i>
+            </a>
+            <h3>{{ course.course.name }}</h3>
+            <a href="{{ course.url }}">
+              <button class="btn btn-primary">Научете повече</button>
             </a>
           </div>
         {% endfor %}

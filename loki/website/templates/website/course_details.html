@@ -26,16 +26,18 @@
           <div class="course-details-container">
             <h3>Бързи детайли за курса</h3>
             <br>
-            <p>Започва: {{ cd.course.start_time }} </p>
-            <p>Приключва: {{ cd.course.end_time }} </p>
-            <p>Интензивност: {{ cd.course_intensity }} дни седмично</p>
-            <p>Дни в седмицата: {{ course_days }}</p>
-            <p>Кандидатстване до: {{ cd.course.application_until }} </p>
-            <!-- 
-              We have price twice (see below)
-              <p>Цена: {{ cd.price }}</p>
-            -->
-            <p>Програма на курса: <a href="">{{ cd.course.git_repository }}</a> </p>
+            <p><b>Започва: </b> {{ cd.course.start_time }}</p>
+            <p><b>Приключва: </b> {{ cd.course.end_time }} </p>
+            <p><b>Интензивност: </b> {{ cd.course_intensity }} дни седмично</p>
+            <p><b>Дни в седмицата: </b> {{ course_days }}</p>
+            <p><b>Кандидатстване до: </b> {{ cd.course.application_until }} </p>
+            <p><b>Програма на курса: </b> <a href="{{ cd.course.git_repository }}" target="_blank">{{ cd.course.git_repository }}</a> </p>
+            <p><b>Адрес: </b><a href="{{ cd.address }}" target="_blank">Залата се намира тук</a></p> 
+            <div id="details-apply-button">
+              <a href="{{ cd.course.applications_url }}">
+                <button  class="btn btn-sm btn-warning">Кандидатствай</button>
+              </a>
+            </div>
           </div>
         </div>
       
@@ -56,7 +58,7 @@
 
         <div class="col-md-12">
           <h2>Преподаватели</h2>
-          <p>{{ snippets.course_teachers_first_paragraph.text }}</p>
+          <p>{{ cd.teacher_preview }}</p>
           {% for teacher in teachers %}
             <div class="course-teacher-image col-sm-2">
               <a data-teacherid="{{ teacher.id }}" class="teacher-avatar">
@@ -84,7 +86,7 @@
         <div class="col-md-12">
           <h2>Възможност за реализация след курса - партньори</h2>
 
-          <p>Курсът е работно ориентиран и има за цел освен да даде нужните теоретични и практични знания на курсисите, да им намери работа. Затова работим с партньори от IT индустрията:</p>
+          <p>{{ cd.realization }}</p>
           {% for partner in partners %}
             <div class="course-partner-image col-md-2">
               <a href="{% url 'website:partners' %}">

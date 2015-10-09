@@ -209,11 +209,14 @@ body {
 .container section:nth-of-type(2n + 1) div.text-card {
   float: right; }
 
-.course-logo {
-  font-size: 22em; }
+.active-courses-container {
+  text-align: center; }
 
 .course-logo-container a {
   text-decoration: none; }
+
+.course-logo {
+  font-size: 22em; }
 
 .course-details-image-container, .course-teacher-image, .course-partner-image {
   width: 161px;
@@ -234,6 +237,9 @@ body {
 
 #course-details-breadcrumb {
   font-size: 26px; }
+
+#details-apply-button {
+  margin-left: 20%; }
 
 #course_video .video {
   padding: 10px; }

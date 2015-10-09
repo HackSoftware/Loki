@@ -304,14 +304,18 @@ $ModerateCompetition: #56CB00;
 }
 
 // courses
-.course-logo {
-    font-size: 22em;
+.active-courses-container {
+    text-align: center;
 }
 
 .course-logo-container{
     a {
         text-decoration: none;
     }
+}
+
+.course-logo {
+    font-size: 22em;
 }
 // end of courses css
 
@@ -340,6 +344,10 @@ $ModerateCompetition: #56CB00;
 
 #course-details-breadcrumb {
     font-size: 26px;
+}
+
+#details-apply-button {
+    margin-left: 20%;
 }
 
 #course_video {
