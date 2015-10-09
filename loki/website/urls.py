@@ -7,5 +7,5 @@ urlpatterns = [
     url(r'^about/$', about, name="about"),
     url(r'^courses/$', courses, name="courses"),
     url(r'^partners/$', partners, name="partners"),
-    url(r'^courses/(?P<course_url>[a-z0-9-]+)$', course_details, name="course_details")
+    url(r'^courses/(?P<course_url>[-\w]+)/$', course_details, name="course_details")
 ]
