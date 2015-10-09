@@ -17,6 +17,8 @@ class SnippetAdmin(admin.ModelAdmin):
     pass
 admin.site.register(Snippet, SnippetAdmin)
 
+
 class CourseDescriptionAdmin(admin.ModelAdmin):
-	pass
+    pass
+
 admin.site.register(CourseDescription, CourseDescriptionAdmin)

@@ -14,7 +14,7 @@
     <div class="row">
       <div class="container-fluid">
         <div id="course_video">
-          <div class="col-md-5 col-md-offset-1 video">
+          <div class="course-details-video col-md-5 col-md-offset-1 video">
             <a class="swipebox-video" rel="youtube" href="{{ cd.course.video }}">
               <img class="video-thumb" src="{{ MEDIA_URL }}{{ cd.video_image }}">
               <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
@@ -56,26 +56,23 @@
 
         <div class="col-md-12">
           <h2>Преподаватели</h2>
+          <p>{{ snippets.course_teachers_first_paragraph.text }}</p>
           {% for teacher in teachers %}
-            <div class="teacher-avatars-container col-sm-2">
-              <a data-teacherid="{{ teacher.id }}" class="teacher-avatar thumbnail">
-                <img class="asd" src="{{ MEDIA_URL }}{{ teacher.avatar }}" alt="">
+            <div class="course-teacher-image col-sm-2">
+              <a data-teacherid="{{ teacher.id }}" class="teacher-avatar">
+                <img class="image" src="{{ MEDIA_URL }}{{ teacher.avatar }}" alt="">
               </a>
             </div>
             {% if forloop.first %}
               <div id="teacher-{{ teacher.id }}" class="teacher-info col-md-12">
-                <p>{{ teacher.first_name }}</p>
+                <p>{{ teacher.description }}</p>
               </div>
             {% else %}
               <div id="teacher-{{ teacher.id }}" class="teacher-info teacher-info-hidden col-md-12">
-                <p>{{ teacher.first_name }}</p>
+                <p>{{ teacher.description }}</p>
               </div>
             {% endif %}
           {% endfor %}
-      
-          <p>
-            TODO: Add other teacher info..
-          </p>
         </div>
 
       </div>
@@ -89,9 +86,9 @@
 
           <p>Курсът е работно ориентиран и има за цел освен да даде нужните теоретични и практични знания на курсисите, да им намери работа. Затова работим с партньори от IT индустрията:</p>
           {% for partner in partners %}
-            <div class="partner-logos-container col-sm-6 col-md-3">
-              <a class="thumbnail">
-                <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" alt="">
+            <div class="course-partner-image col-md-2">
+              <a href="{% url 'website:partners' %}">
+                <img class="image" src="{{ MEDIA_URL }}{{ partner.comapny.logo }}">
               </a>
             </div>
           {% endfor %}
@@ -102,7 +99,6 @@
 
     <div class="row">
       <div class="container-fluid">
-
         <div class="col-md-12">
           <h2>Цена на курса</h2>
           <p>{{ cd.price }}</p>
@@ -112,7 +108,9 @@
     </div>
 
     <div class="aplly-button-container">
-      <button class="apply-button btn btn-lg btn-warning">Кандидатствай</button>
+      <a href="{{ cd.course.applications_url }}">
+        <button class="apply-button btn btn-lg btn-warning">Кандидатствай</button>
+      </a>
     </div>
 
   </div>

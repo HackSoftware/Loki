@@ -39,9 +39,11 @@ class CourseDescription(models.Model):
     logo = models.CharField(
         blank=True,
         max_length=255,
-        help_text='Add class from <a href="http://devicon.fr/" target="_blank">www.devicon.fr</a>')
+        help_text='Copy class from <a href="http://devicon.fr/" target="_blank">www.devicon.fr</a>')
     url = models.SlugField(max_length=80, unique=True)
-    video_image = models.ImageField(blank=True)
+    video_image = models.ImageField(
+        blank=True,
+        help_text='Add a 16/9 video cover image.')
     course_intensity = models.PositiveIntegerField(default=0, blank=False, null=False)
     course_days = models.CharField(blank=True, max_length=255)
     course_summary = RichTextField(blank=True, null=True)

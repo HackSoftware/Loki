@@ -43,5 +43,6 @@ def course_details(request, course_url):
     teachers = cd.course.teacher_set.all()
     partners = Partner.objects.all()
     course_days = " ".join([word.strip() for word in cd.course_days.split(",")])
+    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
     return render(request, "website/course_details.html", locals())

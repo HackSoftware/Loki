@@ -42,7 +42,7 @@ class CourseAssignment(models.Model):
 
 
 class Course(models.Model):
-    # TODO: 
+    # TODO:
     # Moved to website.models.CourseDescription
     # Delete (comment) the fields after you migrade the info too!
     description = RichTextField(blank=False)

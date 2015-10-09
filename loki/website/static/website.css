@@ -215,6 +215,20 @@ body {
 .course-logo-container a {
   text-decoration: none; }
 
+.course-details-image-container, .course-teacher-image, .course-partner-image {
+  width: 161px;
+  height: 161px;
+  margin: 10px;
+  float: none;
+  cursor: pointer;
+  display: inline-block; }
+  .course-details-image-container .image, .course-teacher-image .image, .course-partner-image .image {
+    position: absolute;
+    top: 50%;
+    left: 4%;
+    width: 92%;
+    transform: translateY(-50%); }
+
 .breadcrumb {
   margin-top: 20px; }
 
@@ -233,27 +247,19 @@ body {
     margin: -46px; }
   #course_video .video .video-thumb {
     box-shadow: 0px 10px 20px #888888;
-    width: 100%; }
+    max-width: 100%;
+    max-height: 100%; }
 
-.teacher-avatars-container {
-  padding: 10px;
-  margin: 30px;
-  width: 150px;
-  height: 150px;
-  float: none;
-  display: inline-block;
-  cursor: pointer; }
+.course-details-video {
+  max-width: 640px;
+  max-height: 360px; }
 
 .teacher-info-hidden {
   display: none; }
 
-.partner-logos-container {
-  margin: 35px;
-  width: 200px;
-  height: 200px;
-  float: none;
-  display: inline-block;
-  cursor: pointer; }
+.course-partner-image {
+  background: white;
+  opacity: 0.9; }
 
 .aplly-button-container {
   text-align: center;
