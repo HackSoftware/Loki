@@ -33,6 +33,8 @@ body {
       body #page-wrap #header #main-navigation {
         margin-top: 20px;
         list-style: none; }
+        body #page-wrap #header #main-navigation .dropdown-menu a {
+          color: black; }
         body #page-wrap #header #main-navigation li {
           float: left;
           display: block;
@@ -209,10 +211,13 @@ body {
 .container section:nth-of-type(2n + 1) div.text-card {
   float: right; }
 
+.dropdown-menu {
+  margin-top: 10px !important; }
+
 .active-courses-container {
   text-align: center; }
 
-.course-logo-container a {
+.course-logo-container a:hover {
   text-decoration: none; }
 
 .course-logo {

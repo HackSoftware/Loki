@@ -40,6 +40,12 @@ body {
             #main-navigation {
                 margin-top: 20px;
                 list-style: none;
+                .dropdown-menu {
+                    a {
+                        color: black;
+                    }
+                }
+
                 li {
                     float: left;
                     display: block;
@@ -303,13 +309,17 @@ $ModerateCompetition: #56CB00;
     }
 }
 
+.dropdown-menu {
+    margin-top: 10px !important;
+}
+
 // courses
 .active-courses-container {
     text-align: center;
 }
 
 .course-logo-container{
-    a {
+    a:hover {
         text-decoration: none;
     }
 }
