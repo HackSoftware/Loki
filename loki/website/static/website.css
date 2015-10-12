@@ -267,6 +267,7 @@ body {
     max-height: 100%; }
 
 .course-details-video {
+  margin: 1%;
   max-width: 640px;
   max-height: 360px; }
 
