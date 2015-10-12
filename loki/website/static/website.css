@@ -34,7 +34,7 @@ body {
         margin-top: 20px;
         list-style: none; }
         body #page-wrap #header #main-navigation .dropdown-menu a {
-          color: black; }
+          color: black !important; }
         body #page-wrap #header #main-navigation li {
           float: left;
           display: block;
