@@ -39,7 +39,7 @@
             <li><a class="{% menu_active 'website:index' %}" href="{% url 'website:index' %}">Начало</a></li> 
             <li><a class="{% menu_active 'website:about' %}" href="{% url 'website:about' %}">За нас</a></li>
             <li class="dropdown">
-              <a class="dropdown-toggle {% menu_active 'website:courses' %}" href="" data-toggle="dropdown">Курсове</a>
+              <a class="dropdown-toggle {% menu_active 'website:courses' %}" href="" data-toggle="dropdown">Курсове<span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a class="active-courses" href="{% url 'website:courses' %}">Всички курсове</a></li>
                 {% get_active_courses %}
