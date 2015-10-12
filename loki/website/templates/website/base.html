@@ -42,6 +42,7 @@
               <a class="dropdown-toggle {% menu_active 'website:courses' %}" href="" data-toggle="dropdown">Курсове<span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a class="active-courses" href="{% url 'website:courses' %}">Всички курсове</a></li>
+                <li role="presentation" class="divider"></li>
                 {% get_active_courses %}
               </ul>
             </li>

@@ -37,10 +37,13 @@ body {
           float: left;
           display: block;
           padding: 10px; }
-          body #page-wrap #header #main-navigation li ul li a {
-            color: black; }
-            body #page-wrap #header #main-navigation li ul li a:hover {
-              border: none; }
+          body #page-wrap #header #main-navigation li ul li {
+            float: none;
+            padding: 2px; }
+            body #page-wrap #header #main-navigation li ul li a {
+              color: black; }
+              body #page-wrap #header #main-navigation li ul li a:hover {
+                border: none; }
           body #page-wrap #header #main-navigation li a {
             font-size: 120%;
             color: white;

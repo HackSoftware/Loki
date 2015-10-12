@@ -43,6 +43,8 @@ body {
                 li {
                     ul {
                         li {
+                            float: none;
+                            padding: 2px;
                             a {
                                 color: black;
                                 &:hover, {
