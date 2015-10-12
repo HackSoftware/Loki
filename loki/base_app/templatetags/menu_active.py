@@ -9,7 +9,11 @@ register = template.Library()
 @register.simple_tag(takes_context=True)
 def menu_active(context, pattern_or_urlname):
     try:
-        pattern = '^' + reverse(pattern_or_urlname) + '$'
+        if reverse(pattern_or_urlname) == '/':
+            pattern = '^/$'
+        else:
+            pattern = '^' + reverse(pattern_or_urlname) + "([-\w]+)?"
+        print(pattern)
     except NoReverseMatch:
         pattern = pattern_or_urlname
     path = context['request'].path

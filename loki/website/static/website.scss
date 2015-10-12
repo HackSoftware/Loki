@@ -40,13 +40,17 @@ body {
             #main-navigation {
                 margin-top: 20px;
                 list-style: none;
-                .dropdown-menu {
-                    a {
-                        color: black !important;
-                    }
-                }
-
                 li {
+                    ul {
+                        li {
+                            a {
+                                color: black;
+                                &:hover, {
+                                    border: none;
+                                } 
+                            }
+                        }
+                    }
                     float: left;
                     display: block;
                     padding: 10px;
@@ -313,7 +317,6 @@ $ModerateCompetition: #56CB00;
     margin-top: 10px !important;
 }
 
-// courses
 .active-courses-container {
     text-align: center;
 }
@@ -327,9 +330,6 @@ $ModerateCompetition: #56CB00;
 .course-logo {
     font-size: 22em;
 }
-// end of courses css
-
-// course_details
 
 // images container (reusable)
 .course-details-image-container {
@@ -387,8 +387,6 @@ $ModerateCompetition: #56CB00;
     max-height: 360px;
 }
 
-
-
 .course-teacher-image {
     @extend .course-details-image-container;
 }
@@ -412,7 +410,6 @@ $ModerateCompetition: #56CB00;
 .apply-button {
     font-size: 24px;
 }
-// end of course_details css
 
 @media screen and (max-width: 600px) {
     .text-card, .card {
@@ -425,7 +422,6 @@ $ModerateCompetition: #56CB00;
         width:100%;
     }
 }
-
 
 @media screen and (max-width: 995px) {
     .text-card{

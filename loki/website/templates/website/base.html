@@ -1,4 +1,5 @@
 {% load menu_active %}
+{% load active_courses %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +20,7 @@
     <link href="/static/website.css" rel="stylesheet">
     <link href="/static/bower_components/swipebox/src/css/swipebox.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/static/bower_components/devicon/devicon.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/bower_components/devicon/devicon-color.css">
+    <link rel="stylesheet" type="text/css" href="/static/bower_components/devicon/devicon-colors.css">
     <link href="/static/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   </head>
 
@@ -37,15 +38,10 @@
           <ul id="main-navigation" class="col-md-7 col-md-offset-2">
             <li><a class="{% menu_active 'website:index' %}" href="{% url 'website:index' %}">Начало</a></li> 
             <li><a class="{% menu_active 'website:about' %}" href="{% url 'website:about' %}">За нас</a></li>
-            <!-- 
-            Made courses a dropdown (see below)
-            <li><a class="{% menu_active 'website:courses' %}" href="{% url 'website:courses' %}">Курсове</a></li>
-            -->
             <li class="dropdown">
               <a class="dropdown-toggle {% menu_active 'website:courses' %}" href="" data-toggle="dropdown">Курсове</a>
               <ul class="dropdown-menu">
                 <li><a class="active-courses" href="{% url 'website:courses' %}">Всички курсове</a></li>
-                {% load active_courses %}
                 {% get_active_courses %}
               </ul>
             </li>
