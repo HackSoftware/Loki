@@ -338,7 +338,11 @@ body {
     top: 50%;
     left: 4%;
     width: 92%;
-    transform: translateY(-50%); }
+    transform: translateY(-50%);
+    opacity: 0.7; }
+    .course-partner-image .image:hover {
+      opacity: 1.0;
+      transition: 0.3s ease; }
   .course-partner-image .play_button {
     width: 4vmax;
     height: 4vmax;
