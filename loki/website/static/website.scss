@@ -64,6 +64,15 @@ body {
                             border-bottom: 2px solid $orange;
                         }
                     }
+                    .dropdown-toggle {
+                        font-size: 120%;
+                        color: white;
+                        text-decoration: none;
+                        &:hover, {
+                            cursor:pointer;
+                            // border-bottom: 2px solid $orange;
+                        }
+                    }
                     .active {
                         border-bottom: 2px solid $orange;
                     }
@@ -316,7 +325,7 @@ $ModerateCompetition: #56CB00;
 }
 
 .dropdown-menu {
-    margin-top: 10px !important;
+    margin-top: 20px;
 }
 
 .active-courses-container {
@@ -331,23 +340,6 @@ $ModerateCompetition: #56CB00;
 
 .course-logo {
     font-size: 22em;
-}
-
-// images container (reusable)
-.course-details-image-container {
-    width: 161px;
-    height: 161px;
-    margin: 10px;
-    float: none;
-    cursor:pointer;
-    display:inline-block;
-    .image {
-        position: absolute;
-        top: 50%;
-        left: 4%;
-        width: 92%;
-        transform: translateY(-50%);
-    }
 }
 
 .breadcrumb {
@@ -391,7 +383,54 @@ $ModerateCompetition: #56CB00;
 }
 
 .course-teacher-image {
-    @extend .course-details-image-container;
+    width: 220px;
+    height: 220px;
+    margin-top: 25px;
+    margin-left: 25px;
+    margin-right: 25px;
+    float: none;
+    cursor:pointer;
+    display:inline-block;
+    .image {
+        padding: 1px;
+        border: solid 1px #EFEFEF;
+        opacity:0.7;
+        position: absolute;
+        top: 50%;
+        left: 4%;
+        width: 92%;
+        transform: translateY(-50%);
+        &:hover{
+            border: solid 3px #CCC;
+            -moz-box-shadow: 1px 1px 5px #999;
+            -webkit-box-shadow: 1px 1px 5px #999;
+            box-shadow: 1px 1px 5px #999;
+            opacity:1.0;
+            transition: 0.3s ease;
+        }
+    }
+    a {
+        &:hover{
+            text-decoration: none;
+        }
+    }
+    .course_teacher_name {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+}
+
+.teacher-info {
+        margin-top: 25px;
+    }
+
+.active-teacher-image {
+    border: solid 3px #CCC;
+    -moz-box-shadow: 1px 1px 5px #999;
+    -webkit-box-shadow: 1px 1px 5px #999;
+    box-shadow: 1px 1px 5px #999;
+    opacity:1.0 !important;
 }
 
 .teacher-info-hidden {
@@ -399,9 +438,31 @@ $ModerateCompetition: #56CB00;
 }
 
 .course-partner-image {
-    @extend .course-details-image-container;
+    width: 161px;
+    height: 161px;
+    margin: 10px;
+    float: none;
+    cursor:pointer;
+    display:inline-block;
     background: white;
     opacity: 0.9;
+    .image {
+        position: absolute;
+        top: 50%;
+        left: 4%;
+        width: 92%;
+        transform: translateY(-50%);
+    }
+    .play_button {
+        width: 4vmax;
+        height: 4vmax;
+        left: 50%;
+        top: 50%;
+        z-index: 1;
+        position: absolute;
+        margin-left: -2vmax;
+        margin-top: -2vmax;
+    }
 }
 
 .aplly-button-container {
