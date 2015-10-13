@@ -241,6 +241,7 @@ body {
   font-size: 20px; }
 
 #details-apply-button {
+  margin-top: 30px;
   margin-left: 20%; }
 
 #course_video .video {
@@ -351,7 +352,7 @@ body {
 .aplly-button-container {
   text-align: center;
   margin-top: 20px;
-  margin-bottom: 20px; }
+  margin-bottom: 50px; }
 
 .apply-button {
   font-size: 24px; }
