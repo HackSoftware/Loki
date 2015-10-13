@@ -226,7 +226,8 @@ body {
   margin-top: 20px; }
 
 .active-courses-container {
-  text-align: center; }
+  text-align: center;
+  margin-bottom: 50px; }
 
 .course-logo-container a:hover {
   text-decoration: none; }
