@@ -238,7 +238,7 @@ body {
   margin-top: 20px; }
 
 #course-details-breadcrumb {
-  font-size: 26px; }
+  font-size: 20px; }
 
 #details-apply-button {
   margin-left: 20%; }
@@ -291,8 +291,11 @@ body {
   .course-teacher-image a:hover {
     text-decoration: none; }
   .course-teacher-image .course_teacher_name {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: bold; }
+
+.teacher-info-container {
+  text-align: center; }
 
 .teacher-info {
   margin-top: 25px; }

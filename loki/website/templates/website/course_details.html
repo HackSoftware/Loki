@@ -67,16 +67,16 @@
                   <div class="course-teacher-image">
                     <img class="active-teacher-image image img-circle" src="{{ MEDIA_URL }}{{ teacher.avatar }}" alt="">
                   </div>
-                  <div style="text-align: center;">
-                    <p style="text-decoration: none;"><span class="teacher-info-hidden glyphicon glyphicon-small glyphicon-chevron-right"></span><span class="glyphicon glyphicon-small glyphicon-chevron-down"></span><span class="course_teacher_name"> {{ teacher.first_name }} {{ teacher.last_name }}</span></p>
+                  <div class="teacher-info-container">
+                    <p><span class="teacher-info-hidden glyphicon glyphicon-small glyphicon-chevron-right"></span><span class="glyphicon glyphicon-small glyphicon-chevron-down"></span><span class="course_teacher_name"> {{ teacher.first_name }} {{ teacher.last_name }}</span></p>
                   </div>
 
                 {% else %}
                   <div class="course-teacher-image">
                     <img class="image img-circle" src="{{ MEDIA_URL }}{{ teacher.avatar }}" alt="">
                   </div>
-                  <div style="text-align: center;">
-                    <p style="text-decoration: none;"><span class="glyphicon glyphicon-small glyphicon-chevron-right"></span><span class="teacher-info-hidden glyphicon glyphicon-small glyphicon-chevron-down"></span><span class="course_teacher_name"> {{ teacher.first_name }} {{ teacher.last_name }}</span></p>
+                  <div class="teacher-info-container">
+                    <p><span class="glyphicon glyphicon-small glyphicon-chevron-right"></span><span class="teacher-info-hidden glyphicon glyphicon-small glyphicon-chevron-down"></span><span class="course_teacher_name"> {{ teacher.first_name }} {{ teacher.last_name }}</span></p>
                   </div>
                 {% endif %}
 
