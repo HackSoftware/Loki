@@ -67,8 +67,8 @@
                   <div class="course-teacher-image">
                     <img class="active-teacher-image image img-circle" src="{{ MEDIA_URL }}{{ teacher.avatar }}" alt="">
                   </div>
-                  <div class="teacher-info-container">
-                    <p><span class="teacher-info-hidden glyphicon glyphicon-small glyphicon-chevron-right"></span><span class="glyphicon glyphicon-small glyphicon-chevron-down"></span><span class="course_teacher_name"> {{ teacher.first_name }} {{ teacher.last_name }}</span></p>
+                  <div class="active-teacher-info teacher-info-container">
+                    <span class="teacher-info-hidden glyphicon glyphicon-small glyphicon-chevron-right"></span><span class="glyphicon glyphicon-small glyphicon-chevron-down"></span><span class="course_teacher_name"> {{ teacher.first_name }} {{ teacher.last_name }}</span>
                   </div>
 
                 {% else %}
@@ -76,7 +76,7 @@
                     <img class="image img-circle" src="{{ MEDIA_URL }}{{ teacher.avatar }}" alt="">
                   </div>
                   <div class="teacher-info-container">
-                    <p><span class="glyphicon glyphicon-small glyphicon-chevron-right"></span><span class="teacher-info-hidden glyphicon glyphicon-small glyphicon-chevron-down"></span><span class="course_teacher_name"> {{ teacher.first_name }} {{ teacher.last_name }}</span></p>
+                    <span class="glyphicon glyphicon-small glyphicon-chevron-right"></span><span class="teacher-info-hidden glyphicon glyphicon-small glyphicon-chevron-down"></span><span class="course_teacher_name"> {{ teacher.first_name }} {{ teacher.last_name }}</span>
                   </div>
                 {% endif %}
 
@@ -155,6 +155,8 @@
       $(this).find(".glyphicon-chevron-right").css('display', 'none');
       $(this).find(".glyphicon-chevron-down").css('display', 'inline');
       $(this).find("img").addClass('active-teacher-image');
+      $('.teacher-info-container').removeClass('active-teacher-info');
+      $(this).find('.teacher-info-container').addClass('active-teacher-info');
       $(teacherId).css('display', 'block');
     })
   </script>

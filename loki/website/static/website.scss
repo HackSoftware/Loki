@@ -272,6 +272,7 @@ $MorePractice: #548000;
 $RealWorldPractice: #FE4E00;
 $TeamWork: #B453C8;
 $ModerateCompetition: #56CB00;
+$TabBorder: #C5C4C4;
 
 .text-card {
   padding-top: 100px;
@@ -421,16 +422,25 @@ $ModerateCompetition: #56CB00;
 
 }
 
-.teacher-info-container {
+.active-teacher-info {
+    border: 1px solid $TabBorder;
+    border-bottom: 1px solid #F2F2F2;
+    border-radius: 10px 10px 0 0;
+    z-index: 1;
     text-align: center;
+    padding: 6px;
+    margin: 0px !important;
 }
 
 .teacher-info {
-        margin-top: 25px;
-        -webkit-box-shadow: 3px 3px 4px #9E9E9E;
-        -moz-box-shadow: 3px 3px 4px #9E9E9E;
-        box-shadow: 3px 3px 4px #9E9E9E;
-    }
+    margin-top: 7px;
+    padding-top: 20px;
+    border-top: 1px solid $TabBorder;
+    z-index: 0;
+    // -webkit-box-shadow: 3px 3px 4px #9E9E9E;
+    // -moz-box-shadow: 3px 3px 4px #9E9E9E;
+    // box-shadow: 3px 3px 4px #9E9E9E;
+}
 
 .active-teacher-image {
     border: solid 3px #CCC;
@@ -438,6 +448,11 @@ $ModerateCompetition: #56CB00;
     -webkit-box-shadow: 1px 1px 5px #999;
     box-shadow: 1px 1px 5px #999;
     opacity:1.0 !important;
+}
+
+.teacher-info-container{
+    position: relative;
+    text-align: center;
 }
 
 .teacher-info-hidden {
