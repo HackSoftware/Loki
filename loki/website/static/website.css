@@ -1,4 +1,4 @@
-.ease1s, body #page-wrap #faces .person, body #page-wrap #partners .partner, body #page-wrap #videos .video .video-thumb, #course_video .video .video-thumb {
+.ease1s, body #page-wrap #faces .person, body #page-wrap #partners .partner, body #page-wrap #videos .video .video-thumb, #course_video .video .video-thumb, .course-partner-image {
   -webkit-transition: all 1s ease;
   -moz-transition: all 1s ease;
   -ms-transition: all 1s ease;
@@ -332,7 +332,7 @@ body {
   cursor: pointer;
   display: inline-block;
   background: white;
-  opacity: 0.7; }
+  opacity: 0.6; }
   .course-partner-image .image {
     position: absolute;
     top: 50%;
