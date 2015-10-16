@@ -417,7 +417,7 @@ $TabBorder: #C5C4C4;
         }
     }
     .course_teacher_name {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: bold;
     }
 
@@ -425,7 +425,7 @@ $TabBorder: #C5C4C4;
 
 .active-teacher-info {
     border: 1px solid $TabBorder;
-    border-bottom: 1px solid #F2F2F2;
+    border-bottom: 2px solid #F2F2F2;
     border-radius: 10px 10px 0 0;
     z-index: 1;
     text-align: center;
