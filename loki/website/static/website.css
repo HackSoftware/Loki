@@ -265,11 +265,11 @@ body {
   max-height: 360px; }
 
 .course-teacher-image {
-  width: 220px;
-  height: 220px;
-  margin-top: 25px;
-  margin-left: 25px;
-  margin-right: 25px;
+  width: 230px;
+  height: 230px;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
   float: none;
   cursor: pointer;
   display: inline-block; }
