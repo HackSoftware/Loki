@@ -384,23 +384,24 @@ $TabBorder: #C5C4C4;
     max-height: 360px;
 }
 
-.course-teacher-container{
-    float:left;
-    margin-left:20px;
-    max-width: 220px;
-    min-height: 40px;
-}
-
 .course-teacher-image {
     width: 220px;
+    height: 220px;
+    margin-top: 25px;
+    margin-left: 25px;
+    margin-right: 25px;
+    float: none;
     cursor:pointer;
-    display:block;
-    margin-bottom:20px;
+    display:inline-block;
     .image {
         padding: 1px;
         border: solid 1px #EFEFEF;
         opacity:0.7;
-        width: 100%;
+        position: absolute;
+        top: 50%;
+        left: 4%;
+        width: 92%;
+        transform: translateY(-50%);
         &:hover{
             border: solid 3px #CCC;
             -moz-box-shadow: 1px 1px 5px #999;
@@ -433,9 +434,10 @@ $TabBorder: #C5C4C4;
 }
 
 .teacher-info {
+    margin-top: 7px;
+    padding-top: 20px;
     border-top: 1px solid $TabBorder;
     z-index: 0;
-    display:block;
     // -webkit-box-shadow: 3px 3px 4px #9E9E9E;
     // -moz-box-shadow: 3px 3px 4px #9E9E9E;
     // box-shadow: 3px 3px 4px #9E9E9E;

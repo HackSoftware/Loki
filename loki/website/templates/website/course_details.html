@@ -60,7 +60,7 @@
           <p>{{ cd.teacher_preview }}</p>
 
           {% for teacher in teachers %}
-            <div  class="course-teacher-container">
+            <div  class="course-teacher-image col-md-3">
               <a data-teacherid="{{ teacher.id }}" class="teacher-avatar">
 
                 {% if forloop.first %}
@@ -79,9 +79,10 @@
                     <span class="glyphicon glyphicon-small glyphicon-chevron-right"></span><span class="teacher-info-hidden glyphicon glyphicon-small glyphicon-chevron-down"></span><span class="course_teacher_name"> {{ teacher.first_name }} {{ teacher.last_name }}</span>
                   </div>
                 {% endif %}
+
               </a>
             </div>
-<!--
+
             {% if forloop.first %}
               <div id="teacher-{{ teacher.id }}" class="teacher-info col-md-12">
                 <p>{{ teacher.description }}</p>
@@ -93,19 +94,6 @@
               </div>
             {% endif %}
 
- -->          
-          {% endfor %}
-          {% for teacher in teachers %}
-            {% if forloop.first %}
-              <div id="teacher-{{ teacher.id }}" class="teacher-info col-md-12">
-                <p>{{ teacher.description }}</p>
-              </div>
-
-            {% else %}
-              <div id="teacher-{{ teacher.id }}" class="teacher-info teacher-info-hidden col-md-12">
-                <p>{{ teacher.description }}</p>
-              </div>
-            {% endif %}
           {% endfor %}
         </div>
       </div>
