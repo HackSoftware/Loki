@@ -1,0 +1,163 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+  <div class="container" id="course">
+
+    <ol id="course-details-breadcrumb" class="breadcrumb">
+      <li><a href="{% url 'website:courses' %}">Курсове</a></li>
+      <li class="active">{{ cd.course.name }}</li>
+    </ol>
+
+    <h1>{{ cd.course.name }}</h1>
+
+    <div class="row">
+      <div class="container-fluid">
+        <div id="course_video">
+          <div class="course-details-video col-md-7 video">
+            <a class="swipebox-video" rel="youtube" href="{{ cd.course.video }}">
+              <img class="video-thumb" src="{{ MEDIA_URL }}{{ cd.video_image }}">
+              <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
+            </a>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="course-details-container">
+            <h3>Бързи детайли за курса</h3>
+            <br>
+            <p><b>Започва: </b> {{ cd.course.start_time }}</p>
+            <p><b>Приключва: </b> {{ cd.course.end_time }} </p>
+            <p><b>Интензивност: </b> {{ cd.course_intensity }} дни седмично</p>
+            <p><b>Дни в седмицата: </b> {{ course_days }}</p>
+            <p><b>Кандидатстване до: </b> {{ cd.course.application_until }} </p>
+            <p><b>Програма на курса: </b> <a href="{{ cd.course.git_repository }}" target="_blank">{{ cd.course.git_repository }}</a> </p>
+            <p><b>Адрес: </b><a href="{{ cd.address }}" target="_blank">Залата се намира тук</a></p> 
+            <div id="details-apply-button">
+              <a href="{{ cd.course.applications_url }}">
+                <button  class="btn btn-lg btn-warning">Кандидатствай</button>
+              </a>
+            </div>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="container-fluid">
+        <div class="col-md-12">
+          <h2>Course Summary</h2>
+          <p>{{ cd.course_summary }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="container-fluid">
+        <div class="col-md-12">
+          <h2>Преподаватели</h2>
+          <p>{{ cd.teacher_preview }}</p>
+
+          {% for teacher in teachers %}
+            <div  class="course-teacher-image col-md-3">
+              <a data-teacherid="{{ teacher.id }}" class="teacher-avatar">
+
+                {% if forloop.first %}
+                  <div class="course-teacher-image">
+                    <img class="active-teacher-image image img-circle" src="{{ MEDIA_URL }}{{ teacher.avatar }}" alt="">
+                  </div>
+                  <div class="active-teacher-info teacher-info-container">
+                    <span class="teacher-info-hidden glyphicon glyphicon-small glyphicon-chevron-right"></span><span class="glyphicon glyphicon-small glyphicon-chevron-down"></span><span class="course_teacher_name"> {{ teacher.first_name }} {{ teacher.last_name }}</span>
+                  </div>
+
+                {% else %}
+                  <div class="course-teacher-image">
+                    <img class="image img-circle" src="{{ MEDIA_URL }}{{ teacher.avatar }}" alt="">
+                  </div>
+                  <div class="teacher-info-container">
+                    <span class="glyphicon glyphicon-small glyphicon-chevron-right"></span><span class="teacher-info-hidden glyphicon glyphicon-small glyphicon-chevron-down"></span><span class="course_teacher_name"> {{ teacher.first_name }} {{ teacher.last_name }}</span>
+                  </div>
+                {% endif %}
+
+              </a>
+            </div>
+
+            {% if forloop.first %}
+              <div id="teacher-{{ teacher.id }}" class="teacher-info col-md-12">
+                <p>{{ teacher.description }}</p>
+              </div>
+
+            {% else %}
+              <div id="teacher-{{ teacher.id }}" class="teacher-info teacher-info-hidden col-md-12">
+                <p>{{ teacher.description }}</p>
+              </div>
+            {% endif %}
+
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="container-fluid">
+
+        <div class="col-md-12">
+          <h2>Възможност за реализация след курса - партньори</h2>
+
+          <p>{{ cd.realization }}</p>
+          {% for partner in partners %}
+            <div class="course-partner-image col-md-2">
+              <a class="swipebox-video" rel="youtube" href="{{ partner.video_presentation }}">
+                <img class="image" src="{{ MEDIA_URL }}{{ partner.comapny.logo }}">
+                <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="container-fluid">
+        <div class="col-md-12">
+          <h2>Цена на курса</h2>
+          <p>{{ cd.price }}</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="aplly-button-container">
+      <a href="{{ cd.course.applications_url }}">
+        <button class="apply-button btn btn-lg btn-warning">Кандидатствай</button>
+      </a>
+    </div>
+
+  </div>
+  {% endautoescape %}
+
+  <script src="/static/bower_components/jquery/dist/jquery.js"></script>
+  <script src="/static/bower_components/swipebox/src/js/jquery.swipebox.js"></script>
+  <script type="text/javascript">
+  (function($) {
+    $('.swipebox-video').swipebox();
+  })(jQuery);
+  </script>
+  <script type="text/javascript">
+    $('.teacher-avatar').click(function(teacher){
+      var teacherId = '#teacher-' + $(this).data('teacherid')
+      $('.teacher-info').css('display', 'none');
+      $('.glyphicon-chevron-down').css('display', 'none');
+      $('.glyphicon-chevron-right').css('display', 'inline');
+      $('.course-teacher-image').find('img').removeClass('active-teacher-image');
+      $(this).find(".glyphicon-chevron-right").css('display', 'none');
+      $(this).find(".glyphicon-chevron-down").css('display', 'inline');
+      $(this).find("img").addClass('active-teacher-image');
+      $('.teacher-info-container').removeClass('active-teacher-info');
+      $(this).find('.teacher-info-container').addClass('active-teacher-info');
+      $(teacherId).css('display', 'block');
+    })
+  </script>
+{% endblock 'page-content' %}

@@ -1,5 +1,5 @@
 from django.db import models
-
+from education.models import Course
 
 from ckeditor.fields import RichTextField
 
@@ -32,3 +32,40 @@ class Snippet(models.Model):
 
     def __str__(self):
         return self.label
+
+
+class CourseDescription(models.Model):
+    course = models.OneToOneField(Course)
+    logo = models.CharField(
+        blank=True,
+        max_length=255,
+        help_text='Copy class from <a href="http://devicon.fr/" target="_blank">www.devicon.fr</a>')
+    url = models.SlugField(max_length=80, unique=True)
+    video_image = models.ImageField(
+        blank=True,
+        help_text='Add a 16/9 video cover image.')
+    course_intensity = models.PositiveIntegerField(default=0, blank=False, null=False)
+    course_days = models.CharField(blank=True, max_length=255)
+    course_summary = RichTextField(blank=True, null=True)
+    teacher_preview = RichTextField(blank=True, null=True)
+    realization = RichTextField(blank=True, null=True)
+    price = RichTextField(blank=True, null=True)
+    # is_active = models.BooleanField(default=False)
+    address = models.CharField(
+        blank=True,
+        max_length=255,
+        help_text='Add <a href="http://www.google.com/maps" target="_blank">google maps</a>'
+        ' link to HackBulgaria location')
+    SEO_description = models.CharField(blank=False, max_length=255)
+    SEO_title = models.CharField(blank=False, max_length=255)
+    # title = Course.name
+    # video_url = Course.video
+    # start_time = Course.start_time
+    # end_time = Course.end_time
+    # application_deadline = Course.application_until
+    # github = Course.git_repository
+    # teachers = Course.teachers_set
+    # partners = Course.partner_set
+
+    def __str__(self):
+        return self.course.name
