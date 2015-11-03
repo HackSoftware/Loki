@@ -44,6 +44,9 @@ class CourseDescription(models.Model):
     video_image = models.ImageField(
         blank=True,
         help_text='Add a 16/9 video cover image.')
+    blog_article = models.CharField(
+        blank=True,
+        max_length=255)
     course_intensity = models.PositiveIntegerField(default=0, blank=False, null=False)
     course_days = models.CharField(blank=True, max_length=255)
     course_summary = RichTextField(blank=True, null=True)

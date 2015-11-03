@@ -15,10 +15,17 @@
       <div class="container-fluid">
         <div id="course_video">
           <div class="course-details-video col-md-7 video">
-            <a class="swipebox-video" rel="youtube" href="{{ cd.course.video }}">
-              <img class="video-thumb" src="{{ MEDIA_URL }}{{ cd.video_image }}">
-              <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
-            </a>
+            {% if cd.blog_article == "" %}
+              <a class="swipebox-video" rel="youtube" href="{{ cd.blog_article }}">
+                <img class="video-thumb" src="{{ MEDIA_URL }}{{ cd.video_image }}">
+                <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
+              </a>
+            {% else %}
+              <a class="swipebox-video" rel="youtube" href="{{ cd.course.video }}">
+                <img class="video-thumb" src="{{ MEDIA_URL }}{{ cd.video_image }}">
+                <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
+              </a>
+            {% endif %}
           </div>
         </div>
 
