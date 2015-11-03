@@ -229,8 +229,10 @@ body {
   text-align: center;
   margin-bottom: 50px; }
 
-.course-logo-container a:hover {
-  text-decoration: none; }
+.course-logo-container {
+  margin-bottom: 40px; }
+  .course-logo-container a:hover {
+    text-decoration: none; }
 
 .course-logo {
   font-size: 22em; }
