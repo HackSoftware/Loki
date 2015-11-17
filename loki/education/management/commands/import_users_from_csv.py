@@ -55,6 +55,7 @@ class Command(BaseCommand):
 
                     new_user.skype = skype
                     new_user.phone = phone
+                    new_user.is_active = True
                     new_user.save()
 
                     sender = settings.EMAIL_HOST_USER
