@@ -10,12 +10,13 @@ from .validators import validate_mac
 class Student(BaseUser):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
-    phone = models.CharField(null=True, blank=True, max_length='20')
+    phone = models.CharField(null=True, blank=True, max_length=20)
+    skype = models.CharField(null=True, blank=True, max_length=20)
 
 
 class Teacher(BaseUser):
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
-    phone = models.CharField(null=True, blank=True, max_length='20')
+    phone = models.CharField(null=True, blank=True, max_length=20)
     teached_courses = models.ManyToManyField('Course')
 
 
