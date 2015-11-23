@@ -13,6 +13,9 @@ from .serializers import (SkillSerializer, TeamSerializer,
 from .premissions import IsHackFMIUser, IsTeamLeaderOrReadOnly
 from .helper import send_team_delete_email
 
+from base_app.helper import try_open
+import json
+
 
 class SkillListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
@@ -168,8 +171,7 @@ class AssignMentor(APIView):
         team.mentors.add(mentor)
         return Response(status=status.HTTP_200_OK)
 
-
-    #TODO: Fix methods
+    # TODO: Fix methods
     def post(self, request, format=None):
         logged_competitor = request.user.get_competitor()
         mentor = Mentor.objects.get(id=request.data['id'])
@@ -186,6 +188,7 @@ class AssignMentor(APIView):
 @api_view(['GET'])
 def get_schedule(request):
     content = ""
+
     with open("media/mentors.html", "r") as f:
         content = f.read()
 
@@ -194,8 +197,15 @@ def get_schedule(request):
 
 @api_view(['GET'])
 def schedule_json(request):
-    with open("media/placing.json", "r") as f:
-        content = f.read()
+    content = {
+        "placed": {},
+        "leftovers": []
+    }
+
+    with try_open("media/placing.json", "r") as (f, error):
+        if error is None:
+            content = json.loads(f.read())
+
     return Response(content, status=status.HTTP_200_OK)
 
 

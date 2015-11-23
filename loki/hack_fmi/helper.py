@@ -21,6 +21,7 @@ def date_increase(days):
     result = new_date.strftime("%Y-%m-%d")
     return result
 
+
 def date_decrease(days):
     old_date = datetime.now()
     new_date = old_date - timedelta(days=days)
