@@ -286,6 +286,12 @@ class LeaveTeamTests(APITestCase):
 class InvitationTests(APITestCase):
 
     def setUp(self):
+        self.template = EmailTemplate.objects.create(
+            name='hackfmi_team_invite',
+            subject='Покана за отбор във HackFMI',
+            content='Покана за отбор във HackFMI.',
+        )
+
         self.skills = Skill.objects.create(name="C#")
         self.season = Season.objects.create(
             name="HackFMI 2",

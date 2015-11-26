@@ -1,4 +1,5 @@
 from datetime import date
+from django.conf import settings
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,12 +7,14 @@ from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
+from post_office import mail
 
 from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
 from .serializers import (SkillSerializer, TeamSerializer,
                           Invitation, InvitationSerializer, MentorSerializer, SeasonSerializer, PublicTeamSerializer, OnBoardingCompetitorSerializer)
 from .premissions import IsHackFMIUser, IsTeamLeaderOrReadOnly
 from .helper import send_team_delete_email
+
 
 from base_app.helper import try_open
 import json
@@ -110,6 +113,12 @@ class InvitationView(APIView):
         if membership.is_leader:
             Invitation.objects.create(team=membership.team, competitor=invited_competitor)
             message = {"message": "Успешно изпратихте поканата за включване в отбора!"}
+            sender = settings.DEFAULT_FROM_EMAIL
+            mail.send(
+                invited_competitor.email,
+                sender,
+                template='hackfmi_team_invite',
+            )
             return Response(message, status=status.HTTP_201_CREATED)
         message = {"message": "Трябва да бъдете лидер, за да каните хора!"}
         return Response(message, status=status.HTTP_403_FORBIDDEN)

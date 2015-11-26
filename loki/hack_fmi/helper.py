@@ -7,7 +7,7 @@ from post_office import mail
 def send_team_delete_email(team):
     members = list(team.members.all())
     user_emails = [member.email for member in members]
-    sender = settings.EMAIL_HOST_USER
+    sender = settings.DEFAULT_FROM_EMAIL
     mail.send(
         user_emails,
         sender,
