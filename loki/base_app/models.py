@@ -19,7 +19,7 @@ class Company(models.Model):
 
 
 class Partner(models.Model):
-    comapny = models.OneToOneField(Company, primary_key=True)
+    company = models.OneToOneField(Company, primary_key=True)
     description = RichTextField(blank=False)
     facebook = models.URLField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
@@ -35,7 +35,7 @@ class Partner(models.Model):
         ordering = ('ordering',)
 
     def __str__(self):
-        return self.comapny.name
+        return self.company.name
 
 
 class Event(models.Model):
