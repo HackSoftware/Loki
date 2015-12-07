@@ -1,5 +1,4 @@
 {% extends 'website/base.html' %}
-{% load list_utils %}
 
 {% block 'page-content' %}
 
@@ -11,23 +10,12 @@
         <p class="lead">{{ snippets.become_a_partner.text }}</p>
       </div>
     </div>
+
+    {% include "website/partners_snippet.html" with partners_heading=snippets.general_partners.text partners=general_partners partners_per_row=4 %}
     
-    <div id="partners" class="row" align="center">
-      <h2 class="container">{{ snippets.index_partners_description.text }}</h2>
-        {% for partner_row in partners|split_in_groups:'4'%}
-          <div class="row">
-            {% for partner in partner_row %}
-              <a class="swipebox-video" rel="youtube" href="{{ partner.video_presentation }}">
-                <div class="partner col-sm-3">
-                  <img src="{{ MEDIA_URL }}{{ partner.company.logo }}" class="partner-image">
-                  <img src="{{ STATIC_URL }}/website_images/play_button.png" class="partners_play_button">
-                </div>
-              </a>
-            {% endfor %}
-            </div>
-        {% endfor %}
-    </div>
+    {% include "website/partners_snippet.html" with partners_heading=snippets.index_partners_description.text partners=partners partners_per_row=4 %}
   </div>
+
 {% endautoescape %}
     <script src="/static/bower_components/jquery/dist/jquery.js"></script>
     <script src="/static/bower_components/swipebox/src/js/jquery.swipebox.js"></script>
