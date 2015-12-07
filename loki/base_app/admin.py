@@ -3,7 +3,7 @@ from import_export.admin import ImportExportActionModelAdmin
 from django.contrib import admin
 
 from hack_fmi.models import BaseUser
-from .models import Company, Partner, Event, Ticket, City
+from .models import Company, Partner, GeneralPartner, Event, Ticket, City
 from .modelresource import TicketResource
 
 
@@ -33,6 +33,14 @@ class PartnerAdmin(admin.ModelAdmin):
         model = Partner
 
 admin.site.register(Partner, PartnerAdmin)
+
+
+class GeneralPartnerAdmin(admin.ModelAdmin):
+
+    class Meta:
+        model = GeneralPartner
+
+admin.site.register(GeneralPartner, GeneralPartnerAdmin)
 
 
 class EventAdmin(admin.ModelAdmin):
