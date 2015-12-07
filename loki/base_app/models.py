@@ -38,6 +38,9 @@ class Partner(models.Model):
         return self.company.name
 
 
+class GeneralPartner(models.Model):
+    partner = models.OneToOneField(Partner, primary_key=True)
+
 class Event(models.Model):
     name = models.CharField(max_length=150)
     start_date = models.DateTimeField()
