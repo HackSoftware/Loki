@@ -1,0 +1,15 @@
+<div id="partners" class="row" align="center">
+  <h2 class="container">{{ snippets.index_partners_description.text }}</h2>
+  {% for partner_row in partners|split_in_groups:'4'%}
+    <div class="row">
+      {% for partner in partner_row %}
+        <a class="swipebox-video" rel="youtube" href="{{ partner.video_presentation }}">
+          <div class="partner col-sm-3">
+            <img src="{{ MEDIA_URL }}{{ partner.comapny.logo }}" class="partner-image">
+            <img src="{{ STATIC_URL }}/website_images/play_button.png" class="partners_play_button">
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% endfor %}
+</div>
