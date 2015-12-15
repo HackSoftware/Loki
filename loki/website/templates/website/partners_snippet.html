@@ -1,8 +1,8 @@
 {% load list_utils %}
 
 <div id="partners" class="row" align="center">
-  <h2 class="container">{{ snippets.index_partners_description.text }}</h2>
-  {% for partner_row in partners|split_in_groups:'4'%}
+  <h2 class="container">{{ partners_heading }}</h2>
+  {% for partner_row in partners|split_in_groups:'{{partners_per_row}}' %}
     <div class="row">
       {% for partner in partner_row %}
         <a class="swipebox-video" rel="youtube" href="{{ partner.video_presentation }}">
