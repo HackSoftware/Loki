@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
 
 from education.models import WorkingAt
-from base_app.models import Partner
+from base_app.models import Partner, GeneralPartner
 
 
 def index(request):
@@ -31,6 +31,8 @@ def courses(request):
 
 
 def partners(request):
+    general_partners = GeneralPartner.objects.all().order_by('?')
+    general_partners = [gp.partner for gp in general_partners]
     partners = Partner.objects.all().order_by('?')
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
