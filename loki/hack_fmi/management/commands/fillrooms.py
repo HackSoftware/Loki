@@ -1,12 +1,14 @@
 from django.core.management.base import BaseCommand, CommandError
-from hack_fmi.models import Room, Team
+from hack_fmi.models import Room, Team, Season
 
 
 class Command(BaseCommand):
     help = 'distributes the teams in rooms'
 
     def handle(self, *args, **options):
-        all_rooms = Room.objects.all()
+        latest_season = Season.objects.get(is_active=True)
+        all_rooms = Room.objects.all(season=latest)
+
         capacity = sum([room.capacity for room in all_rooms])
         all_teams = Team.objects.all()
         if len(all_teams) > capacity:
