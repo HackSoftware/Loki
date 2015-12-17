@@ -7,7 +7,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         latest_season = Season.objects.get(is_active=True)
-        all_rooms = Room.objects.all(season=latest)
+        all_rooms = Room.objects.all(season=latest_season)
 
         capacity = sum([room.capacity for room in all_rooms])
         all_teams = Team.objects.all()
