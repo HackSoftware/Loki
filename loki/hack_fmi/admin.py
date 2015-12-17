@@ -19,7 +19,7 @@ class CompetitorAdmin(admin.ModelAdmin):
 
 
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'idea_description', 'season')
+    list_display = ('name', 'idea_description', 'room', 'season', 'members')
 
     list_filter = ('season',)
 
@@ -77,4 +77,3 @@ admin.site.register(Mentor, MentorAdmin)
 admin.site.register(Season, SeasonAdmin)
 admin.site.register(Partner, PartnerAdmin)
 admin.site.register(Room, RoomAdmin)
-
