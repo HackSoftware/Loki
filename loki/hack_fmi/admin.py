@@ -24,7 +24,7 @@ class TeamAdmin(admin.ModelAdmin):
     list_filter = ('season',)
 
     def get_members(self, obj):
-        ", ".join([c.full_name for c in obj.members.all()])
+        return ", ".join([c.full_name for c in obj.members.all()])
 
     class Meta:
         model = Team
