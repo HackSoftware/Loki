@@ -10,7 +10,7 @@ class Command(BaseCommand):
         all_rooms = Room.objects.filter(season=latest_season)
 
         capacity = sum([room.capacity for room in all_rooms])
-        all_teams = Team.objects.all()
+        all_teams = Team.objects.filter(season=latest_season)
 
         if len(all_teams) > capacity:
             error = "We have {} capacity and {} teams.".format(capacity, len(all_teams))
