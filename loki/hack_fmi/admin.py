@@ -19,9 +19,12 @@ class CompetitorAdmin(admin.ModelAdmin):
 
 
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'idea_description', 'room', 'season', 'members')
+    list_display = ('name', 'idea_description', 'room', 'season', 'get_members')
 
     list_filter = ('season',)
+
+    def get_members(self, obj):
+        ", ".join([c.full_name for c in obj.members.all()])
 
     class Meta:
         model = Team
