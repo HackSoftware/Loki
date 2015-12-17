@@ -7,12 +7,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         latest_season = Season.objects.get(is_active=True)
-        all_rooms = Room.objects.all(season=latest_season)
+        all_rooms = Room.objects.filter(season=latest_season)
 
         capacity = sum([room.capacity for room in all_rooms])
         all_teams = Team.objects.all()
+
         if len(all_teams) > capacity:
-            raise CommandError('Teams are more than capacity')
+            error = "We have {} capacity and {} teams.".format(capacity, len(all_teams))
+            raise CommandError(error)
+
         all_teams = list(all_teams)
         while all_teams:
             for room in all_rooms:
