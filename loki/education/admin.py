@@ -2,8 +2,10 @@ from import_export.admin import ImportExportActionModelAdmin
 
 from django.contrib import admin
 
-from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote, WorkingAt, Task, Solution, Certificate
 from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
+from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
+                     WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test, Build,
+                     BuildResult)
 
 
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -149,6 +151,76 @@ class TaskAdmin(admin.ModelAdmin):
     search_fields = ['course', 'name', 'week']
 
 admin.site.register(Task, TaskAdmin)
+
+
+class ProgrammingLanguageAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'name',
+    ]
+
+    list_filter = [
+        'name',
+    ]
+
+    search_fields = ['name']
+
+admin.site.register(ProgrammingLanguage, ProgrammingLanguageAdmin)
+
+
+class TestAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'task',
+        'language',
+        'test_type',
+    ]
+
+    list_filter = [
+        'language',
+        'test_type',
+    ]
+
+    search_fields = ['task']
+
+admin.site.register(Test, TestAdmin)
+
+
+class BuildAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'test',
+        'build_id',
+        'created_at',
+        'build_status',
+    ]
+
+    list_filter = [
+        'created_at',
+        'build_status',
+    ]
+
+    search_fields = ['test', 'build_id']
+
+admin.site.register(Build, BuildAdmin)
+
+
+class BuildResultAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'build',
+        'return_code',
+        'result_status',
+    ]
+
+    list_filter = [
+        'return_code',
+        'result_status',
+    ]
+
+    search_fields = ['build']
+
+admin.site.register(BuildResult, BuildResultAdmin)
 
 
 class SolutionAdmin(admin.ModelAdmin):
