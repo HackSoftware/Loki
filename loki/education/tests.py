@@ -816,3 +816,50 @@ class SolutionsTests(TestCase):
 #         response = self.client.patch(url, data, format='json')
 #         print(response.data)
 #         self.assertEqual(response.status_code, 200)
+
+
+class TestSolutionTests(TestCase):
+
+    def setUp(self):
+        self.test_student = Student.objects.create(
+            email='test@test.com',
+            mac="12:34:56:78:9A:BC",
+        )
+
+        self.course = Course.objects.create(
+            name="Java",
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/haskell-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
+        )
+
+        self.assignment = CourseAssignment.objects.create(
+            user=self.test_student,
+            course=self.course,
+            group_time=1,
+        )
+
+        self.task = Task.objects.create(
+            course=self.course,
+            description="https://github.com/testasdasdtest/README.md",
+            name="Task Name 1",
+            week=1,
+        )
+
+    def test_grader_response(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.test_student)
+
+        url = reverse('education:solution')
+        data = {
+            'task': self.task.id,
+            'url': 'https://github.com/testsolutionasdtest/solution.py'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+
+        solution = Solution.objects.get(task=self.task, student=self.test_student)
+        self.assertEqual(solution.student, self.test_student)
