@@ -219,10 +219,22 @@ class SolutionsAPI(
 
     def perform_create(self, serializer):
         serializer.save(student=self.request.user.get_student())
+        self.test_solution()
+
+    def perform_update(self, serializer):
+        serializer.save()
+        self.test_solution()
 
     def get_queryset(self):
         student = self.request.user.get_student()
         return student.solution_set
+
+    def test_solution(self):
+        # send code to grader
+        # grader returns 204 and build_id -> Build object is created
+        # check test status ?? send requests every half second?
+        # if returncode == 0, return build result
+        return
 
 
 def certificate(request, pk):
