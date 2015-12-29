@@ -153,18 +153,23 @@ admin.site.register(Task, TaskAdmin)
 
 class SolutionAdmin(admin.ModelAdmin):
 
+    def get_solution_course(self, obj):
+        return obj.task.course
+    get_solution_course.short_description = "Course"
+    get_solution_course.admin_order_field = "task__course"
+
     list_display = [
         'task',
         'student',
+        'get_solution_course',
         'url',
     ]
 
     list_filter = [
         'task',
-        'student',
     ]
 
-    search_fields = ['task', 'student', 'url']
+    search_fields = ['task', 'student', 'URL_VALIDATOR_USER_AGENT = ''']
 
 admin.site.register(Solution, SolutionAdmin)
 
