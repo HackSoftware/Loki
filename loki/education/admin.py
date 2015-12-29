@@ -132,6 +132,23 @@ class WorkingAtAdmin(ImportExportActionModelAdmin):
 
 admin.site.register(WorkingAt, WorkingAtAdmin)
 
-admin.site.register(Task)
+
+class TaskAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'name',
+        'course',
+        'week',
+    ]
+
+    list_filter = [
+        'course',
+        'week',
+    ]
+
+    search_fields = ['course', 'name', 'week']
+
+admin.site.register(Task, TaskAdmin)
+
 admin.site.register(Solution)
 admin.site.register(Certificate)
