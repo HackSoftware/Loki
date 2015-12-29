@@ -150,5 +150,22 @@ class TaskAdmin(admin.ModelAdmin):
 
 admin.site.register(Task, TaskAdmin)
 
-admin.site.register(Solution)
+
+class SolutionAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'task',
+        'student',
+        'url',
+    ]
+
+    list_filter = [
+        'task',
+        'student',
+    ]
+
+    search_fields = ['task', 'student', 'url']
+
+admin.site.register(Solution, SolutionAdmin)
+
 admin.site.register(Certificate)

@@ -13,6 +13,9 @@ class Student(BaseUser):
     phone = models.CharField(null=True, blank=True, max_length=20)
     skype = models.CharField(null=True, blank=True, max_length=20)
 
+    def __str__(self):
+        return self.full_name
+
 
 class Teacher(BaseUser):
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
