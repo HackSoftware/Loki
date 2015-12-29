@@ -6,6 +6,9 @@ from base_app.models import City, Company
 from hack_fmi.models import BaseUser
 from .validators import validate_mac
 
+from model_utils import Choices
+from model_utils.fields import StatusField
+
 
 class Student(BaseUser):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
@@ -103,6 +106,13 @@ class StudentNote(models.Model):
         ordering = ('post_time',)
 
 
+class ProgrammingLanguage(models.Model):
+    name = models.CharField(max_length=110)
+
+    def __str__(self):
+        return self.name
+
+
 class Task(models.Model):
     course = models.ForeignKey(Course)
     description = models.URLField()
@@ -115,6 +125,41 @@ class Task(models.Model):
 
     class Meta:
         unique_together = (('name', 'description'),)
+
+
+class Test(models.Model):
+    task = models.ForeignKey(Task)
+    language = models.ForeignKey(ProgrammingLanguage)
+    code = models.TextField()
+    github_url = models.URLField()
+
+    # TODO: add mycamp in the future
+    STATUS = Choices('unittest')
+    test_type = StatusField(db_index=True, default='unittest')
+
+    def __str__(self):
+        return "{}/{}".format(self.task, self.language)
+
+
+class Build(models.Model):
+    test = models.ForeignKey(Test)
+    build_id = models.IntegerField()
+    created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    STATUS = Choices('pending', 'running', 'done', 'failed')
+    build_status = StatusField(db_index=True)
+
+    def __str__(self):
+        return "{} test for {} at {}".format(self.build_status, self.test, self.created_at)
+
+
+class BuildResult(models.Model):
+    build = models.ForeignKey(Build)
+    return_code = models.TextField()
+    output = models.TextField()
+
+    STATUS = Choices('ok', 'not_ok')
+    result_status = StatusField()
 
 
 class Solution(models.Model):
