@@ -130,7 +130,7 @@ class Task(models.Model):
 class Test(models.Model):
     task = models.ForeignKey(Task)
     language = models.ForeignKey(ProgrammingLanguage)
-    code = models.TextField()
+    code = models.TextField(default="")
     github_url = models.URLField()
 
     # TODO: add mycamp in the future
@@ -145,6 +145,7 @@ class Build(models.Model):
     test = models.ForeignKey(Test)
     build_id = models.IntegerField()
     created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
+    code = models.TextField(default="")
 
     STATUS = Choices('pending', 'running', 'done', 'failed')
     build_status = StatusField(db_index=True)
@@ -166,6 +167,7 @@ class Solution(models.Model):
     task = models.ForeignKey(Task)
     student = models.ForeignKey(Student)
     url = models.URLField()
+    code = models.TextField(default="")
 
     def get_assignment(self):
         return CourseAssignment.objects.get(user=self.student, course=self.task.course)
