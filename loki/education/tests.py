@@ -821,7 +821,7 @@ class SolutionsTests(TestCase):
 class TestSolutionTests(TestCase):
 
     def setUp(self):
-        self.test_student = Student.objects.create(
+        self.student = Student.objects.create(
             email='test@test.com',
             mac="12:34:56:78:9A:BC",
         )
@@ -836,7 +836,7 @@ class TestSolutionTests(TestCase):
         )
 
         self.assignment = CourseAssignment.objects.create(
-            user=self.test_student,
+            user=self.student,
             course=self.course,
             group_time=1,
         )
@@ -850,7 +850,7 @@ class TestSolutionTests(TestCase):
 
     def test_grader_response(self):
         self.client = APIClient()
-        self.client.force_authenticate(user=self.test_student)
+        self.client.force_authenticate(user=self.student)
 
         url = reverse('education:solution')
         data = {
@@ -861,5 +861,5 @@ class TestSolutionTests(TestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 201)
 
-        solution = Solution.objects.get(task=self.task, student=self.test_student)
-        self.assertEqual(solution.student, self.test_student)
+        solution = Solution.objects.get(task=self.task, student=self.student)
+        self.assertEqual(solution.student, self.student)

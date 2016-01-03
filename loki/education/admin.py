@@ -4,8 +4,7 @@ from django.contrib import admin
 
 from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
-                     WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test, Build,
-                     BuildResult)
+                     WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test, Build)
 
 
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -192,35 +191,17 @@ class BuildAdmin(admin.ModelAdmin):
         'test',
         'build_id',
         'created_at',
-        'build_status',
+        'status',
     ]
 
     list_filter = [
         'created_at',
-        'build_status',
+        'status',
     ]
 
     search_fields = ['test', 'build_id']
 
 admin.site.register(Build, BuildAdmin)
-
-
-class BuildResultAdmin(admin.ModelAdmin):
-
-    list_display = [
-        'build',
-        'return_code',
-        'result_status',
-    ]
-
-    list_filter = [
-        'return_code',
-        'result_status',
-    ]
-
-    search_fields = ['build']
-
-admin.site.register(BuildResult, BuildResultAdmin)
 
 
 class SolutionAdmin(admin.ModelAdmin):

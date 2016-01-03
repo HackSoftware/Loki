@@ -6,9 +6,6 @@ from base_app.models import City, Company
 from hack_fmi.models import BaseUser
 from .validators import validate_mac
 
-from model_utils import Choices
-from model_utils.fields import StatusField
-
 
 class Student(BaseUser):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
@@ -128,14 +125,17 @@ class Task(models.Model):
 
 
 class Test(models.Model):
+    UNITTEST = 1
+
+    TYPE_CHOICE = (
+        (UNITTEST, 'unittest'),
+    )
+
     task = models.ForeignKey(Task)
     language = models.ForeignKey(ProgrammingLanguage)
-    code = models.TextField(default="")
+    code = models.TextField(blank=True, null=True)
     github_url = models.URLField()
-
-    # TODO: add mycamp in the future
-    STATUS = Choices('unittest')
-    test_type = StatusField(db_index=True, default='unittest')
+    test_type = models.SmallIntegerField(choices=TYPE_CHOICE, default=UNITTEST)
 
     def __str__(self):
         return "{}/{}".format(self.task, self.language)
@@ -144,23 +144,25 @@ class Test(models.Model):
 class Build(models.Model):
     test = models.ForeignKey(Test)
     build_id = models.IntegerField()
-    created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
-    code = models.TextField(default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+    code = models.TextField(null=True, blank=True)
 
-    STATUS = Choices('pending', 'running', 'done', 'failed')
-    build_status = StatusField(db_index=True)
+    PENDING = 1
+    RUNNING = 2
+    DONE = 3
+    FAILED = 4
+
+    STATUS_CHOICE = (
+        (PENDING, 'pending'),
+        (RUNNING, 'running'),
+        (DONE, 'done'),
+        (FAILED, 'failed'),
+    )
+
+    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=PENDING)
 
     def __str__(self):
         return "{} test for {} at {}".format(self.build_status, self.test, self.created_at)
-
-
-class BuildResult(models.Model):
-    build = models.ForeignKey(Build)
-    return_code = models.TextField()
-    output = models.TextField()
-
-    STATUS = Choices('ok', 'not_ok')
-    result_status = StatusField()
 
 
 class Solution(models.Model):
