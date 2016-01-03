@@ -18,5 +18,6 @@ urlpatterns = [
     url(r'^api/task/$', TasksAPI.as_view(), name='task'),
     url(r'^api/solution/$', SolutionsAPI.as_view(), name='solution'),
     url(r'^api/solution/(?P<pk>[0-9]+)/$', SolutionsAPI.as_view(),  name='solution_edit'),
+    url(r'^api/solution_status/(?P<pk>[0-9]+)/$', SolutionStatusAPI.as_view(), name='solution_status'),
     url(r'^certificate/(?P<pk>[0-9]+)/$', certificate, name='certificate'),
 ]

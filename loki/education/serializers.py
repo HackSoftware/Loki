@@ -14,6 +14,17 @@ class CertificateSerializer(serializers.ModelSerializer):
         fields = ('id',)
 
 
+class SolutionStatusSerializer(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Solution
+        fields = ('status',)
+
+    def get_status(self, obj):
+        return obj.update_status()
+
+
 class SolutionSerializer(serializers.ModelSerializer):
     task = serializers.PrimaryKeyRelatedField(
         read_only=False,
@@ -22,7 +33,7 @@ class SolutionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Solution
-        fields = ('id', 'task', 'url')
+        fields = ('id', 'task', 'url', 'code')
 
 
 class TaskSerializer(serializers.ModelSerializer):

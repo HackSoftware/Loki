@@ -1,3 +1,4 @@
+import time
 from django.core.management import call_command
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
@@ -5,7 +6,7 @@ from django.core.urlresolvers import reverse
 from rest_framework.test import APIClient
 from base_app.models import Company
 from base_app.models import City
-from education.models import Student, Certificate, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt, Task, Solution
+from education.models import Student, Certificate, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt, Task, Solution, Test, ProgrammingLanguage
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -848,6 +849,18 @@ class TestSolutionTests(TestCase):
             week=1,
         )
 
+        self.python = ProgrammingLanguage.objects.create(
+            name="python"
+        )
+
+        self.test = Test.objects.create(
+            task=self.task,
+            language=self.python,
+            code="CODE HERE!",
+            test_type=Test.UNITTEST,
+            github_url=""
+        )
+
     def test_grader_response(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.student)
@@ -855,7 +868,8 @@ class TestSolutionTests(TestCase):
         url = reverse('education:solution')
         data = {
             'task': self.task.id,
-            'url': 'https://github.com/testsolutionasdtest/solution.py'
+            'url': 'https://github.com/testsolutionasdtest/solution.py',
+            'code': "print('da')",
         }
 
         response = self.client.post(url, data, format='json')
@@ -863,3 +877,23 @@ class TestSolutionTests(TestCase):
 
         solution = Solution.objects.get(task=self.task, student=self.student)
         self.assertEqual(solution.student, self.student)
+        self.assertIsNotNone(solution.build_id)
+
+    def test_solution_status(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student)
+
+        url = reverse('education:solution')
+        data = {
+            'task': self.task.id,
+            'url': 'https://github.com/testsolutionasdtest/solution.py',
+            'code': "print('da')",
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+
+        solution = Solution.objects.get(task=self.task, student=self.student)
+        url = reverse('education:solution_status', kwargs={'pk': solution.id})
+        time.sleep(6)
+        response = self.client.get(url, format='json')

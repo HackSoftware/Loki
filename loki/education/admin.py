@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
-                     WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test, Build)
+                     WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test)
 
 
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -183,25 +183,6 @@ class TestAdmin(admin.ModelAdmin):
     search_fields = ['task']
 
 admin.site.register(Test, TestAdmin)
-
-
-class BuildAdmin(admin.ModelAdmin):
-
-    list_display = [
-        'test',
-        'build_id',
-        'created_at',
-        'status',
-    ]
-
-    list_filter = [
-        'created_at',
-        'status',
-    ]
-
-    search_fields = ['test', 'build_id']
-
-admin.site.register(Build, BuildAdmin)
 
 
 class SolutionAdmin(admin.ModelAdmin):

@@ -5,7 +5,6 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
-
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
@@ -15,11 +14,11 @@ from base_app.models import City, Company
 
 from education.helper import check_macs_for_student, mac_is_used_by_another_student
 from .models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
-                     Task, Solution, Certificate)
+                     Task, Solution, Certificate, Test)
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
                           SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
-                          CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer)
+                          CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer, SolutionStatusSerializer)
 from .premissions import IsStudent, IsTeacher, IsTeacherForCA
 
 
@@ -198,6 +197,21 @@ class TasksAPI(generics.ListAPIView):
     filter_fields = ('course__id',)
 
 
+class SolutionStatusAPI(
+        mixins.RetrieveModelMixin,
+        generics.GenericAPIView):
+    model = Solution
+    serializer_class = SolutionStatusSerializer
+    permission_classes = (IsStudent,)
+
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+    def get_queryset(self):
+        student = self.request.user.get_student()
+        return student.solution_set
+
+
 class SolutionsAPI(
         mixins.ListModelMixin,
         mixins.CreateModelMixin,
@@ -218,23 +232,36 @@ class SolutionsAPI(
         return self.partial_update(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        serializer.save(student=self.request.user.get_student())
-        self.test_solution()
+        solution = serializer.save(student=self.request.user.get_student())
+        self.send_to_grader(solution)
 
     def perform_update(self, serializer):
-        serializer.save()
-        self.test_solution()
+        solution = serializer.save()
+        self.send_to_grader(solution)
 
     def get_queryset(self):
         student = self.request.user.get_student()
         return student.solution_set
 
-    def test_solution(self):
-        # send code to grader
-        # grader returns 204 and build_id -> Build object is created
-        # check test status ?? send requests every half second?
-        # if returncode == 0, return build result
-        return
+    def send_to_grader(self, solution):
+        import requests
+
+        data = {
+            "test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
+            "language": solution.task.test.language.name,
+            "code": solution.code,
+            "test": solution.task.test.code,
+        }
+        address = settings.GRADER_ADDRESS
+        url = address + 'grade'
+        r = requests.post(url, json=data)
+
+        if r.status_code == 202:
+            solution.build_id = r.json()['run_id']
+            solution.save()
+        else:
+            # TODO: raise some nice error here
+            raise
 
 
 def certificate(request, pk):

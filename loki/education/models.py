@@ -1,4 +1,6 @@
+import requests
 from django.db import models
+from django.conf import settings
 
 from ckeditor.fields import RichTextField
 from base_app.models import City, Company
@@ -125,13 +127,13 @@ class Task(models.Model):
 
 
 class Test(models.Model):
-    UNITTEST = 1
+    UNITTEST = 0
 
     TYPE_CHOICE = (
         (UNITTEST, 'unittest'),
     )
 
-    task = models.ForeignKey(Task)
+    task = models.OneToOneField(Task)
     language = models.ForeignKey(ProgrammingLanguage)
     code = models.TextField(blank=True, null=True)
     github_url = models.URLField()
@@ -141,41 +143,44 @@ class Test(models.Model):
         return "{}/{}".format(self.task, self.language)
 
 
-class Build(models.Model):
-    test = models.ForeignKey(Test)
-    build_id = models.IntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    code = models.TextField(null=True, blank=True)
-
-    PENDING = 1
-    RUNNING = 2
-    DONE = 3
-    FAILED = 4
+class Solution(models.Model):
+    PENDING = 0
+    RUNNING = 1
+    OK = 2
+    NOT_OK = 3
 
     STATUS_CHOICE = (
         (PENDING, 'pending'),
         (RUNNING, 'running'),
-        (DONE, 'done'),
-        (FAILED, 'failed'),
+        (OK, 'ok'),
+        (NOT_OK, 'not_ok'),
     )
 
-    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=PENDING)
-
-    def __str__(self):
-        return "{} test for {} at {}".format(self.build_status, self.test, self.created_at)
-
-
-class Solution(models.Model):
     task = models.ForeignKey(Task)
     student = models.ForeignKey(Student)
-    url = models.URLField()
-    code = models.TextField(default="")
+    url = models.URLField(blank=True, null=True)
+    code = models.TextField(blank=True, null=True)
+    build_id = models.IntegerField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=PENDING)
+
+    def update_status(self):
+        address = settings.GRADER_ADDRESS
+        url = address + 'check_result/{}/'.format(self.build_id)
+        r = requests.get(url)
+
+        if r.status_code == 204:
+            self.status = Solution.PENDING
+        elif r.status_code == 200 and r.json()['result_status'] == 'ok':
+            self.status = Solution.OK
+        elif r.status_code == 200 and r.json()['result_status'] == 'not_ok':
+            self.status = Solution.NOT_OK
+        self.save()
+
+        return Solution.STATUS_CHOICE[self.status][1]
 
     def get_assignment(self):
         return CourseAssignment.objects.get(user=self.student, course=self.task.course)
-
-    class Meta:
-        unique_together = (('student', 'task'),)
 
 
 class WorkingAt(models.Model):
