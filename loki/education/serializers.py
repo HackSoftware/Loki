@@ -33,7 +33,7 @@ class SolutionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Solution
-        fields = ('id', 'task', 'url', 'code')
+        fields = ('id', 'task', 'url', 'code', 'status')
 
 
 class TaskSerializer(serializers.ModelSerializer):
