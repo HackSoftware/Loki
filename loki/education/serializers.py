@@ -1,3 +1,5 @@
+import requests
+from django.conf import settings
 from rest_framework import serializers
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -5,6 +7,7 @@ from base_app.models import Company, City
 
 from .models import (Lecture, CheckIn, Course, Student, Solution,
                      CourseAssignment, StudentNote, Teacher, WorkingAt, Task, Certificate)
+from .helper import generate_grader_headers
 
 
 class CertificateSerializer(serializers.ModelSerializer):
@@ -22,7 +25,23 @@ class SolutionStatusSerializer(serializers.ModelSerializer):
         fields = ('status',)
 
     def get_status(self, obj):
-        return obj.update_status()
+        address = settings.GRADER_ADDRESS
+        path = 'check_result/{}/'.format(self.build_id)
+        url = address + path
+        req_and_resource = "GET {}".format(path)
+
+        headers = generate_grader_headers(path, req_and_resource)
+        r = requests.get(url, headers=headers)
+
+        if r.status_code == 204:
+            obj.status = Solution.PENDING
+        elif r.status_code == 200 and r.json()['result_status'] == 'ok':
+            obj.status = Solution.OK
+        elif r.status_code == 200 and r.json()['result_status'] == 'not_ok':
+            obj.status = Solution.NOT_OK
+        obj.save()
+
+        return obj.status
 
 
 class SolutionSerializer(serializers.ModelSerializer):

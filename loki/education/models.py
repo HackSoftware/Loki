@@ -1,13 +1,10 @@
-import requests
 from django.db import models
-from django.conf import settings
 
 from ckeditor.fields import RichTextField
 from base_app.models import City, Company
 
 from hack_fmi.models import BaseUser
 from .validators import validate_mac
-from .helper import generate_grader_headers
 
 
 class Student(BaseUser):
@@ -165,25 +162,6 @@ class Solution(models.Model):
     build_id = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=PENDING)
-
-    def update_status(self):
-        address = settings.GRADER_ADDRESS
-        path = 'check_result/{}/'.format(self.build_id)
-        url = address + path
-        req_and_resource = "GET {}".format(path)
-
-        headers = generate_grader_headers(path, req_and_resource)
-        r = requests.get(url, headers=headers)
-
-        if r.status_code == 204:
-            self.status = Solution.PENDING
-        elif r.status_code == 200 and r.json()['result_status'] == 'ok':
-            self.status = Solution.OK
-        elif r.status_code == 200 and r.json()['result_status'] == 'not_ok':
-            self.status = Solution.NOT_OK
-        self.save()
-
-        return self.get_status()
 
     def get_status(self):
         return Solution.STATUS_CHOICE[self.status][1]
