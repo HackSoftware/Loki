@@ -26,7 +26,7 @@ class SolutionStatusSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         address = settings.GRADER_ADDRESS
-        path = 'check_result/{}/'.format(self.build_id)
+        path = 'check_result/{}/'.format(obj.build_id)
         url = address + path
         req_and_resource = "GET {}".format(path)
 
