@@ -7,6 +7,7 @@ from base_app.models import City, Company
 
 from hack_fmi.models import BaseUser
 from .validators import validate_mac
+from .helper import generate_grader_headers
 
 
 class Student(BaseUser):
@@ -167,8 +168,12 @@ class Solution(models.Model):
 
     def update_status(self):
         address = settings.GRADER_ADDRESS
-        url = address + 'check_result/{}/'.format(self.build_id)
-        r = requests.get(url)
+        path = 'check_result/{}/'.format(self.build_id)
+        url = address + path
+        req_and_resource = "GET {}".format(path)
+
+        headers = generate_grader_headers(path, req_and_resource)
+        r = requests.get(url, headers=headers)
 
         if r.status_code == 204:
             self.status = Solution.PENDING
