@@ -41,7 +41,7 @@ class SolutionStatusSerializer(serializers.ModelSerializer):
             obj.status = Solution.NOT_OK
         obj.save()
 
-        return obj.status
+        return obj.get_status()
 
 
 class SolutionSerializer(serializers.ModelSerializer):
