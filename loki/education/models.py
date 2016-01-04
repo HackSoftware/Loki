@@ -178,6 +178,9 @@ class Solution(models.Model):
             self.status = Solution.NOT_OK
         self.save()
 
+        return self.get_status()
+
+    def get_status(self):
         return Solution.STATUS_CHOICE[self.status][1]
 
     def get_assignment(self):

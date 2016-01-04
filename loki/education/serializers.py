@@ -26,6 +26,8 @@ class SolutionStatusSerializer(serializers.ModelSerializer):
 
 
 class SolutionSerializer(serializers.ModelSerializer):
+    status = serializers.SerializerMethodField()
+
     task = serializers.PrimaryKeyRelatedField(
         read_only=False,
         queryset=Task.objects.all(),
@@ -34,6 +36,9 @@ class SolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Solution
         fields = ('id', 'task', 'url', 'code', 'status')
+
+    def get_status(self, obj):
+        return obj.get_status()
 
 
 class TaskSerializer(serializers.ModelSerializer):
