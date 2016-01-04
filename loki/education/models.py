@@ -118,6 +118,7 @@ class Task(models.Model):
     is_exam = models.BooleanField(default=False)
     name = models.CharField(max_length=128)
     week = models.SmallIntegerField(default=1)
+    send_to_grader = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name

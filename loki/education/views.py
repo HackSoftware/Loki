@@ -241,11 +241,13 @@ class SolutionsAPI(
 
     def perform_create(self, serializer):
         solution = serializer.save(student=self.request.user.get_student())
-        self.send_to_grader(solution)
+        if solution.task.send_to_grader:
+            self.send_to_grader(solution)
 
     def perform_update(self, serializer):
         solution = serializer.save()
-        self.send_to_grader(solution)
+        if solution.task.send_to_grader:
+            self.send_to_grader(solution)
 
     def get_queryset(self):
         student = self.request.user.get_student()
