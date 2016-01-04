@@ -12,14 +12,22 @@ from rest_framework.response import Response
 from rest_framework import status, generics, mixins
 from base_app.models import City, Company
 
-from education.helper import check_macs_for_student, mac_is_used_by_another_student
+from .premissions import IsStudent, IsTeacher, IsTeacherForCA
+
 from .models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
                      Task, Solution, Certificate, Test)
+
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
                           SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
-                          CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer, SolutionStatusSerializer)
-from .premissions import IsStudent, IsTeacher, IsTeacherForCA
+                          CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer,
+                          SolutionStatusSerializer)
+
+from education.helper import (check_macs_for_student, mac_is_used_by_another_student,
+                              generate_grader_headers)
+
+import requests
+import json
 
 
 @csrf_exempt
@@ -244,7 +252,6 @@ class SolutionsAPI(
         return student.solution_set
 
     def send_to_grader(self, solution):
-        import requests
 
         data = {
             "test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
@@ -252,16 +259,21 @@ class SolutionsAPI(
             "code": solution.code,
             "test": solution.task.test.code,
         }
+
         address = settings.GRADER_ADDRESS
-        url = address + 'grade'
-        r = requests.post(url, json=data)
+        path = "/grade"
+        url = address + path
+
+        req_and_resource = "POST {}".format(path)
+
+        headers = generate_grader_headers(json.dumps(data), req_and_resource)
+        r = requests.post(url, json=data, headers=headers)
 
         if r.status_code == 202:
             solution.build_id = r.json()['run_id']
             solution.save()
         else:
-            # TODO: raise some nice error here
-            raise
+            raise Exception(r.text)
 
 
 def certificate(request, pk):

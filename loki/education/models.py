@@ -183,6 +183,11 @@ class Solution(models.Model):
         return CourseAssignment.objects.get(user=self.student, course=self.task.course)
 
 
+class GraderRequest(models.Model):
+    request_info = models.CharField(max_length=140)
+    nonce = models.BigIntegerField(db_index=True)
+
+
 class WorkingAt(models.Model):
     student = models.ForeignKey(Student)
     company = models.ForeignKey(Company, blank=True, null=True)

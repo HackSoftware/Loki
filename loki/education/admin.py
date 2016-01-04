@@ -4,7 +4,8 @@ from django.contrib import admin
 
 from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
-                     WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test)
+                     WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test,
+                     GraderRequest)
 
 
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -208,3 +209,20 @@ class SolutionAdmin(admin.ModelAdmin):
 admin.site.register(Solution, SolutionAdmin)
 
 admin.site.register(Certificate)
+
+
+class GraderRequestAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'id',
+        'request_info',
+        'nonce',
+    ]
+
+    list_filter = [
+        'request_info',
+    ]
+
+    search_fields = ['nonce']
+
+admin.site.register(GraderRequest, GraderRequestAdmin)
