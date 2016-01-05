@@ -116,7 +116,7 @@ class Task(models.Model):
     is_exam = models.BooleanField(default=False)
     name = models.CharField(max_length=128)
     week = models.SmallIntegerField(default=1)
-    send_to_grader = models.BooleanField(default=True)
+    gradable = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -160,7 +160,7 @@ class Solution(models.Model):
     url = models.URLField(blank=True, null=True)
     code = models.TextField(blank=True, null=True)
     build_id = models.IntegerField(blank=True, null=True)
-    check_status_location = models.CharField(max_length=128, default="")
+    check_status_location = models.CharField(max_length=128, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=PENDING)
 

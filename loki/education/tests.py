@@ -653,7 +653,7 @@ class SolutionsTests(TestCase):
             description="https://github.com/lqlq/README.md",
             name="Task Name",
             week=1,
-            send_to_grader=False,
+            gradable=False,
         )
 
         self.task_with_no_solutions = Task.objects.create(
@@ -661,7 +661,7 @@ class SolutionsTests(TestCase):
             description="https://github.com/lqlnkmbq/README.md",
             name="Task Name 1",
             week=1,
-            send_to_grader=False,
+            gradable=False,
         )
 
         self.python = ProgrammingLanguage.objects.create(
@@ -752,7 +752,7 @@ class SolutionsTests(TestCase):
             description="https://github.com/lqddlq/README.md",
             name="Task3 Name",
             week=1,
-            send_to_grader=False,
+            gradable=False,
         )
 
         Solution.objects.create(
@@ -874,7 +874,7 @@ class TestSolutionTests(TestCase):
             description="https://github.com/testasdasdtest/README.md",
             name="Task Name 1",
             week=1,
-            send_to_grader=True,
+            gradable=False,
         )
 
         self.python = ProgrammingLanguage.objects.create(

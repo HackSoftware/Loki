@@ -241,12 +241,12 @@ class SolutionsAPI(
 
     def perform_create(self, serializer):
         solution = serializer.save(student=self.request.user.get_student())
-        if solution.task.send_to_grader:
+        if solution.task.gradable:
             self.send_to_grader(solution)
 
     def perform_update(self, serializer):
         solution = serializer.save()
-        if solution.task.send_to_grader:
+        if solution.task.gradable:
             self.send_to_grader(solution)
 
     def get_queryset(self):
