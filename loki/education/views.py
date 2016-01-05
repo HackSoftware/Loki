@@ -243,7 +243,7 @@ class SolutionsAPI(
         if self.request.data["url"]:
             solution = serializer.save(
                 student=self.request.user.get_student(),
-                url=self.request.data["url"])
+                url=serializer.solution_url)
         else:
             solution = serializer.save(student=self.request.user.get_student())
         if solution.task.gradable:
@@ -293,6 +293,8 @@ class SolutionsAPI(
             "github", "raw.githubusercontent")
         # Extract the code
         r = requests.get(url)
+        solution.code = r.text
+        solution.save()
         return r.text
 
 

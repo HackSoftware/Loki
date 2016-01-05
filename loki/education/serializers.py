@@ -57,23 +57,28 @@ class SolutionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Solution
+        extra_kwargs = {'url': {'required': False}}
         fields = ('id', 'task', 'url', 'code', 'status')
 
     def get_status(self, obj):
         return obj.get_status()
 
-    def validate__url(self, url):
-        self.solution = get_object_or_404(Solution, url=url)
+    def validate_url(self, url):
+        self.solution_url = url
         github_domain = "github.com"
-        splitted_url = self.solution.url.split("/")
+        splitted_url = self.solution_url.split("/")
         file_name = splitted_url[-1]
         # Check if the url has github domain and ends with fail extension
-        if github_domain not in splitted_url or len(file_name) <= file_name.index(".") + 1:
+        if github_domain not in splitted_url:
+            raise serializers.ValidationError('GitHub url is not valid.')
+        if "." not in file_name:
+            raise serializers.ValidationError('GitHub url is not valid.')
+        elif len(file_name) <= file_name.index(".") + 1:
             raise serializers.ValidationError('GitHub url is not valid.')
         # Check if it's an existing valid url
-        val = URLValidator(verify_exists=True)
+        val = URLValidator()
         try:
-            val(self.solution)
+            val(self.solution_url)
         except ValidationError:
             raise serializers.ValidationError('GitHub url is not valid.')
         return url

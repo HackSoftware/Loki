@@ -743,7 +743,26 @@ class SolutionsTests(TestCase):
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'asdaqwedsad'
+            'url': 'sdsadqweqwesda'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+        url = reverse('education:solution')
+        data = {
+            'task': self.task_with_no_solutions.id,
+            'url': 'https://docs.angularjs.org/api/ng/directive/select'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+
+        url = reverse('education:solution')
+        data = {
+            'task': self.task_with_no_solutions.id,
+            'url': 'https://github.com/HackBulgaria/Programming101-Python'
         }
 
         response = self.client.post(url, data, format='json')
