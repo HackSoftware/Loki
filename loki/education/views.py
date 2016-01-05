@@ -254,11 +254,12 @@ class SolutionsAPI(
         return student.solution_set
 
     def send_to_grader(self, solution):
+        solution_code = self.get_solution_code(solution)
 
         data = {
             "test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
             "language": solution.task.test.language.name,
-            "code": solution.code,
+            "code": solution_code,
             "test": solution.task.test.code,
         }
 
@@ -277,6 +278,17 @@ class SolutionsAPI(
             solution.save()
         else:
             raise Exception(r.text)
+
+    def get_solution_code(self, solution):
+        if solution.code is not None:
+            return solution.code
+        # Create raw github url
+        url = "/".join(
+            [x for x in solution.url.split("/") if x != "blob"]).replace(
+            "github", "raw.githubusercontent")
+        # Extract the code
+        r = requests.get(url)
+        return r.text
 
 
 def certificate(request, pk):

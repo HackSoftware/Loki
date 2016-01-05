@@ -914,6 +914,52 @@ class TestSolutionTests(TestCase):
         # self.assertIsNotNone(solution.build_id)
         # self.assertIsNotNone(solution.check_status_location)
 
+    '''
+    This test checks if a solution with github_url is tested corectly in the grader
+    In order to work properly we need to mockup the grader
+    A manual check after one run of the test (with correct nounce) showed that the
+    code in the grader is the expected one
+    '''
+    # def test_grading_solution_with_github_link(self):
+    #     self.client = APIClient()
+    #     self.client.force_authenticate(user=self.student)
+
+    #     task = Task.objects.create(
+    #         course=self.course,
+    #         description="https://github.com/testasdasdtest/README.md",
+    #         name="Task Name 2",
+    #         week=1,
+    #         gradable=True,
+    #     )
+
+    #     self.grader_request = GraderRequest.objects.create(
+    #         request_info="POST /grade",
+    #         nonce=500
+    #     )
+
+    #     test = Test.objects.create(
+    #         task=task,
+    #         language=self.python,
+    #         code="CODE HERE!",
+    #         test_type=Test.UNITTEST,
+    #         github_url=""
+    #     )
+
+    #     url = reverse('education:solution')
+    #     data = {
+    #         'task': task.id,
+    #         'url': 'https://github.com/HackBulgaria/Programming101-Python/blob/master/week02/materials/food_diary.py',
+    #     }
+
+    #     response = self.client.post(url, data, format='json')
+    #     self.assertEqual(response.status_code, 201)
+
+    #     solution = Solution.objects.get(task=task, student=self.student)
+    #     self.assertEqual(solution.student, self.student)
+    #     self.assertIsNotNone(solution.build_id)
+    #     self.assertIsNotNone(solution.check_status_location)
+
+
     # def test_solution_status(self):
     #     self.client = APIClient()
     #     self.client.force_authenticate(user=self.student)
