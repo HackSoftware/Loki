@@ -273,6 +273,7 @@ class SolutionsAPI(
 
         if r.status_code == 202:
             solution.build_id = r.json()['run_id']
+            solution.check_status_location = r.headers['Location']
             solution.save()
         else:
             raise Exception(r.text)

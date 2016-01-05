@@ -160,6 +160,7 @@ class Solution(models.Model):
     url = models.URLField(blank=True, null=True)
     code = models.TextField(blank=True, null=True)
     build_id = models.IntegerField(blank=True, null=True)
+    check_status_location = models.CharField(max_length=128, default="")
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=PENDING)
 

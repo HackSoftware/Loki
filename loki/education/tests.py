@@ -874,7 +874,7 @@ class TestSolutionTests(TestCase):
             description="https://github.com/testasdasdtest/README.md",
             name="Task Name 1",
             week=1,
-            send_to_grader=False,
+            send_to_grader=True,
         )
 
         self.python = ProgrammingLanguage.objects.create(
@@ -883,7 +883,7 @@ class TestSolutionTests(TestCase):
 
         # self.grader_request = GraderRequest.objects.create(
         #     request_info="POST /grade",
-        #     nonce=102
+        #     nonce=105
         # )
 
         self.test = Test.objects.create(
@@ -912,6 +912,7 @@ class TestSolutionTests(TestCase):
         self.assertEqual(solution.student, self.student)
         # In order to check the build_id a grader mockup is needed
         # self.assertIsNotNone(solution.build_id)
+        # self.assertIsNotNone(solution.check_status_location)
 
     # def test_solution_status(self):
     #     self.client = APIClient()
