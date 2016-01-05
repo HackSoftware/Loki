@@ -1,7 +1,10 @@
 import requests
-from django.conf import settings
 from rest_framework import serializers
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.validators import URLValidator
+from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 
 from base_app.models import Company, City
 
@@ -59,6 +62,21 @@ class SolutionSerializer(serializers.ModelSerializer):
     def get_status(self, obj):
         return obj.get_status()
 
+    def validate__url(self, url):
+        self.solution = get_object_or_404(Solution, url=url)
+        github_domain = "github.com"
+        splitted_url = self.solution.url.split("/")
+        file_name = splitted_url[-1]
+        # Check if the url has github domain and ends with fail extension
+        if github_domain not in splitted_url or len(file_name) <= file_name.index(".") + 1:
+            raise serializers.ValidationError('GitHub url is not valid.')
+        # Check if it's an existing valid url
+        val = URLValidator(verify_exists=True)
+        try:
+            val(self.solution)
+        except ValidationError:
+            raise serializers.ValidationError('GitHub url is not valid.')
+        return url
 
 class TaskSerializer(serializers.ModelSerializer):
 

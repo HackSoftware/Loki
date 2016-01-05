@@ -240,7 +240,12 @@ class SolutionsAPI(
         return self.partial_update(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        solution = serializer.save(student=self.request.user.get_student())
+        if self.request.data["url"]:
+            solution = serializer.save(
+                student=self.request.user.get_student(),
+                url=self.request.data["url"])
+        else:
+            solution = serializer.save(student=self.request.user.get_student())
         if solution.task.gradable:
             self.send_to_grader(solution)
 

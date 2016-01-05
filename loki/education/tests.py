@@ -735,6 +735,20 @@ class SolutionsTests(TestCase):
         solution = Solution.objects.get(task=self.task_with_no_solutions, student=logged_student)
         self.assertEqual(solution.student, logged_student)
 
+    def test_post_solution_with_incorrect_github_url(self):
+        logged_student = self.student2
+        self.client = APIClient()
+        self.client.force_authenticate(user=logged_student)
+
+        url = reverse('education:solution')
+        data = {
+            'task': self.task_with_no_solutions.id,
+            'url': 'asdaqwedsad'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 400)
+
     def test_post_solutions_filter(self):
         logged_student = self.student
 
