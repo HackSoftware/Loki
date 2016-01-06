@@ -65,6 +65,13 @@ class SolutionSerializer(serializers.ModelSerializer):
 
     def validate_url(self, url):
         self.solution_url = url
+        # Check if it's an existing valid url
+        val = URLValidator()
+        try:
+            val(self.solution_url)
+        except ValidationError:
+            raise serializers.ValidationError('GitHub url is not valid.')
+        return url
         github_domain = "github.com"
         splitted_url = self.solution_url.split("/")
         file_name = splitted_url[-1]
@@ -75,13 +82,6 @@ class SolutionSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('GitHub url is not valid.')
         elif len(file_name) <= file_name.index(".") + 1:
             raise serializers.ValidationError('GitHub url is not valid.')
-        # Check if it's an existing valid url
-        val = URLValidator()
-        try:
-            val(self.solution_url)
-        except ValidationError:
-            raise serializers.ValidationError('GitHub url is not valid.')
-        return url
 
 class TaskSerializer(serializers.ModelSerializer):
 
