@@ -163,6 +163,8 @@ class Solution(models.Model):
     check_status_location = models.CharField(max_length=128, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=PENDING)
+    test_output = models.TextField(blank=True, null=True)
+    return_code = models.IntegerField(blank=True, null=True)
 
     def get_status(self):
         return Solution.STATUS_CHOICE[self.status][1]

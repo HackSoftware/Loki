@@ -20,7 +20,7 @@ class SolutionStatusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Solution
-        fields = ('status',)
+        fields = ('status', 'test_output', 'return_code')
 
     def get_status(self, obj):
         path = '/check_result/{}/'.format(obj.build_id)
@@ -30,13 +30,17 @@ class SolutionStatusSerializer(serializers.ModelSerializer):
         url = obj.check_status_location
 
         r = requests.get(url, headers=headers)
-
+        print(r.json())
         if r.status_code == 204:
             obj.status = Solution.PENDING
-        elif r.status_code == 200 and r.json()['result_status'] == 'ok':
-            obj.status = Solution.OK
-        elif r.status_code == 200 and r.json()['result_status'] == 'not_ok':
-            obj.status = Solution.NOT_OK
+        elif r.status_code == 200:
+            if r.json()['result_status'] == 'ok':
+                obj.status = Solution.OK
+            elif r.json()['result_status'] == 'not_ok':
+                obj.status = Solution.NOT_OK
+            obj.test_output = r.json()['output']
+            obj.return_code = r.json()['returncode']
+
         obj.save()
 
         return obj.get_status()
