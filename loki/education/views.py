@@ -240,7 +240,7 @@ class SolutionsAPI(
         return self.partial_update(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        if self.request.data["url"]:
+        if self.request.data["url"] and self.request.data["url"] is not None:
             solution = serializer.save(
                 student=self.request.user.get_student(),
                 url=serializer.solution_url)
