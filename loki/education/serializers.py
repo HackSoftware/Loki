@@ -57,8 +57,8 @@ class SolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Solution
         extra_kwargs = {'url': {'required': False}}
-        fields = ('id', 'task', 'url', 'code', 'status', 'build_id', 'test_output',
-                  'return_code', 'created_at', 'check_status_location')
+        fields = ('id', 'task', 'url', 'code', 'status',
+                  'test_output', 'return_code', 'created_at')
 
     def get_status(self, obj):
         return obj.get_status()
