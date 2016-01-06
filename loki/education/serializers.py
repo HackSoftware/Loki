@@ -34,12 +34,15 @@ class SolutionStatusSerializer(serializers.ModelSerializer):
         if r.status_code == 204:
             obj.status = Solution.PENDING
         elif r.status_code == 200:
-            if r.json()['result_status'] == 'ok':
+            json = r.json()
+
+            if json['result_status'] == 'ok':
                 obj.status = Solution.OK
-            elif r.json()['result_status'] == 'not_ok':
+            elif json['result_status'] == 'not_ok':
                 obj.status = Solution.NOT_OK
-            obj.test_output = r.json()['output']
-            obj.return_code = r.json()['returncode']
+
+            obj.test_output = json['output']
+            obj.return_code = json['returncode']
 
         obj.save()
 
