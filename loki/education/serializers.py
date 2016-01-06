@@ -30,7 +30,7 @@ class SolutionStatusSerializer(serializers.ModelSerializer):
         url = obj.check_status_location
 
         r = requests.get(url, headers=headers)
-        print(r.json())
+
         if r.status_code == 204:
             obj.status = Solution.PENDING
         elif r.status_code == 200:
