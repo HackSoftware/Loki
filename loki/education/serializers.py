@@ -1,13 +1,8 @@
 import requests
 from rest_framework import serializers
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
-from django.shortcuts import get_object_or_404
-
 from base_app.models import Company, City
-
 from .models import (Lecture, CheckIn, Course, Student, Solution,
                      CourseAssignment, StudentNote, Teacher, WorkingAt, Task, Certificate)
 from .helper import generate_grader_headers
@@ -65,23 +60,29 @@ class SolutionSerializer(serializers.ModelSerializer):
 
     def validate_url(self, url):
         self.solution_url = url
-        # Check if it's an existing valid url
-        val = URLValidator()
-        try:
-            val(self.solution_url)
-        except ValidationError:
-            raise serializers.ValidationError('GitHub url is not valid.')
-        return url
-        github_domain = "github.com"
-        splitted_url = self.solution_url.split("/")
-        file_name = splitted_url[-1]
-        # Check if the url has github domain and ends with fail extension
-        if github_domain not in splitted_url:
-            raise serializers.ValidationError('GitHub url is not valid.')
-        if "." not in file_name:
-            raise serializers.ValidationError('GitHub url is not valid.')
-        elif len(file_name) <= file_name.index(".") + 1:
-            raise serializers.ValidationError('GitHub url is not valid.')
+
+        if self.solution_url is not None:
+            # Check if url is valid
+            val = URLValidator()
+            try:
+                val(self.solution_url)
+            except ValidationError:
+                raise serializers.ValidationError('Въведете валиден GitHub URL адрес.')
+
+            github_domain = "github.com"
+            splitted_url = self.solution_url.split("/")
+            file_name = splitted_url[-1]
+
+            # Check if the url has github domain and ends with fail extension
+            if github_domain not in splitted_url:
+                raise serializers.ValidationError('Въведете валиден GitHub URL адрес.')
+            if "." not in file_name:
+                raise serializers.ValidationError('Въведете валиден GitHub URL адрес.')
+            elif len(file_name) <= file_name.index(".") + 1:
+                raise serializers.ValidationError('Въведете валиден GitHub URL адрес.')
+
+        return self.solution_url
+
 
 class TaskSerializer(serializers.ModelSerializer):
 
