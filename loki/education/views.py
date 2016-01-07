@@ -201,7 +201,7 @@ class TasksAPI(generics.ListAPIView):
     model = Task
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    # permission_classes = (IsStudent,)
+    permission_classes = (IsStudent,)
     filter_fields = ('course__id',)
 
 
@@ -218,6 +218,21 @@ class SolutionStatusAPI(
     def get_queryset(self):
         student = self.request.user.get_student()
         return student.solution_set
+
+
+class StudentSolutionsList(generics.ListAPIView):
+    serializer_class = SolutionSerializer
+    permission_classes = (IsTeacher,)
+
+    def get_queryset(self):
+        queryset = Solution.objects.all()
+        student_id = self.request.query_params.get('student_id', None)
+        course_id = self.request.query_params.get('course_id', None)
+        if student_id is not None:
+            queryset = queryset.filter(student__id=student_id)
+        if course_id is not None:
+            queryset = queryset.filter(task__course__id=course_id)
+        return queryset
 
 
 class SolutionsAPI(
