@@ -34,15 +34,15 @@ class SolutionStatusSerializer(serializers.ModelSerializer):
         if r.status_code == 204:
             obj.status = Solution.PENDING
         elif r.status_code == 200:
-            json = r.json()
+            data = r.json()
 
-            if json['result_status'] == 'ok':
+            if data['result_status'] == 'ok':
                 obj.status = Solution.OK
-            elif json['result_status'] == 'not_ok':
+            elif data['result_status'] == 'not_ok':
                 obj.status = Solution.NOT_OK
 
-            obj.test_output = json['output']
-            obj.return_code = json['returncode']
+            obj.test_output = data['output']
+            obj.return_code = data['returncode']
 
         obj.save()
 
@@ -94,9 +94,17 @@ class SolutionSerializer(serializers.ModelSerializer):
 
 class TaskSerializer(serializers.ModelSerializer):
 
+    has_tests = serializers.SerializerMethodField()
+
+    def get_has_tests(self, obj):
+        if hasattr(obj, 'test'):
+            if obj.test.code is not None and obj.test.code != "":
+                return True
+        return False
+
     class Meta:
         model = Task
-        fields = ('id', 'description', 'name', 'week')
+        fields = ('id', 'description', 'name', 'week', 'gradable', 'has_tests')
 
 
 class CitySerializer(serializers.ModelSerializer):
