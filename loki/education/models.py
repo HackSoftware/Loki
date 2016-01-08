@@ -13,6 +13,9 @@ class Student(BaseUser):
     phone = models.CharField(null=True, blank=True, max_length=20)
     skype = models.CharField(null=True, blank=True, max_length=20)
 
+    def __str__(self):
+        return self.full_name
+
 
 class Teacher(BaseUser):
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
@@ -100,12 +103,20 @@ class StudentNote(models.Model):
         ordering = ('post_time',)
 
 
+class ProgrammingLanguage(models.Model):
+    name = models.CharField(max_length=110)
+
+    def __str__(self):
+        return self.name
+
+
 class Task(models.Model):
     course = models.ForeignKey(Course)
     description = models.URLField()
     is_exam = models.BooleanField(default=False)
     name = models.CharField(max_length=128)
     week = models.SmallIntegerField(default=1)
+    gradable = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -114,16 +125,57 @@ class Task(models.Model):
         unique_together = (('name', 'description'),)
 
 
+class Test(models.Model):
+    UNITTEST = 0
+
+    TYPE_CHOICE = (
+        (UNITTEST, 'unittest'),
+    )
+
+    task = models.OneToOneField(Task)
+    language = models.ForeignKey(ProgrammingLanguage)
+    code = models.TextField(blank=True, null=True)
+    github_url = models.URLField()
+    test_type = models.SmallIntegerField(choices=TYPE_CHOICE, default=UNITTEST)
+
+    def __str__(self):
+        return "{}/{}".format(self.task, self.language)
+
+
 class Solution(models.Model):
+    PENDING = 0
+    RUNNING = 1
+    OK = 2
+    NOT_OK = 3
+
+    STATUS_CHOICE = (
+        (PENDING, 'pending'),
+        (RUNNING, 'running'),
+        (OK, 'ok'),
+        (NOT_OK, 'not_ok'),
+    )
+
     task = models.ForeignKey(Task)
     student = models.ForeignKey(Student)
-    url = models.URLField()
+    url = models.URLField(blank=True, null=True)
+    code = models.TextField(blank=True, null=True)
+    build_id = models.IntegerField(blank=True, null=True)
+    check_status_location = models.CharField(max_length=128, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=PENDING)
+    test_output = models.TextField(blank=True, null=True)
+    return_code = models.IntegerField(blank=True, null=True)
+
+    def get_status(self):
+        return Solution.STATUS_CHOICE[self.status][1]
 
     def get_assignment(self):
         return CourseAssignment.objects.get(user=self.student, course=self.task.course)
 
-    class Meta:
-        unique_together = (('student', 'task'),)
+
+class GraderRequest(models.Model):
+    request_info = models.CharField(max_length=140)
+    nonce = models.BigIntegerField(db_index=True)
 
 
 class WorkingAt(models.Model):

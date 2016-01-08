@@ -1,3 +1,4 @@
+import time
 from django.core.management import call_command
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
@@ -5,7 +6,9 @@ from django.core.urlresolvers import reverse
 from rest_framework.test import APIClient
 from base_app.models import Company
 from base_app.models import City
-from education.models import Student, Certificate, CheckIn, Course, Lecture, Teacher, CourseAssignment, StudentNote, WorkingAt, Task, Solution
+from education.models import (Student, Certificate, CheckIn, Course, Lecture, Teacher,
+                              CourseAssignment, StudentNote, WorkingAt, Task, Solution,
+                              Test, ProgrammingLanguage, GraderRequest)
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -272,6 +275,7 @@ class TeachersAPIsTests(TestCase):
 
 
 class CheckPresenceTests(TestCase):
+
     def setUp(self):
         self.course1 = Course.objects.create(
             name="Java",
@@ -373,6 +377,7 @@ class DropStudentTests(TestCase):
 
 
 class CheckMacsTests(TestCase):
+
     def setUp(self):
         self.student = Student.objects.create(
             email='sten@abv.bg',
@@ -648,6 +653,7 @@ class SolutionsTests(TestCase):
             description="https://github.com/lqlq/README.md",
             name="Task Name",
             week=1,
+            gradable=False,
         )
 
         self.task_with_no_solutions = Task.objects.create(
@@ -655,18 +661,39 @@ class SolutionsTests(TestCase):
             description="https://github.com/lqlnkmbq/README.md",
             name="Task Name 1",
             week=1,
+            gradable=False,
+        )
+
+        self.python = ProgrammingLanguage.objects.create(
+            name="python"
+        )
+
+        self.test_for_task_with_no_solutions = Test.objects.create(
+            task=self.task_with_no_solutions,
+            language=self.python,
+            code="CODE HERE!",
+            test_type=Test.UNITTEST,
+            github_url=""
+        )
+
+        self.test = Test.objects.create(
+            task=self.task,
+            language=self.python,
+            code="CODE HERE!",
+            test_type=Test.UNITTEST,
+            github_url=""
         )
 
         self.solution = Solution.objects.create(
             student=self.student,
             task=self.task,
-            url='https://github.com/lqdsadaslsq/solution.py'
+            url='https://github.com/lqdsadaslsq/solution.py',
         )
 
         self.solution2 = Solution.objects.create(
             student=self.student2,
             task=self.task,
-            url='https://github.com/lololo/solution.py'
+            url='https://github.com/lololo/solution.py',
         )
 
         self.certificate = Certificate.objects.create(
@@ -705,8 +732,48 @@ class SolutionsTests(TestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 201)
 
-        solution = Solution.objects.get(task=self.task_with_no_solutions, student=logged_student)
-        self.assertEqual(solution.student, logged_student)
+    def test_post_incorrect_code_solution(self):
+        logged_student = self.student2
+        self.client = APIClient()
+        self.client.force_authenticate(user=logged_student)
+
+        url = reverse('education:solution')
+        data = "{'submitted':true,'status':null,'task':147,'code':'asdf','url':null}"
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_post_solution_with_incorrect_github_url(self):
+        logged_student = self.student2
+        self.client = APIClient()
+        self.client.force_authenticate(user=logged_student)
+
+        url = reverse('education:solution')
+        data = {
+            'task': self.task_with_no_solutions.id,
+            'url': 'sdsadqweqwesda'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+        url = reverse('education:solution')
+        data = {
+            'task': self.task_with_no_solutions.id,
+            'url': 'https://docs.angularjs.org/api/ng/directive/select'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+        url = reverse('education:solution')
+        data = {
+            'task': self.task_with_no_solutions.id,
+            'url': 'https://github.com/HackBulgaria/Programming101-Python'
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 400)
 
     def test_post_solutions_filter(self):
         logged_student = self.student
@@ -725,12 +792,13 @@ class SolutionsTests(TestCase):
             description="https://github.com/lqddlq/README.md",
             name="Task3 Name",
             week=1,
+            gradable=False,
         )
 
         Solution.objects.create(
             student=logged_student,
             task=task2,
-            url='https://github.com/lqdddsadaslsq/solution.py'
+            url='https://github.com/lqdddsadaslsq/solution.py',
         )
 
         self.client = APIClient()
@@ -816,3 +884,137 @@ class SolutionsTests(TestCase):
 #         response = self.client.patch(url, data, format='json')
 #         print(response.data)
 #         self.assertEqual(response.status_code, 200)
+
+
+class TestSolutionTests(TestCase):
+
+    def setUp(self):
+        self.student = Student.objects.create(
+            email='test@test.com',
+            mac="12:34:56:78:9A:BC",
+        )
+
+        self.course = Course.objects.create(
+            name="Java",
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/haskell-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
+        )
+
+        self.assignment = CourseAssignment.objects.create(
+            user=self.student,
+            course=self.course,
+            group_time=1,
+        )
+
+        self.task = Task.objects.create(
+            course=self.course,
+            description="https://github.com/testasdasdtest/README.md",
+            name="Task Name 1",
+            week=1,
+            gradable=False,
+        )
+
+        self.python = ProgrammingLanguage.objects.create(
+            name="python"
+        )
+
+        # self.grader_request = GraderRequest.objects.create(
+        #     request_info="POST /grade",
+        #     nonce=105
+        # )
+
+        self.test = Test.objects.create(
+            task=self.task,
+            language=self.python,
+            code="CODE HERE!",
+            test_type=Test.UNITTEST,
+            github_url=""
+        )
+
+    def test_grader_response(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student)
+
+        url = reverse('education:solution')
+        data = {
+            'task': self.task.id,
+            'url': 'https://github.com/testsolutionasdtest/solution.py',
+            'code': "print('da')",
+        }
+
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
+
+        solution = Solution.objects.get(task=self.task, student=self.student)
+        self.assertEqual(solution.student, self.student)
+        # In order to check the build_id a grader mockup is needed
+        # self.assertIsNotNone(solution.build_id)
+        # self.assertIsNotNone(solution.check_status_location)
+
+    '''
+    This test checks if a solution with github_url is tested corectly in the grader
+    In order to work properly we need to mockup the grader
+    A manual check after one run of the test (with correct nounce) showed that the
+    code in the grader is the expected one
+    '''
+    # def test_grading_solution_with_github_link(self):
+    #     self.client = APIClient()
+    #     self.client.force_authenticate(user=self.student)
+
+    #     task = Task.objects.create(
+    #         course=self.course,
+    #         description="https://github.com/testasdasdtest/README.md",
+    #         name="Task Name 2",
+    #         week=1,
+    #         gradable=True,
+    #     )
+
+    #     self.grader_request = GraderRequest.objects.create(
+    #         request_info="POST /grade",
+    #         nonce=500
+    #     )
+
+    #     test = Test.objects.create(
+    #         task=task,
+    #         language=self.python,
+    #         code="CODE HERE!",
+    #         test_type=Test.UNITTEST,
+    #         github_url=""
+    #     )
+
+    #     url = reverse('education:solution')
+    #     data = {
+    #         'task': task.id,
+    #         'url': 'https://github.com/HackBulgaria/Programming101-Python/blob/master/week02/materials/food_diary.py',
+    #     }
+
+    #     response = self.client.post(url, data, format='json')
+    #     self.assertEqual(response.status_code, 201)
+
+    #     solution = Solution.objects.get(task=task, student=self.student)
+    #     self.assertEqual(solution.student, self.student)
+    #     self.assertIsNotNone(solution.build_id)
+    #     self.assertIsNotNone(solution.check_status_location)
+
+
+    # def test_solution_status(self):
+    #     self.client = APIClient()
+    #     self.client.force_authenticate(user=self.student)
+
+    #     url = reverse('education:solution')
+    #     data = {
+    #         'task': self.task.id,
+    #         'url': 'https://github.com/testsolutionasdtest/solution.py',
+    #         'code': "print('da')",
+    #     }
+
+    #     response = self.client.post(url, data, format='json')
+    #     self.assertEqual(response.status_code, 201)
+
+    #     solution = Solution.objects.get(task=self.task, student=self.student)
+    #     url = reverse('education:solution_status', kwargs={'pk': solution.id})
+    #     time.sleep(6)
+    #     response = self.client.get(url, format='json')

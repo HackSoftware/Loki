@@ -2,8 +2,10 @@ from import_export.admin import ImportExportActionModelAdmin
 
 from django.contrib import admin
 
-from .models import Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote, WorkingAt, Task, Solution, Certificate
 from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
+from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
+                     WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test,
+                     GraderRequest)
 
 
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -150,5 +152,77 @@ class TaskAdmin(admin.ModelAdmin):
 
 admin.site.register(Task, TaskAdmin)
 
-admin.site.register(Solution)
+
+class ProgrammingLanguageAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'name',
+    ]
+
+    list_filter = [
+        'name',
+    ]
+
+    search_fields = ['name']
+
+admin.site.register(ProgrammingLanguage, ProgrammingLanguageAdmin)
+
+
+class TestAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'task',
+        'language',
+        'test_type',
+    ]
+
+    list_filter = [
+        'language',
+        'test_type',
+    ]
+
+    search_fields = ['task']
+
+admin.site.register(Test, TestAdmin)
+
+
+class SolutionAdmin(admin.ModelAdmin):
+
+    def get_solution_course(self, obj):
+        return obj.task.course
+    get_solution_course.short_description = "Course"
+    get_solution_course.admin_order_field = "task__course"
+
+    list_display = [
+        'task',
+        'student',
+        'get_solution_course',
+        'url',
+    ]
+
+    list_filter = [
+        'task',
+    ]
+
+    search_fields = ['task', 'student', 'URL_VALIDATOR_USER_AGENT = ''']
+
+admin.site.register(Solution, SolutionAdmin)
+
 admin.site.register(Certificate)
+
+
+class GraderRequestAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'id',
+        'request_info',
+        'nonce',
+    ]
+
+    list_filter = [
+        'request_info',
+    ]
+
+    search_fields = ['nonce']
+
+admin.site.register(GraderRequest, GraderRequestAdmin)
