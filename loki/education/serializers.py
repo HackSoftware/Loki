@@ -66,41 +66,13 @@ class SolutionSerializer(serializers.ModelSerializer):
     def get_status(self, obj):
         return obj.get_status()
 
-    def validate_url(self, url):
-        self.solution_url = url
-
-        if self.solution_url is not None:
-            # Check if url is valid
-            val = URLValidator()
-            try:
-                val(self.solution_url)
-            except ValidationError:
-                raise serializers.ValidationError('Въведете валиден GitHub URL адрес.')
-
-            github_domain = "github.com"
-            splitted_url = self.solution_url.split("/")
-            file_name = splitted_url[-1]
-
-            # Check if the url has github domain and ends with fail extension
-            if github_domain not in splitted_url:
-                raise serializers.ValidationError('Въведете валиден GitHub URL адрес.')
-            if "." not in file_name:
-                raise serializers.ValidationError('Въведете валиден GitHub URL адрес.')
-            elif len(file_name) <= file_name.index(".") + 1:
-                raise serializers.ValidationError('Въведете валиден GitHub URL адрес.')
-
-        return self.solution_url
-
 
 class TaskSerializer(serializers.ModelSerializer):
 
     has_tests = serializers.SerializerMethodField()
 
     def get_has_tests(self, obj):
-        if hasattr(obj, 'test'):
-            if obj.test.code is not None and obj.test.code != "":
-                return True
-        return False
+        return obj.has_tests()
 
     class Meta:
         model = Task

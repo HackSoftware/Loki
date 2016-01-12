@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.db import IntegrityError
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
@@ -225,7 +225,7 @@ class StudentSolutionsList(generics.ListAPIView):
     permission_classes = (IsTeacher,)
 
     def get_queryset(self):
-        queryset = Solution.objects.all()
+        queryset = Solution.objects.filter(task__course__teacher=self.request.user)
         student_id = self.request.query_params.get('student_id', None)
         course_id = self.request.query_params.get('course_id', None)
         if student_id is not None:
@@ -249,21 +249,15 @@ class SolutionsAPI(
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        # Solutions without code or url are not accepted
+        data = request.data
+        if data["url"] is None and data["code"] is None:
+            return HttpResponseBadRequest('url or code should be given.')
+
         return self.create(request, *args, **kwargs)
 
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
-
     def perform_create(self, serializer):
-        solution = serializer.save(
-            student=self.request.user.get_student(),
-            url=serializer.solution_url)
-
-        if solution.task.gradable:
-            self.send_to_grader(solution)
-
-    def perform_update(self, serializer):
-        solution = serializer.save()
+        solution = serializer.save(student=self.request.user.get_student())
 
         if solution.task.gradable:
             self.send_to_grader(solution)

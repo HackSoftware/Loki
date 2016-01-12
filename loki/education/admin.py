@@ -1,6 +1,6 @@
 from import_export.admin import ImportExportActionModelAdmin
 
-from django.contrib import admin
+from django.contrib import admin, messages
 
 from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
@@ -187,6 +187,14 @@ admin.site.register(Test, TestAdmin)
 
 
 class SolutionAdmin(admin.ModelAdmin):
+
+    def save_model(self, request, obj, form, change):
+        if (obj.code is None or obj.code == "") and (obj.url is None or obj.url == ""):
+            messages.set_level(request, messages.ERROR)
+            messages.error(request, 'Url or Code should be given.')
+            return
+        else:
+            obj.save()
 
     def get_solution_course(self, obj):
         return obj.task.course
