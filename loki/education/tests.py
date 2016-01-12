@@ -642,6 +642,15 @@ class SolutionsTests(TestCase):
             generate_certificates_until=date_decrease(1),
         )
 
+        self.course2 = Course.objects.create(
+            name="Python",
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/haskelsl-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
+        )
+
         self.assignment = CourseAssignment.objects.create(
             user=self.student,
             course=self.course,
@@ -699,6 +708,37 @@ class SolutionsTests(TestCase):
         self.certificate = Certificate.objects.create(
             assignment=self.assignment,
         )
+
+        self.teacher = Teacher.objects.create(
+            email="testteacher@testteacher.bg",
+        )
+
+        self.teacher.teached_courses.add(self.course)
+        self.teacher.teached_courses.add(self.course2)
+        self.teacher.save()
+
+        self.teacher2 = Teacher.objects.create(
+            email="testteacher2@testteacher2.bg",
+        )
+
+        self.teacher2.teached_courses.add(self.course2)
+        self.teacher.save()
+
+    def test_teacher_get_student_solutions(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.teacher)
+        # course_count = self.teacher.teached_courses.count()
+        url = reverse('education:student_solutions')
+        response = self.client.get(url, format='json')
+        self.assertNotEqual(0, len(response.data))
+
+    def test_teacher_get_student_solutions_for_other_course(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.teacher2)
+        # course_count = self.teacher.teached_courses.count()
+        url = reverse('education:student_solutions')
+        response = self.client.get(url, format='json')
+        self.assertEqual(0, len(response.data))
 
     def test_get_solutions(self):
         self.client = APIClient()
@@ -814,21 +854,6 @@ class SolutionsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Solution.objects.filter(student=logged_student).count(), 2)
         self.assertEqual(len(response.data), 1)
-
-    def test_patch_solutions(self):
-        logged_student = self.student
-        self.client = APIClient()
-        self.client.force_authenticate(user=logged_student)
-
-        url = reverse('education:solution_edit', kwargs={'pk': self.solution.id})
-
-        data = {
-            'url': 'https://github.com/lolo/new_solution.py'
-        }
-
-        response = self.client.patch(url, data, format='json')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(Solution.objects.get(pk=self.solution.id).url, data['url'])
 
     def test_certificate(self):
         c = Client()

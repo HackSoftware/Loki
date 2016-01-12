@@ -225,7 +225,7 @@ class StudentSolutionsList(generics.ListAPIView):
     permission_classes = (IsTeacher,)
 
     def get_queryset(self):
-        queryset = Solution.objects.all()
+        queryset = Solution.objects.filter(task__course__teacher=self.request.user)
         student_id = self.request.query_params.get('student_id', None)
         course_id = self.request.query_params.get('course_id', None)
         if student_id is not None:
@@ -251,19 +251,10 @@ class SolutionsAPI(
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
-    def patch(self, request, *args, **kwargs):
-        return self.partial_update(request, *args, **kwargs)
-
     def perform_create(self, serializer):
         solution = serializer.save(
             student=self.request.user.get_student(),
             url=serializer.solution_url)
-
-        if solution.task.gradable:
-            self.send_to_grader(solution)
-
-    def perform_update(self, serializer):
-        solution = serializer.save()
 
         if solution.task.gradable:
             self.send_to_grader(solution)

@@ -4,7 +4,7 @@ from ckeditor.fields import RichTextField
 from base_app.models import City, Company
 
 from hack_fmi.models import BaseUser
-from .validators import validate_mac
+from .validators import validate_mac, validate_url
 
 
 class Student(BaseUser):
@@ -121,6 +121,12 @@ class Task(models.Model):
     def __str__(self):
         return self.name
 
+    def has_tests(self):
+        if hasattr(self, 'test'):
+            if self.test.code is not None and self.test.code != "":
+                return True
+        return False
+
     class Meta:
         unique_together = (('name', 'description'),)
 
@@ -157,7 +163,7 @@ class Solution(models.Model):
 
     task = models.ForeignKey(Task)
     student = models.ForeignKey(Student)
-    url = models.URLField(blank=True, null=True)
+    url = models.URLField(blank=True, null=True, validators=[validate_url])
     code = models.TextField(blank=True, null=True)
     build_id = models.IntegerField(blank=True, null=True)
     check_status_location = models.CharField(max_length=128, blank=True, null=True)
