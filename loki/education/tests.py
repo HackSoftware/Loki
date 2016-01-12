@@ -766,7 +766,8 @@ class SolutionsTests(TestCase):
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'https://github.com/lolo/solution.py'
+            'url': 'https://github.com/lolo/solution.py',
+            'code': None
         }
 
         response = self.client.post(url, data, format='json')
@@ -778,7 +779,13 @@ class SolutionsTests(TestCase):
         self.client.force_authenticate(user=logged_student)
 
         url = reverse('education:solution')
-        data = "{'submitted':true,'status':null,'task':147,'code':'asdf','url':null}"
+        data = {
+            'submitted': True,
+            'status': None,
+            'task': 147,
+            'code': 'asdf',
+            'url': None
+        }
 
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 400)
@@ -791,7 +798,8 @@ class SolutionsTests(TestCase):
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'sdsadqweqwesda'
+            'url': 'sdsadqweqwesda',
+            'code': None,
         }
 
         response = self.client.post(url, data, format='json')
@@ -800,7 +808,8 @@ class SolutionsTests(TestCase):
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'https://docs.angularjs.org/api/ng/directive/select'
+            'url': 'https://docs.angularjs.org/api/ng/directive/select',
+            'code': None,
         }
 
         response = self.client.post(url, data, format='json')
@@ -809,7 +818,8 @@ class SolutionsTests(TestCase):
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'https://github.com/HackBulgaria/Programming101-Python'
+            'url': 'https://github.com/HackBulgaria/Programming101-Python',
+            'code': None,
         }
 
         response = self.client.post(url, data, format='json')
@@ -967,7 +977,7 @@ class TestSolutionTests(TestCase):
         data = {
             'task': self.task.id,
             'url': 'https://github.com/testsolutionasdtest/solution.py',
-            'code': "print('da')",
+            'code': None,
         }
 
         response = self.client.post(url, data, format='json')
