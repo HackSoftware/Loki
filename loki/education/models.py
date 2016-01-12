@@ -4,7 +4,7 @@ from ckeditor.fields import RichTextField
 from base_app.models import City, Company
 
 from hack_fmi.models import BaseUser
-from .validators import validate_mac, validate_url
+from .validators import validate_mac, validate_github_url
 
 
 class Student(BaseUser):
@@ -163,7 +163,7 @@ class Solution(models.Model):
 
     task = models.ForeignKey(Task)
     student = models.ForeignKey(Student)
-    url = models.URLField(blank=True, null=True, validators=[validate_url])
+    url = models.URLField(blank=True, null=True, validators=[validate_github_url])
     code = models.TextField(blank=True, null=True)
     build_id = models.IntegerField(blank=True, null=True)
     check_status_location = models.CharField(max_length=128, blank=True, null=True)

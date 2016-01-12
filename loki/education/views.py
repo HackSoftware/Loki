@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.db import IntegrityError
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
@@ -249,12 +249,15 @@ class SolutionsAPI(
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        # Solutions without code or url are not accepted
+        data = request.data
+        if data["url"] is None and data["code"] is None:
+            return HttpResponseBadRequest('url or code should be given.')
+
         return self.create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
-        solution = serializer.save(
-            student=self.request.user.get_student(),
-            url=serializer.solution_url)
+        solution = serializer.save(student=self.request.user.get_student())
 
         if solution.task.gradable:
             self.send_to_grader(solution)

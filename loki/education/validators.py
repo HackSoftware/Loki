@@ -11,7 +11,7 @@ def validate_mac(mac):
         raise ValidationError('{} is not a valid mac address'.format(mac), 'invalid_mac_address')
 
 
-def validate_url(url):
+def validate_github_url(url):
     # Check if url is valid
     val = URLValidator()
     try:

@@ -66,14 +66,6 @@ class SolutionSerializer(serializers.ModelSerializer):
     def get_status(self, obj):
         return obj.get_status()
 
-    def validate_url(self, url):
-        self.solution_url = url
-
-        if self.solution_url is None:
-            raise serializers.ValidationError('Enter URL')
-
-        return self.solution_url
-
 
 class TaskSerializer(serializers.ModelSerializer):
 
