@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'adminsortable2',
     'django_resized',
     'import_export',
+    'djcelery',
 
     'hack_fmi',
     'base_app',
@@ -154,3 +155,15 @@ SUIT_CONFIG = {
     # misc
     'LIST_PER_PAGE': 100
 }
+
+# Celery settings
+
+BROKER_URL = 'amqp://guest:guest@localhost//'
+
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+
+#: Only add pickle to this list if your broker is secured
+#: from unwanted access (see userguide/security.html)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

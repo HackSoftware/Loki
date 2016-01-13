@@ -5,6 +5,7 @@ import os
 import time
 import hmac
 import hashlib
+import requests
 
 
 def crop_image(x1, y1, x2, y2, path):
@@ -63,3 +64,17 @@ def generate_grader_headers(body, req_and_resource):
                        'X-Nonce-Number': nonce}
 
     return request_headers
+
+
+def get_solution_code(solution):
+    if solution.code is not None:
+        return solution.code
+    # Create raw github url
+    url = "/".join(
+        [x for x in solution.url.split("/") if x != "blob"]).replace(
+        "github", "raw.githubusercontent")
+    # Extract the code
+    r = requests.get(url)
+    solution.code = r.text
+    solution.save()
+    return r.text
