@@ -201,7 +201,7 @@ class TasksAPI(generics.ListAPIView):
     model = Task
     queryset = Task.objects.all()
     serializer_class = TaskSerializer
-    permission_classes = (IsStudent, IsTeacher,)
+    permission_classes = (IsAuthenticated,)
     filter_fields = ('course__id',)
 
 
