@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -156,6 +157,10 @@ SUIT_CONFIG = {
     'LIST_PER_PAGE': 100
 }
 
+
+GRADER_GRADE_PATH = "/grade"
+GRADER_CHECK_PATH = "/check_result/{}/"
+
 # Celery settings
 
 BROKER_URL = 'amqp://guest:guest@localhost//'
@@ -167,3 +172,10 @@ CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+CELERYBEAT_SCHEDULE = {
+    'retest-solutions-on-test-change': {
+        'task': 'education.tasks.retest_solutions',
+        'schedule': timedelta(minutes=1),
+    },
+}

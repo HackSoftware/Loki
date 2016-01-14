@@ -5,7 +5,7 @@ from django.contrib import admin, messages
 from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
                      WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test,
-                     GraderRequest)
+                     GraderRequest, RetestSolution)
 
 
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -234,3 +234,22 @@ class GraderRequestAdmin(admin.ModelAdmin):
     search_fields = ['nonce']
 
 admin.site.register(GraderRequest, GraderRequestAdmin)
+
+
+class RetestSolutionAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'id',
+        'status',
+        'date',
+        'test_id',
+        'tested_solutions_count',
+    ]
+
+    list_filter = [
+        'status',
+    ]
+
+    search_fields = ['test_id']
+
+admin.site.register(RetestSolution, RetestSolutionAdmin)

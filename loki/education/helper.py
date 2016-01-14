@@ -41,7 +41,8 @@ def get_and_update_req_nonce(req_and_resource):
 
     if request is not None:
         nonce = request.nonce
-        request.nonce += 1
+        nonce += 1
+        request.nonce = nonce
         request.save()
         return str(nonce)
     else:
@@ -66,15 +67,11 @@ def generate_grader_headers(body, req_and_resource):
     return request_headers
 
 
-def get_solution_code(solution):
-    if solution.code is not None:
-        return solution.code
+def get_solution_code(url):
     # Create raw github url
-    url = "/".join(
-        [x for x in solution.url.split("/") if x != "blob"]).replace(
+    raw_solution_url = "/".join(
+        [x for x in url.split("/") if x != "blob"]).replace(
         "github", "raw.githubusercontent")
-    # Extract the code
-    r = requests.get(url)
-    solution.code = r.text
-    solution.save()
+
+    r = requests.get(raw_solution_url)
     return r.text

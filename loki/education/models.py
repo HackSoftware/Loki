@@ -131,6 +131,21 @@ class Task(models.Model):
         unique_together = (('name', 'description'),)
 
 
+class RetestSolution(models.Model):
+    PENDING = 0
+    DONE = 1
+
+    STATUS_CHOICE = (
+        (PENDING, 'pending'),
+        (DONE, 'done'),
+    )
+
+    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=PENDING)
+    date = models.DateTimeField(auto_now_add=True)
+    test_id = models.IntegerField()
+    tested_solutions_count = models.IntegerField(default=0)
+
+
 class Test(models.Model):
     UNITTEST = 0
 
@@ -147,18 +162,29 @@ class Test(models.Model):
     def __str__(self):
         return "{}/{}".format(self.task, self.language)
 
+    # Check if test code is change. If yes - retest solutions
+    def save(self, *args, **kwargs):
+        if self.id is not None:
+            old_test_object = Test.objects.get(id=self.id)
+            if old_test_object.code != self.code:
+                RetestSolution.objects.create(test_id=self.id)
+
+        super(Test, self).save(*args, **kwargs)
+
 
 class Solution(models.Model):
     PENDING = 0
     RUNNING = 1
     OK = 2
     NOT_OK = 3
+    SUBMITED = 4
 
     STATUS_CHOICE = (
         (PENDING, 'pending'),
         (RUNNING, 'running'),
         (OK, 'ok'),
         (NOT_OK, 'not_ok'),
+        (SUBMITED, 'submitted'),
     )
 
     task = models.ForeignKey(Task)
@@ -168,7 +194,7 @@ class Solution(models.Model):
     build_id = models.IntegerField(blank=True, null=True)
     check_status_location = models.CharField(max_length=128, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=PENDING)
+    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=SUBMITED)
     test_output = models.TextField(blank=True, null=True)
     return_code = models.IntegerField(blank=True, null=True)
 
