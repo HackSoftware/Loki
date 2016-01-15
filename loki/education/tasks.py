@@ -34,6 +34,7 @@ def submit_solution(solution_id):
 
     r = requests.post(url, json=data, headers=headers)
     if r.status_code == 202:
+        solution.status = Solution.PENDING
         solution.build_id = r.json()['run_id']
         solution.check_status_location = r.headers['Location']
         solution.save()
@@ -47,7 +48,7 @@ def submit_solution(solution_id):
 def poll_solution(solution_id):
     solution = Solution.objects.get(id=solution_id)
 
-    path = settings.GRADER_CHECK_PATH.format(solution.build_id)
+    path = settings.GRADER_CHECK_PATH.format(buildID=solution.build_id)
     url = solution.check_status_location
     req_and_resource = "GET {}".format(path)
 
@@ -55,8 +56,8 @@ def poll_solution(solution_id):
         headers = generate_grader_headers(path, req_and_resource)
         r = requests.get(url, headers=headers)
 
-        if r.status_code == 204:
-            solution.status = Solution.PENDING
+        if r.status_code == 403:
+            raise Exception(r.text)
         elif r.status_code == 200:
             data = r.json()
 
@@ -70,21 +71,27 @@ def poll_solution(solution_id):
             solution.save()
             break
 
-        time.sleep(1)
+        time.sleep(settings.POLLING_SLEEP_TIME)
 
 
 @app.task
-def retest_solutions():
+def check_for_retests():
     status_choices = {
         "pending": 0,
         "done": 1
     }
+
     pending_retests = RetestSolution.objects.filter(status=status_choices["pending"])
     for pending_retest in pending_retests:
         test = Test.objects.get(id=pending_retest.test_id)
         solutions_to_be_tested = Solution.objects.filter(task__test=test)
-        print(solutions_to_be_tested)
-        for solution in solutions_to_be_tested:
-            poll_solution.delay(solution.id)
+        retest_solutions.delay(solutions_to_be_tested)
         pending_retest.status = status_choices["done"]
         pending_retest.save()
+
+
+@app.task
+def retest_solutions(solutions):
+    for solution in solutions:
+        solution.status = Solution.SUBMITED
+        submit_solution.delay(solution.id)

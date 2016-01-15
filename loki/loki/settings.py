@@ -159,7 +159,8 @@ SUIT_CONFIG = {
 
 
 GRADER_GRADE_PATH = "/grade"
-GRADER_CHECK_PATH = "/check_result/{}/"
+GRADER_CHECK_PATH = "/check_result/{buildID}/"
+POLLING_SLEEP_TIME = 1  # seconds
 
 # Celery settings
 
@@ -175,7 +176,7 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 CELERYBEAT_SCHEDULE = {
     'retest-solutions-on-test-change': {
-        'task': 'education.tasks.retest_solutions',
+        'task': 'education.tasks.check_for_retests',
         'schedule': timedelta(minutes=1),
     },
 }
