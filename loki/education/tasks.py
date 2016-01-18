@@ -4,7 +4,7 @@ from loki.celery import app
 from django.conf import settings
 
 from .models import Test, Solution, RetestSolution
-from .helper import generate_grader_headers, get_solution_code
+from .helper import generate_grader_headers, get_solution_code, update_req_and_resource_nonce
 
 import json
 import requests
@@ -55,9 +55,18 @@ def poll_solution(solution_id):
     while True:
         headers = generate_grader_headers(path, req_and_resource)
         r = requests.get(url, headers=headers)
+        if r.status_code == 403 and r.text == "Nonce check failed":
+            get_nonce_url = settings.GRADER_ADDRESS + settings.GRADER_GET_NONCE_PATH
 
-        if r.status_code == 403:
-            raise Exception(r.text)
+            data = {
+                "request_info": req_and_resource,
+                "user_key": settings.GRADER_API_KEY
+            }
+
+            responce = requests.post(get_nonce_url, data=data)
+            nonce = responce.json()["nonce"]
+            update_req_and_resource_nonce(req_and_resource, nonce)
+
         elif r.status_code == 200:
             data = r.json()
 

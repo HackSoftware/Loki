@@ -1,5 +1,6 @@
 from PIL import Image
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 from education.models import CheckIn, Student, GraderRequest
 import os
 import time
@@ -75,3 +76,9 @@ def get_solution_code(url):
 
     r = requests.get(raw_solution_url)
     return r.text
+
+
+def update_req_and_resource_nonce(req_and_resource, nonce):
+    grader_request = get_object_or_404(GraderRequest, request_info=req_and_resource)
+    grader_request.nonce = nonce
+    grader_request.save()

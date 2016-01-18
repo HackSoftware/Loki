@@ -202,7 +202,9 @@ class SolutionAdmin(admin.ModelAdmin):
     get_solution_course.admin_order_field = "task__course"
 
     list_display = [
+        'id',
         'task',
+        'status',
         'student',
         'get_solution_course',
         'url',

@@ -160,6 +160,7 @@ SUIT_CONFIG = {
 
 GRADER_GRADE_PATH = "/grade"
 GRADER_CHECK_PATH = "/check_result/{buildID}/"
+GRADER_GET_NONCE_PATH = "/nonce"
 POLLING_SLEEP_TIME = 1  # seconds
 
 # Celery settings
