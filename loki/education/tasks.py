@@ -58,12 +58,12 @@ def poll_solution(solution_id):
         if r.status_code == 403 and r.text == "Nonce check failed":
             get_nonce_url = settings.GRADER_ADDRESS + settings.GRADER_GET_NONCE_PATH
 
-            data = {
-                "request_info": req_and_resource,
-                "user_key": settings.GRADER_API_KEY
+            headers = {
+                'Request-Info': req_and_resource,
+                'X-USER-Key': settings.GRADER_API_KEY
             }
 
-            responce = requests.post(get_nonce_url, data=data)
+            responce = requests.get(get_nonce_url, headers=headers)
             nonce = responce.json()["nonce"]
             update_req_and_resource_nonce(req_and_resource, nonce)
 
