@@ -148,7 +148,7 @@ class TaskAdmin(admin.ModelAdmin):
         'week',
     ]
 
-    search_fields = ['course', 'name', 'week']
+    search_fields = ['course__name', 'name', 'week']
 
 admin.site.register(Task, TaskAdmin)
 
@@ -212,7 +212,7 @@ class SolutionAdmin(admin.ModelAdmin):
         'task',
     ]
 
-    search_fields = ['task', 'student']
+    search_fields = ['task__name', 'student__first_name']
 
 admin.site.register(Solution, SolutionAdmin)
 
