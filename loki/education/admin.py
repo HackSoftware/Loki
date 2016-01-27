@@ -212,7 +212,7 @@ class SolutionAdmin(admin.ModelAdmin):
         'task',
     ]
 
-    search_fields = ['task', 'student', 'URL_VALIDATOR_USER_AGENT = ''']
+    search_fields = ['task', 'student']
 
 admin.site.register(Solution, SolutionAdmin)
 
