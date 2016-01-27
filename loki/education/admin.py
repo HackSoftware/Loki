@@ -212,7 +212,7 @@ class SolutionAdmin(admin.ModelAdmin):
         'task',
     ]
 
-    search_fields = ['task__name', 'student__first_name']
+    search_fields = ['id', 'task__name', 'student__first_name']
 
 admin.site.register(Solution, SolutionAdmin)
 
