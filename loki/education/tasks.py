@@ -94,13 +94,14 @@ def check_for_retests():
     for pending_retest in pending_retests:
         test = Test.objects.get(id=pending_retest.test_id)
         solutions_to_be_tested = Solution.objects.filter(task__test=test)
-        retest_solutions.delay(solutions_to_be_tested)
+        for solution in solutions_to_be_tested:
+            retest_solution.delay(solution.id)
         pending_retest.status = status_choices["done"]
         pending_retest.save()
 
 
 @app.task
-def retest_solutions(solutions):
-    for solution in solutions:
-        solution.status = Solution.SUBMITED
-        submit_solution.delay(solution.id)
+def retest_solution(solution_id):
+    solution = Solution.objects.get(id=solution_id)
+    solution.status = Solution.SUBMITED
+    submit_solution.delay(solution.id)
