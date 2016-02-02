@@ -15,13 +15,13 @@ from base_app.models import City, Company
 from .premissions import IsStudent, IsTeacher, IsTeacherForCA
 
 from .models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
-                     Task, Solution, Certificate)
+                     Task, Solution, Certificate, SolutionComment)
 
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
                           SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
                           CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer,
-                          SolutionStatusSerializer)
+                          SolutionStatusSerializer, SolutionCommentSerializer)
 
 from education.helper import (check_macs_for_student, mac_is_used_by_another_student)
 from .tasks import submit_solution
@@ -230,6 +230,33 @@ class StudentSolutionsList(generics.ListAPIView):
         if course_id is not None:
             queryset = queryset.filter(task__course__id=course_id)
         return queryset
+
+
+class SolutionComments(
+        mixins.ListModelMixin,
+        mixins.CreateModelMixin,
+        mixins.UpdateModelMixin,
+        mixins.DestroyModelMixin,
+        generics.GenericAPIView):
+    serializer_class = SolutionCommentSerializer
+    # permission_classes = (IsAuthenticated,)
+    # filter_fields = ('solution__id',)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        solution_id = self.kwargs['pk']
+        return SolutionComment.objects.filter(solution__id=solution_id)
+
+    def perform_create(self, serializer):
+        # Check if student or teacher?
+        # Add writed_by and write_rights
+        # Finish the tests
+        serializer.save()
 
 
 class SolutionsAPI(

@@ -4,7 +4,8 @@ from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from base_app.models import Company, City
 from .models import (Lecture, CheckIn, Course, Student, Solution,
-                     CourseAssignment, StudentNote, Teacher, WorkingAt, Task, Certificate)
+                     CourseAssignment, StudentNote, Teacher, WorkingAt, Task, Certificate,
+                     SolutionComment)
 from .helper import generate_grader_headers
 
 
@@ -13,6 +14,17 @@ class CertificateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certificate
         fields = ('id',)
+
+
+class SolutionCommentSerializer(serializers.ModelSerializer):
+    write_rights = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SolutionComment
+        fields = ('id', 'writed_by', 'created_at', 'write_rights', 'comment')
+
+    def get_write_rights(self, obj):
+        return obj.get_write_rights()
 
 
 class SolutionStatusSerializer(serializers.ModelSerializer):

@@ -5,7 +5,7 @@ from django.contrib import admin, messages
 from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
                      WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test,
-                     GraderRequest, RetestSolution)
+                     GraderRequest, RetestSolution, SolutionComment)
 
 
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -255,3 +255,21 @@ class RetestSolutionAdmin(admin.ModelAdmin):
     search_fields = ['test_id']
 
 admin.site.register(RetestSolution, RetestSolutionAdmin)
+
+
+class SolutionCommentAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'id',
+        'writed_by',
+        'created_at',
+    ]
+
+    list_filter = [
+        'writed_by',
+        'created_at',
+    ]
+
+    search_fields = ['writed_by']
+
+admin.site.register(SolutionComment, SolutionCommentAdmin)

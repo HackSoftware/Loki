@@ -8,7 +8,7 @@ from base_app.models import Company
 from base_app.models import City
 from education.models import (Student, Certificate, CheckIn, Course, Lecture, Teacher,
                               CourseAssignment, StudentNote, WorkingAt, Task, Solution,
-                              Test, ProgrammingLanguage, GraderRequest)
+                              Test, ProgrammingLanguage, GraderRequest, SolutionComment)
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -872,6 +872,79 @@ class SolutionsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Source Link')
         self.assertContains(response, 'Not sent')
+
+
+class SolutionCommentTests(TestCase):
+
+    def setUp(self):
+
+        self.student = Student.objects.create(
+            email='sten@abv.bg',
+            mac="12:34:56:78:9A:BC",
+        )
+
+        self.teacher = Teacher.objects.create(
+            email="testteacher@testteacher.bg",
+        )
+
+        self.course = Course.objects.create(
+            name="Java",
+            application_until=date_decrease(30),
+            url="https://hackbulgaria.com/course/haskell-1/",
+            start_time=date_decrease(29),
+            end_time=date_decrease(2),
+            generate_certificates_until=date_decrease(1),
+        )
+
+        self.assignment = CourseAssignment.objects.create(
+            user=self.student,
+            course=self.course,
+            group_time=1,
+        )
+
+        self.task = Task.objects.create(
+            course=self.course,
+            description="https://github.com/lqlq/README.md",
+            name="Task Name",
+            week=1,
+            gradable=False,
+        )
+
+        self.solution = Solution.objects.create(
+            student=self.student,
+            task=self.task,
+            url='https://github.com/lqdsadaslsq/solution.py',
+        )
+
+        self.solution_comment = SolutionComment.objects.create(
+            writed_by="someone1",
+            comment="some comment",
+            solution=self.solution
+        )
+
+        # self.url = reverse('education:solution_comments')
+
+    def test_create(self):
+        client = APIClient()
+        client.force_authenticate(user=self.student)
+
+        url = reverse('education:solution_comments', kwargs={'pk': self.solution.id})
+
+        data = {
+            'writed_by': "someone2",
+            'comment': "some comment",
+        }
+
+        response = client.post(url, data, format='json')
+        # self.assertEqual(len(response.data), 2)
+
+    def test_get(self):
+        client = APIClient()
+        client.force_authenticate(user=self.student)
+
+        url = reverse('education:solution_comments', kwargs={'pk': self.solution.id})
+        response = client.get(url)
+        self.assertEqual(len(response.data), 1)
 
 # class CourseAsignmentTests(TestCase):
 

@@ -5,6 +5,7 @@ from base_app.models import City, Company
 
 from hack_fmi.models import BaseUser
 from .validators import validate_mac, validate_github_url
+from .utils import get_comment_and_code
 
 
 class Student(BaseUser):
@@ -198,11 +199,41 @@ class Solution(models.Model):
     test_output = models.TextField(blank=True, null=True)
     return_code = models.IntegerField(blank=True, null=True)
 
+    def __str__(self):
+        return "Solution <id={}> for {}".format(self.id, self.task)
+
     def get_status(self):
         return Solution.STATUS_CHOICE[self.status][1]
 
     def get_assignment(self):
         return CourseAssignment.objects.get(user=self.student, course=self.task.course)
+
+
+class SolutionComment(models.Model):
+    STUDENT = 0
+    TEACHER = 1
+
+    WRITE_RIGHTS_CHOICES = (
+        (STUDENT, 'student'),
+        (TEACHER, 'teacher'),
+    )
+
+    writed_by = models.CharField(max_length=100, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    write_rights = models.SmallIntegerField(choices=WRITE_RIGHTS_CHOICES, default=STUDENT)
+    comment = models.TextField(blank=True, null=True)
+    solution = models.ForeignKey(Solution, blank=True, null=True)
+
+    def get_write_rights(self):
+        return SolutionComment.WRITE_RIGHTS_CHOICES[self.write_rights][1]
+
+    def save(self, *args, **kwargs):
+        # If the writer has selected code, add that code to his comment
+        # Example code selection: #5-#8
+        # TODO: Markup here?
+        self.comment = get_comment_and_code(self.comment)
+
+        super(SolutionComment, self).save(*args, **kwargs)
 
 
 class GraderRequest(models.Model):
