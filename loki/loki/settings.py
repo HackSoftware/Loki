@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
@@ -162,22 +161,3 @@ GRADER_GRADE_PATH = "/grade"
 GRADER_CHECK_PATH = "/check_result/{buildID}/"
 GRADER_GET_NONCE_PATH = "/nonce"
 POLLING_SLEEP_TIME = 1  # seconds
-
-# Celery settings
-
-BROKER_URL = 'amqp://guest:guest@localhost//'
-
-CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
-
-#: Only add pickle to this list if your broker is secured
-#: from unwanted access (see userguide/security.html)
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-
-CELERYBEAT_SCHEDULE = {
-    'retest-solutions-on-test-change': {
-        'task': 'education.tasks.check_for_retests',
-        'schedule': timedelta(minutes=1),
-    },
-}

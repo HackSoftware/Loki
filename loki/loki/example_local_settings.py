@@ -1,5 +1,7 @@
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+from datetime import timedelta
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -54,3 +56,22 @@ GRADER_ADDRESS = "http://IP_HERE"
 GRADER_API_KEY = ""
 
 GRADER_API_SECRET = ""
+
+# Celery settings
+
+BROKER_URL = 'amqp://guest:guest@localhost//'
+
+CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
+
+#: Only add pickle to this list if your broker is secured
+#: from unwanted access (see userguide/security.html)
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+CELERYBEAT_SCHEDULE = {
+    'retest-solutions-on-test-change': {
+        'task': 'education.tasks.check_for_retests',
+        'schedule': timedelta(minutes=1),
+    },
+}
