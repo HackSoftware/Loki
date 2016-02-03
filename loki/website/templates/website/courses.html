@@ -28,7 +28,11 @@
         {% for course in courses %}
           <div class="course-logo-container col-md-6">
             <a href="{{ course.url }}">
-              <i class="course-logo {{ course.logo }}"></i>
+              {% if course.custom_logo != "" %}
+                <img class="video-thumb" src="{{ MEDIA_URL }}{{ course.custom_logo }}">
+              {% else %}
+                <i class="course-logo {{ course.logo }}"></i>
+              {% endif %}
             </a>
             <h3>{{ course.course.name }}</h3>
             <a href="{{ course.url }}">
