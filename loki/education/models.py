@@ -153,12 +153,14 @@ class Solution(models.Model):
     RUNNING = 1
     OK = 2
     NOT_OK = 3
+    MISSING = 4
 
     STATUS_CHOICE = (
         (PENDING, 'pending'),
         (RUNNING, 'running'),
         (OK, 'ok'),
         (NOT_OK, 'not_ok'),
+        (MISSING, 'missing'),
     )
 
     task = models.ForeignKey(Task)
@@ -173,7 +175,11 @@ class Solution(models.Model):
     return_code = models.IntegerField(blank=True, null=True)
 
     def get_status(self):
-        return Solution.STATUS_CHOICE[self.status][1]
+        try:
+            status = Solution.STATUS_CHOICE[self.status][1]
+        except:
+            status = STATUS_CHOICE[MISSING][1]
+        return status
 
     def get_assignment(self):
         return CourseAssignment.objects.get(user=self.student, course=self.task.course)
