@@ -922,21 +922,20 @@ class SolutionCommentTests(TestCase):
             solution=self.solution
         )
 
-        # self.url = reverse('education:solution_comments')
-
     def test_create(self):
         client = APIClient()
-        client.force_authenticate(user=self.student)
+        client.force_authenticate(user=self.teacher)
 
         url = reverse('education:solution_comments', kwargs={'pk': self.solution.id})
-
         data = {
-            'writed_by': "someone2",
             'comment': "some comment",
         }
 
         response = client.post(url, data, format='json')
-        # self.assertEqual(len(response.data), 2)
+        self.assertEqual(response.status_code, 201)
+
+        comments = SolutionComment.objects.filter(solution_id=self.solution.id)
+        self.assertEqual(len(comments), 2)
 
     def test_get(self):
         client = APIClient()
@@ -944,7 +943,33 @@ class SolutionCommentTests(TestCase):
 
         url = reverse('education:solution_comments', kwargs={'pk': self.solution.id})
         response = client.get(url)
+
         self.assertEqual(len(response.data), 1)
+
+    def test_write_rights_for_teacher(self):
+        client = APIClient()
+        client.force_authenticate(user=self.teacher)
+
+        url = reverse('education:solution_comments', kwargs={'pk': self.solution.id})
+        data = {
+            'comment': "some comment",
+        }
+
+        response = client.post(url, data, format='json')
+        self.assertEqual(response.data["write_rights"], "teacher")
+
+    def test_write_rights_for_student(self):
+        client = APIClient()
+        client.force_authenticate(user=self.student)
+
+        url = reverse('education:solution_comments', kwargs={'pk': self.solution.id})
+        data = {
+            'comment': "some comment",
+        }
+
+        response = client.post(url, data, format='json')
+        self.assertEqual(response.data["write_rights"], "student")
+
 
 # class CourseAsignmentTests(TestCase):
 

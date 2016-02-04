@@ -4,8 +4,7 @@ from ckeditor.fields import RichTextField
 from base_app.models import City, Company
 
 from hack_fmi.models import BaseUser
-from .validators import validate_mac, validate_github_url
-from .utils import get_comment_and_code
+from .validators import validate_mac, validate_github_url, is_valid_code_selection
 
 
 class Student(BaseUser):
@@ -227,11 +226,56 @@ class SolutionComment(models.Model):
     def get_write_rights(self):
         return SolutionComment.WRITE_RIGHTS_CHOICES[self.write_rights][1]
 
+    def get_student_code(self, code_lines, code):
+        '''
+        Here we extract the student's code and return it so it can be added to the solution comment
+        There are two options:
+          - One row is given -> the code from that row should be returned
+          - Two rows -> all rows between the first and second row should be returned
+        '''
+
+        first_row = None
+        second_row = None
+        result = []
+
+        if len(code_lines) == 1:
+            # Reduce the value by one, because list indexes start from 0
+            first_row = int(code_lines[0][1:]) - 1
+            result.append(code.splitlines()[first_row])
+
+            return result
+
+        elif len(code_lines) == 2:
+            first_row = int(code_lines[0][1:]) - 1
+            # Since this is the upper limit of the range function, we don't substract 1
+            second_row = int(code_lines[1][1:])
+            for row in range(first_row, second_row):
+                result.append(code.splitlines()[row])
+
+            return result
+
+        else:
+            # TODO: Return valid error or raise exception?
+            return result
+
+    def get_comment_and_code(self, comment):
+        result = []
+        comment_lines = comment.splitlines()
+
+        for line in comment_lines:
+            result.append(line)
+            line = line.strip()
+            if line.startswith("#") and is_valid_code_selection(line):
+                code_lines = line.split("-")
+                result.append("\n".join(self.get_student_code(code_lines, self.solution.code)))
+
+        return "\n".join(result)
+
     def save(self, *args, **kwargs):
         # If the writer has selected code, add that code to his comment
         # Example code selection: #5-#8
         # TODO: Markup here?
-        self.comment = get_comment_and_code(self.comment)
+        self.comment = self.get_comment_and_code(self.comment)
 
         super(SolutionComment, self).save(*args, **kwargs)
 

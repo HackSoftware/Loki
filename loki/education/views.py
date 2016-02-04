@@ -235,12 +235,9 @@ class StudentSolutionsList(generics.ListAPIView):
 class SolutionComments(
         mixins.ListModelMixin,
         mixins.CreateModelMixin,
-        mixins.UpdateModelMixin,
-        mixins.DestroyModelMixin,
         generics.GenericAPIView):
     serializer_class = SolutionCommentSerializer
-    # permission_classes = (IsAuthenticated,)
-    # filter_fields = ('solution__id',)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
@@ -253,10 +250,21 @@ class SolutionComments(
         return SolutionComment.objects.filter(solution__id=solution_id)
 
     def perform_create(self, serializer):
-        # Check if student or teacher?
-        # Add writed_by and write_rights
-        # Finish the tests
-        serializer.save()
+        solution_id = self.kwargs['pk']
+        solution = get_object_or_404(Solution, id=solution_id)
+
+        # TODO: This can be done better?
+        if self.request.user.get_teacher():
+            serializer.save(
+                writed_by=self.request.user.full_name,
+                write_rights=1,
+                solution=solution
+            )
+        elif self.request.user.get_student():
+            serializer.save(
+                writed_by=self.request.user.full_name,
+                solution=solution
+            )
 
 
 class SolutionsAPI(
