@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseNotAllowed
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
@@ -235,6 +235,8 @@ class StudentSolutionsList(generics.ListAPIView):
 class SolutionComments(
         mixins.ListModelMixin,
         mixins.CreateModelMixin,
+        mixins.UpdateModelMixin,
+        mixins.DestroyModelMixin,
         generics.GenericAPIView):
     serializer_class = SolutionCommentSerializer
     permission_classes = (IsAuthenticated,)
@@ -265,6 +267,18 @@ class SolutionComments(
                 writed_by=self.request.user.full_name,
                 solution=solution
             )
+
+    def patch(self, request, *args, **kwargs):
+        if self.request.user.get_teacher():
+            return self.update(request, *args, **kwargs)
+        return HttpResponseNotAllowed('Only teachers are allowed to edit their comments')
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def perform_destroy(self, instance):
+        instance.is_deleted = True
+        instance.save()
 
 
 class SolutionsAPI(

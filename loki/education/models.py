@@ -5,6 +5,7 @@ from base_app.models import City, Company
 
 from hack_fmi.models import BaseUser
 from .validators import validate_mac, validate_github_url, is_valid_code_selection
+from .exceptions import CodeSelectionError
 
 
 class Student(BaseUser):
@@ -221,6 +222,7 @@ class SolutionComment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     write_rights = models.SmallIntegerField(choices=WRITE_RIGHTS_CHOICES, default=STUDENT)
     comment = models.TextField(blank=True, null=True)
+    is_deleted = models.BooleanField(default=False)
     solution = models.ForeignKey(Solution, blank=True, null=True)
 
     def get_write_rights(self):
@@ -238,10 +240,17 @@ class SolutionComment(models.Model):
         second_row = None
         result = []
 
+        # Check if there is any code:
+        if self.solution.code is None:
+            raise ValueError("There is no present code for this solution")
+
         if len(code_lines) == 1:
             # Reduce the value by one, because list indexes start from 0
             first_row = int(code_lines[0][1:]) - 1
-            result.append(code.splitlines()[first_row])
+            try:
+                result.append(code.splitlines()[first_row])
+            except:
+                raise CodeSelectionError(first_row + 1)
 
             return result
 
@@ -249,9 +258,11 @@ class SolutionComment(models.Model):
             first_row = int(code_lines[0][1:]) - 1
             # Since this is the upper limit of the range function, we don't substract 1
             second_row = int(code_lines[1][1:])
-            for row in range(first_row, second_row):
-                result.append(code.splitlines()[row])
-
+            try:
+                for row in range(first_row, second_row):
+                    result.append(code.splitlines()[row])
+            except:
+                raise CodeSelectionError(row + 1)
             return result
 
         else:

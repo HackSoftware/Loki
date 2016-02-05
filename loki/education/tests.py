@@ -9,6 +9,7 @@ from base_app.models import City
 from education.models import (Student, Certificate, CheckIn, Course, Lecture, Teacher,
                               CourseAssignment, StudentNote, WorkingAt, Task, Solution,
                               Test, ProgrammingLanguage, GraderRequest, SolutionComment)
+from education.exceptions import CodeSelectionError
 from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
@@ -914,6 +915,7 @@ class SolutionCommentTests(TestCase):
             student=self.student,
             task=self.task,
             url='https://github.com/lqdsadaslsq/solution.py',
+            code="asd",
         )
 
         self.solution_comment = SolutionComment.objects.create(
@@ -946,6 +948,47 @@ class SolutionCommentTests(TestCase):
 
         self.assertEqual(len(response.data), 1)
 
+    def test_delete(self):
+        client = APIClient()
+        client.force_authenticate(user=self.student)
+
+        url = reverse('education:solution_comments', kwargs={'pk': self.solution.id})
+
+        response = client.delete(url)
+        self.assertEqual(response.status_code, 204)
+
+        solution_comment = SolutionComment.objects.get(id=1)
+        self.assertTrue(solution_comment.is_deleted)
+
+    def test_patch_for_teacher(self):
+        client = APIClient()
+        client.force_authenticate(user=self.teacher)
+
+        solution_comment = SolutionComment.objects.get(id=1)
+        url = reverse('education:solution_comments', kwargs={'pk': self.solution.id})
+
+        data = {
+            'comment': "updated comment",
+        }
+
+        response = client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, 200)
+
+        self.assertNotEqual(response.data["comment"], solution_comment.comment)
+
+    def test_patch_for_student(self):
+        client = APIClient()
+        client.force_authenticate(user=self.student)
+
+        url = reverse('education:solution_comments', kwargs={'pk': self.solution.id})
+
+        data = {
+            'comment': "updated comment",
+        }
+
+        response = client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, 405)
+
     def test_write_rights_for_teacher(self):
         client = APIClient()
         client.force_authenticate(user=self.teacher)
@@ -969,6 +1012,37 @@ class SolutionCommentTests(TestCase):
 
         response = client.post(url, data, format='json')
         self.assertEqual(response.data["write_rights"], "student")
+
+    def test_code_selection(self):
+        client = APIClient()
+        client.force_authenticate(user=self.student)
+
+        url = reverse('education:solution_comments', kwargs={'pk': self.solution.id})
+        data = {
+            'comment': "some comment \n #1",
+        }
+
+        response = client.post(url, data, format='json')
+
+        self.assertNotEqual(response.data["comment"], self.solution_comment.comment)
+
+    def test_selecting_unexisting_row(self):
+        client = APIClient()
+        client.force_authenticate(user=self.student)
+
+        url = reverse('education:solution_comments', kwargs={'pk': self.solution.id})
+
+        with self.assertRaises(CodeSelectionError):
+            data = {
+                'comment': "some comment \n #5",
+            }
+            client.post(url, data, format='json')
+
+        with self.assertRaises(CodeSelectionError):
+            data = {
+                'comment': "some comment \n #1-#5",
+            }
+            client.post(url, data, format='json')
 
 
 # class CourseAsignmentTests(TestCase):
