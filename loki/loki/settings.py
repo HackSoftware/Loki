@@ -146,6 +146,7 @@ SUIT_CONFIG = {
     'MENU_OPEN_FIRST_CHILD': True,  # Default True
     'MENU_EXCLUDE': ('auth.group',),
     'MENU': (
+        {'app': 'website', 'icon': 'icon-cog'},
         {'app': 'education', 'icon': 'icon-pencil'},
         {'app': 'hack_conf', 'icon': 'icon-briefcase'},
         {'app': 'hack_fmi', 'icon': 'icon-certificate'},

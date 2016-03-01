@@ -19,6 +19,19 @@ admin.site.register(Snippet, SnippetAdmin)
 
 
 class CourseDescriptionAdmin(admin.ModelAdmin):
-    pass
+    list_display = [
+        'id',
+        'course',
+        'logo',
+        'course_intensity',
+        'course_days',
+    ]
+
+    list_filter = [
+        'course_intensity',
+        'course_days',
+    ]
+
+    search_fields = ['course']
 
 admin.site.register(CourseDescription, CourseDescriptionAdmin)

@@ -148,7 +148,7 @@ class TaskAdmin(admin.ModelAdmin):
         'week',
     ]
 
-    search_fields = ['course', 'name', 'week']
+    search_fields = ['course__name', 'name', 'week']
 
 admin.site.register(Task, TaskAdmin)
 
@@ -208,13 +208,14 @@ class SolutionAdmin(admin.ModelAdmin):
         'student',
         'get_solution_course',
         'url',
+        'status'
     ]
 
     list_filter = [
         'task',
     ]
 
-    search_fields = ['task', 'student', 'URL_VALIDATOR_USER_AGENT = ''']
+    search_fields = ['id', 'task__name', 'student__first_name']
 
 admin.site.register(Solution, SolutionAdmin)
 
