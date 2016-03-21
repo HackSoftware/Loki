@@ -141,6 +141,8 @@ class TaskAdmin(admin.ModelAdmin):
         'name',
         'course',
         'week',
+        'gradable',
+        'submited_solutions'
     ]
 
     list_filter = [
@@ -149,6 +151,9 @@ class TaskAdmin(admin.ModelAdmin):
     ]
 
     search_fields = ['course__name', 'name', 'week']
+
+    def submited_solutions(self, task):
+        return len(task.solution_set.all())
 
 admin.site.register(Task, TaskAdmin)
 
@@ -200,6 +205,22 @@ class SolutionAdmin(admin.ModelAdmin):
         return obj.task.course
     get_solution_course.short_description = "Course"
     get_solution_course.admin_order_field = "task__course"
+
+    list_filter = [
+        'status'
+    ]
+
+    readonly_fields = [
+        'task',
+        'student',
+        'url',
+        'code',
+        'build_id',
+        'check_status_location',
+        'status',
+        'test_output',
+        'return_code',
+    ]
 
     list_display = [
         'id',
