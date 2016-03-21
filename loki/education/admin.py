@@ -208,7 +208,6 @@ class SolutionAdmin(admin.ModelAdmin):
         'student',
         'get_solution_course',
         'url',
-        'status'
     ]
 
     list_filter = [

@@ -758,7 +758,7 @@ class SolutionsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
 
-    def test_post_solutions(self):
+    def test_post_solution_for_ungradable_task(self):
         logged_student = self.student2
         self.client = APIClient()
         self.client.force_authenticate(user=logged_student)
@@ -766,14 +766,15 @@ class SolutionsTests(TestCase):
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'https://github.com/lolo/solution.py',
-            'code': None
+            'url': 'https://github.com/lolo/solution.py'
         }
 
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 201)  # 201 Created
+        expected = Solution.STATUS_CHOICE[Solution.SUBMITTED_WITHOUT_GRADING][1]
+        self.assertEqual(expected, response.data['status'])
 
-    def test_post_incorrect_code_solution(self):
+    def test_post_solution_for_ungradable_task_for_non_existing_task(self):
         logged_student = self.student2
         self.client = APIClient()
         self.client.force_authenticate(user=logged_student)
@@ -788,9 +789,9 @@ class SolutionsTests(TestCase):
         }
 
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 404)
 
-    def test_post_solution_with_incorrect_github_url(self):
+    def test_post_solution_for_ungradable_test_with_incorrect_github_url(self):
         logged_student = self.student2
         self.client = APIClient()
         self.client.force_authenticate(user=logged_student)
@@ -798,8 +799,7 @@ class SolutionsTests(TestCase):
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'sdsadqweqwesda',
-            'code': None,
+            'url': 'sdsadqweqwesda'
         }
 
         response = self.client.post(url, data, format='json')
@@ -808,8 +808,7 @@ class SolutionsTests(TestCase):
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'https://docs.angularjs.org/api/ng/directive/select',
-            'code': None,
+            'url': 'https://docs.angularjs.org/api/ng/directive/select'
         }
 
         response = self.client.post(url, data, format='json')
@@ -818,11 +817,26 @@ class SolutionsTests(TestCase):
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'https://github.com/HackBulgaria/Programming101-Python',
-            'code': None,
+            'url': 'https://github.com/HackBulgaria/Programming101-Python'
         }
 
         response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_post_solution_for_ungradable_task_without_url(self):
+        logged_student = self.student2
+        self.client = APIClient()
+        self.client.force_authenticate(user=logged_student)
+
+        url = reverse('education:solution')
+
+        data = {
+            'task': self.task_with_no_solutions.id,
+            'code': 'asdafasda'
+        }
+
+        response = self.client.post(url, data, format='json')
+
         self.assertEqual(response.status_code, 400)
 
     def test_post_solutions_filter(self):
@@ -1033,7 +1047,6 @@ class TestSolutionTests(TestCase):
     #     self.assertEqual(solution.student, self.student)
     #     self.assertIsNotNone(solution.build_id)
     #     self.assertIsNotNone(solution.check_status_location)
-
 
     # def test_solution_status(self):
     #     self.client = APIClient()

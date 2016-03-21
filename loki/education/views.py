@@ -245,11 +245,22 @@ class SolutionsAPI(
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
+    ''' Pre-create validations
+    '''
     def post(self, request, *args, **kwargs):
-        # Solutions without code or url are not accepted
         data = request.data
-        if data["url"] is None and data["code"] is None:
+
+        ''' Solutions without code or url are not accepted
+        '''
+        if data.get('url', None) is None and data.get('code', None) is None:
             return HttpResponseBadRequest('url or code should be given.')
+
+        ''' If task is not gradable, we should have url
+        '''
+        task = get_object_or_404(Task, pk=data['task'])
+
+        if not task.gradable and data.get('url', None) is None:
+            return HttpResponseBadRequest('Non-gradable tasks require GitHub url')
 
         return self.create(request, *args, **kwargs)
 
@@ -257,6 +268,9 @@ class SolutionsAPI(
         solution = serializer.save(student=self.request.user.get_student())
 
         if solution.task.gradable:
+            solution.status = Solution.SUBMITED
+            solution.save()
+
             solution_id = solution.id
             submit_solution.delay(solution_id)
 

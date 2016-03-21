@@ -179,6 +179,7 @@ class Solution(models.Model):
     NOT_OK = 3
     SUBMITED = 4
     MISSING = 5
+    SUBMITTED_WITHOUT_GRADING = 6
 
     STATUS_CHOICE = (
         (PENDING, 'pending'),
@@ -186,7 +187,8 @@ class Solution(models.Model):
         (OK, 'ok'),
         (NOT_OK, 'not_ok'),
         (SUBMITED, 'submitted'),
-        (MISSING, 'missing')
+        (MISSING, 'missing'),
+        (SUBMITTED_WITHOUT_GRADING, 'submitted_without_grading'),
     )
 
     task = models.ForeignKey(Task)
@@ -196,7 +198,7 @@ class Solution(models.Model):
     build_id = models.IntegerField(blank=True, null=True)
     check_status_location = models.CharField(max_length=128, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=SUBMITED)
+    status = models.SmallIntegerField(choices=STATUS_CHOICE, default=SUBMITTED_WITHOUT_GRADING)
     test_output = models.TextField(blank=True, null=True)
     return_code = models.IntegerField(blank=True, null=True)
 
