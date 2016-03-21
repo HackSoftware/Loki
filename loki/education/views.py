@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
+from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
@@ -253,14 +254,14 @@ class SolutionsAPI(
         ''' Solutions without code or url are not accepted
         '''
         if data.get('url', None) is None and data.get('code', None) is None:
-            return HttpResponseBadRequest('url or code should be given.')
+            raise serializers.ValidationError('Either url or code should be given.')
 
         ''' If task is not gradable, we should have url
         '''
         task = get_object_or_404(Task, pk=data['task'])
 
         if not task.gradable and data.get('url', None) is None:
-            return HttpResponseBadRequest('Non-gradable tasks require GitHub url')
+            raise serializers.ValidationError('Non-gradable tasks require GitHub url')
 
         return self.create(request, *args, **kwargs)
 
