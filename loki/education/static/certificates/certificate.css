@@ -53,6 +53,7 @@ a:hover {
     margin-top: 50px;
     display: inline;
     color: #FFF;
+    vertical-align: top;
 }
 
 #projects > div, #github-statistics > div {
@@ -60,7 +61,8 @@ a:hover {
 }
 
 #logo {
-    width: 70%;
+    width: 700px;
+    margin-top: 30px;
 }
 
 legend {
@@ -97,4 +99,37 @@ legend {
 
 .code-not-sent {
     color: #AD1E17;
+}
+
+.subtext{
+    color:#000;
+    display:inline-block;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+
+.tasks_field{
+    margin-top:40px;
+    margin-bottom:50px;
+}
+
+.lectors-signatures{
+    margin-top:20px;
+    margin-bottom:50px;
+    padding-left:30px;
+    padding-right:30px;
+}
+
+.lectors-signatures:after{
+    content:"";
+    display:block;
+    clear:both;
+}
+
+.teacher{
+    float:right;
+}
+
+.teacher .signature img{
+    width:100px;
 }

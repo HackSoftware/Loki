@@ -24,10 +24,35 @@
             <p id="name"><a href="{{ student.github_account }}">{{ student.full_name }}</a></p>
         </div>
 
-        <div>
+        <div class="tasks_field">
+            {% if problems %}
+            <fieldset id="projects">
+                <legend>Graded Problems</legend>
+                {% if projects and problems %}
+                    <span class="subtext">Problems that are automatically graded</span>
+                {% endif %}
+                {% for task in problems %}
+                <div>
+                    <a href="{{ task.description }}" target="_blank">Week {{ task.week }}
+                            {{ task.name }}
+                        </a> -
+                        {% if task.solution %}
+                            <a class="code-sent" href="{{ task.solution.url }}">Source Link
+                            </a>
+                        {% else %}
+                            <span class="code-not-sent">Not sent</span>
+                        {% endif %}
+                </div>
+                {% endfor %}
+            </fieldset>
+            {% endif %}
+            {% if projects %}
             <fieldset id='projects'>
                 <legend>Projects:</legend>
-                    {% for task in tasks %}
+                    {% if projects and problems %}
+                        <span class="subtext">Bigger projects that cannot be graded</span>
+                    {% endif %}
+                    {% for task in projects %}
                     <div>
                         <a href="{{ task.description }}" target="_blank">Week {{ task.week }}
                             {{ task.name }}
@@ -41,6 +66,18 @@
                     </div>
                     {% endfor %}     
             </fieldset>
+            {% endif %}
+        </div>
+
+        <div class="lectors-signatures">
+            {% for teacher in teachers %}
+            <div class="teacher">
+                <div class="signature">
+                    <img src="{{MEDIA_URL}}{{teacher.signature}}">
+                </div>
+                <div>/{{teacher.first_name}} {{teacher.last_name}}/</div>
+            </div>
+            {% endfor %}
         </div>
 
     <div id="fb-root"></div>

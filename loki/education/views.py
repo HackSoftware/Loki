@@ -287,6 +287,11 @@ def certificate(request, pk):
     course = ca.course
 
     tasks = Task.objects.filter(course=ca.course)
+
+    projects = tasks.filter(gradable=False)
+    problems = tasks.filter(gradable=True)
+    teachers = course.teacher_set.all()
+
     solutions = Solution.objects.filter(task__in=tasks, student=ca.user)
     percent_awesome = round((solutions.count() / tasks.count()) * 100, 2)
 
