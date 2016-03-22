@@ -12,7 +12,7 @@ class CertificateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Certificate
-        fields = ('id',)
+        fields = ('token',)
 
 
 class SolutionStatusSerializer(serializers.ModelSerializer):

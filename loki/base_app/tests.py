@@ -143,8 +143,8 @@ class PersonalUserInformationTests(TestCase):
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
-        certificate_id = response.data['student']['courseassignment_set'][0]['certificate']['id']
-        self.assertEqual(certificate_id, self.certificate.id)
+        certificate_token = response.data['student']['courseassignment_set'][0]['certificate']['token']
+        self.assertEqual(certificate_token, str(self.certificate.token))
 
     def test_baseuser_update(self):
         self.client = APIClient()
