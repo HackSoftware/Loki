@@ -881,7 +881,7 @@ class SolutionsTests(TestCase):
 
     def test_certificate(self):
         c = Client()
-        url = reverse('education:certificate', kwargs={'pk': self.certificate.id})
+        url = reverse('education:certificate', kwargs={'token': self.certificate.token})
         response = c.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Source Link')
