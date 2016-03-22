@@ -306,7 +306,9 @@ def certificate(request, token):
             solved_projects_count += 1
 
     for problem in problems:
-        if problem.solution_set.last().status == 'ok':
+        current_solutions = problem.solution_set.all()
+
+        if current_solutions.count() > 0 and current_solutions.last().status == 'ok':
             solved_problems_count += 1
 
     total = solved_problems_count + solved_projects_count
