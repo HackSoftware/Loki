@@ -1,10 +1,12 @@
 from PIL import Image
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 from education.models import CheckIn, Student, GraderRequest
 import os
 import time
 import hmac
 import hashlib
+import requests
 
 
 def crop_image(x1, y1, x2, y2, path):
@@ -40,7 +42,8 @@ def get_and_update_req_nonce(req_and_resource):
 
     if request is not None:
         nonce = request.nonce
-        request.nonce += 1
+        nonce += 1
+        request.nonce = nonce
         request.save()
         return str(nonce)
     else:
@@ -63,3 +66,19 @@ def generate_grader_headers(body, req_and_resource):
                        'X-Nonce-Number': nonce}
 
     return request_headers
+
+
+def get_solution_code(url):
+    # Create raw github url
+    raw_solution_url = "/".join(
+        [x for x in url.split("/") if x != "blob"]).replace(
+        "github", "raw.githubusercontent")
+
+    r = requests.get(raw_solution_url)
+    return r.text
+
+
+def update_req_and_resource_nonce(req_and_resource, nonce):
+    grader_request = get_object_or_404(GraderRequest, request_info=req_and_resource)
+    grader_request.nonce = nonce
+    grader_request.save()

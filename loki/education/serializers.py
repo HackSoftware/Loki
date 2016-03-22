@@ -23,29 +23,6 @@ class SolutionStatusSerializer(serializers.ModelSerializer):
         fields = ('status', 'test_output', 'return_code')
 
     def get_status(self, obj):
-        path = '/check_result/{}/'.format(obj.build_id)
-        req_and_resource = "GET {}".format(path)
-
-        headers = generate_grader_headers(path, req_and_resource)
-        url = obj.check_status_location
-
-        r = requests.get(url, headers=headers)
-
-        if r.status_code == 204:
-            obj.status = Solution.PENDING
-        elif r.status_code == 200:
-            data = r.json()
-
-            if data['result_status'] == 'ok':
-                obj.status = Solution.OK
-            elif data['result_status'] == 'not_ok':
-                obj.status = Solution.NOT_OK
-
-            obj.test_output = data['output']
-            obj.return_code = data['returncode']
-
-        obj.save()
-
         return obj.get_status()
 
 

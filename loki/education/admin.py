@@ -5,7 +5,7 @@ from django.contrib import admin, messages
 from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
                      WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test,
-                     GraderRequest)
+                     GraderRequest, RetestSolution)
 
 
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -141,6 +141,8 @@ class TaskAdmin(admin.ModelAdmin):
         'name',
         'course',
         'week',
+        'gradable',
+        'submited_solutions'
     ]
 
     list_filter = [
@@ -149,6 +151,9 @@ class TaskAdmin(admin.ModelAdmin):
     ]
 
     search_fields = ['course__name', 'name', 'week']
+
+    def submited_solutions(self, task):
+        return len(task.solution_set.all())
 
 admin.site.register(Task, TaskAdmin)
 
@@ -201,12 +206,29 @@ class SolutionAdmin(admin.ModelAdmin):
     get_solution_course.short_description = "Course"
     get_solution_course.admin_order_field = "task__course"
 
-    list_display = [
+    list_filter = [
+        'status'
+    ]
+
+    readonly_fields = [
         'task',
+        'student',
+        'url',
+        'code',
+        'build_id',
+        'check_status_location',
+        'status',
+        'test_output',
+        'return_code',
+    ]
+
+    list_display = [
+        'id',
+        'task',
+        'status',
         'student',
         'get_solution_course',
         'url',
-        'status'
     ]
 
     list_filter = [
@@ -235,3 +257,22 @@ class GraderRequestAdmin(admin.ModelAdmin):
     search_fields = ['nonce']
 
 admin.site.register(GraderRequest, GraderRequestAdmin)
+
+
+class RetestSolutionAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'id',
+        'status',
+        'date',
+        'test_id',
+        'tested_solutions_count',
+    ]
+
+    list_filter = [
+        'status',
+    ]
+
+    search_fields = ['test_id']
+
+admin.site.register(RetestSolution, RetestSolutionAdmin)

@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'adminsortable2',
     'django_resized',
     'import_export',
+    'djcelery',
 
     'hack_fmi',
     'base_app',
@@ -155,3 +156,9 @@ SUIT_CONFIG = {
     # misc
     'LIST_PER_PAGE': 100
 }
+
+
+GRADER_GRADE_PATH = "/grade"
+GRADER_CHECK_PATH = "/check_result/{buildID}/"
+GRADER_GET_NONCE_PATH = "/nonce"
+POLLING_SLEEP_TIME = 1  # seconds

@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
+from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
@@ -15,7 +16,7 @@ from base_app.models import City, Company
 from .premissions import IsStudent, IsTeacher, IsTeacherForCA
 
 from .models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
-                     Task, Solution, Certificate, Test)
+                     Task, Solution, Certificate)
 
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
@@ -23,11 +24,8 @@ from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer,
                           SolutionStatusSerializer)
 
-from education.helper import (check_macs_for_student, mac_is_used_by_another_student,
-                              generate_grader_headers)
-
-import requests
-import json
+from education.helper import (check_macs_for_student, mac_is_used_by_another_student)
+from .tasks import submit_solution
 
 
 @csrf_exempt
@@ -248,11 +246,22 @@ class SolutionsAPI(
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
+    ''' Pre-create validations
+    '''
     def post(self, request, *args, **kwargs):
-        # Solutions without code or url are not accepted
         data = request.data
-        if data["url"] is None and data["code"] is None:
-            return HttpResponseBadRequest('url or code should be given.')
+
+        ''' Solutions without code or url are not accepted
+        '''
+        if data.get('url', None) is None and data.get('code', None) is None:
+            raise serializers.ValidationError('Either url or code should be given.')
+
+        ''' If task is not gradable, we should have url
+        '''
+        task = get_object_or_404(Task, pk=data['task'])
+
+        if not task.gradable and data.get('url', None) is None:
+            raise serializers.ValidationError('Non-gradable tasks require GitHub url')
 
         return self.create(request, *args, **kwargs)
 
@@ -260,50 +269,15 @@ class SolutionsAPI(
         solution = serializer.save(student=self.request.user.get_student())
 
         if solution.task.gradable:
-            self.send_to_grader(solution)
+            solution.status = Solution.SUBMITED
+            solution.save()
+
+            solution_id = solution.id
+            submit_solution.delay(solution_id)
 
     def get_queryset(self):
         student = self.request.user.get_student()
         return student.solution_set
-
-    def send_to_grader(self, solution):
-        solution_code = self.get_solution_code(solution)
-
-        data = {
-            "test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
-            "language": solution.task.test.language.name,
-            "code": solution_code,
-            "test": solution.task.test.code,
-        }
-
-        address = settings.GRADER_ADDRESS
-        path = "/grade"
-        url = address + path
-
-        req_and_resource = "POST {}".format(path)
-
-        headers = generate_grader_headers(json.dumps(data), req_and_resource)
-        r = requests.post(url, json=data, headers=headers)
-
-        if r.status_code == 202:
-            solution.build_id = r.json()['run_id']
-            solution.check_status_location = r.headers['Location']
-            solution.save()
-        else:
-            raise Exception(r.text)
-
-    def get_solution_code(self, solution):
-        if solution.code is not None:
-            return solution.code
-        # Create raw github url
-        url = "/".join(
-            [x for x in solution.url.split("/") if x != "blob"]).replace(
-            "github", "raw.githubusercontent")
-        # Extract the code
-        r = requests.get(url)
-        solution.code = r.text
-        solution.save()
-        return r.text
 
 
 def certificate(request, pk):
