@@ -289,26 +289,35 @@ def certificate(request, token):
     ca = certificate.assignment
     student = ca.user
     course = ca.course
+    teachers = course.teacher_set.all()
 
     tasks = Task.objects.filter(course=ca.course)
+    solutions = Solution.objects.filter(task__in=tasks, student=ca.user)
+    task_to_solution = {solution.task: solution for solution in solutions}
 
     projects = tasks.filter(gradable=False)
     problems = tasks.filter(gradable=True)
-    teachers = course.teacher_set.all()
 
-    solutions = Solution.objects.filter(task__in=tasks, student=ca.user)
-    percent_awesome = round((solutions.count() / tasks.count()) * 100, 2)
-
-    projects_solutions = {solution.task: solution for solution in solutions}
+    solved_projects_count = 0
+    solved_problems_count = 0
 
     for project in projects:
-        if project in projects_solutions:
-            project.solution = projects_solutions[project]
-
-    problems_solutions = {solution.task: solution for solution in solutions}
+        if project.solution_set.count() >= 0:
+            solved_projects_count += 1
 
     for problem in problems:
-        if problem in problems_solutions:
-            problem.solution = problems_solutions[problem]
+        if problem.solution_set.last().status == 'ok':
+            solved_problems_count += 1
+
+    total = solved_problems_count + solved_projects_count
+    percent_awesome = round((total / tasks.count()) * 100, 2)
+
+    for project in projects:
+        if project in task_to_solution:
+            project.solution = task_to_solution[project]
+
+    for problem in problems:
+        if problem in task_to_solution:
+            problem.solution = task_to_solution[problem]
 
     return render(request, "certificate.html", locals())
