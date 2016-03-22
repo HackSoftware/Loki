@@ -280,8 +280,12 @@ class SolutionsAPI(
         return student.solution_set
 
 
-def certificate(request, pk):
-    certificate = get_object_or_404(Certificate, id=pk)
+def certificate_old(request, pk):
+    return render(request, "certificate_old.html", locals())
+
+
+def certificate(request, token):
+    certificate = get_object_or_404(Certificate, token=token)
     ca = certificate.assignment
     student = ca.user
     course = ca.course
