@@ -6,6 +6,8 @@ from base_app.models import City, Company
 from hack_fmi.models import BaseUser
 from .validators import validate_mac, validate_github_url
 
+import uuid
+
 
 class Student(BaseUser):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
@@ -20,6 +22,7 @@ class Student(BaseUser):
 class Teacher(BaseUser):
     mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
     phone = models.CharField(null=True, blank=True, max_length=20)
+    signature = models.ImageField(upload_to="teachers_signatures", null=True, blank=True)
     teached_courses = models.ManyToManyField('Course')
 
 
@@ -234,3 +237,4 @@ class WorkingAt(models.Model):
 
 class Certificate(models.Model):
     assignment = models.OneToOneField(CourseAssignment)
+    token = models.CharField(default=uuid.uuid4, unique=True, max_length=110)

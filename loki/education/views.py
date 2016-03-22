@@ -280,20 +280,35 @@ class SolutionsAPI(
         return student.solution_set
 
 
-def certificate(request, pk):
-    certificate = get_object_or_404(Certificate, id=pk)
+def certificate_old(request, pk):
+    return render(request, "certificate_old.html", locals())
+
+
+def certificate(request, token):
+    certificate = get_object_or_404(Certificate, token=token)
     ca = certificate.assignment
     student = ca.user
     course = ca.course
 
     tasks = Task.objects.filter(course=ca.course)
+
+    projects = tasks.filter(gradable=False)
+    problems = tasks.filter(gradable=True)
+    teachers = course.teacher_set.all()
+
     solutions = Solution.objects.filter(task__in=tasks, student=ca.user)
     percent_awesome = round((solutions.count() / tasks.count()) * 100, 2)
 
-    tasks_solutions = {solution.task: solution for solution in solutions}
+    projects_solutions = {solution.task: solution for solution in solutions}
 
-    for task in tasks:
-        if task in tasks_solutions:
-            task.solution = tasks_solutions[task]
+    for project in projects:
+        if project in projects_solutions:
+            project.solution = projects_solutions[project]
+
+    problems_solutions = {solution.task: solution for solution in solutions}
+
+    for problem in problems:
+        if problem in problems_solutions:
+            problem.solution = problems_solutions[problem]
 
     return render(request, "certificate.html", locals())

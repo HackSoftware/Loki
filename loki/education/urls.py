@@ -20,5 +20,6 @@ urlpatterns = [
     url(r'^api/solution/(?P<pk>[0-9]+)/$', SolutionsAPI.as_view(),  name='solution_edit'),
     url(r'^api/solution-status/(?P<pk>[0-9]+)/$', SolutionStatusAPI.as_view(), name='solution_status'),
     url(r'^api/student-solutions/$', StudentSolutionsList.as_view(), name='student_solutions'),
-    url(r'^certificate/(?P<pk>[0-9]+)/$', certificate, name='certificate'),
+    url(r'^certificate/(?P<pk>[0-9]+)/$', certificate_old, name='certificate_old'),
+    url(r'^certificate/(?P<token>[\w|-]+)/$', certificate, name='certificate'),
 ]
