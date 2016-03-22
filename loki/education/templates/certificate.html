@@ -71,12 +71,14 @@
 
         <div class="lectors-signatures">
             {% for teacher in teachers %}
-            <div class="teacher">
-                <div class="signature">
-                    <img src="{{MEDIA_URL}}{{teacher.signature}}">
-                </div>
-                <div>/{{teacher.first_name}} {{teacher.last_name}}/</div>
-            </div>
+                {% if teacher.signature %}
+                    <div class="teacher">
+                        <div class="signature">
+                            <img src="{{MEDIA_URL}}{{teacher.signature}}">
+                        </div>
+                        <div>/{{teacher.first_name}} {{teacher.last_name}}/</div>
+                    </div>
+                {% endif %}
             {% endfor %}
         </div>
 
