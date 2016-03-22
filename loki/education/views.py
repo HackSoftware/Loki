@@ -295,10 +295,16 @@ def certificate(request, pk):
     solutions = Solution.objects.filter(task__in=tasks, student=ca.user)
     percent_awesome = round((solutions.count() / tasks.count()) * 100, 2)
 
-    tasks_solutions = {solution.task: solution for solution in solutions}
+    projects_solutions = {solution.task: solution for solution in solutions}
 
-    for task in tasks:
-        if task in tasks_solutions:
-            task.solution = tasks_solutions[task]
+    for project in projects:
+        if project in projects_solutions:
+            project.solution = projects_solutions[project]
+
+    problems_solutions = {solution.task: solution for solution in solutions}
+
+    for problem in problems:
+        if problem in problems_solutions:
+            problem.solution = problems_solutions[problem]
 
     return render(request, "certificate.html", locals())
