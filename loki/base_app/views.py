@@ -4,10 +4,8 @@ from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import generics
-from base_app.models import Event, Ticket
 
-from base_app.serializers import (BaseUserMeSerializer, UpdateBaseUserSerializer,
-                                  EventSerializer, TicketSerializer)
+from base_app.serializers import (BaseUserMeSerializer, UpdateBaseUserSerializer)
 from hack_fmi.models import BaseUser
 
 from .helper import crop_image
@@ -36,45 +34,6 @@ def baseuser_update(request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=400)
-
-
-class EventAPI(generics.ListAPIView):
-    model = Event
-    queryset = Event.objects.all()
-    serializer_class = EventSerializer
-
-
-class TicketAPI(mixins.ListModelMixin,
-                mixins.CreateModelMixin,
-                mixins.DestroyModelMixin,
-                generics.GenericAPIView):
-
-    model = Ticket
-    queryset = Ticket.objects.all()
-    serializer_class = TicketSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-
-    def perform_create(self, serializer):
-        serializer.save(base_user=self.request.user)
-
-    def get_queryset(self):
-        user = self.request.user
-        return Ticket.objects.filter(base_user=user)
-
-
-@api_view(['GET'])
-def get_number_of_sold_tickets(request):
-    users = BaseUser.objects.filter(ticket__isnull=False)
-    return Response({'item': [{"value": users.count()}]}, status=status.HTTP_200_OK)
 
 
 @api_view(['PATCH'])

@@ -5,7 +5,6 @@ from post_office import mail
 from post_office.models import EmailTemplate
 from rest_framework import status
 from rest_framework.test import APIClient
-from base_app.models import Event, Ticket
 
 from hack_fmi.models import BaseUser, Skill, Team
 from .models import City
@@ -120,6 +119,7 @@ class PersonalUserInformationTests(TestCase):
         self.city = City.objects.create(
             name="Sofia"
         )
+
     def test_me_returns_full_team_membership_set(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
@@ -165,67 +165,3 @@ class PersonalUserInformationTests(TestCase):
         self.client.patch(update_url, data, format='json')
         baseuser = BaseUser.objects.get(id=self.baseuser.id)
         self.assertEqual(baseuser.birth_place, self.city)
-
-
-class EventTests(TestCase):
-
-    def setUp(self):
-        self.test_user = BaseUser.objects.create_user(
-            email="comp@comp.bg",
-            password="123",
-            full_name='Comp compov'
-        )
-        self.event_conf = Event.objects.create(
-            start_date="2012-01-01",
-            end_date="2012-01-01",
-            location="location text",
-            description="Desc!",
-            name='HackConf'
-        )
-        self.event_theater = Event.objects.create(
-            start_date="2012-01-01",
-            end_date="2012-01-01",
-            location="location theater text",
-            description="theater desc!",
-            name='Theater!'
-        )
-
-    def test_get_all_events(self):
-        count = Event.objects.count()
-        url = reverse('base_app:event')
-        response = self.client.get(url, format='json')
-        self.assertEqual(count, len(response.data))
-
-    def test_buy_ticket_for_event_not_logged(self):
-        url = reverse('base_app:ticket')
-        data = {'event': self.event_conf.id}
-        response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, 401)
-
-    def test_buy_ticket_for_event_logged_user(self):
-        count = Ticket.objects.count()
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.test_user)
-        url = reverse('base_app:ticket')
-        data = {'event': self.event_conf.id}
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, 201)
-        new_count = Ticket.objects.count()
-        self.assertEqual(count+1, new_count)
-
-    def test_buy_ticket_for_event_no_data(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.test_user)
-        url = reverse('base_app:ticket')
-        response = self.client.post(url)
-        self.assertEqual(response.status_code, 400)
-
-# TODO: Find a nice way to do this!
-    # def test_buy_two_tickets(self):
-    #     self.client = APIClient()
-    #     self.client.force_authenticate(user=self.test_user)
-    #     url = reverse('base_app:ticket')
-    #     data = {'event': self.event_conf.id}
-    #     response = self.client.post(url, data)
-    #     response = self.client.post(url, data)
-    #     self.assertEqual(response.status_code, 400)

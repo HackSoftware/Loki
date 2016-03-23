@@ -45,26 +45,6 @@ class GeneralPartner(models.Model):
         return self.partner.comapny.name
 
 
-class Event(models.Model):
-    name = models.CharField(max_length=150)
-    start_date = models.DateTimeField()
-    end_date = models.DateTimeField()
-    url = models.URLField(blank=True, null=True)
-    location = models.CharField(max_length=255)
-    description = models.TextField()
-
-    def __str__(self):
-        return self.name
-
-
-class Ticket(models.Model):
-    event = models.ForeignKey('Event')
-    base_user = models.ForeignKey('hack_fmi.BaseUser')
-
-    class Meta:
-        unique_together = ('event', 'base_user')
-
-
 class City(models.Model):
     name = models.CharField(max_length=50)
 

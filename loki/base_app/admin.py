@@ -3,8 +3,7 @@ from import_export.admin import ImportExportActionModelAdmin
 from django.contrib import admin
 
 from hack_fmi.models import BaseUser
-from .models import Company, Partner, Event, Ticket, City, GeneralPartner
-from .modelresource import TicketResource
+from .models import Company, Partner, City, GeneralPartner
 
 
 class BaseUserAdmin(admin.ModelAdmin):
@@ -33,41 +32,6 @@ class PartnerAdmin(admin.ModelAdmin):
         model = Partner
 
 admin.site.register(Partner, PartnerAdmin)
-
-
-class EventAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'start_date')
-
-    class Meta:
-        model = Event
-
-admin.site.register(Event, EventAdmin)
-
-
-class TicketAdmin(ImportExportActionModelAdmin):
-    resource_class = TicketResource
-
-    def full_name(self, obj):
-        return obj.base_user.full_name
-
-    def birth_place(self, obj):
-        return obj.base_user.birth_place
-
-    def studies_at(self, obj):
-        return obj.base_user.studies_at
-
-    def description(self, obj):
-        return obj.base_user.description
-
-    list_display = ('id', 'event', 'full_name', 'birth_place', 'studies_at', 'description')
-
-    class Meta:
-        model = Ticket
-
-    list_filter = ('event',)
-    search_fields = ['base_user__first_name', 'base_user__last_name']
-
-admin.site.register(Ticket, TicketAdmin)
 
 
 class CityAdmin(admin.ModelAdmin):
