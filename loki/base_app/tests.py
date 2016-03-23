@@ -6,8 +6,8 @@ from post_office.models import EmailTemplate
 from rest_framework import status
 from rest_framework.test import APIClient
 
-from hack_fmi.models import BaseUser, Skill, Team
-from .models import City
+from hack_fmi.models import Skill, Team
+from .models import BaseUser, City
 from hack_fmi.helper import date_decrease
 from education.models import Course, CourseAssignment, Student, Certificate
 

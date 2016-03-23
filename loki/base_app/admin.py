@@ -2,7 +2,7 @@ from import_export.admin import ImportExportActionModelAdmin
 
 from django.contrib import admin
 
-from hack_fmi.models import BaseUser
+from base_app.models import BaseUser
 from .models import Company, Partner, City, GeneralPartner
 
 

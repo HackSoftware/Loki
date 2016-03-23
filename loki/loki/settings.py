@@ -94,7 +94,7 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, '../static')
 
-AUTH_USER_MODEL = 'hack_fmi.BaseUser'
+AUTH_USER_MODEL = 'base_app.BaseUser'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (

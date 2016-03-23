@@ -2,9 +2,8 @@ from rest_framework import serializers
 from rest_framework.validators import UniqueTogetherValidator
 from education.serializers import StudentSerializer, TeacherSerializer, CitySerializer
 
-from hack_fmi.models import BaseUser
+from base_app.models import BaseUser, City
 from hack_fmi.serializers import CompetitorSerializer
-from base_app.models import City
 
 
 class BaseUserSerializer(serializers.ModelSerializer):

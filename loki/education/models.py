@@ -1,9 +1,8 @@
 from django.db import models
 
 from ckeditor.fields import RichTextField
-from base_app.models import City, Company
+from base_app.models import BaseUser, City, Company
 
-from hack_fmi.models import BaseUser
 from .validators import validate_mac, validate_github_url
 
 import uuid

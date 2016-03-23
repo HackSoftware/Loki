@@ -4,12 +4,10 @@ from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 
 from rest_framework.test import APIClient
-from base_app.models import Company
-from base_app.models import City
+from base_app.models import BaseUser, Company, City
 from education.models import (Student, Certificate, CheckIn, Course, Lecture, Teacher,
                               CourseAssignment, StudentNote, WorkingAt, Task, Solution,
                               Test, ProgrammingLanguage, GraderRequest)
-from hack_fmi.models import BaseUser
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
 

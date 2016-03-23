@@ -1,6 +1,6 @@
 from django.db import models
 
-from hack_fmi.models import BaseUser
+from base_app.models import BaseUser
 
 
 class HR(BaseUser):

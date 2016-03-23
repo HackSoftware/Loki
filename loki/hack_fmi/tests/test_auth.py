@@ -2,7 +2,8 @@ from django.test import TestCase
 from django.core.urlresolvers import reverse
 from rest_framework.test import APIClient
 
-from ..models import Competitor, BaseUser, Skill
+from base_app.models import BaseUser
+from ..models import Competitor, Skill
 
 
 class AuthenticationTests(TestCase):

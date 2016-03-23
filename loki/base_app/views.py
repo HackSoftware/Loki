@@ -6,9 +6,9 @@ from rest_framework.response import Response
 from rest_framework import generics
 
 from base_app.serializers import (BaseUserMeSerializer, UpdateBaseUserSerializer)
-from hack_fmi.models import BaseUser
 
 from .helper import crop_image
+from .models import BaseUser
 
 
 @api_view(['GET'])
