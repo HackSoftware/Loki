@@ -46,7 +46,6 @@ class BaseUserMeSerializer(serializers.ModelSerializer):
             'competitor',
             'student',
             'teacher',
-            'ticket_set',
             'works_at',
             'studies_at',
             'description',
