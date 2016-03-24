@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'django_resized',
     'import_export',
     'djcelery',
+    'crispy_forms',
 
     'hack_fmi',
     'base_app',
@@ -103,6 +104,8 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
     'UPLOADED_FILES_USE_URL': False
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 #TODO: Just for the begining
 CORS_ORIGIN_ALLOW_ALL = True

@@ -1,8 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
 
 from education.models import WorkingAt
 from base_app.models import Partner, GeneralPartner
+
+from .forms import RegisterForm
 
 
 def index(request):
@@ -48,3 +50,13 @@ def course_details(request, course_url):
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
     return render(request, "website/course_details.html", locals())
+
+
+def register(request):
+    form = RegisterForm()
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, 'website/auth/thanks.html', locals())
+    return render(request, "website/auth/register.html", locals())

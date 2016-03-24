@@ -1,0 +1,14 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% load crispy_forms_tags %}
+
+<h1>Регистрация</h1>
+
+<form method="POST" action="" >
+    {{form|crispy}}
+    {% csrf_token %}
+    <input type="submit" value="Hack on!" />
+</form>
+
+{% endblock %}
