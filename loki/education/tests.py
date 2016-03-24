@@ -819,7 +819,7 @@ class SolutionsTests(TestCase):
         }
 
         response = self.client.post(url, data, format='json')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 201)
 
     def test_post_solution_for_ungradable_task_without_url(self):
         logged_student = self.student2

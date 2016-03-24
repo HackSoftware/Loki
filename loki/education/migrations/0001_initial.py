@@ -107,7 +107,7 @@ class Migration(migrations.Migration):
             name='Solution',
             fields=[
                 ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
-                ('url', models.URLField(blank=True, validators=[education.validators.validate_github_url], null=True)),
+                ('url', models.URLField(blank=True, null=True)),
                 ('code', models.TextField(blank=True, null=True)),
                 ('build_id', models.IntegerField(blank=True, null=True)),
                 ('check_status_location', models.CharField(blank=True, max_length=128, null=True)),

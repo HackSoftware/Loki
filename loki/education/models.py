@@ -3,7 +3,8 @@ from django.db import models
 from ckeditor.fields import RichTextField
 from base_app.models import BaseUser, City, Company
 
-from .validators import validate_mac, validate_github_url
+from .validators import (validate_mac, validate_github_solution_url,
+                         validate_github_project_url)
 
 import uuid
 
@@ -195,7 +196,7 @@ class Solution(models.Model):
 
     task = models.ForeignKey(Task)
     student = models.ForeignKey(Student)
-    url = models.URLField(blank=True, null=True, validators=[validate_github_url])
+    url = models.URLField(blank=True, null=True)
     code = models.TextField(blank=True, null=True)
     build_id = models.IntegerField(blank=True, null=True)
     check_status_location = models.CharField(max_length=128, blank=True, null=True)

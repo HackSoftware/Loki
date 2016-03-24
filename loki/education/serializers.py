@@ -7,6 +7,9 @@ from .models import (Lecture, CheckIn, Course, Student, Solution,
                      CourseAssignment, StudentNote, Teacher, WorkingAt, Task, Certificate)
 from .helper import generate_grader_headers
 
+from .validators import (validate_mac, validate_github_solution_url,
+                         validate_github_project_url)
+
 
 class CertificateSerializer(serializers.ModelSerializer):
 
@@ -42,6 +45,14 @@ class SolutionSerializer(serializers.ModelSerializer):
 
     def get_status(self, obj):
         return obj.get_status()
+
+    def validate(self, data):
+        if data['task'].gradable and data['code'] is None:
+            validate_github_solution_url(data['url'])
+
+        if not data['task'].gradable:
+            validate_github_project_url(data['url'])
+        return data
 
 
 class TaskSerializer(serializers.ModelSerializer):
