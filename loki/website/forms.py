@@ -19,13 +19,13 @@ class RegisterForm(forms.ModelForm):
 
     def clean_password(self):
         password = self.cleaned_data.get("password")
-        self.__validate_password_strength(self.cleaned_data.get('password'))
+        self._validate_password_strength(self.cleaned_data.get('password'))
         return password
 
     def save(self, commit=True):
         return BaseUser.objects.create_user(**self.cleaned_data)
 
-    def __validate_password_strength(self, value):
+    def _validate_password_strength(self, value):
         """Validates that a password is as least 7 characters long and has at least
         1 digit and 1 letter.
         """
@@ -42,3 +42,8 @@ class RegisterForm(forms.ModelForm):
         # check for letter
         if not any(char.isalpha() for char in value):
             raise ValidationError(_('Password must container at least 1 letter.'))
+
+
+class LoginForm(forms.Form):
+    email = forms.CharField(label="Email")
+    password = forms.CharField(widget=forms.PasswordInput())

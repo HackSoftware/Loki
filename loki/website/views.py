@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import authenticate, login
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
 
 from education.models import WorkingAt
 from base_app.models import Partner, GeneralPartner
 
-from .forms import RegisterForm
+from .forms import RegisterForm, LoginForm
 
 
 def index(request):
@@ -60,3 +61,16 @@ def register(request):
             form.save()
             return render(request, 'website/auth/thanks.html', locals())
     return render(request, "website/auth/register.html", locals())
+
+
+def log_in(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(email=email, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect("/")
+    form = LoginForm()
+    return render(request, "website/auth/login.html", locals())
