@@ -378,5 +378,28 @@ body {
     width: 100% !important;
     min-height: 100px;
     padding-top: 0px; } }
+.login-container {
+  max-width: 400px;
+  margin-top: 50px;
+  margin-bottom: 50px; }
+  .login-container label {
+    display: none; }
+  .login-container .error {
+    font-weight: bold;
+    color: #a94442;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px; }
+  .login-container .profile-img-container {
+    text-align: center;
+    margin-bottom: 50px; }
+    .login-container .profile-img-container .img-circle {
+      width: 96px;
+      height: 96px;
+      border: 2px solid; }
+  .login-container .btn-login {
+    width: 100%;
+    margin-bottom: 20px; }
 
 /*# sourceMappingURL=website.css.map */

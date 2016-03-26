@@ -3,10 +3,24 @@
 {% block 'page-content' %}
 {% load crispy_forms_tags %}
 
-<h1>Login</h1>
-<form action="" method="POST" >
-    {{ form|crispy }}
-    {% csrf_token %}
-    <input type="submit" value="Login" />
-</form>
+<div class="container login-container">
+    <div class="card card-container">
+        <div class="profile-img-container">
+            <img class="img-circle" src="{{ STATIC_URL }}website_images/hackman_head.png" />
+        </div>
+        <div class="bg-warning error">{{error}}</div>
+        <form action="" method="POST" >
+            {{ form|crispy }}
+            {% csrf_token %}
+            <input type="submit" value="Вход" class="btn btn-warning btn-login" />
+            <a ui-sref="register" class="forgot-password">
+                Още не си се регистрирал?
+            </a><br>
+            <a ui-sref="resetpassword" class="forgot-password">
+                Забравена парола?
+            </a>
+        </form>
+    </div><!-- /card-container -->
+</div>
+
 {% endblock %}

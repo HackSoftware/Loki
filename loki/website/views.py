@@ -64,7 +64,9 @@ def register(request):
 
 
 def log_in(request):
+    form = LoginForm()
     if request.method == 'POST':
+        form = LoginForm(request.POST)
         email = request.POST['email']
         password = request.POST['password']
         user = authenticate(email=email, password=password)
@@ -72,5 +74,6 @@ def log_in(request):
             if user.is_active:
                 login(request, user)
                 return redirect("/")
-    form = LoginForm()
+        else:
+            error = "Невалидни email и/или парола"
     return render(request, "website/auth/login.html", locals())

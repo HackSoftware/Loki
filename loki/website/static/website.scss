@@ -531,3 +531,37 @@ $TabBorder: #C5C4C4;
         padding-top: 0px;
     }
 }
+
+.login-container{
+    max-width:400px;
+    margin-top:50px;
+    margin-bottom:50px;
+    
+    label{
+        display:none;
+    }
+    
+    .error{
+        font-weight: bold;
+        color:#a94442;
+        padding-left:10px;
+        padding-top:10px;
+        padding-bottom:10px;
+        margin-bottom:10px;
+    }
+
+    .profile-img-container{
+        text-align: center;
+        margin-bottom:50px;
+        .img-circle{
+            width:96px;
+            height:96px;
+            border:2px solid;
+        }
+    }
+
+    .btn-login{
+        width:100%;
+        margin-bottom:20px;
+    }
+}
