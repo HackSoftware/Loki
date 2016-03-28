@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^api/student-solutions/$', StudentSolutionsList.as_view(), name='student_solutions'),
     url(r'^certificate/(?P<pk>[0-9]+)/$', certificate_old, name='certificate_old'),
     url(r'^certificate/(?P<token>[\w|-]+)/$', certificate, name='certificate'),
+    url(r'^solutions-status/$', solutions_status, name='solutions_status')
 ]

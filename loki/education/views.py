@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 
@@ -16,7 +16,7 @@ from base_app.models import City, Company
 from .premissions import IsStudent, IsTeacher, IsTeacherForCA
 
 from .models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
-                     Task, Solution, Certificate)
+                     Task, Solution, Certificate, Test)
 
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
@@ -26,7 +26,7 @@ from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
 
 from education.helper import (check_macs_for_student, mac_is_used_by_another_student)
 from .tasks import submit_solution
-
+import json
 
 @csrf_exempt
 @require_POST
@@ -248,6 +248,7 @@ class SolutionsAPI(
 
     ''' Pre-create validations
     '''
+
     def post(self, request, *args, **kwargs):
         data = request.data
 
@@ -323,3 +324,38 @@ def certificate(request, token):
             problem.solution = task_to_solution[problem]
 
     return render(request, "certificate.html", locals())
+
+
+def solutions_status(request):
+    data = {
+        'total': 0,
+        'statuses': {},
+        'courses': {}
+    }
+
+    all_solutions = Solution.objects.all()
+
+    for solution in all_solutions:
+        data['total'] += 1
+
+        status = Solution.STATUS_CHOICE[solution.status][1]
+
+        if status not in data['statuses']:
+            data['statuses'][status] = 0
+
+        data['statuses'][status] += 1
+
+        language = solution.task.course.name
+        if language not in data['courses']:
+            data['courses'][language] = {'total': 0, 'statuses': {}}
+
+        data['courses'][language]['total'] += 1
+
+        if status not in data['courses'][language]['statuses']:
+            data['courses'][language]['statuses'][status] = 0
+
+        data['courses'][language]['statuses'][status] += 1
+
+    response = HttpResponse(json.dumps(data, indent=4, ensure_ascii=False),
+                     content_type='application/json')
+    return response
