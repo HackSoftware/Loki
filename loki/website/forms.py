@@ -1,17 +1,24 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 from base_app.models import BaseUser
 
 
 class RegisterForm(forms.ModelForm):
 
     password = forms.CharField(label=_("Password"),
-                               widget=forms.PasswordInput)
+                               widget=forms.PasswordInput(attrs={'placeholder': "Парола"}))
 
     class Meta:
         model = BaseUser
-        fields = ("first_name", "last_name", "email", "studies_at")
+        fields = ("first_name", "last_name", "email", "password", "studies_at")
+
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': "Име", 'autofocus': ''}),
+            'last_name': forms.TextInput(attrs={'placeholder': "Фамилия"}),
+            'email': forms.EmailInput(attrs={'placeholder': "E-mail adress"}),
+            'studies_at': forms.TextInput(attrs={'placeholder': "Образование"})
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -47,5 +54,5 @@ class RegisterForm(forms.ModelForm):
 class LoginForm(forms.Form):
     email = forms.EmailField(
         label="Email",
-        widget=forms.TextInput(attrs={'placeholder': 'Email adress'}))
+        widget=forms.TextInput(attrs={'placeholder': 'Email adress', 'autofocus': ''}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))

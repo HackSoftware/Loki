@@ -8,15 +8,17 @@
         <div class="profile-img-container">
             <img class="img-circle" src="{{ STATIC_URL }}website_images/hackman_head.png" />
         </div>
-        <div class="bg-warning error">{{error}}</div>
+        {% if error %}
+            <div class="bg-warning error">{{error}}</div>
+        {% endif %}
         <form action="" method="POST" >
             {{ form|crispy }}
             {% csrf_token %}
             <input type="submit" value="Вход" class="btn btn-warning btn-login" />
-            <a ui-sref="register" class="forgot-password">
+            <a href="{% url 'website:register' %}">
                 Още не си се регистрирал?
             </a><br>
-            <a ui-sref="resetpassword" class="forgot-password">
+            <a ui-sref="resetpassword" >
                 Забравена парола?
             </a>
         </form>

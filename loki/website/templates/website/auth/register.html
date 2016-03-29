@@ -3,12 +3,23 @@
 {% block 'page-content' %}
 {% load crispy_forms_tags %}
 
-<h1>Регистрация</h1>
-
-<form method="POST" action="" >
-    {{form|crispy}}
-    {% csrf_token %}
-    <input type="submit" value="Hack on!" />
-</form>
+<div class="container login-container">
+    <div class="card card-container">
+        <div class="profile-img-container">
+            <img class="img-circle" src="{{ STATIC_URL }}website_images/hackman_head.png" />
+        </div>
+        {% if error %}
+            <div class="bg-warning error">{{error}}</div>
+        {% endif %}
+        <form method="POST" action="" >
+            {{form|crispy}}
+            {% csrf_token %}
+            <button type="submit" class="btn btn-warning btn-login" >Hack on!</button>
+            <a href="{% url 'website:login' %}">
+                Вече имаш регистрация?
+            </a>
+        </form>
+    </div>
+</div>
 
 {% endblock %}
