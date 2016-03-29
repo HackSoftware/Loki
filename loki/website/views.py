@@ -1,12 +1,14 @@
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
 
 from education.models import WorkingAt
 from base_app.models import Partner, GeneralPartner
 
 from .forms import RegisterForm, LoginForm
+from .decorators import anonymous_required
 
 
 def index(request):
@@ -54,6 +56,7 @@ def course_details(request, course_url):
     return render(request, "website/course_details.html", locals())
 
 
+@anonymous_required(redirect_url=reverse_lazy('website:profile'))
 def register(request):
     form = RegisterForm()
     if request.method == 'POST':
@@ -64,6 +67,7 @@ def register(request):
     return render(request, "website/auth/register.html", locals())
 
 
+@anonymous_required(redirect_url=reverse_lazy('website:profile'))
 def log_in(request):
     form = LoginForm()
     if request.method == 'POST':
@@ -81,3 +85,14 @@ def log_in(request):
             else:
                 error = "Невалидни email и/или парола"
     return render(request, "website/auth/login.html", locals())
+
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect(reverse('website:index'))
+
+
+@login_required
+def profile(request):
+    return render(request, 'website/profile.html', locals())

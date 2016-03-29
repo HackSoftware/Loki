@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
-from .views import index, about, courses, partners, course_details, register, log_in
+from .views import (index, about, courses, partners, course_details, register,
+                    log_in, profile, logout_view)
 
 urlpatterns = [
     url(r'^$', index, name='index'),
@@ -9,5 +10,7 @@ urlpatterns = [
     url(r'^partners/$', partners, name="partners"),
     url(r'^courses/(?P<course_url>[-\w]+)/$', course_details, name="course_details"),
     url(r'^login/$', log_in, name="login"),
-    url(r'^register/$', register, name="register")
+    url(r'^logout/$', logout_view, name="logout"),
+    url(r'^register/$', register, name="register"),
+    url(r'^profile/$', profile, name="profile")
 ]
