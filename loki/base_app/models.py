@@ -55,7 +55,8 @@ class City(models.Model):
 
 class UserManager(BaseUserManager):
 
-    def __create_user(self, email, password, is_staff, is_active, full_name, is_superuser, **kwargs):
+    def __create_user(self, email, password, full_name,
+                      is_staff=False, is_active=False, is_superuser=False, **kwargs):
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -71,11 +72,12 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(self, email, password, full_name='', **kwargs):
-        return self.__create_user(email, password, False, False,
-                                  full_name, False, **kwargs)
+        return self.__create_user(email, password, full_name, is_staff=False, is_active=False,
+                                  is_superuser=False, **kwargs)
 
     def create_superuser(self, email, password, full_name=''):
-        return self.__create_user(email, password, True, True, full_name, True)
+        return self.__create_user(email, password, full_name, is_staff=True,
+                                  is_active=True, is_superuser=True)
 
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):

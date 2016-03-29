@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
@@ -67,13 +68,16 @@ def log_in(request):
     form = LoginForm()
     if request.method == 'POST':
         form = LoginForm(request.POST)
-        email = request.POST['email']
-        password = request.POST['password']
-        user = authenticate(email=email, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return redirect("/")
-        else:
-            error = "Невалидни email и/или парола"
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(email=email, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect(reverse('website:index'))
+                else:
+                    error = "Моля активирай акаунта си"
+            else:
+                error = "Невалидни email и/или парола"
     return render(request, "website/auth/login.html", locals())
