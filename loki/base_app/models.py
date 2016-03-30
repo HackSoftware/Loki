@@ -18,6 +18,9 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'Companies'
+
 
 class Partner(models.Model):
     comapny = models.OneToOneField(Company, primary_key=True)
@@ -51,6 +54,53 @@ class City(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = 'Cities'
+
+
+class EducationPlace(models.Model):
+    name = models.CharField(max_length=1000, unique=True)
+    city = models.ForeignKey(City)
+
+    def is_uni(self):
+        return hasattr(self, 'university')
+
+    def is_school(self):
+        return hasattr(self, 'school')
+
+    def is_academy(self):
+        return hasattr(self, 'academy')
+
+
+class University(EducationPlace):
+    class Meta:
+        verbose_name_plural = 'Universities'
+
+
+class Faculty(models.Model):
+    uni = models.ForeignKey(University)
+    name = models.CharField(max_length=1000)
+
+    class Meta:
+        unique_together = (('uni', 'name'),)
+        verbose_name_plural = 'Faculties'
+
+
+class Subject(models.Model):
+    faculty = models.ForeignKey(Faculty)
+    name = models.CharField(max_length=1000, unique=True)
+
+    class Meta:
+        unique_together = (('faculty', 'name'),)
+
+
+class School(EducationPlace):
+    pass
+
+
+class Academy(EducationPlace):
+    pass
 
 
 class UserManager(BaseUserManager):
