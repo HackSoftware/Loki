@@ -6,7 +6,7 @@ from base_app.models import Partner, GeneralPartner
 
 
 def index(request):
-    successors = SuccessStoryPerson.objects.order_by('?')[:6]
+    successors = SuccessStoryPerson.objects.filter(show_picture_on_site=True).order_by('?')[:6]
     partners = Partner.objects.all().order_by('?')
     videos = SuccessVideo.objects.all()[:4]
 

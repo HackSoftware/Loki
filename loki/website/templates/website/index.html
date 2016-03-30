@@ -13,15 +13,13 @@
   <div id="faces" class="row">
     <h2 id="moto"><strong>{{success_students_count}}</strong> {{ snippets.index_call_to_action.text }}</h2>
     {% for successor in successors %}
-      {% if successor.show_picture_on_site %}
-        <div class="person">
-          <img src="/media/{{ successor.picture }}" class="person-image">
-          <p class="person-description " > 
-            <span class="name">{{ successor.name }}</span> <br>
-            <span class="position">{{ successor.title }}</span>
-          </p>
-        </div>
-      {% endif %}
+      <div class="person">
+        <img src="/media/{{ successor.picture }}" class="person-image">
+        <p class="person-description " > 
+          <span class="name">{{ successor.name }}</span> <br>
+          <span class="position">{{ successor.title }}</span>
+        </p>
+      </div>
     {% endfor %}
   </div>
 
