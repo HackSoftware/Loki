@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from loki.settings import MEDIA_ROOT
@@ -90,7 +91,7 @@ class Faculty(models.Model):
     abbreviation = models.CharField(max_length=10, blank=True, null=True)
 
     def __str__(self):
-        return "{} - {}".format(self.name, str(self.uni))
+        return self.name
 
     class Meta:
         unique_together = (('uni', 'name'),)
@@ -102,7 +103,7 @@ class Subject(models.Model):
     name = models.CharField(max_length=1000, unique=True)
 
     def __str__(self):
-        return "{} - {}".format(self.name, str(self.faculty))
+        return self.name
 
     class Meta:
         unique_together = (('faculty', 'name'),)
@@ -162,6 +163,8 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     avatar = models.ImageField(blank=True, null=True)
     full_image = models.ImageField(blank=True, null=True)
 
+    education_info = models.ManyToManyField(EducationPlace, through='EducationInfo')
+
     USERNAME_FIELD = 'email'
 
     objects = UserManager()
@@ -202,3 +205,27 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         competitor.save()
         competitor.__dict__.update(self.__dict__)
         return competitor.save()
+
+
+class EducationInfo(models.Model):
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    place = models.ForeignKey(EducationPlace, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    created_at = models.DateTimeField(editable=False)
+    updated_at = models.DateTimeField()
+
+    faculty = models.ForeignKey(Faculty, blank=True, null=True)
+    subject = models.ForeignKey(Subject, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        '''On save, update created_at and updated_at timestamps
+           Idea based on http://stackoverflow.com/questions/1737017/django-auto-now-and-auto-now-add/1737078#1737078
+        '''
+
+        if not self.id:
+            self.created_at = timezone.now()
+
+        self.updated_at = timezone.now()
+
+        return super().save(*args, **kwargs)
