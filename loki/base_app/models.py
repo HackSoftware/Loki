@@ -60,7 +60,7 @@ class City(models.Model):
 
 
 class EducationPlace(models.Model):
-    name = models.CharField(max_length=1000, unique=True)
+    name = models.CharField(max_length=1000)
     city = models.ForeignKey(City)
 
     def is_uni(self):
@@ -71,6 +71,9 @@ class EducationPlace(models.Model):
 
     def is_academy(self):
         return hasattr(self, 'academy')
+
+    class Meta:
+        unique_together = (('name', 'city'),)
 
 
 class University(EducationPlace):
