@@ -100,10 +100,13 @@ class Faculty(models.Model):
 
 class Subject(models.Model):
     faculty = models.ForeignKey(Faculty)
-    name = models.CharField(max_length=1000, unique=True)
+    name = models.CharField(max_length=1000)
 
     def __str__(self):
         return self.name
+
+    def represent(self):
+        return " / ".join([self.name, self.faculty.name, self.faculty.uni.name, self.faculty.uni.city.name])
 
     class Meta:
         unique_together = (('faculty', 'name'),)
@@ -114,7 +117,8 @@ class School(EducationPlace):
 
 
 class Academy(EducationPlace):
-    pass
+    class Meta:
+        verbose_name_plural = 'Academies'
 
 
 class UserManager(BaseUserManager):

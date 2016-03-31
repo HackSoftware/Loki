@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from base_app.models import BaseUser
 from .models import (Company, Partner, City, GeneralPartner,
-                     EducationPlace, University, Faculty, Subject, EducationInfo)
+                     EducationPlace, University, Faculty, Subject, School, Academy, EducationInfo)
 
 
 @admin.register(BaseUser)
@@ -52,6 +52,16 @@ class FacultyAdmin(admin.ModelAdmin):
 @admin.register(Subject)
 class SubjectAdmin(admin.ModelAdmin):
     list_display = ('name', 'faculty')
+
+
+@admin.register(School)
+class SchoolAdmin(admin.ModelAdmin):
+    list_display = ('name', 'city')
+
+
+@admin.register(Academy)
+class AcademyAdmin(admin.ModelAdmin):
+    list_display = ('name', 'city')
 
 
 @admin.register(EducationInfo)

@@ -1,4 +1,5 @@
 import json
+
 from rest_framework import status, mixins
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
@@ -9,6 +10,7 @@ from base_app.serializers import (BaseUserMeSerializer, UpdateBaseUserSerializer
 
 from .helper import crop_image
 from .models import BaseUser
+from .services import fuzzy_search_education_place
 
 
 @api_view(['GET'])
@@ -53,3 +55,19 @@ def base_user_update(request):
         return Response(name, status=status.HTTP_200_OK)
 
     return Response(serializer.errors, status=400)
+
+
+@api_view(['POST'])
+def education_place_suggest(request):
+    query = request.data.get('query', '')
+    words = [w.lower() for w in query.split()]
+
+    result = fuzzy_search_education_place(words)
+
+    response = {
+        "words": words,
+        "result": result
+
+    }
+
+    return Response(response)
