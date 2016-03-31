@@ -1,0 +1,24 @@
+
+#suggestion-dropdown {
+    position:absolute;
+    padding:5px;
+    padding-right:10px;
+    border:1px solid #ccc;
+    background-color:white;
+    display:none;
+}
+
+#suggestion-dropdown ul{
+    list-style-type: none;
+    padding:0;
+    margin:0;
+}
+
+#suggestion-dropdown ul li{
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+#suggestion-dropdown ul li.selected{
+    background-color: #9E9E9E;
+}

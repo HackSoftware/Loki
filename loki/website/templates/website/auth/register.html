@@ -11,7 +11,7 @@
         {% if error %}
             <div class="bg-warning error">{{error}}</div>
         {% endif %}
-        <form method="POST" action="" >
+        <form method="POST" action="" class="register-form" >
             {{form|crispy}}
             {% csrf_token %}
             <button type="submit" class="btn btn-warning btn-login" >Hack on!</button>
