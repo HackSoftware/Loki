@@ -1,0 +1,834 @@
+[
+    {
+        "fields": {
+            "city": 41,
+            "name": "Медицински университет „Професор доктор Параскев Стоянов“"
+        },
+        "pk": 1,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Софийски университет „Свети Климент Охридски“"
+        },
+        "pk": 2,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Университет за национално и световно стопанство"
+        },
+        "pk": 3,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 169,
+            "name": "Пловдивски университет „Паисий Хилендарски“"
+        },
+        "pk": 4,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 41,
+            "name": "Икономически университет"
+        },
+        "pk": 5,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Технически университет"
+        },
+        "pk": 6,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Нов български университет"
+        },
+        "pk": 7,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 21,
+            "name": "Югозападен университет „Неофит Рилски“"
+        },
+        "pk": 8,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 84,
+            "name": "Великотърновски университет „Свети свети Кирил и Методий“"
+        },
+        "pk": 9,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 193,
+            "name": "Стопанска академия „Димитър Ценов“"
+        },
+        "pk": 10,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 41,
+            "name": "Варненски свободен университет „Черноризец Храбър“"
+        },
+        "pk": 11,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 186,
+            "name": "Русенски университет „Ангел Кънчев“"
+        },
+        "pk": 12,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 239,
+            "name": "Шуменски университет „Епископ Константин Преславски“"
+        },
+        "pk": 13,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 169,
+            "name": "Висше училище по агробизнес и развитие на регионите"
+        },
+        "pk": 14,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Медицински университет"
+        },
+        "pk": 15,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 41,
+            "name": "Технически университет"
+        },
+        "pk": 16,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 28,
+            "name": "Международно висше бизнес училище"
+        },
+        "pk": 17,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 210,
+            "name": "Тракийски университет"
+        },
+        "pk": 18,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 34,
+            "name": "Университет „Професор доктор Асен Златаров“"
+        },
+        "pk": 19,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Университет по архитектура, строителство и геодезия"
+        },
+        "pk": 20,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 34,
+            "name": "Бургаски свободен университет"
+        },
+        "pk": 21,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 169,
+            "name": "Медицински университет"
+        },
+        "pk": 22,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 53,
+            "name": "Технически университет"
+        },
+        "pk": 23,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 169,
+            "name": "Аграрен университет"
+        },
+        "pk": 24,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Национална спортна академия „Васил Левски“"
+        },
+        "pk": 25,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 169,
+            "name": "Университет по хранителни технологии"
+        },
+        "pk": 26,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Химикотехнологичен и металургичен университет"
+        },
+        "pk": 27,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Лесотехнически университет"
+        },
+        "pk": 28,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Минно-геоложки университет „Свети Иван Рилски“"
+        },
+        "pk": 29,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Университет по библиотекознание и информационни технологии"
+        },
+        "pk": 30,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 169,
+            "name": "Европейско висше училище по икономика и мениджмънт"
+        },
+        "pk": 31,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 84,
+            "name": "Национален военен университет „Васил Левски“"
+        },
+        "pk": 32,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 41,
+            "name": "Висше военноморско училище „Никола Вапцаров“"
+        },
+        "pk": 33,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Висше транспортно училище „Тодор Каблешков“"
+        },
+        "pk": 34,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 169,
+            "name": "Колеж по икономика и администрация"
+        },
+        "pk": 35,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 167,
+            "name": "Медицински университет"
+        },
+        "pk": 36,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Колеж по мениджмънт, търговия и маркетинг"
+        },
+        "pk": 37,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 21,
+            "name": "Американски университет в България"
+        },
+        "pk": 38,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Висше строително училище „Любен Каравелов“"
+        },
+        "pk": 39,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Висше училище по застраховане и финанси"
+        },
+        "pk": 40,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Академия на МВР"
+        },
+        "pk": 41,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Национална художествена академия"
+        },
+        "pk": 42,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 169,
+            "name": "Академия за музикално, танцово и изобразително изкуство"
+        },
+        "pk": 43,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Колеж по телекомуникации и пощи"
+        },
+        "pk": 44,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Национална музикална академия „Професор Панчо Владигеров“"
+        },
+        "pk": 45,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 71,
+            "name": "Международен колеж"
+        },
+        "pk": 46,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Професионален колеж \"Евклид\""
+        },
+        "pk": 47,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Национална академия за театрално и филмово изкуство „Кръстю Сарафов“"
+        },
+        "pk": 48,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Военна академия „Георги Раковски“"
+        },
+        "pk": 49,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 161,
+            "name": "Европейски политехнически университет"
+        },
+        "pk": 50,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 207,
+            "name": "Театрален колеж „Любен Гройс“"
+        },
+        "pk": 51,
+        "model": "base_app.educationplace"
+    },
+    {
+        "fields": {
+            "city": 21,
+            "name": "Колеж по туризъм"
+        },
+        "pk": 52,
+        "model": "base_app.educationplace"
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Медицински университет „Професор доктор Параскев Стоянов“",
+            "city": 41
+        },
+        "pk": 1
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Софийски университет „Свети Климент Охридски“",
+            "city": 207
+        },
+        "pk": 2
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Университет за национално и световно стопанство",
+            "city": 207
+        },
+        "pk": 3
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Пловдивски университет „Паисий Хилендарски“",
+            "city": 169
+        },
+        "pk": 4
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Икономически университет",
+            "city": 41
+        },
+        "pk": 5
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Технически университет",
+            "city": 207
+        },
+        "pk": 6
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Нов български университет",
+            "city": 207
+        },
+        "pk": 7
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Югозападен университет „Неофит Рилски“",
+            "city": 21
+        },
+        "pk": 8
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Великотърновски университет „Свети свети Кирил и Методий“",
+            "city": 84
+        },
+        "pk": 9
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Стопанска академия „Димитър Ценов“",
+            "city": 193
+        },
+        "pk": 10
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Варненски свободен университет „Черноризец Храбър“",
+            "city": 41
+        },
+        "pk": 11
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Русенски университет „Ангел Кънчев“",
+            "city": 186
+        },
+        "pk": 12
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Шуменски университет „Епископ Константин Преславски“",
+            "city": 239
+        },
+        "pk": 13
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Висше училище по агробизнес и развитие на регионите",
+            "city": 169
+        },
+        "pk": 14
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Медицински университет",
+            "city": 207
+        },
+        "pk": 15
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Технически университет",
+            "city": 41
+        },
+        "pk": 16
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Международно висше бизнес училище",
+            "city": 28
+        },
+        "pk": 17
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Тракийски университет",
+            "city": 210
+        },
+        "pk": 18
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Университет „Професор доктор Асен Златаров“",
+            "city": 34
+        },
+        "pk": 19
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Университет по архитектура, строителство и геодезия",
+            "city": 207
+        },
+        "pk": 20
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Бургаски свободен университет",
+            "city": 34
+        },
+        "pk": 21
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Медицински университет",
+            "city": 169
+        },
+        "pk": 22
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Технически университет",
+            "city": 53
+        },
+        "pk": 23
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Аграрен университет",
+            "city": 169
+        },
+        "pk": 24
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Национална спортна академия „Васил Левски“",
+            "city": 207
+        },
+        "pk": 25
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Университет по хранителни технологии",
+            "city": 169
+        },
+        "pk": 26
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Химикотехнологичен и металургичен университет",
+            "city": 207
+        },
+        "pk": 27
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Лесотехнически университет",
+            "city": 207
+        },
+        "pk": 28
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Минно-геоложки университет „Свети Иван Рилски“",
+            "city": 207
+        },
+        "pk": 29
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Университет по библиотекознание и информационни технологии",
+            "city": 207
+        },
+        "pk": 30
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Европейско висше училище по икономика и мениджмънт",
+            "city": 169
+        },
+        "pk": 31
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Национален военен университет „Васил Левски“",
+            "city": 84
+        },
+        "pk": 32
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Висше военноморско училище „Никола Вапцаров“",
+            "city": 41
+        },
+        "pk": 33
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Висше транспортно училище „Тодор Каблешков“",
+            "city": 207
+        },
+        "pk": 34
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Колеж по икономика и администрация",
+            "city": 169
+        },
+        "pk": 35
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Медицински университет",
+            "city": 167
+        },
+        "pk": 36
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Колеж по мениджмънт, търговия и маркетинг",
+            "city": 207
+        },
+        "pk": 37
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Американски университет в България",
+            "city": 21
+        },
+        "pk": 38
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Висше строително училище „Любен Каравелов“",
+            "city": 207
+        },
+        "pk": 39
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Висше училище по застраховане и финанси",
+            "city": 207
+        },
+        "pk": 40
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Академия на МВР",
+            "city": 207
+        },
+        "pk": 41
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Национална художествена академия",
+            "city": 207
+        },
+        "pk": 42
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Академия за музикално, танцово и изобразително изкуство",
+            "city": 169
+        },
+        "pk": 43
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Колеж по телекомуникации и пощи",
+            "city": 207
+        },
+        "pk": 44
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Национална музикална академия „Професор Панчо Владигеров“",
+            "city": 207
+        },
+        "pk": 45
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Международен колеж",
+            "city": 71
+        },
+        "pk": 46
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Професионален колеж \"Евклид\"",
+            "city": 207
+        },
+        "pk": 47
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Национална академия за театрално и филмово изкуство „Кръстю Сарафов“",
+            "city": 207
+        },
+        "pk": 48
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Военна академия „Георги Раковски“",
+            "city": 207
+        },
+        "pk": 49
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Европейски политехнически университет",
+            "city": 161
+        },
+        "pk": 50
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Театрален колеж „Любен Гройс“",
+            "city": 207
+        },
+        "pk": 51
+    },
+    {
+        "model": "base_app.university",
+        "fields": {
+            "name": "Колеж по туризъм",
+            "city": 21
+        },
+        "pk": 52
+    }
+]
