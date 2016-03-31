@@ -1,0 +1,146 @@
+[
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет по Математика и Информатика",
+            "abbreviation": "ФМИ",
+            "uni": 2
+        },
+        "pk": 1
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Философски Факултет",
+            "abbreviation": "ФФ ",
+            "uni": 2
+        },
+        "pk": 2
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Биологически факултет",
+            "abbreviation": "БФ",
+            "uni": 2
+        },
+        "pk": 3
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Исторически факултет",
+            "abbreviation": "ИФ ",
+            "uni": 2
+        },
+        "pk": 4
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет по Класически и Нови Филологии",
+            "abbreviation": "ФКНФ",
+            "uni": 2
+        },
+        "pk": 5
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет по Славянски Филологии",
+            "abbreviation": "ФСлФ",
+            "uni": 2
+        },
+        "pk": 6
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Юридически факултет",
+            "abbreviation": "ЮФ",
+            "uni": 2
+        },
+        "pk": 7
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет по Педагогика",
+            "abbreviation": "ФП",
+            "uni": 2
+        },
+        "pk": 8
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет по Начална и Предучилищна Педагогика",
+            "abbreviation": "ФНПП",
+            "uni": 2
+        },
+        "pk": 9
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет по Журналистика и Масова Комуникация",
+            "abbreviation": "ФЖМК",
+            "uni": 2
+        },
+        "pk": 10
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Богословски Факултет",
+            "abbreviation": "БогФ",
+            "uni": 2
+        },
+        "pk": 11
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Стопански Факултет",
+            "abbreviation": "СтФ ",
+            "uni": 2
+        },
+        "pk": 12
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Физически Факултет",
+            "abbreviation": "ФзФ",
+            "uni": 2
+        },
+        "pk": 13
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет по Химия и Фармация",
+            "abbreviation": "ФХФ",
+            "uni": 2
+        },
+        "pk": 14
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Геолого-Географски Факултет",
+            "abbreviation": "ГГФ",
+            "uni": 2
+        },
+        "pk": 15
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Медицински Факултет",
+            "abbreviation": "МФ",
+            "uni": 2
+        },
+        "pk": 16
+    }
+]

@@ -72,6 +72,9 @@ class EducationPlace(models.Model):
     def is_academy(self):
         return hasattr(self, 'academy')
 
+    def __str__(self):
+        return "{} ({})".format(self.name, self.city)
+
     class Meta:
         unique_together = (('name', 'city'),)
 
@@ -84,6 +87,10 @@ class University(EducationPlace):
 class Faculty(models.Model):
     uni = models.ForeignKey(University)
     name = models.CharField(max_length=1000)
+    abbreviation = models.CharField(max_length=10, blank=True, null=True)
+
+    def __str__(self):
+        return "{} - {}".format(self.name, str(self.uni))
 
     class Meta:
         unique_together = (('uni', 'name'),)
@@ -93,6 +100,9 @@ class Faculty(models.Model):
 class Subject(models.Model):
     faculty = models.ForeignKey(Faculty)
     name = models.CharField(max_length=1000, unique=True)
+
+    def __str__(self):
+        return "{} - {}".format(self.name, str(self.faculty))
 
     class Meta:
         unique_together = (('faculty', 'name'),)

@@ -1,11 +1,18 @@
 import json
 
-def rename(key, rename_rules):
+
+def rename(data, rename_rules):
     for old, new in rename_rules:
+        old_parts = old.split(".")
+
+        for key in data:
+            if key == old_parts[-1]:
+                print(key)
+
         if key == old:
             return new
 
-    return key
+    return data
 
 
 def add(data, to_add):
@@ -16,16 +23,26 @@ def add(data, to_add):
 
 
 def restructure(data, restructure_rules):
+    if len(restructure_rules) == 0:
+        return data
+
     new = {}
     for rule in restructure_rules:
-        new[rule['into']] = {key: data[key] for key in rule['fields']}
-        new.update({key: data[key] for key in data if key not in rule['fields']})
+        if rule['into'] in data:
+            new[rule['into']] = {key: data[rule['into']][key] for key in data[rule['into']]}
+
+        new[rule['into']].update({key: data[key] for key in rule['fields']})
+        new.update({key: data[key] for key in data if key not in rule['fields'] if key != rule['into']})
 
     return new
 
 
 def transform(data, transform_rules):
     for field, transform_obj in transform_rules:
+
+        if isinstance(transform_obj, str):
+            data[field] = transform_obj
+
         if isinstance(transform_obj, dict):
             data[field] = transform_obj[data[field]]
 
@@ -38,10 +55,12 @@ def transform(data, transform_rules):
 def modify_json(data, rules):
     result = []
     for item in data:
-        trans = {rename(k, rules['RENAME']): item[k] for k in item if k not in rules['DELETE']}
+        trans = rename(item, rules['RENAME'])
+        # trans = {rename(k, rules['RENAME']): item[k] for k in item if k not in rules['DELETE']}
         trans = add(trans, rules['ADD'])
         trans = transform(trans, rules['TRANSFORM'])
         trans = restructure(trans, rules['RESTRUCTURE'])
+        print(trans)
 
         result.append(trans)
 
@@ -62,15 +81,23 @@ def get_id():
     return inner
 
 
+# rules = {
+#     'DELETE': ['Брои', 'Основано', "Студенти[3]"],
+#     'RENAME': [('Висше училище', 'name'), ('Седалище', 'city')],
+#     'ADD': [('model', 'base_app.university'), ('pk', 0)],
+#     'RESTRUCTURE': [{'fields': ['city', 'name'], 'into': 'fields'}],
+#     'TRANSFORM': [('city', cities), ('pk', get_id())]
+# }
+
 rules = {
-    'DELETE': ['Брои', 'Основано', "Студенти[3]"],
-    'RENAME': [('Висше училище', 'name'), ('Седалище', 'city')],
-    'ADD': [('model', 'base_app.university'), ('pk', 0)],
-    'RESTRUCTURE': [{'fields': ['city', 'name'], 'into': 'fields'}],
-    'TRANSFORM': [('city', cities), ('pk', get_id())]
+    'DELETE': [],
+    'RENAME': [('fields.full_name', 'name')],
+    'ADD': [('uni', 2)],
+    'RESTRUCTURE': [{'fields': ['uni'], 'into': 'fields'}],
+    'TRANSFORM': [('model', 'base_app.faculty')]
 }
 
-with open('./universities_in_bulgaria_raw.json', 'r') as f:
+with open('./sofia_university_faculties_raw.json', 'r') as f:
     data = json.load(f)
 
 print(json.dumps(modify_json(data, rules), indent=4, ensure_ascii=False))
