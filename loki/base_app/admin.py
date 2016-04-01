@@ -46,7 +46,7 @@ class UniversityAdmin(admin.ModelAdmin):
 
 @admin.register(Faculty)
 class FacultyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'uni')
+    list_display = ('name', 'university')
 
 
 @admin.register(Subject)

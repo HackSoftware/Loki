@@ -1,0 +1,121 @@
+[
+    {
+        "fields": {
+            "name": "Telerik Academy",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "VMWare Talent Boost",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "MentorMate Academy",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "Imperia Online Training",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "David Academy",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "SoftAcad",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "НАРС",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "IPT Academy",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "Pragmatic",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "InfoStart",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "SoftUni",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "HackBulgaria",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "Softbridge",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "MNKnowledge",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "ICN.Bg UniversITy",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "Софт Интелект",
+            "base_app.city": 207
+        },
+        "model": "base_app.academy"
+    },
+    {
+        "fields": {
+            "name": "Враца Софтуер",
+            "base_app.city": 48
+        },
+        "model": "base_app.academy"
+    }
+]

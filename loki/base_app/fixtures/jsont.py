@@ -1,4 +1,6 @@
+import sys
 import json
+from rules import RULE
 
 
 def rename(data, rename_rules):
@@ -7,7 +9,8 @@ def rename(data, rename_rules):
 
         for key in data:
             if key == old_parts[-1]:
-                print(key)
+                pass
+                # print(key)
 
         if key == old:
             return new
@@ -28,7 +31,9 @@ def restructure(data, restructure_rules):
 
     new = {}
     for rule in restructure_rules:
-        if rule['into'] in data:
+        if rule['into'] not in data:
+            new[rule['into']] = {}
+        else:
             new[rule['into']] = {key: data[rule['into']][key] for key in data[rule['into']]}
 
         new[rule['into']].update({key: data[key] for key in rule['fields']})
@@ -55,49 +60,28 @@ def transform(data, transform_rules):
 def modify_json(data, rules):
     result = []
     for item in data:
+        for delete in rules['DELETE']:
+            if delete in item:
+                del item[delete]
         trans = rename(item, rules['RENAME'])
-        # trans = {rename(k, rules['RENAME']): item[k] for k in item if k not in rules['DELETE']}
         trans = add(trans, rules['ADD'])
         trans = transform(trans, rules['TRANSFORM'])
         trans = restructure(trans, rules['RESTRUCTURE'])
-        print(trans)
 
         result.append(trans)
 
     return result
 
-with open('./cities.json', 'r') as f:
-    cities = json.load(f)
 
+def main():
+    if len(sys.argv) <= 1:
+        print('Provide JSON file as argument')
+        sys.exit()
 
-def get_id():
-    current = 0
+    with open(sys.argv[1], 'r') as f:
+        data = json.load(f)
 
-    def inner(*args, **kwargs):
-        nonlocal current
-        current += 1
-        return current
+    print(json.dumps(modify_json(data, RULE), indent=4, ensure_ascii=False))
 
-    return inner
-
-
-# rules = {
-#     'DELETE': ['Брои', 'Основано', "Студенти[3]"],
-#     'RENAME': [('Висше училище', 'name'), ('Седалище', 'city')],
-#     'ADD': [('model', 'base_app.university'), ('pk', 0)],
-#     'RESTRUCTURE': [{'fields': ['city', 'name'], 'into': 'fields'}],
-#     'TRANSFORM': [('city', cities), ('pk', get_id())]
-# }
-
-rules = {
-    'DELETE': [],
-    'RENAME': [('fields.full_name', 'name')],
-    'ADD': [('uni', 2)],
-    'RESTRUCTURE': [{'fields': ['uni'], 'into': 'fields'}],
-    'TRANSFORM': [('model', 'base_app.faculty')]
-}
-
-with open('./sofia_university_faculties_raw.json', 'r') as f:
-    data = json.load(f)
-
-print(json.dumps(modify_json(data, rules), indent=4, ensure_ascii=False))
+if __name__ == '__main__':
+    main()
