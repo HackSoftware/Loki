@@ -12,8 +12,8 @@ def get_possible_universities():
         'subject': s.name,
         'faculty': s.faculty.name,
         'faculty_abbreviation': s.faculty.abbreviation or "",
-        'uni': s.faculty.uni.name,
-        'city': s.faculty.uni.city.name,
+        'university': s.faculty.university.name,
+        'city': s.faculty.university.city.name,
         'total_score': 0
     } for s in subjects]
 

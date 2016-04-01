@@ -86,7 +86,7 @@ class University(EducationPlace):
 
 
 class Faculty(models.Model):
-    uni = models.ForeignKey(University)
+    university = models.ForeignKey(University)
     name = models.CharField(max_length=1000)
     abbreviation = models.CharField(max_length=10, blank=True, null=True)
 
