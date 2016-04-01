@@ -1,0 +1,290 @@
+[
+    {
+        "pk": 1,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "Telerik Academy",
+            "city": 207
+        }
+    },
+    {
+        "pk": 2,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "VMWare Talent Boost",
+            "city": 207
+        }
+    },
+    {
+        "pk": 3,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "MentorMate Academy",
+            "city": 207
+        }
+    },
+    {
+        "pk": 4,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "Imperia Online Training",
+            "city": 207
+        }
+    },
+    {
+        "pk": 5,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "David Academy",
+            "city": 207
+        }
+    },
+    {
+        "pk": 6,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "ProPeople Drupal Training Center",
+            "city": 207
+        }
+    },
+    {
+        "pk": 7,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "SoftAcad",
+            "city": 207
+        }
+    },
+    {
+        "pk": 8,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "Национална академия за разработка на софтуер (НАРС)",
+            "city": 207
+        }
+    },
+    {
+        "pk": 9,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "IPT Academy",
+            "city": 207
+        }
+    },
+    {
+        "pk": 10,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "Pragmatic",
+            "city": 207
+        }
+    },
+    {
+        "pk": 11,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "InfoStart",
+            "city": 207
+        }
+    },
+    {
+        "pk": 12,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "СофтУни / SoftUni",
+            "city": 207
+        }
+    },
+    {
+        "pk": 13,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "ХакБългария / HackBulgaria",
+            "city": 207
+        }
+    },
+    {
+        "pk": 14,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "Softbridge",
+            "city": 207
+        }
+    },
+    {
+        "pk": 15,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "MNKnowledge",
+            "city": 207
+        }
+    },
+    {
+        "pk": 16,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "ICN.Bg UniversITy",
+            "city": 207
+        }
+    },
+    {
+        "pk": 17,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "Софт Интелект",
+            "city": 207
+        }
+    },
+    {
+        "pk": 18,
+        "model": "base_app.educationplace",
+        "fields": {
+            "name": "Враца Софтуер",
+            "city": 48
+        }
+    },
+    {
+        "pk": 1,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "Telerik Academy",
+            "city": 207
+        }
+    },
+    {
+        "pk": 2,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "VMWare Talent Boost",
+            "city": 207
+        }
+    },
+    {
+        "pk": 3,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "MentorMate Academy",
+            "city": 207
+        }
+    },
+    {
+        "pk": 4,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "Imperia Online Training",
+            "city": 207
+        }
+    },
+    {
+        "pk": 5,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "David Academy",
+            "city": 207
+        }
+    },
+    {
+        "pk": 6,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "ProPeople Drupal Training Center",
+            "city": 207
+        }
+    },
+    {
+        "pk": 7,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "SoftAcad",
+            "city": 207
+        }
+    },
+    {
+        "pk": 8,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "Национална академия за разработка на софтуер (НАРС)",
+            "city": 207
+        }
+    },
+    {
+        "pk": 9,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "IPT Academy",
+            "city": 207
+        }
+    },
+    {
+        "pk": 10,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "Pragmatic",
+            "city": 207
+        }
+    },
+    {
+        "pk": 11,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "InfoStart",
+            "city": 207
+        }
+    },
+    {
+        "pk": 12,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "СофтУни / SoftUni",
+            "city": 207
+        }
+    },
+    {
+        "pk": 13,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "ХакБългария / HackBulgaria",
+            "city": 207
+        }
+    },
+    {
+        "pk": 14,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "Softbridge",
+            "city": 207
+        }
+    },
+    {
+        "pk": 15,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "MNKnowledge",
+            "city": 207
+        }
+    },
+    {
+        "pk": 16,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "ICN.Bg UniversITy",
+            "city": 207
+        }
+    },
+    {
+        "pk": 17,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "Софт Интелект",
+            "city": 207
+        }
+    },
+    {
+        "pk": 18,
+        "model": "base_app.academy",
+        "fields": {
+            "name": "Враца Софтуер",
+            "city": 48
+        }
+    }
+]

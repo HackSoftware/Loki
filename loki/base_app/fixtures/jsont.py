@@ -28,7 +28,9 @@ def restructure(data, restructure_rules):
 
     new = {}
     for rule in restructure_rules:
-        if rule['into'] in data:
+        if rule['into'] not in data:
+            new[rule['into']] = {}
+        else:
             new[rule['into']] = {key: data[rule['into']][key] for key in data[rule['into']]}
 
         new[rule['into']].update({key: data[key] for key in rule['fields']})
@@ -91,13 +93,13 @@ def get_id():
 
 rules = {
     'DELETE': [],
-    'RENAME': [('fields.full_name', 'name')],
-    'ADD': [('uni', 2)],
-    'RESTRUCTURE': [{'fields': ['uni'], 'into': 'fields'}],
-    'TRANSFORM': [('model', 'base_app.faculty')]
+    'RENAME': [],
+    'ADD': [('model', 'base_app.academy'), ('pk', 0)],
+    'RESTRUCTURE': [{'fields': ['name', 'city'], 'into': 'fields'}],
+    'TRANSFORM': [('pk', get_id())]
 }
 
-with open('./sofia_university_faculties_raw.json', 'r') as f:
+with open('./academies_in_bulgaria.json', 'r') as f:
     data = json.load(f)
 
 print(json.dumps(modify_json(data, rules), indent=4, ensure_ascii=False))
