@@ -1,0 +1,72 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Ямбол",
+            "name": "Професионална Техническа Гимназия Иван Райнов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ямбол",
+            "name": "Професионална Гимназия по Хранителни Технологии и Туризъм"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ямбол",
+            "name": "Гимназия Васил Левски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ямбол",
+            "name": "Математическа Гимназия Атанас Радев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ямбол",
+            "name": "Гимназия с Преподаване на Чужди Езици Васил Карагьозов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ямбол",
+            "name": "Професионална Гимназия по Икономика Георги Стойков Раковски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ямбол",
+            "name": "Професионална Гимназия по Строителство и Геодезия К. Фичето"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ямбол",
+            "name": "Професионална Гимназия по Подемна, Строителна и Транспортна Техника Н. Й. Вапцаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ямбол",
+            "name": "Професионална Гимназия по Лека Промишленост, Екология и Химични Технологии"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ямбол",
+            "name": "Професионална Гимназия по Земеделие Христо Ботев"
+        },
+        "model": "base_app.school"
+    }
+]

@@ -1,0 +1,58 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Търговище",
+            "name": "Второ Средно Общообразователно Училище Професор Никола Маринов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Търговище",
+            "name": "Първо Средно Общообразователно Училище Свети Седмочисленици"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Търговище",
+            "name": "Профилирана Гимназия с Изучаване на Чужди Езици Митрополит Андрей"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Търговище",
+            "name": "Пг по Икономическа Информатика Джон Атанасов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Търговище",
+            "name": "Професионална Техническа Гимназия Цар Симеон Велики"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Търговище",
+            "name": "Професионална Гимназия по Туризъм и Хранително-Вкусови Технологии Алеко Константинов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Търговище",
+            "name": "Професионална Гимназия по Земеделие"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Търговище",
+            "name": "Професионална Гимназия по Електротехника и Строителство"
+        },
+        "model": "base_app.school"
+    }
+]

@@ -1,0 +1,79 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Хасково",
+            "name": "Професионална Гимназия по Туризъм Александър Паскалев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Хасково",
+            "name": "Гимназия с Преподаванена Чужди Езици Проф. Д-Р Асен Златаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Хасково",
+            "name": "Професионална Гимназия по Дървообработване и Строителство Цар Иван Асен ІI"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Хасково",
+            "name": "Средно Общообразователно Училище Васил Левски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Хасково",
+            "name": "Природо-Математическа Гимназия Академик Боян Петканчин"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Хасково",
+            "name": "Професионална Гимназия по Транспорт Н.Й.Вапцаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Хасково",
+            "name": "Професионална Гимназия по Механоелектротехника Стойчо и Кица Марчеви"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Хасково",
+            "name": "Финансово-Стопанска Гимназия Атанас Буров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Хасково",
+            "name": "Средно Общообразователно Училище Св.Паисий Хилендарски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Хасково",
+            "name": "Професионална Гимназия по Селско Стопанство"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Хасково",
+            "name": "Професионална Гимназия по Лека Промишленост"
+        },
+        "model": "base_app.school"
+    }
+]

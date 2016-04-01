@@ -27,6 +27,7 @@ class PartnerAdmin(admin.ModelAdmin):
 
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
+    search_fields = ('name',)
     list_display = ('name',)
 
 

@@ -1,0 +1,86 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Професионална Гимназия по Техника и Строителство Арх.Йордан Миланов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Природо-Математическа Гимназия Христо Смирненски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Гимназия с Преподаване на Чужди Езици Симеон Радев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Професионална Техничека Гимназия Юрий Гагарин"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Технологична Професионална Гимназия Мария Кюри"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Професионална Гимназия по Икономика"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Средно Общообразователно Училище Свети Климент Охридски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Пето Средно Общообразователно Училище Петко Рачов Славейков"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Шесто Средно Общообразователно Училище Св. Св. Кирил и Методий"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "СОУ с Разширено Изучаване на Чужди Езици Д-Р Петър Берон"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Професионална Гимназия по Енергетика и Минна Промишленост Христо Ботев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Професионална Гимназия по Облекло и Туризъм Свети Иван Рилски"
+        },
+        "model": "base_app.school"
+    }
+]

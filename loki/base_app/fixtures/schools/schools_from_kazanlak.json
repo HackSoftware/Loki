@@ -1,0 +1,65 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Казанлък",
+            "name": "Професионална Гимназия Иван Хаджиенов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Казанлък",
+            "name": "Национална Гимназия по Пластични Изкуства и Дизайн Академик Дечко Узунов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Казанлък",
+            "name": "Гимназия Академик Петко Стайнов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Казанлък",
+            "name": "Природоматематическа Гимназаия Никола Обрешков"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Казанлък",
+            "name": "Средно Общообразователно Училище Екзарх Антим I"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Казанлък",
+            "name": "Професионална Гимназия по Лека Промишленост и Туризъм"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Казанлък",
+            "name": "Хуманитарна Гимназия Св.Св.Кирил и Методий"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Казанлък",
+            "name": "Професионална Гимназия по Транспорт и Транспортен Мениджмънт"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Казанлък",
+            "name": "Професионална Гимназия по Строителство"
+        },
+        "model": "base_app.school"
+    }
+]

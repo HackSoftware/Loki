@@ -1,0 +1,51 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Свищов",
+            "name": "Средно Общообразователно Училище Цветан Радославов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Свищов",
+            "name": "Средно Общообразователноучилище Николай Катранов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Свищов",
+            "name": "Държавна Търговска Гимназия Димитър Хадживасилев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Свищов",
+            "name": "Професионална Гимназия Проф. Д-Р Асен Златаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Свищов",
+            "name": "Професионална Гимназия по Лека Промишленост и Строителство"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Свищов",
+            "name": "Средно Общообразователно Училище Алеко Константинов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Свищов",
+            "name": "Средно Общообразователно Училище Димитър Благоев"
+        },
+        "model": "base_app.school"
+    }
+]

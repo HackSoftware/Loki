@@ -1,0 +1,163 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Гимназия с Преподаване на Чужди Езици"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Математическа Гимназия Гео Милев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Средно Общообразователно Училище Стоян Заимов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Средно Общообразователно Училище Иван Вазов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Средно Общообразователно Училище Пейо Крачолов Яворов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Държавна Финансово-Стопанска Гимназия Интелект"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия по Хранително-Вкусови Технологии Луи Пастьор"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия по Строителство, Архитектура и Геодезия Никола Фичев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия по Транспорт Проф. Цветан Лазаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия по Електроника и Химични Технологии Проф. Асен Златаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия по Лозарство и Винарство Александър Стамболийски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия по Подемна, Строителна и Транспортна Техника Г.С.Раковски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия по Туризъм Алеко Константинов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия по Облекло и Текстил"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия по Механо-електротехника"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Прогимназия Цветан Спасов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Средно Общообразователно Училище Анастасия Димитрова"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Средно Общообразователно Училище Христо Смирненски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия по Мениджмънт и Хранителни Технологии"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия по Ресторантьорство, Търговия и Обслужване"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Частна Профилирана Гимназия Иком Интелект"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Професионална Гимназия Захарий Зограф"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Плевен",
+            "name": "Общоградско Средношколско Общежитие"
+        },
+        "model": "base_app.school"
+    }
+]

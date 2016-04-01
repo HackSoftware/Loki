@@ -1,0 +1,93 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Професионална Гимназия по Строителство, Архитектура и Геодезия"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Професионална Гимназия по Облекло, Хранене и Химични Технологии Проф. Д-Р Асен Златаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Средно Общообразователно Училище Панайот Волов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Гимназия с Преподаване на Чужди Езици Никола Йонков Вапцаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Средно Общообразователно Училище Васил Левски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Професионална Гимназия по Механотехника, Електроника, Телекомуникации и Транспорт Христо Ботев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Професионална Гимназия по Машиностроене"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Професионална Гимназия по Икономика"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Професионална Гимназия по Селско Стопанство и Хранителни Технологии"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Средно Общообразователно Училище Трайко Симеонов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Средно Общообразователно Училище Йоан Екзарх Български"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Средно Общообразователно Училище Сава Доброплодни"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Средно Общообразователно Духовно Училище Нювваб"
+        },
+        "model": "base_app.school"
+    }
+]

@@ -1,0 +1,65 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Ловеч",
+            "name": "Професионална Гимназия по Ветеринарна Медицина Проф. Д-Р Димитър Димов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ловеч",
+            "name": "Средно Общообразователно Училище Тодор Кирков"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ловеч",
+            "name": "Средно Общообразователно Училище Св.Климент Охридски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ловеч",
+            "name": "Природо-Математическа Гимназия"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ловеч",
+            "name": "Гимназия За Чужди Езици Екзарх Йосиф I"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ловеч",
+            "name": "Професионална Гимназия по Кожарство, Облекло и Химични Технологии Марийка и Маринчо Караконови"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ловеч",
+            "name": "Професионална Гимназия по Икономика, Търговия и Услуги"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ловеч",
+            "name": "Средно Общообразователно Училище Панайот Пипков"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Ловеч",
+            "name": "Професионална Гимназия по Механоелектротехника"
+        },
+        "model": "base_app.school"
+    }
+]

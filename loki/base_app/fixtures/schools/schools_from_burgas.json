@@ -1,0 +1,191 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Професионална Гимназия по Химични Технологии Академик Н. Д. Зелинский"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Природоматематическа Гимназия Академик Никола Обрешков"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Професионална Гимназия по Строителство, Архитектура и Геодезия Кольо Фичето"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Професионална Гимназия по Електротехника и Електроника Константин Фотинов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Гимназия За Романски Езици Г. С. Раковски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Средно Общообразователно Училище Добри Чинтулов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Средно Общообразователноучилище Йордан Йовков"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Професионална Гимназия по Механоелектротехника и Електроника"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Търговска Гимназия"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Вечерна Гимназия Захари Стоянов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Частна Профилирана Гимназия с Изучаване на Английски Език Британика"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Гимназия с Преподаване на Английски Език Гео Милев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Средно Общообразователно Училище Константин Преславски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Средно Общообразователно Училище Иван Вазов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Средно Общообразователно Училище Димчо Дебелянов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Средно Общообразователно Училище Константин Петканов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Средно Общообразователно Училище Петко Росен"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Средно Общообразователно Училище с Хуманитарно-Естетически Профил Св.Св. Кирил и Методий"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Гимназия с Преподаване на Немски Език Гьоте"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Гимназия За Чужди Езици Васил Левски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Професионална Гимназия по Туризъм Проф.Д-Р Асен Златаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Професионална Гимназия по Морско Корабоплаване и Риболов Свети Никола"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Професионална Гимназия по Транспорт"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Професионална Техническа Гимназия"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Професионална Гимназия по Дървообработване Георги Кондолов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Професионална Гимназия по Сградостроителство и Инсталации Пеньо Пенев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Първо Частно Прогимназиално Училище"
+        },
+        "model": "base_app.school"
+    }
+]

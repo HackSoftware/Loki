@@ -57,7 +57,7 @@
     },
     {
         "fields": {
-            "base_app.city": 84,
+            "base_app.city": 43,
             "name": "Великотърновски университет Свети свети Кирил и Методий"
         },
         "model": "base_app.university"
@@ -78,7 +78,7 @@
     },
     {
         "fields": {
-            "base_app.city": 186,
+            "base_app.city": 139,
             "name": "Русенски университет Ангел Кънчев"
         },
         "model": "base_app.university"
@@ -218,7 +218,7 @@
     },
     {
         "fields": {
-            "base_app.city": 84,
+            "base_app.city": 43,
             "name": "Национален военен университет Васил Левски"
         },
         "model": "base_app.university"

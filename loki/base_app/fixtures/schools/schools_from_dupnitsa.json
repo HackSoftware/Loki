@@ -1,0 +1,51 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Дупница",
+            "name": "Средно Общообразователно Училище Св. Паисий Хилендарски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Дупница",
+            "name": "Гимназия Христо Ботев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Дупница",
+            "name": "Вечерно Средно Общообразователно Училище Димчо Дебелянов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Дупница",
+            "name": "Професионална Гимназия по Облекло и Стопанско Управление"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Дупница",
+            "name": "Професионална Гимназия по Транспорт"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Дупница",
+            "name": "Професионална Гимназия Акад. Сергей П. Корольов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Дупница",
+            "name": "Професионална Гимназия по Хранително – Вкусови и Химични Технологии"
+        },
+        "model": "base_app.school"
+    }
+]

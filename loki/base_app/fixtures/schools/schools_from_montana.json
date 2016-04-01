@@ -1,0 +1,79 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Монтана",
+            "name": "Професионална Гимназия по Строителство, Архитектура и Геодезия"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Монтана",
+            "name": "Природо-Математическа Гимназия Свети Климент Охридски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Монтана",
+            "name": "Второ Средно Общообразователно Училище Никола Йонков Вапцаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Монтана",
+            "name": "Професионална Техническа Гимназия Юрий Гагарин"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Монтана",
+            "name": "Финансово-Стопанска Гимназия Васил Левски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Монтана",
+            "name": "Гимназия с Преподаване на Чужди Езици Петърбогдан"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Монтана",
+            "name": "Пето Средно Общообразователно Училище Христо Ботев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Монтана",
+            "name": "Осмо Средно Общообразователно Училище Отец Паисий"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Монтана",
+            "name": "Девето Средно Общообразователно Училище Йордан Радичков"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Монтана",
+            "name": "Професионална Гимназия по Лека Промишленост"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Монтана",
+            "name": "Професионална Гимназия по Електротехника Христо Ботев"
+        },
+        "model": "base_app.school"
+    }
+]
