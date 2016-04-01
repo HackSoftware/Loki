@@ -22,3 +22,40 @@
 #suggestion-dropdown ul li.selected{
     background-color: #9E9E9E;
 }
+
+#ui-datepicker-div{
+    border-radius: 5px;
+}
+
+
+
+.ui-datepicker-calendar {
+    display: none;
+}
+
+.ui-datepicker-month {
+    display:none;
+}
+
+.ui-datepicker-header {
+    background-color: #F7931E;
+    border-color:#5A5555;
+}
+
+.ui-datepicker .ui-datepicker-title select {
+    background-color: #F7931E;
+    border-color:#F7931E;
+    color:#000;
+}
+
+.ui-widget-content {
+    border: 1px solid #F7931E;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default {
+    border: 1px solid #F7931E;
+}
+
+.ui-state-hover, .ui-widget-content .ui-state-hover {
+    background-color: #F7931E;
+}

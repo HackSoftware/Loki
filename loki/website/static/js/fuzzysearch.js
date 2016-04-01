@@ -1,7 +1,24 @@
 (function () {
     $(document).ready(function () {
 
+        $('.dateinput').datepicker({
+            dateFormat: "yy",
+            changeMonth: false,
+            changeYear: true,
+            showButtonPanel: true,
+            onChangeMonthYear: function (year, mohth, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            },
+            onClose: function (dateText, inst) {
+                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
+        });
+
         if ($("#id_studies_at").length > 0) {
+
+            // preset the data because of reasons
+            $(".dateinput#id_start_date").attr("placeholder", "Учене от").val("");
+            $(".dateinput#id_end_date").attr("placeholder", "Учене до").val("");
 
             var suggestion_dropdown = $("<div id='suggestion-dropdown'><ul></ul></div>");
 
@@ -10,6 +27,7 @@
             field.attr("name", '');
             field.attr('id', 'fuzzy-field');
             $("#id_studies_at").hide().after(field);
+            $("#id_education_info").hide();
 
             suggestion_dropdown = suggestion_dropdown.find("ul");
 
@@ -47,7 +65,7 @@
 
                         for (var i in data['result']) {
                             var el = data['result'][i];
-                            var str = el.city + " " + el.uni + " " + el.faculty + " " + el.subject;
+                            var str = represent(el);
 
                             if (i == 0) {
                                 suggestion_dropdown.append($("<li class='selected' ref='" + el.pk + "'>" + str + "</li>"));
@@ -62,7 +80,13 @@
             $(".register-form").submit(function (e) {
                 if ($(":focus").is($("#fuzzy-field"))) {
                     e.preventDefault();
+                    return;
                 }
+
+                // Forgive me father, for I have sinned
+                $("#id_start_date").val($("#id_start_date").val() + "-" + 1 + "-" + 1);
+                $("#id_end_date").val($("#id_end_date").val() + "-" + 1 + "-" + 1);
+
             }).on("mouseover", "#suggestion-dropdown li", function () {
                 $("#suggestion-dropdown .selected").removeClass("selected");
                 $(this).addClass("selected")
@@ -77,6 +101,13 @@
             })
         }
     });
+
+    function represent(el) {
+        if (el.faculty) {
+            return el.city + " " + el.uni + " " + el.faculty + " " + el.subject;
+        }
+        return el.city + " " + el.name;
+    }
 
 
     function fuzzysearch_navigation(keycode) {
@@ -108,7 +139,7 @@
     function select_item() {
         var el = $("#suggestion-dropdown .selected")
         console.log(el)
-        $("#id_studies_at").val(el.attr('ref'));
+        $("#id_education_info").val(el.attr('ref'));
         $("#fuzzy-field").val(el.html())
         $("#suggestion-dropdown").hide();
     }

@@ -22,6 +22,7 @@
     "jquery": "~2.1.4",
     "swipebox": "~1.4.1",
     "devicon": "*",
-    "bootstrap-hover-dropdown": "~2.1.3"
+    "bootstrap-hover-dropdown": "~2.1.3",
+    "jqueryui-datepicker": "^0.0.3"
   }
 }

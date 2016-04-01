@@ -1,13 +1,16 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from base_app.models import BaseUser
+from base_app.models import BaseUser, EducationInfo, EducationPlace
 
 
 class RegisterForm(forms.ModelForm):
 
     password = forms.CharField(label=_("Password"),
                                widget=forms.PasswordInput(attrs={'placeholder': "Парола"}))
+    education_info = forms.CharField()
+    start_date = forms.DateField()
+    end_date = forms.DateField()
 
     class Meta:
         model = BaseUser
@@ -17,7 +20,10 @@ class RegisterForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'placeholder': "Име", 'autofocus': ''}),
             'last_name': forms.TextInput(attrs={'placeholder': "Фамилия"}),
             'email': forms.EmailInput(attrs={'placeholder': "E-mail adress"}),
-            'studies_at': forms.TextInput(attrs={'placeholder': "Образование"})
+            'studies_at': forms.TextInput(attrs={'placeholder': "Образование"}),
+            'education_info': forms.TextInput(),
+            'start_date': forms.DateInput(),
+            'end_date': forms.DateInput()
         }
 
     def __init__(self, *args, **kwargs):
@@ -30,7 +36,19 @@ class RegisterForm(forms.ModelForm):
         return password
 
     def save(self, commit=True):
-        return BaseUser.objects.create_user(**self.cleaned_data)
+        user = BaseUser.objects.create_user(
+                email=self.cleaned_data.get('email'),
+                password=self.cleaned_data.get('password'),
+                full_name="{} {}".format(
+                        self.cleaned_data.get('first_name'),
+                        self.cleaned_data.get('last_name')))
+        education_place = EducationPlace.objects.get(pk=self.cleaned_data.get('education_info'))
+        EducationInfo.objects.create(
+                user=user,
+                place=education_place,
+                start_date=self.cleaned_data.get('start_date'),
+                end_date=self.cleaned_data.get('end_date'))
+        return user
 
     def _validate_password_strength(self, value):
         """Validates that a password is as least 7 characters long and has at least
