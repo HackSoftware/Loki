@@ -9,7 +9,8 @@ def rename(data, rename_rules):
 
         for key in data:
             if key == old_parts[-1]:
-                print(key)
+                pass
+                # print(key)
 
         if key == old:
             return new
@@ -58,7 +59,6 @@ def transform(data, transform_rules):
 
 def modify_json(data, rules):
     result = []
-    print(rules['DELETE'])
     for item in data:
         for delete in rules['DELETE']:
             if delete in item:
