@@ -94,7 +94,7 @@ class Faculty(models.Model):
         return self.name
 
     class Meta:
-        unique_together = (('uni', 'name'),)
+        unique_together = (('university', 'name'),)
         verbose_name_plural = 'Faculties'
 
 
