@@ -32,6 +32,9 @@
             suggestion_dropdown = suggestion_dropdown.find("ul");
 
             var last_content = "";
+            var requests_waiting = 0;
+            var last_keyup = Date.now();
+            window.timeout = false;
 
             $("#fuzzy-field").keyup(function (e) {
 
@@ -40,41 +43,57 @@
                     return;
                 }
 
-                $("#suggestion-dropdown").show();
+                if (!timeout)
+                    timeout = setTimeout(function () {
 
-                var value = $.trim($("#fuzzy-field").val());
+                        $("#suggestion-dropdown").show();
 
-                if (value == "") {
-                    $("#suggestion-dropdown").hide();
-                    suggestion_dropdown.html("");
-                    return;
-                }
+                        var value = $.trim($("#fuzzy-field").val());
 
-                if (value == last_content) return;
-                last_content = value;
-
-                $.ajax({
-                    url: '/base/api/education-place-suggest/',
-                    type: "POST",
-                    data: {
-                        query: value
-                    },
-                    success: function (data) {
-
-                        suggestion_dropdown.html("");
-
-                        for (var i in data['result']) {
-                            var el = data['result'][i];
-                            var str = represent(el);
-
-                            if (i == 0) {
-                                suggestion_dropdown.append($("<li class='selected' ref='" + el.pk + "'>" + str + "</li>"));
-                            } else {
-                                suggestion_dropdown.append($("<li ref='" + el.pk + "'>" + str + "</li>"));
-                            }
+                        if (value == "") {
+                            $("#suggestion-dropdown").hide();
+                            suggestion_dropdown.html("");
+                            return;
                         }
-                    }
-                })
+
+                        if (value == last_content) return;
+                        last_content = value;
+
+                        requests_waiting++;
+                        suggestion_dropdown.fadeTo("fast", 0.4);
+
+                        $.ajax({
+                            url: '/base/api/education-place-suggest/',
+                            type: "POST",
+                            data: {
+                                query: value
+                            },
+                            success: function (data) {
+
+                                requests_waiting--;
+                                clearTimeout(timeout);
+                                timeout = false;
+
+                                if (requests_waiting == 0) {
+                                    suggestion_dropdown.fadeTo("fast", 1);
+
+                                    suggestion_dropdown.html("");
+
+                                    for (var i in data['result']) {
+                                        var el = data['result'][i];
+                                        var str = represent(el);
+
+                                        if (i == 0) {
+                                            suggestion_dropdown.append($("<li class='selected' ref='" + el.pk + "'>" + str + "</li>"));
+                                        } else {
+                                            suggestion_dropdown.append($("<li ref='" + el.pk + "'>" + str + "</li>"));
+                                        }
+                                    }
+                                    suggestion_dropdown.append($("<li rel='add_new'>" + "Не намирам моето" + "</li>"));
+                                }
+                            }
+                        })
+                    }, 1000);
             });
 
             $(".register-form").submit(function (e) {
@@ -103,10 +122,24 @@
     });
 
     function represent(el) {
-        if (el.faculty) {
-            return el.city + " " + el.uni + " " + el.faculty + " " + el.subject;
+        var str = "";
+        if (el.subject) {
+            str += " " + el.subject;
         }
-        return el.city + " " + el.name;
+
+        if (el.faculty) {
+            str += " " + el.faculty;
+        }
+
+        if (el.educationplace) {
+            str += " " + el.educationplace;
+        }
+
+        if (el.city) {
+            str += " " + el.city;
+        }
+
+        return str;
     }
 
 
@@ -137,11 +170,21 @@
     }
 
     function select_item() {
+        // if an item from suggestion is selected - fill the ed_info field
         var el = $("#suggestion-dropdown .selected")
-        console.log(el)
-        $("#id_education_info").val(el.attr('ref'));
-        $("#fuzzy-field").val(el.html())
-        $("#suggestion-dropdown").hide();
+        if (el.attr('ref')) {
+            $("#id_education_info").val(el.attr('ref'));
+            $("#fuzzy-field").val(el.html())
+            $("#id_studies_at").val("");
+            $("#suggestion-dropdown").hide();
+        } else {
+            // if the "other thing" option is selected from the dropdown - fill in the "studies at" field
+            if (el.attr("rel")) {
+                $("#id_education_info").val("")
+                $("#id_studies_at").val($("#fuzzy-field").val());
+                $("#suggestion-dropdown").hide();
+            }
+        }
     }
 
 })();
