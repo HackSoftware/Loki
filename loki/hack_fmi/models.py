@@ -1,10 +1,6 @@
 from django.db import models
 
 from ckeditor.fields import RichTextField
-from django.db.models.loading import get_model
-from django_resized import ResizedImageField
-from base_app.models import City
-
 from base_app.models import BaseUser
 
 
