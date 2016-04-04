@@ -2,13 +2,16 @@ from operator import itemgetter
 from fuzzywuzzy import fuzz
 from .models import Subject, School, Academy
 
-EXCLUDE_FIELDS = ('pk', 'total_score')
+EXCLUDE_FIELDS = ('pk', 'faculty_pk', 'subject_pk',
+                  'total_score')
 
 
 def get_possible_universities():
     subjects = Subject.objects.all()
     possible = [{
-        'pk': s.pk,
+        'pk': s.faculty.university.pk,
+        'subject_pk': s.pk,
+        'faculty_pk': s.faculty.pk,
         'subject': s.name,
         'faculty': s.faculty.name,
         'faculty_abbreviation': s.faculty.abbreviation or "",
@@ -52,12 +55,15 @@ def fuzzy_search_education_place(words):
     for word in words:
         for obj in everything:
             s = 0
+            c = 0
             for field in obj:
                 if field in EXCLUDE_FIELDS:
                     continue
-                s += fuzz.ratio(word.lower(), obj[field].lower())
 
-            obj['total_score'] += s
+                s += fuzz.ratio(word.lower(), obj[field].lower())
+                c += 1
+
+            obj['total_score'] += s / c
 
     flatten = sorted(everything, key=itemgetter('total_score'), reverse=True)
 
