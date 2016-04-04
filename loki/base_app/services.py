@@ -12,7 +12,7 @@ def get_possible_universities():
         'subject': s.name,
         'faculty': s.faculty.name,
         'faculty_abbreviation': s.faculty.abbreviation or "",
-        'university': s.faculty.university.name,
+        'educationplace': s.faculty.university.name,
         'city': s.faculty.university.city.name,
         'total_score': 0
     } for s in subjects]
@@ -24,7 +24,7 @@ def get_possible_schools():
     schools = School.objects.all()
     possible = [
         {'pk': s.pk,
-         'name': s.name,
+         'educationplace': s.name,
          'city': s.city.name,
          'total_score': 0} for s in schools]
 
@@ -35,7 +35,7 @@ def get_possible_academies():
     academies = Academy.objects.all()
     possible = [
         {'pk': a.pk,
-         'name': a.name,
+         'educationplace': a.name,
          'city': a.city.name,
          'total_score': 0} for a in academies]
 
