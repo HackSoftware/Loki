@@ -2,6 +2,7 @@ from operator import itemgetter
 from fuzzywuzzy import fuzz
 from .models import Subject, School, Academy
 
+FILTER_UNDER_TRESHOLD = 30
 EXCLUDE_FIELDS = ('pk', 'faculty_pk', 'subject_pk',
                   'total_score')
 
@@ -52,19 +53,22 @@ def fuzzy_search_education_place(words):
 
     everything = universities + schools + academies
 
-    for word in words:
+    for word in set(words):
         for obj in everything:
             s = 0
             c = 0
+
             for field in obj:
                 if field in EXCLUDE_FIELDS:
                     continue
 
-                s += fuzz.ratio(word.lower(), obj[field].lower())
+                ratio = fuzz.ratio(word.lower(), obj[field].lower())
+
+                s += ratio
                 c += 1
 
             obj['total_score'] += s / c
 
     flatten = sorted(everything, key=itemgetter('total_score'), reverse=True)
 
-    return flatten[:5]
+    return list(filter(lambda r: r['total_score'] >= FILTER_UNDER_TRESHOLD, flatten))[:5]
