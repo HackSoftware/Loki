@@ -30,3 +30,6 @@ def try_open(filename, mode="r"):
         finally:
             f.close()
 
+
+def split_and_lower(query):
+    return [w.lower() for w in query.split()]

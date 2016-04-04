@@ -8,9 +8,10 @@ from rest_framework import generics
 
 from base_app.serializers import (BaseUserMeSerializer, UpdateBaseUserSerializer)
 
-from .helper import crop_image
+from .helper import crop_image, split_and_lower
 from .models import BaseUser
 from .services import fuzzy_search_education_place
+from .decorators import cache_response
 
 
 @api_view(['GET'])
@@ -58,9 +59,10 @@ def base_user_update(request):
 
 
 @api_view(['POST'])
+@cache_response
 def education_place_suggest(request):
     query = request.data.get('query', '')
-    words = [w.lower() for w in query.split()]
+    words = split_and_lower(query)
 
     result = fuzzy_search_education_place(words)
 
