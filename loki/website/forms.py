@@ -1,16 +1,17 @@
+import json
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from base_app.models import BaseUser, EducationInfo, EducationPlace
+from base_app.models import BaseUser, EducationInfo, EducationPlace, Faculty, Subject
 
 
 class RegisterForm(forms.ModelForm):
 
     password = forms.CharField(label=_("Password"),
                                widget=forms.PasswordInput(attrs={'placeholder': "Парола"}))
-    education_info = forms.CharField()
-    start_date = forms.DateField()
-    end_date = forms.DateField()
+    education_info = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'off'}))
+    start_date = forms.DateField(input_formats=['%d-%m-%Y'])
+    end_date = forms.DateField(input_formats=['%d-%m-%Y'])
 
     class Meta:
         model = BaseUser
@@ -42,12 +43,35 @@ class RegisterForm(forms.ModelForm):
                 full_name="{} {}".format(
                         self.cleaned_data.get('first_name'),
                         self.cleaned_data.get('last_name')))
-        education_place = EducationPlace.objects.get(pk=self.cleaned_data.get('education_info'))
-        EducationInfo.objects.create(
+
+        education_info = json.loads(self.cleaned_data.get('education_info'))
+        print(education_info)
+
+        if 'other' in education_info:
+            print('We have other')
+            user.studies_at = education_info['other']
+            user.save()
+
+            return user
+
+        education_place = EducationPlace.objects.get(pk=education_info['pk'])
+
+        info = EducationInfo.objects.create(
                 user=user,
                 place=education_place,
                 start_date=self.cleaned_data.get('start_date'),
                 end_date=self.cleaned_data.get('end_date'))
+
+        if 'faculty_pk' in education_info:
+            faculty = Faculty.objects.get(pk=education_info['faculty_pk'])
+            info.faculty = faculty
+
+        if 'subject_pk' in education_info:
+            subject = Subject.objects.get(pk=education_info['subject_pk'])
+            info.subject = subject
+
+        info.save()
+
         return user
 
     def _validate_password_strength(self, value):
