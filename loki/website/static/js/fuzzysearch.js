@@ -14,6 +14,7 @@
             }
         });
 
+
         if ($("#id_studies_at").length > 0) {
 
             // preset the data because of reasons
@@ -32,9 +33,8 @@
             suggestion_dropdown = suggestion_dropdown.find("ul");
 
             var last_content = "";
-            var requests_waiting = 0;
             var last_keyup = Date.now();
-            window.timeout = false;
+            var timeout = false;
 
             $("#fuzzy-field").keyup(function (e) {
 
@@ -53,14 +53,16 @@
                         if (value == "") {
                             $("#suggestion-dropdown").hide();
                             suggestion_dropdown.html("");
+                            timeout = false;
                             return;
                         }
 
-                        if (value == last_content) return;
+                        if (value == last_content) {
+                            timeout = false;
+                            return;
+                        }
                         last_content = value;
 
-                        requests_waiting++;
-                        suggestion_dropdown.fadeTo("fast", 0.4);
 
                         $.ajax({
                             url: '/base/api/education-place-suggest/',
@@ -70,27 +72,25 @@
                             },
                             success: function (data) {
 
-                                requests_waiting--;
-                                clearTimeout(timeout);
+                                //clearTimeout(timeout);
                                 timeout = false;
+                                console.log("Timeout cleared");
 
-                                if (requests_waiting == 0) {
-                                    suggestion_dropdown.fadeTo("fast", 1);
 
-                                    suggestion_dropdown.html("");
+                                suggestion_dropdown.html("");
 
-                                    for (var i in data['result']) {
-                                        var el = data['result'][i];
-                                        var str = represent(el);
+                                for (var i in data['result']) {
+                                    var el = data['result'][i];
+                                    var str = represent(el);
 
-                                        if (i == 0) {
-                                            suggestion_dropdown.append($("<li class='selected' ref='" + el.pk + "'>" + str + "</li>"));
-                                        } else {
-                                            suggestion_dropdown.append($("<li ref='" + el.pk + "'>" + str + "</li>"));
-                                        }
+                                    if (i == 0) {
+                                        suggestion_dropdown.append($("<li class='selected' ref='" + el.pk + "'>" + str + "</li>"));
+                                    } else {
+                                        suggestion_dropdown.append($("<li ref='" + el.pk + "'>" + str + "</li>"));
                                     }
-                                    suggestion_dropdown.append($("<li rel='add_new'>" + "Не намирам моето" + "</li>"));
                                 }
+                                suggestion_dropdown.append($("<li rel='add_new'>" + "<b>Не намирам моето</b>" + "</li>"));
+
                             }
                         })
                     }, 1000);
@@ -174,7 +174,7 @@
         var el = $("#suggestion-dropdown .selected")
         if (el.attr('ref')) {
             $("#id_education_info").val(el.attr('ref'));
-            $("#fuzzy-field").val(el.html())
+            $("#fuzzy-field").val(el.html().trim())
             $("#id_studies_at").val("");
             $("#suggestion-dropdown").hide();
         } else {
