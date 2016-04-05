@@ -5,7 +5,9 @@ from django.contrib.auth.decorators import login_required
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
 
 from education.models import WorkingAt
-from base_app.models import Partner, GeneralPartner
+from base_app.models import Partner, GeneralPartner, BaseUser
+from base_app.services import send_activation_mail, send_forgotten_password_email
+from base_app.helper import get_or_none
 
 from .forms import RegisterForm, LoginForm
 from .decorators import anonymous_required
@@ -62,7 +64,8 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            send_activation_mail(request, user)
             return render(request, 'website/auth/thanks.html', locals())
     return render(request, "website/auth/register.html", locals())
 
@@ -96,3 +99,15 @@ def logout_view(request):
 @login_required
 def profile(request):
     return render(request, 'website/profile.html', locals())
+
+
+def forgotten_password(request):
+    if request.POST:
+        email = request.POST.get('email', '').strip()
+        baseuser = get_or_none(BaseUser, email=email)
+        if baseuser is None:
+            message = "Потребител с посочения email не е открит"
+        else:
+            message = "Email за промяна на паролата беше изпратен на посочения адрес"
+            send_forgotten_password_email(request, baseuser)
+    return render(request, 'website/auth/forgotten_password.html', locals())

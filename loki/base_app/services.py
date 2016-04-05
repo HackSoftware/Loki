@@ -1,6 +1,13 @@
+import uuid
+
+from django.conf import settings
+from django.contrib.sites.models import RequestSite
+from django.core.urlresolvers import reverse
 from operator import itemgetter
 from fuzzywuzzy import fuzz
-from .models import Subject, School, Academy
+from .models import Subject, School, Academy, BaseUserRegisterToken, BaseUserPasswordResetToken
+from post_office import mail
+
 
 FILTER_UNDER_TRESHOLD = 30
 EXCLUDE_FIELDS = ('pk', 'faculty_pk', 'subject_pk',
@@ -72,3 +79,43 @@ def fuzzy_search_education_place(words):
     flatten = sorted(everything, key=itemgetter('total_score'), reverse=True)
 
     return list(filter(lambda r: r['total_score'] >= FILTER_UNDER_TRESHOLD, flatten))[:5]
+
+
+def send_activation_mail(request, user):
+    to_email = user.email
+    from_email = settings.EMAIL_HOST_USER
+
+    BaseUserRegisterToken.objects.filter(user=user).delete()
+
+    user_token = BaseUserRegisterToken.objects.create(
+        user=user,
+        token=uuid.uuid4())
+
+    mail.send(
+        to_email,
+        from_email,
+        template='user_register',
+        context={'protocol': request.is_secure() and 'https' or 'http',
+                 'domain': RequestSite(request).domain,
+                 'url': reverse("base_app:user_activation", kwargs={'token': user_token.token})}
+    )
+
+
+def send_forgotten_password_email(request, user):
+    to_email = user.email
+    from_email = settings.EMAIL_HOST_USER
+
+    BaseUserPasswordResetToken.objects.filter(user=user).delete()
+
+    user_token = BaseUserPasswordResetToken.objects.create(
+        user=user,
+        token=uuid.uuid4())
+
+    mail.send(
+        to_email,
+        from_email,
+        template='password_reset',
+        context={'protocol': request.is_secure() and 'https' or 'http',
+                 'domain': RequestSite(request).domain,
+                 'url': reverse("base_app:user_password_reset", kwargs={"token": user_token.token})}
+    )

@@ -233,3 +233,13 @@ class EducationInfo(models.Model):
         self.updated_at = timezone.now()
 
         return super().save(*args, **kwargs)
+
+
+class BaseUserRegisterToken(models.Model):
+    user = models.OneToOneField(BaseUser)
+    token = models.CharField(unique=True, max_length=100)
+
+
+class BaseUserPasswordResetToken(models.Model):
+    user = models.OneToOneField(BaseUser)
+    token = models.CharField(unique=True, max_length=100)

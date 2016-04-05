@@ -1,9 +1,8 @@
-import json
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from base_app.models import BaseUser, EducationInfo, EducationPlace, Faculty, Subject
-from base_app.helper import get_or_none
+from base_app.helper import get_or_none, validate_password
 
 
 INPUTS = {
@@ -27,19 +26,22 @@ def w(input_type, value=None):
 
 
 class RegisterForm(forms.Form):
-    first_name = forms.CharField(label=_('First Name'), widget=w('text', 'Име'))
-    last_name = forms.CharField(label=_('Last Name'), widget=w('text', 'Фамилия'))
+    first_name = forms.CharField(label=_('Име'), widget=w('text', 'Име'))
+    last_name = forms.CharField(label=_('Фамилия'), widget=w('text', 'Фамилия'))
     email = forms.EmailField(widget=w('text', 'Email'))
-    password = forms.CharField(label=_("Password"), widget=w('pass', 'Парола'))
+    password = forms.CharField(label=_("Парола"), widget=w('pass', 'Парола'))
 
-    studies_at = forms.CharField(required=False)
+    studies_at = forms.CharField(label=_(
+        """Започни да пишеш и избери мястото, на което си учил от менюто.
+        Ако не намираш мястото си - напиши града и пълното наименование и натисни
+        'Не намирам моето' *"""), required=False)
 
     educationplace = forms.IntegerField(required=False, widget=w('hidden'))
     faculty = forms.IntegerField(required=False, widget=w('hidden'))
     subject = forms.IntegerField(required=False, widget=w('hidden'))
 
-    start_date = forms.DateField(input_formats=['%d-%m-%Y'])
-    end_date = forms.DateField(input_formats=['%d-%m-%Y'])
+    start_date = forms.DateField(label=_('Дата на начало'), input_formats=['%d-%m-%Y'])
+    end_date = forms.DateField(label=_('Дата на край'), input_formats=['%d-%m-%Y'])
 
     def clean_password(self):
         password = self.cleaned_data.get("password")
@@ -118,22 +120,7 @@ class RegisterForm(forms.Form):
         return user
 
     def _validate_password_strength(self, value):
-        """Validates that a password is as least 7 characters long and has at least
-        1 digit and 1 letter.
-        """
-        min_length = 6
-
-        if len(value) < min_length:
-            raise ValidationError(_('Password must be at least {0} characters '
-                                    'long.').format(min_length))
-
-        # check for digit
-        if not any(char.isdigit() for char in value):
-            raise ValidationError(_('Password must container at least 1 digit.'))
-
-        # check for letter
-        if not any(char.isalpha() for char in value):
-            raise ValidationError(_('Password must container at least 1 letter.'))
+        validate_password(value)
 
 
 class LoginForm(forms.Form):

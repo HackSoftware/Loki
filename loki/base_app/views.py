@@ -1,15 +1,16 @@
 import json
 
-from rest_framework import status, mixins
+from django.shortcuts import render, get_object_or_404
+from django.core.exceptions import ValidationError
+from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import generics
 
-from base_app.serializers import (BaseUserMeSerializer, UpdateBaseUserSerializer)
+from base_app.serializers import BaseUserMeSerializer, UpdateBaseUserSerializer
 
-from .helper import crop_image
-from .models import BaseUser
+from .helper import crop_image, validate_password
+from .models import BaseUserRegisterToken, BaseUserPasswordResetToken
 from .services import fuzzy_search_education_place
 
 
@@ -71,3 +72,35 @@ def education_place_suggest(request):
     }
 
     return Response(response)
+
+
+def user_activation(request, token):
+    token = BaseUserRegisterToken.objects.get(token=token)
+    user = token.user
+    user.is_active = True
+    user.save()
+    token.delete()
+
+    return render(request, 'website/auth/account_activated.html')
+
+
+def user_password_reset(request, token):
+    token = get_object_or_404(BaseUserPasswordResetToken, token=token)
+    errors = []
+    if request.POST and request.POST.get("password"):
+        user = token.user
+        password = request.POST.get("password")
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            errors = e
+            print(errors)
+        else:
+            user.set_password(password)
+            user.save()
+            token.delete()
+            message = "Паролата ти беше успешно сменена!"
+
+        print(errors)
+
+    return render(request, 'website/auth/password_reset.html', locals())
