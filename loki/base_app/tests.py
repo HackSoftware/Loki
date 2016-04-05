@@ -14,7 +14,6 @@ from education.models import Course, CourseAssignment, Student, Certificate
 import unittest
 
 
-@unittest.skip('Skip until further implementation of Hackathon system')
 class BaseUserRegistrationTests(TestCase):
 
     def setUp(self):
