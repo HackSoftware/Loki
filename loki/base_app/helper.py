@@ -30,3 +30,9 @@ def try_open(filename, mode="r"):
         finally:
             f.close()
 
+
+def get_or_none(model, *args, **kwargs):
+    try:
+        return model.objects.get(*args, **kwargs)
+    except model.DoesNotExist:
+        return None

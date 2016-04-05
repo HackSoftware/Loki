@@ -54,30 +54,32 @@ $(document).ready(function () {
   }
 
   function selectItem() {
-      // if an item from suggestion is selected - fill the ed_info field
       var el = $("#suggestion-dropdown .selected");
       var rawData = el.attr('ref');
       var data = JSON.parse(rawData);
 
-      if(data !== false) {
-        $("#id_education_info").val(rawData);
-        $("#fuzzy-field").val(el.html().trim());
-        $("#id_studies_at").val("");
-        $("#suggestion-dropdown").hide();
-      } else {
-        var other = {
-          other: $("#fuzzy-field").val()
-        };
+      $("#id_studies_at").val($("#fuzzy-field").val());
 
-        $("#id_education_info").val(JSON.stringify(other));
-        $("#suggestion-dropdown").hide();
+      if(!_.isUndefined(data.pk)) {
+        $("#id_educationplace").val(data.pk);
       }
 
-      if (el.attr('ref')) {
+      if(!_.isUndefined(data.subject_pk)) {
+        $("#id_subject").val(data.subject_pk);
+      }
+
+      if(!_.isUndefined(data.faculty_pk)) {
+        $("#id_faculty").val(data.faculty_pk);
+      }
+
+      if(data !== false) {
+        $("#fuzzy-field").val(el.html().trim());
+        $("#suggestion-dropdown").hide();
       } else {
-          // if the "other thing" option is selected from the dropdown - fill in the "studies at" field
-          if (el.attr("rel")) {
-          }
+        $("#id_educationplace").val("");
+        $("#id_subject").val("");
+        $("#id_faculty").val("");
+        $("#suggestion-dropdown").hide();
       }
   }
 
@@ -132,11 +134,10 @@ $(document).ready(function () {
           data.result.forEach(function(item, index) {
             var repr = represent(item);
             suggestionDropdown.append($("<li ref='" + JSON.stringify(item) + "'>" + repr + "</li>"));
-
           });
 
-          suggestionDropdown.find("li").first().addClass('selected');
           suggestionDropdown.append($("<li ref='false'>" + "<b>Не намирам моето</b>" + "</li>"));
+          suggestionDropdown.find("li").first().addClass('selected');
         });
       }, 1000);
     }
