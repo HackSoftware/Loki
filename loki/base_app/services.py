@@ -1,7 +1,7 @@
 import uuid
 
 from django.conf import settings
-from django.contrib.sites.models import RequestSite
+from django.contrib.sites.requests import RequestSite
 from django.core.urlresolvers import reverse
 from operator import itemgetter
 from fuzzywuzzy import fuzz
@@ -99,8 +99,7 @@ def send_activation_mail(request, user):
         template='user_register',
         context={'protocol': request.is_secure() and 'https' or 'http',
                  'domain': RequestSite(request).domain,
-                 'url': reverse("base_app:user_activation", kwargs={'token': user_token.token})}
-    )
+                 'url': reverse("base_app:user_activation", kwargs={'token': user_token.token})})
 
 
 def send_forgotten_password_email(request, user):
