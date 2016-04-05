@@ -120,6 +120,7 @@ class RegisterForm(forms.Form):
         return user
 
     def _validate_password_strength(self, value):
+        print("validate password called")
         validate_password(value)
 
 

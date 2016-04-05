@@ -75,7 +75,7 @@ def education_place_suggest(request):
 
 
 def user_activation(request, token):
-    token = BaseUserRegisterToken.objects.get(token=token)
+    token = get_object_or_404(BaseUserRegisterToken, token=token)
     user = token.user
     user.is_active = True
     user.save()
@@ -87,20 +87,17 @@ def user_activation(request, token):
 def user_password_reset(request, token):
     token = get_object_or_404(BaseUserPasswordResetToken, token=token)
     errors = []
-    if request.POST and request.POST.get("password"):
+    if request.POST and request.POST.get("password", False):
         user = token.user
         password = request.POST.get("password")
         try:
             validate_password(password)
         except ValidationError as e:
             errors = e
-            print(errors)
         else:
             user.set_password(password)
             user.save()
             token.delete()
             message = "Паролата ти беше успешно сменена!"
-
-        print(errors)
 
     return render(request, 'website/auth/password_reset.html', locals())

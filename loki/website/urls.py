@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^logout/$', logout_view, name="logout"),
     url(r'^register/$', register, name="register"),
     url(r'^profile/$', profile, name="profile"),
-    url(r'^forgotten_password/$', forgotten_password, name="forgotten_password")
+    url(r'^forgotten-password/$', forgotten_password, name="forgotten_password")
 ]

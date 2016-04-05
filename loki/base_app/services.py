@@ -87,10 +87,12 @@ def send_activation_mail(request, user):
 
     BaseUserRegisterToken.objects.filter(user=user).delete()
 
+    # TODO: check if it exsists
     user_token = BaseUserRegisterToken.objects.create(
         user=user,
         token=uuid.uuid4())
 
+    # TODO: fix deprecation error (RequestSite)
     mail.send(
         to_email,
         from_email,
@@ -107,10 +109,12 @@ def send_forgotten_password_email(request, user):
 
     BaseUserPasswordResetToken.objects.filter(user=user).delete()
 
+    # TODO: check if it exsists
     user_token = BaseUserPasswordResetToken.objects.create(
         user=user,
         token=uuid.uuid4())
 
+    # TODO: fix deprecation error (RequestSite)
     mail.send(
         to_email,
         from_email,
