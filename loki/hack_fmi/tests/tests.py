@@ -12,7 +12,10 @@ from ..helper import date_increase
 from ..models import (Skill, Competitor, TeamMembership,
                       Season, Team, Invitation, Mentor, Room)
 
+import unittest
 
+
+@unittest.skip('Skip until further implementation of Hackathon system')
 class SkillTests(APITestCase):
 
     def setUp(self):
@@ -24,6 +27,7 @@ class SkillTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
+@unittest.skip('Skip until further implementation of Hackathon system')
 class TeamRegistrationTests(APITestCase):
 
     def setUp(self):
@@ -83,6 +87,7 @@ class TeamRegistrationTests(APITestCase):
     #     self.assertEqual(Team.objects.count(), 1)
 
 
+@unittest.skip('Skip until further implementation of Hackathon system')
 class TeamManagementTests(APITestCase):
 
     def setUp(self):
@@ -215,6 +220,7 @@ class TeamManagementTests(APITestCase):
         self.assertEqual(team.season, self.season2)
 
 
+@unittest.skip('Skip until further implementation of Hackathon system')
 class LeaveTeamTests(APITestCase):
 
     def setUp(self):
@@ -283,6 +289,7 @@ class LeaveTeamTests(APITestCase):
         self.assertEqual(len(mail.get_queued()[0].to), 2)
 
 
+@unittest.skip('Skip until further implementation of Hackathon system')
 class InvitationTests(APITestCase):
 
     def setUp(self):
@@ -505,6 +512,7 @@ class InvitationTests(APITestCase):
         self.assertEqual(len(Invitation.objects.all()), 1)
 
 
+@unittest.skip('Skip until further implementation of Hackathon system')
 class SeasonTests(APITestCase):
 
     def setUp(self):
@@ -544,6 +552,7 @@ class SeasonTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
+@unittest.skip('Skip until further implementation of Hackathon system')
 class MentorTests(APITestCase):
 
     def setUp(self):
@@ -622,6 +631,7 @@ class MentorTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
+@unittest.skip('Skip until further implementation of Hackathon system')
 class RoomTests(APITestCase):
 
     def setUp(self):
