@@ -163,11 +163,11 @@ class Test(models.Model):
     def __str__(self):
         return "{}/{}".format(self.task, self.language)
 
-    # Check if test code is change. If yes - retest solutions
+    # Check if test code is changed. If yes - retest solutions
     def save(self, *args, **kwargs):
         if self.id is not None:
             old_test_object = Test.objects.get(id=self.id)
-            if old_test_object.code != self.code:
+            if old_test_object.sourcecodetest.code != self.sourcecodetest.code:
                 RetestSolution.objects.create(test_id=self.id)
 
         super(Test, self).save(*args, **kwargs)

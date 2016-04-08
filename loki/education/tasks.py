@@ -23,7 +23,7 @@ def submit_solution(solution_id):
         "test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
         "language": solution.task.test.language.name,
         "code": solution.code,
-        "test": solution.task.test.code,
+        "test": solution.task.test.sourcecodetest.code,
     }
 
     address = settings.GRADER_ADDRESS
