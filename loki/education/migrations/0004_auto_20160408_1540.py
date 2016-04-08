@@ -15,10 +15,6 @@ class Migration(migrations.Migration):
             model_name='test',
             name='code',
         ),
-        migrations.RemoveField(
-            model_name='test',
-            name='description',
-        ),
         migrations.RenameField(
             model_name='sourcecodetest',
             old_name='sourcecode',
