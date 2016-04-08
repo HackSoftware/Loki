@@ -66,7 +66,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             send_activation_mail(request, user)
-            return render(request, 'website/auth/thanks.html', locals())
+            return render(request, 'website/auth/thanks.html')
     return render(request, "website/auth/register.html", locals())
 
 

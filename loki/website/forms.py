@@ -86,6 +86,11 @@ class RegisterForm(forms.Form):
 
         return self.cleaned_data
 
+    def clean_email(self):
+        user = get_or_none(BaseUser, email=self.cleaned_data.get('email'))
+        if user is not None:
+            raise ValidationError(_("Потребител с такъв email вече съществува"))
+
     def save(self, commit=True):
         user = BaseUser.objects.create_user(
                 first_name=self.cleaned_data.get('first_name'),
