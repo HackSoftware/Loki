@@ -1,0 +1,100 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Професионална Гимназия по Облекло"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Професионална Гимназия по Промишлени Технологии"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Средно Общообразователно Училище Георги Брегов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Професионална Гимназия по Строителство и Архитектура"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Математическа Гимназия Константин Величков"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Гимназия Иван Сергеевич Аксаков"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Професионална Гимназияпо Механоелектротехника"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Езикова Гимназия Бертолт Брехт"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Средно Общообразователно Училище Георги Бенковски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Средно Общообразователно Училище Д-Р Петър Берон"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Професионална Гимназия по Икономика и Мениджмънт"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Прогимназия Св. Св. Кирил и Методий"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Професионална Гимназия по Селско Стопанство Царица Йоанна"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пазарджик",
+            "name": "Професионална Гимназия по Химични и Хранителни Технологии"
+        },
+        "model": "base_app.school"
+    }
+]

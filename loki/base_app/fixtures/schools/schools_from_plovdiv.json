@@ -1,0 +1,331 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Свети Свети Кирил и Методий"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Любен Каравелов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Облекло Ана Май"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Машиностроене Пловдив"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Кожени Изделия и Текстил Д-Р Иван Богоров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Езикова Гимназия Иван Вазов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Вътрешна Архитектура и Дървообработване Христо Ботев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Свети Константин – Кирил Философ"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Национална Търговска Гимназия"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия По битова Техника"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Димитър Матевски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Свети Софроний Врачански"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Частна Профилирана Гимназия Академик Любомир Илиев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Национална Гимназия За Сценични и Екранни Изкуства"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Гимназия с Хуманитарен Профил Св. Св. Кирил и Методий"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Св.Паисий Хилендарски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Свети Климент Охридски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Свети Патриарх Евтимий"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Електротехника и Електроника"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Туризъм Проф. Д-Р Асен Златаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Найден Геров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Транспорт Гоце Делчев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Строителни Технологии Пеньо Пенев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Образцова Математическа Гимназия Академик Кирил Попов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Никола Йонков Вапцаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователноучилище Пейо Крачолов Яворов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Френска Езикова Гимназия Антоан Дьо Сент Екзюпери"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Вечерна Гимназия Христо Смирненски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Хранителни Технологии и Техника"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Механотехника Професор Цветан Лазаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Свети Седмочисленици"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Частно Средно общообразователно Училище Дружба"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Частна Професионална Гимназия по Икономика и Търговия Пловдив"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Частна Профилирана Гимназия с Чуждоезиково Обучение Стоянстрой"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Цар Симеон Велики"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Симон Боливар"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Строителство, Архитектура и Геодезия"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Христо Груев Данов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Езикова Гимназия Пловдив"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Професионална Гимназия по Подемна, Строителна и Транспортна Техника"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Братя Миладинови"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно Общообразователно Училище Константин Величков"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Средно-Общообразователно Училище Черноризец Храбър"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Частна Профилиранагимназия с Профил Чуждоезиков Едмънд Бърк"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Частна Професионална Гимназия по Икономика и Управление"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Частна Профилирана Гимназия Класик"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Частна Професионална Гимназия Академик Любомир Илиев"
+        },
+        "model": "base_app.school"
+    }
+]

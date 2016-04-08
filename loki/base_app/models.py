@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from loki.settings import MEDIA_ROOT
@@ -17,6 +18,9 @@ class Company(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name_plural = 'Companies'
 
 
 class Partner(models.Model):
@@ -47,15 +51,80 @@ class GeneralPartner(models.Model):
 
 
 class City(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique=True)
 
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name_plural = 'Cities'
+
+
+class EducationPlace(models.Model):
+    name = models.CharField(max_length=1000)
+    city = models.ForeignKey(City)
+
+    def is_uni(self):
+        return hasattr(self, 'university')
+
+    def is_school(self):
+        return hasattr(self, 'school')
+
+    def is_academy(self):
+        return hasattr(self, 'academy')
+
+    def __str__(self):
+        return "{} ({})".format(self.name, self.city)
+
+    class Meta:
+        unique_together = (('name', 'city'),)
+
+
+class University(EducationPlace):
+    class Meta:
+        verbose_name_plural = 'Universities'
+
+
+class Faculty(models.Model):
+    university = models.ForeignKey(University)
+    name = models.CharField(max_length=1000)
+    abbreviation = models.CharField(max_length=10, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        unique_together = (('university', 'name'),)
+        verbose_name_plural = 'Faculties'
+
+
+class Subject(models.Model):
+    faculty = models.ForeignKey(Faculty)
+    name = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.name
+
+    def represent(self):
+        return " / ".join([self.name, self.faculty.name, self.faculty.uni.name, self.faculty.uni.city.name])
+
+    class Meta:
+        unique_together = (('faculty', 'name'),)
+
+
+class School(EducationPlace):
+    pass
+
+
+class Academy(EducationPlace):
+    class Meta:
+        verbose_name_plural = 'Academies'
+
 
 class UserManager(BaseUserManager):
 
-    def __create_user(self, email, password, is_staff, is_active, full_name, is_superuser):
+    def __create_user(self, email, password, full_name,
+                      is_staff=False, is_active=False, is_superuser=False, **kwargs):
         if not email:
             raise ValueError('Users must have an email address')
 
@@ -64,17 +133,19 @@ class UserManager(BaseUserManager):
                           is_staff=is_staff,
                           is_active=is_active,
                           full_name=full_name,
-                          is_superuser=is_superuser)
+                          is_superuser=is_superuser,
+                          **kwargs)
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_user(self, email, password, full_name=''):
-        return self.__create_user(email, password, False, False,
-                                  full_name, False)
+    def create_user(self, email, password, full_name='', **kwargs):
+        return self.__create_user(email, password, full_name, is_staff=False, is_active=False,
+                                  is_superuser=False, **kwargs)
 
     def create_superuser(self, email, password, full_name=''):
-        return self.__create_user(email, password, True, True, full_name, True)
+        return self.__create_user(email, password, full_name, is_staff=True,
+                                  is_active=True, is_superuser=True)
 
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
@@ -95,6 +166,8 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
 
     avatar = models.ImageField(blank=True, null=True)
     full_image = models.ImageField(blank=True, null=True)
+
+    education_info = models.ManyToManyField(EducationPlace, through='EducationInfo')
 
     USERNAME_FIELD = 'email'
 
@@ -131,8 +204,42 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         except:
             return False
 
-    def make_competitor(self):
-        competitor = Competitor(baseuser_ptr_id=self.id)
-        competitor.save()
-        competitor.__dict__.update(self.__dict__)
-        return competitor.save()
+    # def make_competitor(self):
+    #     competitor = Competitor(baseuser_ptr_id=self.id)
+    #     competitor.save()
+    #     competitor.__dict__.update(self.__dict__)
+    #     return competitor.save()
+
+
+class EducationInfo(models.Model):
+    user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
+    place = models.ForeignKey(EducationPlace, on_delete=models.CASCADE)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    created_at = models.DateTimeField(editable=False)
+    updated_at = models.DateTimeField()
+
+    faculty = models.ForeignKey(Faculty, blank=True, null=True)
+    subject = models.ForeignKey(Subject, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        '''On save, update created_at and updated_at timestamps
+           Idea based on http://stackoverflow.com/questions/1737017/django-auto-now-and-auto-now-add/1737078#1737078
+        '''
+
+        if not self.id:
+            self.created_at = timezone.now()
+
+        self.updated_at = timezone.now()
+
+        return super().save(*args, **kwargs)
+
+
+class BaseUserRegisterToken(models.Model):
+    user = models.OneToOneField(BaseUser)
+    token = models.CharField(unique=True, max_length=100)
+
+
+class BaseUserPasswordResetToken(models.Model):
+    user = models.OneToOneField(BaseUser)
+    token = models.CharField(unique=True, max_length=100)

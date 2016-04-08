@@ -1,0 +1,30 @@
+[
+  {
+    "model": "base_app.subject",
+    "fields": {
+      "name": "Компютърни науки",
+      "base_app.faculty.name": "Факултет по Математика и Информатика"
+    }
+  },
+  {
+    "model": "base_app.subject",
+    "fields": {
+      "name": "Софтуерно Инженерство",
+      "base_app.faculty.name": "Факултет по Математика и Информатика"
+    }
+  },
+  {
+    "model": "base_app.subject",
+    "fields": {
+      "name": "Информатика",
+      "base_app.faculty.name": "Факултет по Математика и Информатика"
+    }
+  },
+  {
+    "model": "base_app.subject",
+    "fields": {
+      "name": "Математика и Информатика",
+      "base_app.faculty.name": "Факултет по Математика и Информатика"
+    }
+  }
+]

@@ -1,8 +1,16 @@
-from django.shortcuts import render, get_object_or_404
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
 
 from education.models import WorkingAt
-from base_app.models import Partner, GeneralPartner
+from base_app.models import Partner, GeneralPartner, BaseUser
+from base_app.services import send_activation_mail, send_forgotten_password_email
+from base_app.helper import get_or_none
+
+from .forms import RegisterForm, LoginForm
+from .decorators import anonymous_required
 
 
 def index(request):
@@ -48,3 +56,58 @@ def course_details(request, course_url):
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
     return render(request, "website/course_details.html", locals())
+
+
+@anonymous_required(redirect_url=reverse_lazy('website:profile'))
+def register(request):
+    form = RegisterForm()
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            send_activation_mail(request, user)
+            return render(request, 'website/auth/thanks.html', locals())
+    return render(request, "website/auth/register.html", locals())
+
+
+@anonymous_required(redirect_url=reverse_lazy('website:profile'))
+def log_in(request):
+    form = LoginForm()
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(email=email, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect(reverse('website:index'))
+                else:
+                    error = "Моля активирай акаунта си"
+            else:
+                error = "Невалидни email и/или парола"
+    return render(request, "website/auth/login.html", locals())
+
+
+@login_required
+def logout_view(request):
+    logout(request)
+    return redirect(reverse('website:index'))
+
+
+@login_required
+def profile(request):
+    return render(request, 'website/profile.html', locals())
+
+
+def forgotten_password(request):
+    if request.POST:
+        email = request.POST.get('email', '').strip()
+        baseuser = get_or_none(BaseUser, email=email)
+        if baseuser is None:
+            message = "Потребител с посочения email не е открит"
+        else:
+            message = "Email за промяна на паролата беше изпратен на посочения адрес"
+            send_forgotten_password_email(request, baseuser)
+    return render(request, 'website/auth/forgotten_password.html', locals())

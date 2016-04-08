@@ -1,0 +1,37 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Асеновград",
+            "name": "Средно Общообразователно Училище Свети Свети Кирил и Методий"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Асеновград",
+            "name": "Професионална Гимназия по Хранително-Вкусови Технологии Св. Димитрий Солунски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Асеновград",
+            "name": "Средно Общообразователно Училище Свети Княз Борис I"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Асеновград",
+            "name": "Професионална Гимназия Свети Патриарх Евтимий"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Асеновград",
+            "name": "Професионална Гимназия Цар Иван Асен II"
+        },
+        "model": "base_app.school"
+    }
+]

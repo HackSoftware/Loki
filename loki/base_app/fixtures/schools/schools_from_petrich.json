@@ -1,0 +1,44 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Петрич",
+            "name": "Професионална Гимназия по Механоелектротехника Юрий Гагарин"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Петрич",
+            "name": "Професионална Гимназия по Икономика и Туризъм Проф. Д-Р Асен Златаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Петрич",
+            "name": "Средно Общообразователно Училище Никола Йонков Вапцаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Петрич",
+            "name": "Гимназия Пейо К. Яворов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Петрич",
+            "name": "Средно Общообразователно Училище Антон Попов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Петрич",
+            "name": "Професионална Гимназия по Лека Промишленост А.А. – Малчика"
+        },
+        "model": "base_app.school"
+    }
+]

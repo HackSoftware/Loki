@@ -378,5 +378,64 @@ body {
     width: 100% !important;
     min-height: 100px;
     padding-top: 0px; } }
+.login-container {
+  max-width: 400px;
+  margin-top: 50px;
+  margin-bottom: 50px; }
+  .login-container .error {
+    font-weight: bold;
+    color: #a94442;
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px; }
+  .login-container .profile-img-container {
+    text-align: center;
+    margin-bottom: 50px; }
+    .login-container .profile-img-container .img-circle {
+      width: 96px;
+      height: 96px;
+      border: 2px solid; }
+  .login-container .btn-login {
+    width: 100%;
+    margin-bottom: 20px; }
+
+#suggestion-dropdown {
+  position: absolute;
+  padding: 5px;
+  padding-right: 10px;
+  border: 1px solid #ccc;
+  background-color: white;
+  display: none; }
+  #suggestion-dropdown ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0; }
+    #suggestion-dropdown ul li {
+      white-space: nowrap;
+      cursor: pointer; }
+      #suggestion-dropdown ul li.selected {
+        background-color: #9E9E9E; }
+
+#ui-datepicker-div {
+  border-radius: 5px; }
+
+.ui-datepicker .ui-datepicker-header {
+  background-color: #F7931E;
+  border-color: #5A5555; }
+
+.ui-datepicker .ui-datepicker-title select {
+  background-color: #F7931E;
+  border-color: #F7931E;
+  color: #000; }
+
+.ui-widget-content {
+  border: 1px solid #F7931E; }
+
+.ui-state-default, .ui-widget-content .ui-state-default {
+  border: 1px solid #F7931E; }
+
+.ui-state-hover, .ui-widget-content .ui-state-hover {
+  background-color: #F7931E; }
 
 /*# sourceMappingURL=website.css.map */

@@ -1,0 +1,28 @@
+{% extends "website/base.html" %}
+
+{% block 'page-content' %}
+{% load crispy_forms_tags %}
+
+<div class="container login-container">
+    <div class="card card-container">
+        <div class="profile-img-container">
+            <img class="img-circle" src="{{ STATIC_URL }}website_images/hackman_head.png" />
+        </div>
+        {% if error %}
+            <div class="bg-warning error">{{error}}</div>
+        {% endif %}
+        <form action="" method="POST" >
+            {{ form|crispy }}
+            {% csrf_token %}
+            <input type="submit" value="Вход" class="btn btn-warning btn-login" />
+            <a href="{% url 'website:register' %}">
+                Още не си се регистрирал?
+            </a><br>
+            <a href="{% url 'website:forgotten_password' %}" >
+                Забравена парола?
+            </a>
+        </form>
+    </div><!-- /card-container -->
+</div>
+
+{% endblock %}

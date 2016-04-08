@@ -1,0 +1,30 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Карлово",
+            "name": "Професионална Гимназия Братя Евлогий и Христо Георгиеви"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Карлово",
+            "name": "Професионална Гимназия по Железопътен Транспорт Христо Смирненски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Карлово",
+            "name": "Средно Общообразователно Училище Васил Левски"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Карлово",
+            "name": "Средно Общообразователно Училище Христо Проданов"
+        },
+        "model": "base_app.school"
+    }
+]

@@ -1,0 +1,79 @@
+[
+    {
+        "fields": {
+            "base_app.city.name": "Враца",
+            "name": "Професионална Гимназия по Строителство и Архитектура"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Враца",
+            "name": "Професионална Гимназия по Търговия и Ресторантьорство"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Враца",
+            "name": "Средно Общообразователно Училище Козма Тричков"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Враца",
+            "name": "Природо Математическа Гимназия Академик Иван Ценов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Враца",
+            "name": "Средно Общообразователно Училище Отец Паисий"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Враца",
+            "name": "Професионална Техническа Гимназия Н.Йонков Вапцаров"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Враца",
+            "name": "Средно Общообразователно Училище Христо Ботев"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Враца",
+            "name": "Езикова Гимназия Йоан Екзарх"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Враца",
+            "name": "Средно Общообразователно Училище Васил Кънчов"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Враца",
+            "name": "Професионална Гимназия по Лека Промишленост и Услуги – Враца"
+        },
+        "model": "base_app.school"
+    },
+    {
+        "fields": {
+            "base_app.city.name": "Враца",
+            "name": "Среднообщообразователно Училище Никола Войводов"
+        },
+        "model": "base_app.school"
+    }
+]
