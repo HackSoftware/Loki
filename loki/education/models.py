@@ -126,7 +126,7 @@ class Task(models.Model):
 
     def has_tests(self):
         if hasattr(self, 'test'):
-            if self.test.code is not None and self.test.code != "":
+            if(self.test is not None):
                 return True
         return False
 
@@ -178,7 +178,7 @@ class SourceCodeTest(Test):
 
 
 class BinaryFileTest(Test):
-    file = models.FileField(upload_to="{}{}".format(settings.MEDIA_URL, "tests"))
+    file = models.FileField(upload_to="tests")
 
 
 class Solution(models.Model):
