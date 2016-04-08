@@ -1,10 +1,10 @@
 from django.db import models
+from django.conf import settings
 
 from ckeditor.fields import RichTextField
 from base_app.models import BaseUser, City, Company
 
-from .validators import (validate_mac, validate_github_solution_url,
-                         validate_github_project_url)
+from .validators import validate_mac
 
 import uuid
 
@@ -158,8 +158,6 @@ class Test(models.Model):
 
     task = models.OneToOneField(Task)
     language = models.ForeignKey(ProgrammingLanguage)
-    code = models.TextField(blank=True, null=True)
-    github_url = models.URLField()
     test_type = models.SmallIntegerField(choices=TYPE_CHOICE, default=UNITTEST)
 
     def __str__(self):
@@ -173,6 +171,14 @@ class Test(models.Model):
                 RetestSolution.objects.create(test_id=self.id)
 
         super(Test, self).save(*args, **kwargs)
+
+
+class SourceCodeTest(Test):
+    code = models.TextField(blank=True, null=True)
+
+
+class BinaryFileTest(Test):
+    file = models.FileField(upload_to="{}{}".format(settings.MEDIA_URL, "tests"))
 
 
 class Solution(models.Model):
@@ -209,7 +215,7 @@ class Solution(models.Model):
         try:
             status = Solution.STATUS_CHOICE[self.status][1]
         except:
-            status = STATUS_CHOICE[MISSING][1]
+            status = Solution.STATUS_CHOICE[Solution.MISSING][1]
         return status
 
     def get_assignment(self):
