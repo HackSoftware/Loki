@@ -1,3 +1,4 @@
+from datetime import date
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from post_office import mail
@@ -7,9 +8,10 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from hack_fmi.models import Skill, Team
-from .models import BaseUser, City
+from .models import BaseUser, City, EducationInfo, School, Academy, University, Faculty, Subject
 from hack_fmi.helper import date_decrease
 from education.models import Course, CourseAssignment, Student, Certificate
+from website.forms import RegisterForm
 
 import unittest
 
@@ -22,6 +24,26 @@ class BaseUserRegistrationTests(TestCase):
             subject='Регистриран потребител',
             content='Lorem ipsum dolor sit amet, consectetur adipisicing'
         )
+
+        self.base_user_base_info = {
+            "first_name": "Robert",
+            "last_name": "Paulson",
+            "email": "zombie@underworld.dead",
+            "password": "1want3omebrain3",
+            "studies_at": "",
+            "educationplace": None,
+            "faculty": None,
+            "subject": None
+        }
+
+        self.city1 = City.objects.create(name='Monstropolis')
+        self.city2 = City.objects.create(name='Death City')
+
+        self.university = University.objects.create(city=self.city1, name="Monsters University")
+        self.faculty = Faculty.objects.create(university=self.university, name="School of Scaring")
+        self.subject = Subject.objects.create(faculty=self.faculty, name="SCAR101.Intro to Scaring")
+
+        self.academy = Academy.objects.create(city=self.city2, name="Shibusen")
 
     def test_register_base_user(self):
         user_mail = 'sten@gmail.com'
@@ -70,6 +92,87 @@ class BaseUserRegistrationTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn(self.user_register.content, mail.get_queued()[0].message)
 
+    def test_register_base_user_via_form(self):
+        user_info = self.base_user_base_info
+        user_info['studies_at'] = "underworld"
+        user_info['start_date'] = date(2000, 10, 1)
+        user_info['end_date'] = date(2005, 10, 1)
+
+        reg_form = RegisterForm(user_info)
+
+        self.assertTrue(reg_form.is_valid())
+        user = reg_form.save()
+        self.assertEqual(user.first_name, "Robert")
+        self.assertEqual(user.last_name, "Paulson")
+        self.assertEqual(user.email, "zombie@underworld.dead")
+        self.assertTrue(user.check_password("1want3omebrain3"))
+
+    def test_register_base_user_via_form_with_ed_place(self):
+        user_info = self.base_user_base_info
+        user_info["educationplace"] = self.university.id
+        user_info["faculty"] = self.faculty.id
+        user_info["subject"] = self.subject.id
+        user_info['start_date'] = date(2000, 10, 1)
+        user_info['end_date'] = date(2005, 10, 1)
+
+        reg_form = RegisterForm(user_info)
+
+        self.assertTrue(reg_form.is_valid())
+        user = reg_form.save()
+
+        self.assertEqual(user.first_name, "Robert")
+        self.assertEqual(user.last_name, "Paulson")
+        self.assertEqual(user.email, "zombie@underworld.dead")
+        self.assertTrue(user.check_password, "1want3omebrain3")
+
+        self.assertEqual(len(user.educationinfo_set.all()), 1)
+        self.assertEqual(user.educationinfo_set.first().place.name, self.university.name)
+        self.assertEqual(user.educationinfo_set.first().place.city.name, self.city1.name)
+        self.assertEqual(user.educationinfo_set.first().faculty.name, self.faculty.name)
+        self.assertEqual(user.educationinfo_set.first().subject.name, self.subject.name)
+        self.assertIsNone(user.studies_at)
+
+    def test_register_base_user_via_form_with_studies_at(self):
+        user_info = self.base_user_base_info
+        user_info['studies_at'] = "Home"
+        user_info['start_date'] = date(2000, 10, 1)
+        user_info['end_date'] = date(2005, 10, 1)
+
+        reg_form = RegisterForm(user_info)
+
+        self.assertTrue(reg_form.is_valid())
+        user = reg_form.save()
+
+        self.assertEqual(user.first_name, "Robert")
+        self.assertEqual(user.last_name, "Paulson")
+        self.assertEqual(user.email, "zombie@underworld.dead")
+        self.assertTrue(user.check_password, "1want3omebrain3")
+
+        self.assertEqual(len(user.educationinfo_set.all()), 0)
+        self.assertEqual(user.studies_at, "Home")
+
+    def test_register_base_user_via_form_with_academy(self):
+        user_info = self.base_user_base_info
+        user_info["educationplace"] = self.academy.id
+        user_info['start_date'] = date(2000, 10, 1)
+        user_info['end_date'] = date(2005, 10, 1)
+
+        reg_form = RegisterForm(user_info)
+
+        self.assertTrue(reg_form.is_valid())
+        user = reg_form.save()
+
+        self.assertEqual(user.first_name, "Robert")
+        self.assertEqual(user.last_name, "Paulson")
+        self.assertEqual(user.email, "zombie@underworld.dead")
+        self.assertTrue(user.check_password, "1want3omebrain3")
+
+        self.assertEqual(len(user.educationinfo_set.all()), 1)
+        self.assertEqual(user.educationinfo_set.first().place.name, self.academy.name)
+        self.assertEqual(user.educationinfo_set.first().place.city.name, self.city2.name)
+        self.assertIsNone(user.educationinfo_set.first().faculty)
+        self.assertIsNone(user.educationinfo_set.first().subject)
+        self.assertIsNone(user.studies_at)
 
 # class PersonalUserInformationTests(TestCase):
 

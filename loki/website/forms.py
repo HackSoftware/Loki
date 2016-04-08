@@ -88,12 +88,12 @@ class RegisterForm(forms.Form):
 
     def save(self, commit=True):
         user = BaseUser.objects.create_user(
+                first_name=self.cleaned_data.get('first_name'),
+                last_name=self.cleaned_data.get('last_name'),
                 email=self.cleaned_data.get('email'),
-                password=self.cleaned_data.get('password'),
-                full_name="{} {}".format(
-                        self.cleaned_data.get('first_name'),
-                        self.cleaned_data.get('last_name')))
+                password=self.cleaned_data.get('password'))
 
+        # TODO: save start_date and end_date when the user hasnt selected educationplace
         start_date = self.cleaned_data.get('start_date')
         end_date = self.cleaned_data.get('end_date')
         studies_at = self.cleaned_data.get('studies_at')
@@ -115,12 +115,11 @@ class RegisterForm(forms.Form):
             info.save()
         else:
             user.studies_at = studies_at.strip()
-            user.save()
 
+        user.save()
         return user
 
     def _validate_password_strength(self, value):
-        print("validate password called")
         validate_password(value)
 
 
