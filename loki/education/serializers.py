@@ -54,13 +54,20 @@ class SolutionSerializer(serializers.ModelSerializer):
 class TaskSerializer(serializers.ModelSerializer):
 
     has_tests = serializers.SerializerMethodField()
+    test_mode = serializers.SerializerMethodField()
 
     def get_has_tests(self, obj):
         return obj.has_tests()
 
+    def get_test_mode(self, obj):
+        try:
+            return obj.test.test_mode()
+        except:
+            return "source"
+
     class Meta:
         model = Task
-        fields = ('id', 'description', 'name', 'week', 'gradable', 'has_tests')
+        fields = ('id', 'description', 'name', 'week', 'gradable', 'has_tests', 'test_mode')
 
 
 class CitySerializer(serializers.ModelSerializer):

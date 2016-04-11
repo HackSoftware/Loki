@@ -171,6 +171,15 @@ class Test(models.Model):
 
         super(Test, self).save(*args, **kwargs)
 
+    def test_mode(self):
+        try:
+            if self.binaryfiletest:
+                return "binary"
+            else:
+                return "source"
+        except:
+            return "source"
+
 
 class SourceCodeTest(Test):
     code = models.TextField(blank=True, null=True)
