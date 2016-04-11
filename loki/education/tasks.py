@@ -1,30 +1,29 @@
-from __future__ import absolute_import
-
-from loki.celery import app
-from django.conf import settings
-
-from .models import Test, Solution, RetestSolution
-from .helper import generate_grader_headers, get_solution_code, update_req_and_resource_nonce
-
 import json
 import requests
 import time
+
+from __future__ import absolute_import
+
+from django.conf import settings
+from loki.celery import app
+
+from .models import Test, Solution, RetestSolution
+from .helper import (generate_grader_headers, get_solution_code,
+                     update_req_and_resource_nonce, read_binary_file)
 
 
 @app.task
 def submit_solution(solution_id):
     solution = Solution.objects.get(id=solution_id)
 
-    if solution.code is None:
+    if not solution.code and not solution.file:
         solution.code = get_solution_code(solution.url)
         solution.save()
 
-    data = {
-        "test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
-        "language": solution.task.test.language.name,
-        "code": solution.code,
-        "test": solution.task.test.sourcecodetest.code,
-    }
+    if not solution.file:
+        data = get_plain_problem_data(solution)
+    else:
+        data = get_binary_problem_data()
 
     address = settings.GRADER_ADDRESS
     path = settings.GRADER_GRADE_PATH
@@ -42,6 +41,32 @@ def submit_solution(solution_id):
         poll_solution.delay(solution_id)
     else:
         raise Exception(r.text)
+
+
+def get_binary_problem_data(solution):
+    d = {"test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
+         "language": solution.task.test.language.name,
+         'file_type': 'binary',
+         'code': read_binary_file(solution.file),
+         'test': read_binary_file(solution.task.test.binaryfiletest.file),
+         'extra_options': {
+             'qualified_class_name': 'com.hackbulgaria.grader.Tests',
+          }}
+
+    return d
+
+
+def get_plain_problem_data(solution):
+    d = {"test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
+         "language": solution.task.test.language.name,
+         "file_type": 'plain',
+         "code": solution.code,
+         "test": solution.task.test.sourcecodetest.code,
+         "extra_options": {
+             "foo": "bar"
+          }}
+
+    return d
 
 
 @app.task
