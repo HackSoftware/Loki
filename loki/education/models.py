@@ -158,6 +158,7 @@ class Test(models.Model):
     task = models.OneToOneField(Task)
     language = models.ForeignKey(ProgrammingLanguage)
     test_type = models.SmallIntegerField(choices=TYPE_CHOICE, default=UNITTEST)
+    extra_options = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return "{}/{}".format(self.task, self.language)
@@ -165,9 +166,7 @@ class Test(models.Model):
     # Check if test code is changed. If yes - retest solutions
     def save(self, *args, **kwargs):
         if self.id is not None:
-            old_test_object = Test.objects.get(id=self.id)
-            if old_test_object.sourcecodetest.code != self.sourcecodetest.code:
-                RetestSolution.objects.create(test_id=self.id)
+            RetestSolution.objects.create(test_id=self.id)
 
         super(Test, self).save(*args, **kwargs)
 

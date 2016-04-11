@@ -52,9 +52,7 @@ def get_binary_problem_data(solution):
                                                 solution.file)),
          'test': read_binary_file("{}{}".format(settings.MEDIA_ROOT,
                                                 solution.task.test.binaryfiletest.file)),
-         'extra_options': {
-             'qualified_class_name': 'com.hackbulgaria.grader.Tests',
-          }}
+         'extra_options': solution.task.test.extra_options}
 
     return d
 
@@ -65,9 +63,7 @@ def get_plain_problem_data(solution):
          "file_type": 'plain',
          "code": solution.code,
          "test": solution.task.test.sourcecodetest.code,
-         "extra_options": {
-             "foo": "bar"
-          }}
+         "extra_options": solution.task.test.extra_options}
 
     return d
 
