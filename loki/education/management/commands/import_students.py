@@ -60,11 +60,12 @@ class Command(BaseCommand):
                         'email': student['email']
                     }
                 )
+                print('New user: {}'.format(obj))
+            else:
+                print('Existing user: {}'.format(obj))
 
             CourseAssignment.objects.get_or_create(
                 user=obj,
                 course=course,
                 group_time=student['group_time']
             )
-
-            print(student['email'] + ' registered successfully')
