@@ -24,7 +24,7 @@ def submit_solution(solution_id):
     if not solution.file:
         data = get_plain_problem_data(solution)
     else:
-        data = get_binary_problem_data()
+        data = get_binary_problem_data(solution)
 
     address = settings.GRADER_ADDRESS
     path = settings.GRADER_GRADE_PATH
