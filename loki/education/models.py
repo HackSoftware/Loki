@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 
 from ckeditor.fields import RichTextField
 from base_app.models import BaseUser, City, Company
@@ -126,7 +125,7 @@ class Task(models.Model):
 
     def has_tests(self):
         if hasattr(self, 'test'):
-            if(self.test is not None):
+            if self.test is not None:
                 return True
         return False
 
@@ -210,6 +209,12 @@ class Solution(models.Model):
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=SUBMITTED_WITHOUT_GRADING)
     test_output = models.TextField(blank=True, null=True)
     return_code = models.IntegerField(blank=True, null=True)
+    file = models.FileField(upload_to="solutions", blank=True, null=True)
+
+    def save_model(self, request, obj, form, change):
+        print(obj.upload_field_name)
+        obj.upload_field_name.path
+        obj.save()
 
     def get_status(self):
         try:
