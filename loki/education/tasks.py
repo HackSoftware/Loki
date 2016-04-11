@@ -48,8 +48,10 @@ def get_binary_problem_data(solution):
     d = {"test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
          "language": solution.task.test.language.name,
          'file_type': 'binary',
-         'code': read_binary_file(solution.file),
-         'test': read_binary_file(solution.task.test.binaryfiletest.file),
+         'code': read_binary_file("{}{}".format(settings.MEDIA_ROOT,
+                                                solution.file)),
+         'test': read_binary_file("{}{}".format(settings.MEDIA_ROOT,
+                                                solution.task.test.binaryfiletest.file)),
          'extra_options': {
              'qualified_class_name': 'com.hackbulgaria.grader.Tests',
           }}
