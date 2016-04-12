@@ -45,37 +45,28 @@ def submit_solution(solution_id):
 
 
 def get_binary_problem_data(solution):
-    try:
-        extra_options = json.loads(solution.task.test.extra_options)
-    except:
-        extra_options = {}
 
-    d = {"test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
-         "language": solution.task.test.language.name,
-         'file_type': 'binary',
-         'code': read_binary_file("{}{}".format(settings.MEDIA_ROOT,
-                                                solution.file)),
-         'test': read_binary_file("{}{}".format(settings.MEDIA_ROOT,
-                                                solution.task.test.binaryfiletest.file)),
-         'extra_options': extra_options}
+    data = {"test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
+            "language": solution.task.test.language.name,
+            "file_type": "binary",
+            "code": read_binary_file("{}{}".format(settings.MEDIA_ROOT,
+                                                   solution.file)),
+            "test": read_binary_file("{}{}".format(settings.MEDIA_ROOT,
+                                                   solution.task.test.binaryfiletest.file)),
+            "extra_options": solution.task.test.extra_options}
 
-    return d
+    return data
 
 
 def get_plain_problem_data(solution):
-    try:
-        extra_options = json.loads(solution.task.test.extra_options)
-    except:
-        extra_options = {}
+    data = {"test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
+            "language": solution.task.test.language.name,
+            "file_type": 'plain',
+            "code": solution.code,
+            "test": solution.task.test.sourcecodetest.code,
+            "extra_options": solution.task.test.extra_options}
 
-    d = {"test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
-         "language": solution.task.test.language.name,
-         "file_type": 'plain',
-         "code": solution.code,
-         "test": solution.task.test.sourcecodetest.code,
-         "extra_options": extra_options}
-
-    return d
+    return data
 
 
 @app.task

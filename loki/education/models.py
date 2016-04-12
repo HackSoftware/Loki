@@ -2,6 +2,7 @@ from django.db import models
 
 from ckeditor.fields import RichTextField
 from base_app.models import BaseUser, City, Company
+from jsonfield import JSONField
 
 from .validators import validate_mac
 
@@ -158,7 +159,7 @@ class Test(models.Model):
     task = models.OneToOneField(Task)
     language = models.ForeignKey(ProgrammingLanguage)
     test_type = models.SmallIntegerField(choices=TYPE_CHOICE, default=UNITTEST)
-    extra_options = models.TextField(blank=True, null=True)
+    extra_options = JSONField(blank=True, null=True)
 
     def __str__(self):
         return "{}/{}".format(self.task, self.language)
