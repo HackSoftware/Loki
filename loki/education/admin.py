@@ -4,8 +4,9 @@ from django.contrib import admin, messages
 
 from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
-                     WorkingAt, Task, Solution, Certificate, ProgrammingLanguage, Test,
-                     GraderRequest, RetestSolution)
+                     WorkingAt, Task, Solution, Certificate, ProgrammingLanguage,
+                     GraderRequest, RetestSolution, SourceCodeTest, BinaryFileTest)
+from .forms import FixJsonFieldDisplayInInheritedClassAdminForm
 
 
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -173,7 +174,25 @@ class ProgrammingLanguageAdmin(admin.ModelAdmin):
 admin.site.register(ProgrammingLanguage, ProgrammingLanguageAdmin)
 
 
-class TestAdmin(admin.ModelAdmin):
+class SourceCodeTestAdmin(admin.ModelAdmin):
+    list_display = [
+        'task',
+        'language',
+        'test_type',
+    ]
+
+    list_filter = [
+        'language',
+        'test_type',
+    ]
+
+    search_fields = ['task']
+
+admin.site.register(SourceCodeTest, SourceCodeTestAdmin)
+
+
+class BinaryFileTestAdmin(admin.ModelAdmin):
+    form = FixJsonFieldDisplayInInheritedClassAdminForm
 
     list_display = [
         'task',
@@ -188,10 +207,11 @@ class TestAdmin(admin.ModelAdmin):
 
     search_fields = ['task']
 
-admin.site.register(Test, TestAdmin)
+admin.site.register(BinaryFileTest, BinaryFileTestAdmin)
 
 
 class SolutionAdmin(admin.ModelAdmin):
+    form = FixJsonFieldDisplayInInheritedClassAdminForm
 
     def save_model(self, request, obj, form, change):
         if (obj.code is None or obj.code == "") and (obj.url is None or obj.url == ""):

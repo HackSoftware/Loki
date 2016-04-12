@@ -2,9 +2,10 @@ from django.db import models
 
 from ckeditor.fields import RichTextField
 from base_app.models import BaseUser, City, Company
+from jsonfield import JSONField
 
-from .validators import (validate_mac, validate_github_solution_url,
-                         validate_github_project_url)
+from .validators import validate_mac
+from .exceptions import HasToBeRetested
 
 import uuid
 
@@ -126,7 +127,7 @@ class Task(models.Model):
 
     def has_tests(self):
         if hasattr(self, 'test'):
-            if self.test.code is not None and self.test.code != "":
+            if self.test is not None:
                 return True
         return False
 
@@ -158,21 +159,67 @@ class Test(models.Model):
 
     task = models.OneToOneField(Task)
     language = models.ForeignKey(ProgrammingLanguage)
-    code = models.TextField(blank=True, null=True)
-    github_url = models.URLField()
     test_type = models.SmallIntegerField(choices=TYPE_CHOICE, default=UNITTEST)
+    extra_options = JSONField(blank=True, null=True)
+
+    @property
+    def options(self):
+        if self.extra_options is None:
+            return {}
+
+        return self.extra_options
 
     def __str__(self):
         return "{}/{}".format(self.task, self.language)
 
-    # Check if test code is change. If yes - retest solutions
+    # Check if test code is changed. If yes - retest solutions (i refuse to use flags)
     def save(self, *args, **kwargs):
+
         if self.id is not None:
-            old_test_object = Test.objects.get(id=self.id)
-            if old_test_object.code != self.code:
+            old_test = Test.objects.get(id=self.id)
+
+            try:
+                if bool(old_test.is_binary()) != bool(self.is_binary()):
+                    raise HasToBeRetested
+
+                if self.is_binary():
+                    if self.binaryfiletest.file.name != old_test.binaryfiletest.file.name:
+                        raise HasToBeRetested
+
+                if self.is_source():
+                    if self.sourcecodetest.code != old_test.sourcecodetest.code:
+                        raise HasToBeRetested
+
+            except HasToBeRetested:
                 RetestSolution.objects.create(test_id=self.id)
 
-        super(Test, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
+
+    def is_binary(self):
+        if hasattr(self, 'binaryfiletest'):
+            return True
+
+        return False
+
+    def is_source(self):
+        if hasattr(self, 'sourcecodetest'):
+            return True
+
+        return False
+
+    def test_mode(self):
+        if self.is_binary():
+            return "binary"
+
+        return "source"
+
+
+class SourceCodeTest(Test):
+    code = models.TextField(blank=True, null=True)
+
+
+class BinaryFileTest(Test):
+    file = models.FileField(upload_to="tests")
 
 
 class Solution(models.Model):
@@ -204,12 +251,13 @@ class Solution(models.Model):
     status = models.SmallIntegerField(choices=STATUS_CHOICE, default=SUBMITTED_WITHOUT_GRADING)
     test_output = models.TextField(blank=True, null=True)
     return_code = models.IntegerField(blank=True, null=True)
+    file = models.FileField(upload_to="solutions", blank=True, null=True)
 
     def get_status(self):
         try:
             status = Solution.STATUS_CHOICE[self.status][1]
         except:
-            status = STATUS_CHOICE[MISSING][1]
+            status = Solution.STATUS_CHOICE[Solution.MISSING][1]
         return status
 
     def get_assignment(self):

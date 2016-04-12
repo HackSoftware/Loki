@@ -1,30 +1,30 @@
 from __future__ import absolute_import
 
-from loki.celery import app
-from django.conf import settings
-
-from .models import Test, Solution, RetestSolution
-from .helper import generate_grader_headers, get_solution_code, update_req_and_resource_nonce
-
 import json
 import requests
 import time
+
+
+from django.conf import settings
+from loki.celery import app
+
+from .models import Test, Solution, RetestSolution
+from .helper import (generate_grader_headers, get_solution_code,
+                     update_req_and_resource_nonce, read_binary_file)
 
 
 @app.task
 def submit_solution(solution_id):
     solution = Solution.objects.get(id=solution_id)
 
-    if solution.code is None:
+    if solution.code is None and solution.file is None:
         solution.code = get_solution_code(solution.url)
         solution.save()
 
-    data = {
-        "test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
-        "language": solution.task.test.language.name,
-        "code": solution.code,
-        "test": solution.task.test.code,
-    }
+    if solution.task.test.is_source():
+        data = get_plain_problem_data(solution)
+    else:
+        data = get_binary_problem_data(solution)
 
     address = settings.GRADER_ADDRESS
     path = settings.GRADER_GRADE_PATH
@@ -42,6 +42,31 @@ def submit_solution(solution_id):
         poll_solution.delay(solution_id)
     else:
         raise Exception(r.text)
+
+
+def get_binary_problem_data(solution):
+
+    data = {"test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
+            "language": solution.task.test.language.name,
+            "file_type": "binary",
+            "code": read_binary_file("{}{}".format(settings.MEDIA_ROOT,
+                                                   solution.file)),
+            "test": read_binary_file("{}{}".format(settings.MEDIA_ROOT,
+                                                   solution.task.test.binaryfiletest.file)),
+            "extra_options": solution.task.test.options}
+
+    return data
+
+
+def get_plain_problem_data(solution):
+    data = {"test_type": Test.TYPE_CHOICE[solution.task.test.test_type][1],
+            "language": solution.task.test.language.name,
+            "file_type": 'plain',
+            "code": solution.code,
+            "test": solution.task.test.sourcecodetest.code,
+            "extra_options": solution.task.test.options}
+
+    return data
 
 
 @app.task

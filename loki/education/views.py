@@ -1,9 +1,13 @@
+import uuid
+import base64
+
 from django.shortcuts import get_object_or_404, render
 from django.conf import settings
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseBadRequest
+from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+from django.core.files.base import ContentFile
 
 from rest_framework import serializers
 from rest_framework.permissions import IsAuthenticated
@@ -250,18 +254,27 @@ class SolutionsAPI(
     '''
     def post(self, request, *args, **kwargs):
         data = request.data
+        url = data.get('url', None)
+        code = data.get('code', None)
+        file = data.get('file', None)
 
-        ''' Solutions without code or url are not accepted
         '''
-        if data.get('url', None) is None and data.get('code', None) is None:
-            raise serializers.ValidationError('Either url or code should be given.')
+            Solutions without code or url are not accepted
+        '''
+        if not url and not code and not file:
+            raise serializers.ValidationError('Either code, file or url should be given.')
 
-        ''' If task is not gradable, we should have url
+        '''
+            If task is not gradable, we should have url
         '''
         task = get_object_or_404(Task, pk=data['task'])
 
-        if not task.gradable and data.get('url', None) is None:
-            raise serializers.ValidationError('Non-gradable tasks require GitHub url')
+        if not task.gradable and not url and not file:
+            raise serializers.ValidationError('Non-gradable tasks require GitHub url or a file')
+
+        if file is not None:
+            file = base64.b64decode(request.data['file'])
+            request.data['file'] = ContentFile(content=file, name=str(uuid.uuid4()))
 
         return self.create(request, *args, **kwargs)
 

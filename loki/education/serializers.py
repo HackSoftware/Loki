@@ -1,13 +1,8 @@
-import requests
 from rest_framework import serializers
-from django.core.validators import URLValidator
-from django.core.exceptions import ValidationError
 from base_app.models import Company, City
 from .models import (Lecture, CheckIn, Course, Student, Solution,
                      CourseAssignment, StudentNote, Teacher, WorkingAt, Task, Certificate)
-from .helper import generate_grader_headers
-
-from .validators import (validate_mac, validate_github_solution_url,
+from .validators import (validate_github_solution_url,
                          validate_github_project_url)
 
 
@@ -40,31 +35,43 @@ class SolutionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Solution
         extra_kwargs = {'url': {'required': False}}
-        fields = ('id', 'task', 'url', 'code', 'status',
+        fields = ('id', 'task', 'url', 'code', 'status', 'file',
                   'test_output', 'return_code', 'created_at')
 
     def get_status(self, obj):
         return obj.get_status()
 
     def validate(self, data):
-        if data['task'].gradable and data['code'] is None:
+        code = data.get('code', None)
+        file = data.get('file', None)
+        is_gradable = data['task'].gradable
+
+        if is_gradable and code is None and file is None:
             validate_github_solution_url(data['url'])
 
-        if not data['task'].gradable:
+        if not is_gradable:
             validate_github_project_url(data['url'])
+
         return data
 
 
 class TaskSerializer(serializers.ModelSerializer):
 
     has_tests = serializers.SerializerMethodField()
+    test_mode = serializers.SerializerMethodField()
 
     def get_has_tests(self, obj):
         return obj.has_tests()
 
+    def get_test_mode(self, obj):
+        if obj.has_tests():
+            return obj.test.test_mode()
+
+        return None
+
     class Meta:
         model = Task
-        fields = ('id', 'description', 'name', 'week', 'gradable', 'has_tests')
+        fields = ('id', 'description', 'name', 'week', 'gradable', 'has_tests', 'test_mode')
 
 
 class CitySerializer(serializers.ModelSerializer):
