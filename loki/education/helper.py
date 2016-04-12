@@ -93,7 +93,3 @@ def read_binary_file(path):
         encoded = base64.b64encode(f.read())
 
     return encoded.decode('ascii')
-
-
-class HasToBeRetested(Exception):
-    pass

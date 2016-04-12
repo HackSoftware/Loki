@@ -5,7 +5,7 @@ from base_app.models import BaseUser, City, Company
 from jsonfield import JSONField
 
 from .validators import validate_mac
-from .helper import HasToBeRetested
+from .exceptions import HasToBeRetested
 
 import uuid
 

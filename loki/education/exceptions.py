@@ -1,0 +1,2 @@
+class HasToBeRetested(Exception):
+    pass
