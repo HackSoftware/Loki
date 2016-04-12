@@ -174,6 +174,7 @@ class Test(models.Model):
 
     # Check if test code is changed. If yes - retest solutions (i refuse to use flags)
     def save(self, *args, **kwargs):
+
         if self.id is not None:
             old_test = Test.objects.get(id=self.id)
 
@@ -192,7 +193,7 @@ class Test(models.Model):
             except HasToBeRetested:
                 RetestSolution.objects.create(test_id=self.id)
 
-        super(Test, self).save(*args, **kwargs)
+        return super().save(*args, **kwargs)
 
     def is_binary(self):
         if hasattr(self, 'binaryfiletest'):

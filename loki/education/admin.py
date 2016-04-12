@@ -6,6 +6,7 @@ from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtR
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
                      WorkingAt, Task, Solution, Certificate, ProgrammingLanguage,
                      GraderRequest, RetestSolution, SourceCodeTest, BinaryFileTest)
+from .forms import FixJsonFieldDisplayInInheritedClassAdminForm
 
 
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -191,6 +192,8 @@ admin.site.register(SourceCodeTest, SourceCodeTestAdmin)
 
 
 class BinaryFileTestAdmin(admin.ModelAdmin):
+    form = FixJsonFieldDisplayInInheritedClassAdminForm
+
     list_display = [
         'task',
         'language',
@@ -208,6 +211,7 @@ admin.site.register(BinaryFileTest, BinaryFileTestAdmin)
 
 
 class SolutionAdmin(admin.ModelAdmin):
+    form = FixJsonFieldDisplayInInheritedClassAdminForm
 
     def save_model(self, request, obj, form, change):
         if (obj.code is None or obj.code == "") and (obj.url is None or obj.url == ""):
