@@ -207,7 +207,7 @@ class Test(models.Model):
         return False
 
     def test_mode(self):
-        if self.is_binary:
+        if self.is_binary():
             return "binary"
 
         return "source"

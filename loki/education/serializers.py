@@ -64,7 +64,10 @@ class TaskSerializer(serializers.ModelSerializer):
         return obj.has_tests()
 
     def get_test_mode(self, obj):
-        return obj.test.test_mode()
+        if obj.has_tests():
+            return obj.test.test_mode()
+
+        return None
 
     class Meta:
         model = Task
