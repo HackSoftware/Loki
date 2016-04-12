@@ -69,8 +69,12 @@
             <li><a href="{% url 'website:profile' %}">Профил</a></li>
             <li><a href="{% url 'website:logout' %}">Изход</a></li>
             {% else %}
+            
+            {% comment "Defer register/login until fully migrated" %}
             <li><a href="{% url 'website:register' %}">Регистрация</a></li>
             <li><a href="{% url 'website:login' %}">Вход</a></li>
+            {% endcomment %}
+
             {% endif %}
           </ul>
 
