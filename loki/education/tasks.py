@@ -17,11 +17,11 @@ from .helper import (generate_grader_headers, get_solution_code,
 def submit_solution(solution_id):
     solution = Solution.objects.get(id=solution_id)
 
-    if not solution.code and not solution.file:
+    if solution.code is None and solution.file is None:
         solution.code = get_solution_code(solution.url)
         solution.save()
 
-    if not solution.file:
+    if solution.task.test.is_source():
         data = get_plain_problem_data(solution)
     else:
         data = get_binary_problem_data(solution)
@@ -53,7 +53,7 @@ def get_binary_problem_data(solution):
                                                    solution.file)),
             "test": read_binary_file("{}{}".format(settings.MEDIA_ROOT,
                                                    solution.task.test.binaryfiletest.file)),
-            "extra_options": solution.task.test.extra_options}
+            "extra_options": solution.task.test.options}
 
     return data
 
@@ -64,7 +64,7 @@ def get_plain_problem_data(solution):
             "file_type": 'plain',
             "code": solution.code,
             "test": solution.task.test.sourcecodetest.code,
-            "extra_options": solution.task.test.extra_options}
+            "extra_options": solution.task.test.options}
 
     return data
 

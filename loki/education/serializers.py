@@ -42,10 +42,14 @@ class SolutionSerializer(serializers.ModelSerializer):
         return obj.get_status()
 
     def validate(self, data):
-        if data['task'].gradable and not data['code'] and not data['file']:
+        code = data.get('code', None)
+        file = data.get('file', None)
+        is_gradable = data['task'].gradable
+
+        if is_gradable and code is None and file is None:
             validate_github_solution_url(data['url'])
 
-        if not data['task'].gradable:
+        if not is_gradable:
             validate_github_project_url(data['url'])
 
         return data
@@ -60,10 +64,7 @@ class TaskSerializer(serializers.ModelSerializer):
         return obj.has_tests()
 
     def get_test_mode(self, obj):
-        try:
-            return obj.test.test_mode()
-        except:
-            return "source"
+        return obj.test.test_mode()
 
     class Meta:
         model = Task

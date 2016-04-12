@@ -5,6 +5,7 @@ from base_app.models import BaseUser, City, Company
 from jsonfield import JSONField
 
 from .validators import validate_mac
+from .helper import HasToBeRetested
 
 import uuid
 
@@ -161,24 +162,55 @@ class Test(models.Model):
     test_type = models.SmallIntegerField(choices=TYPE_CHOICE, default=UNITTEST)
     extra_options = JSONField(blank=True, null=True)
 
+    @property
+    def options(self):
+        if self.extra_options is None:
+            return {}
+
+        return self.extra_options
+
     def __str__(self):
         return "{}/{}".format(self.task, self.language)
 
-    # Check if test code is changed. If yes - retest solutions
+    # Check if test code is changed. If yes - retest solutions (i refuse to use flags)
     def save(self, *args, **kwargs):
         if self.id is not None:
-            RetestSolution.objects.create(test_id=self.id)
+            old_test = Test.objects.get(id=self.id)
+
+            try:
+                if bool(old_test.is_binary()) != bool(self.is_binary()):
+                    raise HasToBeRetested
+
+                if self.is_binary():
+                    if self.binaryfiletest.file.name != old_test.binaryfiletest.file.name:
+                        raise HasToBeRetested
+
+                if self.is_source():
+                    if self.sourcecodetest.code != old_test.sourcecodetest.code:
+                        raise HasToBeRetested
+
+            except HasToBeRetested:
+                RetestSolution.objects.create(test_id=self.id)
 
         super(Test, self).save(*args, **kwargs)
 
+    def is_binary(self):
+        if hasattr(self, 'binaryfiletest'):
+            return True
+
+        return False
+
+    def is_source(self):
+        if hasattr(self, 'sourcecodetest'):
+            return True
+
+        return False
+
     def test_mode(self):
-        try:
-            if self.binaryfiletest:
-                return "binary"
-            else:
-                return "source"
-        except:
-            return "source"
+        if self.is_binary:
+            return "binary"
+
+        return "source"
 
 
 class SourceCodeTest(Test):
@@ -219,10 +251,6 @@ class Solution(models.Model):
     test_output = models.TextField(blank=True, null=True)
     return_code = models.IntegerField(blank=True, null=True)
     file = models.FileField(upload_to="solutions", blank=True, null=True)
-
-    def save_model(self, request, obj, form, change):
-        obj.upload_field_name.path
-        obj.save()
 
     def get_status(self):
         try:
