@@ -221,7 +221,6 @@ class Solution(models.Model):
     file = models.FileField(upload_to="solutions", blank=True, null=True)
 
     def save_model(self, request, obj, form, change):
-        print(obj.upload_field_name)
         obj.upload_field_name.path
         obj.save()
 
