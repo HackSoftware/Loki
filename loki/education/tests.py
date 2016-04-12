@@ -1,4 +1,3 @@
-import time
 from django.core.management import call_command
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
@@ -7,7 +6,7 @@ from rest_framework.test import APIClient
 from base_app.models import BaseUser, Company, City
 from education.models import (Student, Certificate, CheckIn, Course, Lecture, Teacher,
                               CourseAssignment, StudentNote, WorkingAt, Task, Solution,
-                              Test, ProgrammingLanguage, GraderRequest)
+                              SourceCodeTest, ProgrammingLanguage)
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
 
@@ -675,20 +674,18 @@ class SolutionsTests(TestCase):
             name="python"
         )
 
-        self.test_for_task_with_no_solutions = Test.objects.create(
+        self.test_for_task_with_no_solutions = SourceCodeTest.objects.create(
             task=self.task_with_no_solutions,
             language=self.python,
             code="CODE HERE!",
-            test_type=Test.UNITTEST,
-            github_url=""
+            test_type=SourceCodeTest.UNITTEST,
         )
 
-        self.test = Test.objects.create(
+        self.test = SourceCodeTest.objects.create(
             task=self.task,
             language=self.python,
             code="CODE HERE!",
-            test_type=Test.UNITTEST,
-            github_url=""
+            test_type=SourceCodeTest.UNITTEST,
         )
 
         self.solution = Solution.objects.create(
@@ -973,12 +970,11 @@ class TestSolutionTests(TestCase):
         #     nonce=105
         # )
 
-        self.test = Test.objects.create(
+        self.test = SourceCodeTest.objects.create(
             task=self.task,
             language=self.python,
             code="CODE HERE!",
-            test_type=Test.UNITTEST,
-            github_url=""
+            test_type=SourceCodeTest.UNITTEST,
         )
 
     def test_grader_response(self):
