@@ -20,7 +20,7 @@ class FixJsonFieldDisplayInInheritedClassAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if self.initial['extra_options'] is None:
+        if self.initial.get('extra_options') is None:
             return
 
         decoded = json.loads(self.initial['extra_options'])
