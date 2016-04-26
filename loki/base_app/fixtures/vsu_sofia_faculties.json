@@ -1,0 +1,18 @@
+[
+    {
+        "fields": {
+            "name": "Строителен Факултет",
+            "base_app.university.name": "Висше строително училище Любен Каравелов",
+            "abbreviation": "СФ"
+        },
+        "model": "base_app.faculty"
+    },
+    {
+        "fields": {
+            "name": "Архитектурен Факултет",
+            "base_app.university.name": "Висше строително училище Любен Каравелов",
+            "abbreviation": "АФ"
+        },
+        "model": "base_app.faculty"
+    }
+]

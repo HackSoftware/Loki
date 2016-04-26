@@ -1,0 +1,18 @@
+[
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет \"Национална сигурност и отбрана\"",
+            "base_app.university.name": "Военна академия Георги Раковски",
+            "abbreviation": "ФСО"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет \"Командно-щабен\"",
+            "base_app.university.name": "Военна академия Георги Раковски",
+            "abbreviation": "ФКЩ"
+        }
+    }
+]

@@ -36,7 +36,11 @@
             </a>
             <h3>{{ course.course.name }}</h3>
             <a href="{{ course.url }}">
+            {% if course.course.is_active %}
               <button class="btn btn-primary">Научете повече</button>
+            {% else %}
+              <button class="btn .btn-danger">Курсът приключи</button>
+            {% endif %}
             </a>
           </div>
         {% endfor %}

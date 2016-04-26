@@ -1,0 +1,26 @@
+[
+    {
+        "fields": {
+            "name": "Треньорски факултет",
+            "base_app.university.name": "Национална спортна академия Васил Левски",
+            "abbreviation": "ТФ"
+        },
+        "model": "base_app.faculty"
+    },
+    {
+        "fields": {
+            "name": "Учителски факултет",
+            "base_app.university.name": "Национална спортна академия Васил Левски",
+            "abbreviation": "УФ"
+        },
+        "model": "base_app.faculty"
+    },
+    {
+        "fields": {
+            "name": "Факултет Кинезитерапия, Туризъм и Спортна Анимация",
+            "base_app.university.name": "Национална спортна академия Васил Левски",
+            "abbreviation": "ФКТСА"
+        },
+        "model": "base_app.faculty"
+    }
+]

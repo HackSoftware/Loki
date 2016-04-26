@@ -1,0 +1,18 @@
+[
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет за Изящни Изкуства",
+            "base_app.university.name": "Национална художествена академия",
+            "abbreviation": "ФИИ"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет за Приложни Изкуства",
+            "base_app.university.name": "Национална художествена академия",
+            "abbreviation": "ФПИ"
+        }
+    }
+]
