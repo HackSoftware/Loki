@@ -1,313 +1,345 @@
-[{
-    "fields": {
-        "base_app.city": 41,
-        "name": "Медицински университет Професор доктор Параскев Стоянов"
+[
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Варна",
+            "name": "Медицински университет Професор доктор Параскев Стоянов"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Софийски университет Свети Климент Охридски"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Софийски университет Свети Климент Охридски"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Университет за национално и световно стопанство"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Университет за национално и световно стопанство"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 169,
-        "name": "Пловдивски университет Паисий Хилендарски"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Пловдивски университет Паисий Хилендарски"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 41,
-        "name": "Икономически университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Варна",
+            "name": "Икономически университет"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Технически университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Технически университет"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Нов български университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Нов български университет"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 21,
-        "name": "Югозападен университет Неофит Рилски"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Благоевград",
+            "name": "Югозападен университет Неофит Рилски"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 43,
-        "name": "Великотърновски университет Свети свети Кирил и Методий"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Велико Търново",
+            "name": "Великотърновски университет Свети свети Кирил и Методий"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 193,
-        "name": "Стопанска академия Димитър Ценов"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Свищов",
+            "name": "Стопанска академия Димитър Ценов"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 41,
-        "name": "Варненски свободен университет Черноризец Храбър"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Варна",
+            "name": "Варненски свободен университет Черноризец Храбър"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 186,
-        "name": "Русенски университет Ангел Кънчев"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Русе",
+            "name": "Русенски университет Ангел Кънчев"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 239,
-        "name": "Шуменски университет Епископ Константин Преславски"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Шумен",
+            "name": "Шуменски университет Епископ Константин Преславски"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 169,
-        "name": "Висше училище по агробизнес и развитие на регионите"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Висше училище по агробизнес и развитие на регионите"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Медицински университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Варна",
+            "name": "Технически университет"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 41,
-        "name": "Технически университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Ботевград",
+            "name": "Международно висше бизнес училище"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 28,
-        "name": "Международно висше бизнес училище"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Стара Загора",
+            "name": "Тракийски университет"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 121,
-        "name": "Тракийски университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Университет Професор доктор Асен Златаров"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 34,
-        "name": "Университет Професор доктор Асен Златаров"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Университет по архитектура, строителство и геодезия"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Университет по архитектура, строителство и геодезия"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Бургас",
+            "name": "Бургаски свободен университет"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 34,
-        "name": "Бургаски свободен университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Габрово",
+            "name": "Технически университет"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 169,
-        "name": "Медицински университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Аграрен университет"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 53,
-        "name": "Технически университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Национална спортна академия Васил Левски"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 169,
-        "name": "Аграрен университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Университет по хранителни технологии"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Национална спортна академия Васил Левски"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Химикотехнологичен и металургичен университет"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 169,
-        "name": "Университет по хранителни технологии"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Лесотехнически университет"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Химикотехнологичен и металургичен университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Минно-геоложки университет Свети Иван Рилски"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Лесотехнически университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Университет по библиотекознание и информационни технологии"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Минно-геоложки университет Свети Иван Рилски"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Европейско висше училище по икономика и мениджмънт"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Университет по библиотекознание и информационни технологии"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Велико Търново",
+            "name": "Национален военен университет Васил Левски"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 169,
-        "name": "Европейско висше училище по икономика и мениджмънт"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Варна",
+            "name": "Висше военноморско училище Никола Вапцаров"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 43,
-        "name": "Национален военен университет Васил Левски"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Висше транспортно училище Тодор Каблешков"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 41,
-        "name": "Висше военноморско училище Никола Вапцаров"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Колеж по икономика и администрация"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Висше транспортно училище Тодор Каблешков"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Колеж по мениджмънт, търговия и маркетинг"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 169,
-        "name": "Колеж по икономика и администрация"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Благоевград",
+            "name": "Американски университет в България"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 167,
-        "name": "Медицински университет"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Висше строително училище Любен Каравелов"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Колеж по мениджмънт, търговия и маркетинг"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Висше училище по застраховане и финанси"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 21,
-        "name": "Американски университет в България"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Академия на МВР"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Висше строително училище Любен Каравелов"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Национална художествена академия"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Висше училище по застраховане и финанси"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Пловдив",
+            "name": "Академия за музикално, танцово и изобразително изкуство"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Академия на МВР"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Колеж по телекомуникации и пощи"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Национална художествена академия"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Национална музикална академия Професор Панчо Владигеров"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 169,
-        "name": "Академия за музикално, танцово и изобразително изкуство"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Добрич",
+            "name": "Международен колеж"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Колеж по телекомуникации и пощи"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Професионален колеж \"Евклид\""
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Национална музикална академия Професор Панчо Владигеров"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Национална академия за театрално и филмово изкуство Кръстю Сарафов"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 71,
-        "name": "Международен колеж"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Военна академия Георги Раковски"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Професионален колеж \"Евклид\""
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Перник",
+            "name": "Европейски политехнически университет"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Национална академия за театрално и филмово изкуство Кръстю Сарафов"
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "София",
+            "name": "Театрален колеж Любен Гройс"
+        }
     },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Военна академия Георги Раковски"
-    },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 161,
-        "name": "Европейски политехнически университет"
-    },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 207,
-        "name": "Театрален колеж Любен Гройс"
-    },
-    "model": "base_app.university"
-}, {
-    "fields": {
-        "base_app.city": 21,
-        "name": "Колеж по туризъм"
-    },
-    "model": "base_app.university"
-}]
+    {
+        "model": "base_app.university",
+        "fields": {
+            "base_app.city.name": "Благоевград",
+            "name": "Колеж по туризъм"
+        }
+    }
+]

@@ -1,5 +1,6 @@
 from django.db import models
-
+import datetime
+from django.utils import timezone 
 from ckeditor.fields import RichTextField
 from base_app.models import BaseUser, City, Company
 from jsonfield import JSONField
@@ -66,7 +67,7 @@ class Course(models.Model):
     applications_url = models.URLField(null=True, blank=True)
     ask_for_favorite_partner = models.BooleanField(default=False)
     ask_for_feedback = models.BooleanField(default=False)
-    end_time = models.DateField(blank=True, null=True)
+    end_time = models.DateField(blank=False, null=True)
     fb_group = models.URLField(blank=True, null=True)
     next_season_mail_list = models.URLField(null=True, blank=True)
     SEO_description = models.CharField(blank=False, max_length=255)
@@ -75,6 +76,9 @@ class Course(models.Model):
     url = models.SlugField(max_length=80, unique=True)
     video = models.URLField(blank=True)
     generate_certificates_until = models.DateField()
+
+    def is_active(self):
+        return self.end_time >= timezone.now().date()
 
     def __str__(self):
         return self.name
