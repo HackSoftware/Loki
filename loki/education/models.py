@@ -78,7 +78,7 @@ class Course(models.Model):
     generate_certificates_until = models.DateField()
 
     def is_active(self):
-        return self.end_time > timezone.now().date()
+        return self.end_time >= timezone.now().date()
 
     def __str__(self):
         return self.name
