@@ -1,4 +1,6 @@
 from django.db import models
+import datetime
+from django.utils import timezone 
 from ckeditor.fields import RichTextField
 from base_app.models import BaseUser, City, Company
 from jsonfield import JSONField
@@ -74,6 +76,9 @@ class Course(models.Model):
     url = models.SlugField(max_length=80, unique=True)
     video = models.URLField(blank=True)
     generate_certificates_until = models.DateField()
+
+    def is_active(self):
+        return self.end_time > timezone.now().date()
 
     def __str__(self):
         return self.name
