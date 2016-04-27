@@ -50,6 +50,13 @@ class GeneralPartner(models.Model):
         return self.partner.comapny.name
 
 
+class HostingPartner(models.Model):
+    partner = models.OneToOneField(Partner, primary_key=True)
+
+    def __str__(self):
+        return self.partner.comapny.name
+
+
 class City(models.Model):
     name = models.CharField(max_length=50, unique=True)
 
