@@ -2,6 +2,7 @@ import json
 
 from django.shortcuts import render, get_object_or_404
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
@@ -81,7 +82,13 @@ def user_activation(request, token):
     user.save()
     token.delete()
 
-    return render(request, 'website/auth/account_activated.html')
+    origin = request.GET.get('origin', None)
+    if origin:
+        redirect_url = 'http://' + origin
+    else:
+        redirect_url = reverse('website:login')
+
+    return render(request, 'website/auth/account_activated.html', locals())
 
 
 def user_password_reset(request, token):

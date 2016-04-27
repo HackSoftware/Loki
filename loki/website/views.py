@@ -60,7 +60,9 @@ def course_details(request, course_url):
 
 @anonymous_required(redirect_url=reverse_lazy('website:profile'))
 def register(request):
-    form = RegisterForm()
+    origin = request.GET.get('origin', None)
+    form = RegisterForm(initial={'origin': origin})
+
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
