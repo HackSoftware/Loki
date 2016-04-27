@@ -75,3 +75,14 @@ CELERYBEAT_SCHEDULE = {
         'schedule': timedelta(minutes=1),
     },
 }
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'loki_cache',
+        'TIMEOUT': 60 * 60,
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000,
+        }
+    }
+}

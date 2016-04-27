@@ -13,6 +13,8 @@ from .helper import crop_image, validate_password
 from .models import BaseUserRegisterToken, BaseUserPasswordResetToken
 from .services import fuzzy_search_education_place
 
+from .decorators import cache_response
+
 
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
@@ -59,6 +61,7 @@ def base_user_update(request):
 
 
 @api_view(['POST'])
+@cache_response
 def education_place_suggest(request):
     query = request.data.get('query', '')
     words = [w.lower() for w in query.split()]
