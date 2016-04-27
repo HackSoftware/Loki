@@ -58,3 +58,7 @@ def validate_password(value):
     # check for letter
     if not any(char.isalpha() for char in value):
         raise ValidationError(_('Password must container at least 1 letter.'))
+
+
+def split_and_lower(query):
+    return [w.lower() for w in query.split()]
