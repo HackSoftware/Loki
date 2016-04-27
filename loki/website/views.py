@@ -41,6 +41,8 @@ def courses(request):
 def partners(request):
     general_partners = GeneralPartner.objects.all().order_by('?')
     general_partners = [gp.partner for gp in general_partners]
+    hosting_partners = GeneralPartner.objects.all().order_by('?')
+    hosting_partners = [gp.partner for gp in hosting_partners]
     partners = Partner.objects.all().order_by('?')
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
