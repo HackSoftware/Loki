@@ -41,9 +41,23 @@
             <p><b>Програма на курса: </b> <a href="{{ cd.course.git_repository }}" target="_blank">{{ cd.course.git_repository }}</a> </p>
             <p><b>Адрес: </b><a href="{{ cd.address }}" target="_blank">Залата се намира тук</a></p> 
             <div id="details-apply-button">
+            {% if cd.course.is_free == True %}
               <a href="{{ cd.course.applications_url }}" target="_blank">
+              {% if cd.course.application_opened %}
                 <button  class="btn btn-lg btn-warning">Кандидатствай</button>
+              {% else %}
+                <button  class="btn btn-lg btn-warning" disabled>Кандидатстването е затворетно</button>
+              {% endif %}
               </a>
+            {% else %}
+              <a href="{{ cd.course.applications_url }}" target="_blank">
+              {% if cd.course.application_opened %}
+                <button  class="btn btn-lg btn-warning">Запиши се</button>
+              {% else %}
+                <button  class="btn btn-lg btn-warning" disabled="">Записването е затворено</button>
+              {% endif %}
+              </a>
+            {% endif %}
             </div>
           </div>
         </div>
@@ -140,7 +154,19 @@
 
     <div class="aplly-button-container">
       <a href="{{ cd.course.applications_url }}" target="_blank">
-        <button class="apply-button btn btn-lg btn-warning">Кандидатствай</button>
+      {% if cd.course.is_free == True %}
+        {% if cd.course.application_opened %}
+          <button class="apply-button btn btn-lg btn-warning">Кандидатствай</button>
+        {% else %}
+          <button class="apply-button btn btn-lg btn-warning" disabled>Кандидатстването е затворетно</button>
+        {% endif %}
+      {% else %}
+        {% if cd.course.application_opened %}
+          <button class="apply-button btn btn-lg btn-warning">Запиши се</button>
+        {% else %}
+          <button class="apply-button btn btn-lg btn-warning" disabled>Записването е затворено</button>
+        {% endif %}
+      {% endif %}
       </a>
     </div>
 
