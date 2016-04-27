@@ -4,7 +4,7 @@ from django.contrib import admin
 
 from base_app.models import BaseUser
 from .models import (Company, Partner, City, GeneralPartner,
-                     EducationPlace, University, Faculty, Subject, School, Academy, EducationInfo)
+                     EducationPlace, University, Faculty, Subject, School, Academy, EducationInfo, HostingPartner)
 
 
 @admin.register(BaseUser)
@@ -32,6 +32,7 @@ class CityAdmin(admin.ModelAdmin):
 
 
 admin.site.register(GeneralPartner)
+admin.site.register(HostingPartner)
 
 
 @admin.register(EducationPlace)
