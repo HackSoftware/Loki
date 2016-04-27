@@ -34,7 +34,7 @@ def about(request):
 
 def courses(request):
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
-    courses = CourseDescription.objects.all()
+    courses = CourseDescription.objects.all().order_by('-course__start_time')
     return render(request, "website/courses.html", locals())
 
 

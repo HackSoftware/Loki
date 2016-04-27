@@ -1,15 +1,15 @@
+import uuid
+import datetime
+
 from django.db import models
 
 from ckeditor.fields import RichTextField
 from base_app.models import BaseUser, City, Company
 from jsonfield import JSONField
 
-import datetime
 from django.utils import timezone
 from .validators import validate_mac
 from .exceptions import HasToBeRetested
-
-import uuid
 
 
 class Student(BaseUser):
@@ -68,18 +68,21 @@ class Course(models.Model):
     applications_url = models.URLField(null=True, blank=True)
     ask_for_favorite_partner = models.BooleanField(default=False)
     ask_for_feedback = models.BooleanField(default=False)
-    end_time = models.DateField(blank=True, null=True)
+    end_time = models.DateField()
     fb_group = models.URLField(blank=True, null=True)
     next_season_mail_list = models.URLField(null=True, blank=True)
     SEO_description = models.CharField(blank=False, max_length=255)
     SEO_title = models.CharField(blank=False, max_length=255)
-    start_time = models.DateField(blank=True, null=True)
+    start_time = models.DateField()
     url = models.SlugField(max_length=80, unique=True)
     video = models.URLField(blank=True)
     generate_certificates_until = models.DateField()
 
     def application_opened(self):
         return self.application_until >= timezone.now().date()
+
+    def is_active(self):
+        return self.end_time >= timezone.now().date()
 
     def __str__(self):
         return self.name
