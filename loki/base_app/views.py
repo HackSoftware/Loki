@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from base_app.serializers import BaseUserMeSerializer, UpdateBaseUserSerializer
+from base_app.models import RegisterOrigin
 
 from .helper import crop_image, validate_password
 from .models import BaseUserRegisterToken, BaseUserPasswordResetToken
@@ -82,9 +83,11 @@ def user_activation(request, token):
     user.save()
     token.delete()
 
-    origin = request.GET.get('origin', None)
+    origin_name = request.GET.get('origin', None)
+    origin = RegisterOrigin.objects.filter(name=origin_name).first()
+
     if origin:
-        redirect_url = 'http://' + origin
+        redirect_url = origin.redirect_url
     else:
         redirect_url = reverse('website:login')
 

@@ -92,6 +92,7 @@ def send_activation_mail(request, user):
     user_token = BaseUserRegisterToken.objects.create(
         user=user,
         token=uuid.uuid4())
+
     # TODO: fix deprecation error (RequestSite)
     mail.send(
         to_email,

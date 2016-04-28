@@ -243,3 +243,14 @@ class BaseUserRegisterToken(models.Model):
 class BaseUserPasswordResetToken(models.Model):
     user = models.OneToOneField(BaseUser)
     token = models.CharField(unique=True, max_length=100)
+
+
+class RegisterOrigin(models.Model):
+    """
+    This is a model that describes all of the systems that are integrated
+    with Loki's user management. (HackFMI, Education)
+    This is used on user activation. Users are being redirect to 'redirect_url'
+    after getting 'name' from a GET parameter.
+    """
+    name = models.SlugField()
+    redirect_url = models.URLField()
