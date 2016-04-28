@@ -2,12 +2,14 @@ import json
 
 from django.shortcuts import render, get_object_or_404
 from django.core.exceptions import ValidationError
+from django.core.urlresolvers import reverse
 from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from base_app.serializers import BaseUserMeSerializer, UpdateBaseUserSerializer
+from base_app.models import RegisterOrigin
 
 from .helper import crop_image, validate_password
 from .models import BaseUserRegisterToken, BaseUserPasswordResetToken
@@ -81,7 +83,15 @@ def user_activation(request, token):
     user.save()
     token.delete()
 
-    return render(request, 'website/auth/account_activated.html')
+    origin_name = request.GET.get('origin', None)
+    origin = RegisterOrigin.objects.filter(name=origin_name).first()
+
+    if origin:
+        redirect_url = origin.redirect_url
+    else:
+        redirect_url = reverse('website:login')
+
+    return render(request, 'website/auth/account_activated.html', locals())
 
 
 def user_password_reset(request, token):

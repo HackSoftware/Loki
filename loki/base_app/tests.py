@@ -8,7 +8,8 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from hack_fmi.models import Skill, Team
-from .models import BaseUser, City, EducationInfo, School, Academy, University, Faculty, Subject
+from .models import BaseUser, City, EducationInfo, School, Academy, University, Faculty, Subject, RegisterOrigin
+from .helper import get_activation_url
 from hack_fmi.helper import date_decrease
 from education.models import Course, CourseAssignment, Student, Certificate
 from website.forms import RegisterForm
@@ -173,6 +174,17 @@ class BaseUserRegistrationTests(TestCase):
         self.assertIsNone(user.educationinfo_set.first().faculty)
         self.assertIsNone(user.educationinfo_set.first().subject)
         self.assertIsNone(user.studies_at)
+
+    def test_get_activation_url(self):
+        RegisterOrigin.objects.create(
+            name='hackfmi',
+            redirect_url='http://ragister.hackfmi.com/#/login')
+
+        url_with_origin = get_activation_url('token', 'hackfmi')
+        url_without_origin = get_activation_url('token')
+
+        self.assertTrue('?origin=' in url_with_origin)
+        self.assertFalse('?origin=' in url_without_origin)
 
 # class PersonalUserInformationTests(TestCase):
 

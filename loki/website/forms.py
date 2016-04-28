@@ -42,6 +42,7 @@ class RegisterForm(forms.Form):
 
     start_date = forms.DateField(label=_('Дата на начало'), input_formats=['%d-%m-%Y'])
     end_date = forms.DateField(label=_('Дата на край'), input_formats=['%d-%m-%Y'])
+    origin = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     def clean_password(self):
         password = self.cleaned_data.get("password")

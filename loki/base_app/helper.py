@@ -5,6 +5,8 @@ from PIL import Image
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.core.urlresolvers import reverse
+from base_app.models import RegisterOrigin
 
 
 def crop_image(x1, y1, x2, y2, path):
@@ -58,3 +60,13 @@ def validate_password(value):
     # check for letter
     if not any(char.isalpha() for char in value):
         raise ValidationError(_('Password must container at least 1 letter.'))
+
+
+def get_activation_url(token, origin_name=None):
+    activation_url = reverse("base_app:user_activation", kwargs={'token': token})
+    origin = RegisterOrigin.objects.filter(name=origin_name).first()
+
+    if origin:
+        return '{}/?origin={}'.format(activation_url, origin.name)
+    else:
+        return activation_url

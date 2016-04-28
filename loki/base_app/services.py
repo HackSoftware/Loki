@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from operator import itemgetter
 from fuzzywuzzy import fuzz
 from .models import Subject, School, Academy, BaseUserRegisterToken, BaseUserPasswordResetToken
+from .helper import get_activation_url
 from post_office import mail
 
 
@@ -99,7 +100,9 @@ def send_activation_mail(request, user):
         template='user_register',
         context={'protocol': request.is_secure() and 'https' or 'http',
                  'domain': RequestSite(request).domain,
-                 'url': reverse("base_app:user_activation", kwargs={'token': user_token.token})})
+                 'url': get_activation_url(user_token.token, request.GET.get('origin', None))
+                 }
+            )
 
 
 def send_forgotten_password_email(request, user):
