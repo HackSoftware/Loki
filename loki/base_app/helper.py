@@ -67,6 +67,6 @@ def get_activation_url(token, origin_name=None):
     origin = RegisterOrigin.objects.filter(name=origin_name).first()
 
     if origin:
-        return '{}/?origin={}'.format(activation_url, origin.name)
+        return '{}?origin={}'.format(activation_url, origin.name)
     else:
         return activation_url

@@ -31,7 +31,11 @@ class CityAdmin(admin.ModelAdmin):
 
 admin.site.register(GeneralPartner)
 admin.site.register(HostingPartner)
-admin.site.register(RegisterOrigin)
+
+
+@admin.register(RegisterOrigin)
+class RegisterOriginAdmin(admin.ModelAdmin):
+    list_display = ('name', 'redirect_url')
 
 
 @admin.register(EducationPlace)
