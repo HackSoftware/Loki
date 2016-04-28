@@ -11,6 +11,7 @@ from base_app.helper import get_or_none
 
 from .forms import RegisterForm, LoginForm
 from .decorators import anonymous_required
+from .helpers import get_label
 
 
 def index(request):
@@ -52,6 +53,7 @@ def course_details(request, course_url):
     cd = get_object_or_404(CourseDescription, url=course_url)
     teachers = cd.course.teacher_set.all()
     partners = cd.course.partner.all().order_by('?')
+    apply_button_label = get_label(cd.course.application_opened(), cd.course.is_free)
     course_days = " ".join([word.strip() for word in cd.course_days.split(",")])
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
