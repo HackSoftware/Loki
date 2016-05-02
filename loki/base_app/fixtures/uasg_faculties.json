@@ -1,0 +1,74 @@
+[
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "base_app.university.name": "Университет по архитектура, строителство и геодезия",
+            "name": "Архитектурен Факултет",
+            "abbreviation": "АФ"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "base_app.university.name": "Университет по архитектура, строителство и геодезия",
+            "name": "Строителен Факултет",
+            "abbreviation": "СФ"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "base_app.university.name": "Университет по архитектура, строителство и геодезия",
+            "name": "Хидротехнически Факултет",
+            "abbreviation": "ХФ"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "base_app.university.name": "Университет по архитектура, строителство и геодезия",
+            "name": "Факултет По Транспортно Строителство",
+            "abbreviation": "ФПТС"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "base_app.university.name": "Университет по архитектура, строителство и геодезия",
+            "name": "Геодезически Факултет",
+            "abbreviation": "ГФ"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "base_app.university.name": "Университет по архитектура, строителство и геодезия",
+            "name": "Архитектурният Факултет",
+            "abbreviation": "АФ"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "base_app.university.name": "Университет по архитектура, строителство и геодезия",
+            "name": "Строителният Факултет",
+            "abbreviation": "СФ"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "base_app.university.name": "Университет по архитектура, строителство и геодезия",
+            "name": "Геодезическия Факултет",
+            "abbreviation": "ГФ"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "base_app.university.name": "Университет по архитектура, строителство и геодезия",
+            "name": "Хидротехническия Факултет",
+            "abbreviation": "ХФ"
+        }
+    }
+]

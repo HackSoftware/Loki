@@ -1,12 +1,37 @@
 #!/bin/bash
 
+read -p "Do you want to import all cities?" -n 1 -r
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+  python3 -W ignore manage.py loadfixtures cities.json
+fi
+
 read -p "Do you want to import all universities, faculties and subects?" -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
   python3 -W ignore manage.py loadfixtures universities_in_bulgaria.json
+  
   python3 -W ignore manage.py loadfixtures sofia_university_faculties.json
+  python3 -W ignore manage.py loadfixtures htmu_faculties.json
+  python3 -W ignore manage.py loadfixtures ltu_faculties.json
+  python3 -W ignore manage.py loadfixtures mgu_faculties.json
+  python3 -W ignore manage.py loadfixtures mvr_faculties.json
+  python3 -W ignore manage.py loadfixtures natfiz_faculties.json
+  python3 -W ignore manage.py loadfixtures nha_faculties.json
+  python3 -W ignore manage.py loadfixtures nma_faculties.json
+  python3 -W ignore manage.py loadfixtures nsa_faculties.json
+  python3 -W ignore manage.py loadfixtures tu_sofia_faculties.json
+  python3 -W ignore manage.py loadfixtures uasg_faculties.json
+  python3 -W ignore manage.py loadfixtures ubit_faculties.json
+  python3 -W ignore manage.py loadfixtures unwe_faculties.json
+  python3 -W ignore manage.py loadfixtures va_sofia_faculties.json
+  python3 -W ignore manage.py loadfixtures vsu_sofia_faculties.json
+  python3 -W ignore manage.py loadfixtures vtu_sofia_faculties.json
+  
   python3 -W ignore manage.py loadfixtures subjects_in_fmi.json
+
 fi
 
 read -p "Do you want to import all academies?" -n 1 -r
@@ -15,6 +40,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]
 then
   python3 -W ignore manage.py loadfixtures academies_in_bulgaria.json
 fi
+
 
 read -p "Do you want to import all schools?" -n 1 -r
 echo

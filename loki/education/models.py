@@ -2,7 +2,6 @@ import uuid
 import datetime
 
 from django.db import models
-
 from ckeditor.fields import RichTextField
 from base_app.models import BaseUser, City, Company
 from jsonfield import JSONField

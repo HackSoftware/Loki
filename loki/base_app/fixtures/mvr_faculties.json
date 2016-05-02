@@ -1,0 +1,18 @@
+[
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "base_app.university.name": "Академия на МВР",
+            "abbreviation": "ФП",
+            "name": "Факултет \"Полиция\""
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "base_app.university.name": "Академия на МВР",
+            "abbreviation": "ПБЗН",
+            "name": "Факултет \"ПБЗН\""
+        }
+    }
+]

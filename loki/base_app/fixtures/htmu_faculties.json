@@ -1,0 +1,26 @@
+[
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет по Химични Технологии",
+            "abbreviation": "ФХТ",
+            "base_app.university.name": "Химикотехнологичен и металургичен университет"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет по Химично и Системно Инженерство",
+            "abbreviation": "ФХСИ",
+            "base_app.university.name": "Химикотехнологичен и металургичен университет"
+        }
+    },
+    {
+        "model": "base_app.faculty",
+        "fields": {
+            "name": "Факултет по Металургия и Материалознание",
+            "abbreviation": "ФММ",
+            "base_app.university.name": "Химикотехнологичен и металургичен университет"
+        }
+    }
+]
