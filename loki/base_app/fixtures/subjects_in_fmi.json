@@ -26,5 +26,33 @@
       "name": "Математика и Информатика",
       "base_app.faculty.name": "Факултет по Математика и Информатика"
     }
+  },
+  {
+    "model": "base_app.subject",
+    "fields": {
+      "name": "Математика",
+      "base_app.faculty.name": "Факултет по Математика и Информатика"
+    }
+  },
+  {
+    "model": "base_app.subject",
+    "fields": {
+      "name": "Приложна математика",
+      "base_app.faculty.name": "Факултет по Математика и Информатика"
+    }
+  },
+  {
+    "model": "base_app.subject",
+    "fields": {
+      "name": "Информационни системи",
+      "base_app.faculty.name": "Факултет по Математика и Информатика"
+    }
+  },
+  {
+    "model": "base_app.subject",
+    "fields": {
+      "name": "Статистика",
+      "base_app.faculty.name": "Факултет по Математика и Информатика"
+    }
   }
 ]
