@@ -84,8 +84,8 @@ $(document).ready(function () {
   }
 
   function represent(el) {
-    var parts = [el.subject, el.faculty, el.educationplace, el.city];
-    return _.compact(parts).join(" ");
+    var parts = [el.subject, el.faculty_abbreviation, el.educationplace, el.city];
+    return _.compact(parts).join(" <strong>=></strong> ");
   }
 
 
