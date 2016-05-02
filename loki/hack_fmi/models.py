@@ -43,7 +43,7 @@ class TeamMembership(models.Model):
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     members = models.ManyToManyField('Competitor', through='TeamMembership')
     mentors = models.ManyToManyField('Mentor', blank=True)
     technologies = models.ManyToManyField('Skill', blank=True)
@@ -70,6 +70,9 @@ class Team(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        unique_together = (('name', 'season'),)
 
 
 class Season(models.Model):
