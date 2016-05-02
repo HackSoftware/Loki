@@ -56,7 +56,8 @@ def get_possible_academies():
 
 def fuzzy_search_education_place(words):
     universities = get_possible_universities()
-    schools = get_possible_schools()
+    # schools = get_possible_schools()
+    schools = []
     academies = get_possible_academies()
 
     everything = universities + schools + academies
