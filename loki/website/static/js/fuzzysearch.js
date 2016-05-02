@@ -73,7 +73,7 @@ $(document).ready(function () {
       }
 
       if(data !== false) {
-        $("#fuzzy-field").val(el.html().trim());
+        $("#fuzzy-field").val(el.text().trim());
         $("#suggestion-dropdown").hide();
       } else {
         $("#id_educationplace").val("");
@@ -133,7 +133,9 @@ $(document).ready(function () {
 
           data.result.forEach(function(item, index) {
             var repr = represent(item);
-            suggestionDropdown.append($("<li ref='" + JSON.stringify(item) + "'>" + repr + "</li>"));
+            $li = $("<li ref='" + JSON.stringify(item) + "'></li>");
+            $li.html(repr);
+            suggestionDropdown.append($li);
           });
 
           suggestionDropdown.append($("<li ref='false'>" + "<b>Не намирам моето</b>" + "</li>"));
