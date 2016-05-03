@@ -38,7 +38,11 @@
             <p><b>Интензивност: </b> {{ cd.course_intensity }} дни седмично</p>
             <p><b>Дни в седмицата: </b> {{ course_days }}</p>
             <p><b>Кандидатстване до: </b> {{ cd.course.application_until }} </p>
-            <p><b>Програма на курса: </b> <a href="{{ cd.course.git_repository }}" target="_blank">{{ cd.course.git_repository }}</a> </p>
+            {% if cd.course.git_repository %}
+              <p><b> <a href="{{ cd.course.git_repository }}" target="_blank">Програма на курса</a> </b></p>
+            {% else %}
+              <p><b> <a href="#">Програма на курса</a> </b></p>
+            {% endif %}
             <p><b>Адрес: </b><a href="{{ cd.address }}" target="_blank">Залата се намира тук</a></p> 
             <div id="details-apply-button">
             {% if cd.course.is_free == True %}
