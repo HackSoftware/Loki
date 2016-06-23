@@ -1,179 +1,161 @@
-from datetime import date
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from post_office import mail
 
 from post_office.models import EmailTemplate
 from rest_framework import status
-from rest_framework.test import APIClient
+from .models import BaseUser, RegisterOrigin
+from .helper import get_activation_url
+from website.forms import RegisterForm
+
+from faker import Factory
+from seed import factories
+
+import unittest
+
+from datetime import date
 
 from hack_fmi.models import Skill, Team
-from .models import BaseUser, City, EducationInfo, School, Academy, University, Faculty, Subject, RegisterOrigin
 from .helper import get_activation_url
 from hack_fmi.helper import date_decrease
 from education.models import Course, CourseAssignment, Student, Certificate
 from website.forms import RegisterForm
 
-import unittest
+
+faker = Factory.create()
 
 
 class BaseUserRegistrationTests(TestCase):
 
     def setUp(self):
+
+        self.city1 = factories.CityFactory()
+        self.user = factories.BaseUserFactory(birth_place=self.city1)
+        self.education_place = factories.EducationPlaceFactory(city=self.city1)
+        self.university = factories.UniversityFactory()
+        self.faculty = factories.FacultyFactory(university=self.university)
+        self.subject = factories.SubjectFactory(faculty=self.faculty)
+        factories.\
+            EducationInfoFactory(user=self.user,
+                                 place=self.education_place,
+                                 faculty=self.faculty,
+                                 subject=self.subject)
+
+        self.academy = factories.AcademyFactory()
+
         self.user_register = EmailTemplate.objects.create(
             name='user_register',
             subject='Регистриран потребител',
             content='Lorem ipsum dolor sit amet, consectetur adipisicing'
         )
-
-        self.base_user_base_info = {
-            "first_name": "Robert",
-            "last_name": "Paulson",
-            "email": "zombie@underworld.dead",
-            "password": "1want3omebrain3",
-            "studies_at": "",
-            "educationplace": None,
-            "faculty": None,
-            "subject": None
+        self.user_data = {
+            'email': faker.email(),
+            'first_name': faker.text(max_nb_chars=20),
+            'last_name': faker.text(max_nb_chars=20),
+            'password': faker.password()
         }
+        self.user_reg_form = {
+            'studies_at': faker.country(),
+            'start_date': faker.date(pattern="%d-%m-%Y"),
+            'end_date': faker.date(pattern="%d-%m-%Y")
+        }
+        self.user_reg_form.update(self.user_data)
 
-        self.city1 = City.objects.create(name='Monstropolis')
-        self.city2 = City.objects.create(name='Death City')
+        self.reg_form_with_faculty_ed_place = {
+            'faculty': self.faculty.id,
+            'educationplace': self.education_place.id
+        }
+        self.reg_form_with_faculty_ed_place.update(self.user_reg_form)
 
-        self.university = University.objects.create(city=self.city1, name="Monsters University")
-        self.faculty = Faculty.objects.create(university=self.university, name="School of Scaring")
-        self.subject = Subject.objects.create(faculty=self.faculty, name="SCAR101.Intro to Scaring")
-
-        self.academy = Academy.objects.create(city=self.city2, name="Shibusen")
+        self.reg_form_with_academy = {
+            # 'faculty': self.faculty.id,
+            'educationplace': self.academy.id
+        }
+        self.reg_form_with_academy.update(self.user_reg_form)
 
     def test_register_base_user(self):
-        user_mail = 'sten@gmail.com'
-        data = {
-            'email': user_mail,
-            'first_name': 'Stanislav',
-            'last_name': 'Bozhanov',
-            'password': '123',
-        }
         url = reverse('base_app:register')
         count = BaseUser.objects.count()
-        self.client.post(url, data, format='json')
-        self.assertEqual(count + 1, BaseUser.objects.count())
+        self.client.post(url, self.user_data, format='json')
+        self.assertEqual(count + 1, BaseUser.objects.all().count())
 
     def test_register_user_no_password(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'first_name': 'Ivo',
-            'last_name': 'Bachvarov',
-        }
+        self.user_data_without_pass = {
+            k: v for k, v in self.user_data.items() if k != 'password'}
+
         url = reverse('base_app:register')
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url,
+                                    self.user_data_without_pass, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_email_sent(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'first_name': 'Ivo',
-            'last_name': ' Bachvarov',
-            'password': '123',
-        }
         url = reverse('base_app:register')
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, self.user_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(mail.get_queued()), 1)
 
     def test_email_sent_new_template(self):
-        data = {
-            'email': 'ivo@abv.bg',
-            'first_name': 'Ivo',
-            'last_name': ' Bachvarov',
-            'password': '123'
-        }
         url = reverse('base_app:register')
-        response = self.client.post(url, data, format='json')
+        response = self.client.post(url, self.user_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIn(self.user_register.content, mail.get_queued()[0].message)
 
     def test_register_base_user_via_form(self):
-        user_info = self.base_user_base_info
-        user_info['studies_at'] = "underworld"
-        user_info['start_date'] = date(2000, 10, 1)
-        user_info['end_date'] = date(2005, 10, 1)
-
-        reg_form = RegisterForm(user_info)
+        reg_form = RegisterForm(data=self.user_reg_form)
 
         self.assertTrue(reg_form.is_valid())
         user = reg_form.save()
-        self.assertEqual(user.first_name, "Robert")
-        self.assertEqual(user.last_name, "Paulson")
-        self.assertEqual(user.email, "zombie@underworld.dead")
-        self.assertTrue(user.check_password("1want3omebrain3"))
+        self.assertEqual(user.first_name, self.user_data['first_name'])
+        self.assertEqual(user.last_name, self.user_data['last_name'])
+        self.assertEqual(user.email, self.user_data['email'])
+        self.\
+            assertTrue(user.check_password(self.user_data['password']))
 
-    def test_register_base_user_via_form_with_ed_place(self):
-        user_info = self.base_user_base_info
-        user_info["educationplace"] = self.university.id
-        user_info["faculty"] = self.faculty.id
-        user_info["subject"] = self.subject.id
-        user_info['start_date'] = date(2000, 10, 1)
-        user_info['end_date'] = date(2005, 10, 1)
-
-        reg_form = RegisterForm(user_info)
+    def test_register_base_user_via_form_with_ed_place_and_faculty(self):
+        reg_form = RegisterForm(self.reg_form_with_faculty_ed_place)
 
         self.assertTrue(reg_form.is_valid())
         user = reg_form.save()
 
-        self.assertEqual(user.first_name, "Robert")
-        self.assertEqual(user.last_name, "Paulson")
-        self.assertEqual(user.email, "zombie@underworld.dead")
-        self.assertTrue(user.check_password, "1want3omebrain3")
+        self.assertEqual(user.first_name,
+                         self.reg_form_with_faculty_ed_place['first_name'])
+        self.assertEqual(user.last_name,
+                         self.reg_form_with_faculty_ed_place['last_name'])
+        self.assertEqual(user.email,
+                         self.reg_form_with_faculty_ed_place['email'])
+        self.assertTrue(user.check_password,
+                        self.reg_form_with_faculty_ed_place['password'])
 
-        self.assertEqual(len(user.educationinfo_set.all()), 1)
-        self.assertEqual(user.educationinfo_set.first().place.name, self.university.name)
-        self.assertEqual(user.educationinfo_set.first().place.city.name, self.city1.name)
-        self.assertEqual(user.educationinfo_set.first().faculty.name, self.faculty.name)
-        self.assertEqual(user.educationinfo_set.first().subject.name, self.subject.name)
-        self.assertIsNone(user.studies_at)
-
-    def test_register_base_user_via_form_with_studies_at(self):
-        user_info = self.base_user_base_info
-        user_info['studies_at'] = "Home"
-        user_info['start_date'] = date(2000, 10, 1)
-        user_info['end_date'] = date(2005, 10, 1)
-
-        reg_form = RegisterForm(user_info)
-
-        self.assertTrue(reg_form.is_valid())
-        user = reg_form.save()
-
-        self.assertEqual(user.first_name, "Robert")
-        self.assertEqual(user.last_name, "Paulson")
-        self.assertEqual(user.email, "zombie@underworld.dead")
-        self.assertTrue(user.check_password, "1want3omebrain3")
-
-        self.assertEqual(len(user.educationinfo_set.all()), 0)
-        self.assertEqual(user.studies_at, "Home")
+        self.assertEqual(self.user.education_info.count(), 1)
+        self.assertEqual(self.user.education_info.first().name,
+                         self.university.name)
+        self.assertEqual(self.user.education_info.first().city.name,
+                         self.city1.name)
+        self.assertEqual(self.faculty.related_fac_to_user.first().user,
+                         self.user)
+        self.assertEqual(self.subject.related_subj_to_user.first().user,
+                         self.user)
 
     def test_register_base_user_via_form_with_academy(self):
-        user_info = self.base_user_base_info
-        user_info["educationplace"] = self.academy.id
-        user_info['start_date'] = date(2000, 10, 1)
-        user_info['end_date'] = date(2005, 10, 1)
-
-        reg_form = RegisterForm(user_info)
+        reg_form = RegisterForm(self.reg_form_with_academy)
 
         self.assertTrue(reg_form.is_valid())
         user = reg_form.save()
 
-        self.assertEqual(user.first_name, "Robert")
-        self.assertEqual(user.last_name, "Paulson")
-        self.assertEqual(user.email, "zombie@underworld.dead")
-        self.assertTrue(user.check_password, "1want3omebrain3")
+        self.assertEqual(user.first_name,
+                         self.reg_form_with_faculty_ed_place['first_name'])
+        self.assertEqual(user.last_name,
+                         self.reg_form_with_faculty_ed_place['last_name'])
+        self.assertEqual(user.email,
+                         self.reg_form_with_faculty_ed_place['email'])
+        self.assertTrue(user.check_password,
+                        self.reg_form_with_faculty_ed_place['password'])
 
-        self.assertEqual(len(user.educationinfo_set.all()), 1)
-        self.assertEqual(user.educationinfo_set.first().place.name, self.academy.name)
-        self.assertEqual(user.educationinfo_set.first().place.city.name, self.city2.name)
-        self.assertIsNone(user.educationinfo_set.first().faculty)
-        self.assertIsNone(user.educationinfo_set.first().subject)
-        self.assertIsNone(user.studies_at)
+        self.assertEqual(self.user.education_info.count(), 1)
+        self.assertEqual(self.user.education_info.first().name,
+                         self.academy.name)
+        self.assertEqual(self.user.education_info.first().city.name,
+                         self.city1.name)
 
     def test_get_activation_url(self):
         RegisterOrigin.objects.create(
@@ -186,64 +168,79 @@ class BaseUserRegistrationTests(TestCase):
         self.assertTrue('?origin=' in url_with_origin)
         self.assertFalse('?origin=' in url_without_origin)
 
-# class PersonalUserInformationTests(TestCase):
+    def test_login(self):
+        reg_url = reverse('base_app:register')
+        self.client.post(reg_url, self.user_data, format='json')
 
-#     def setUp(self):
-#         self.baseuser = BaseUser.objects.create_user(
-#             email="comp@comp.bg",
-#             password="123",
-#             full_name='Comp compov'
-#         )
-#         self.baseuser.is_active = True
-#         # self.baseuser.make_competitor()
-#         self.baseuser.save()
-#         self.baseuser.is_vegetarian = True
-#         self.baseuser.needs_work = True
-#         self.skill = Skill.objects.create(name='C#')
+        login_url = reverse('base_app:login')
+        self.client.post(login_url, self.user_data, format='json')
 
-#         # make baseuser student
-#         self.student = Student(
-#             baseuser_ptr_id=self.baseuser.id,
-#         )
 
-#         self.student.save()
-#         self.student.__dict__.update(self.__dict__)
-#         self.student.save()
+class PersonalUserInformationTests(TestCase):
 
-#         self.course = Course.objects.create(
-#             name='Programming 101',
-#             application_until='2015-03-03',
-#             generate_certificates_until=date_decrease(1),
-#         )
+    def setUp(self):
+        self.company = factories.CompanyFactory()
+        self.partner = factories.PartnerFactory(company=self.company)
+        self.course = factories.CourseFactory()
+        self.baseuser = factories.BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.is_vegeterian = True
+        self.baseuser.needs_work = True
 
-#         self.team = Team.objects.create(
-#             name='My Team',
-#         )
-#         self.ca = CourseAssignment.objects.create(
-#             course=self.course,
-#             user=self.student,
-#             group_time=1,
-#         )
-#         self.team.save()
-#         self.team.add_member(
-#             self.baseuser.get_competitor(), True
-#         )
 
-#         self.certificate = Certificate.objects.create(
-#             assignment=self.ca,
-#         )
+        self.skill = factories.SkillFactory()
 
-#         self.city = City.objects.create(
-#             name="Sofia"
-#         )
+        # make baseuser student
+        self.student = factories.StudentFactory(
+            baseuser_ptr_id=self.baseuser.id,
+        )
 
-#     def test_me_returns_full_team_membership_set(self):
-#         self.client = APIClient()
-#         self.client.force_authenticate(user=self.baseuser)
-#         url_me = reverse('base_app:me')
-#         response = self.client.get(url_me, format='json')
-#         resul_teammembership_set = response.data['competitor']['teammembership_set'][0]
-#         self.assertEqual(resul_teammembership_set['team']['name'], self.team.name)
+        # self.student.save()
+        self.student.__dict__.update(self.__dict__)
+        # self.student.save()
+        self.course = factories.CourseFactory()
+        # self.course = Course.objects.create(
+        #     name='Programming 101',
+        #     application_until='2015-03-03',
+        #     generate_certificates_until=date_decrease(1),
+        # )
+        self.season = factories.SeasonFactory()
+
+        self.team = factories.TeamFactory()
+    #     self.team = Team.objects.create(
+    #         name='My Team',
+    #     )
+    #     self.ca = CourseAssignment.objects.create(
+    #         course=self.course,
+    #         user=self.student,
+    #         group_time=1,
+    #     )
+    #     self.team.save()
+    #     self.team.add_member(
+    #         self.baseuser.get_competitor(), True
+    #     )
+
+    #     self.certificate = Certificate.objects.create(
+    #         assignment=self.ca,
+    #     )
+
+    #     self.city = City.objects.create(
+    #         name="Sofia"
+    #     )
+
+    # def test_me_returns_full_team_membership_set(self):
+    #     self.client = APIClient()
+    #     self.client.force_authenticate(user=self.baseuser)
+    #     url_me = reverse('base_app:me')
+    #     response = self.client.get(url_me, format='json')
+    #     resul_teammembership_set = response.data['competitor']['teammembership_set'][0]
+    #     self.assertEqual(resul_teammembership_set['team']['name'], self.team.name)
+
+
+
+
+
+
 
 #     def test_me_returns_full_courseassignments_set(self):
 #         self.client = APIClient()

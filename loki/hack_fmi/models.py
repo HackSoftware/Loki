@@ -61,18 +61,47 @@ class Competitor(BaseUser):
     registered = models.BooleanField(default=False)
 
 
-class TeamMembership(models.Model):
-    competitor = models.ForeignKey('Competitor')
-    team = models.ForeignKey('Team')
-    is_leader = models.BooleanField(default=False)
-
-    def __str__(self):
-        return "{} {}".format(self.competitor, self.team)
-
-
 def active_season():
     active = Season.objects.get(is_active=True)
     return active.id
+
+
+class Room(models.Model):
+    number = models.IntegerField()
+    season = models.ForeignKey(Season)
+    capacity = models.SmallIntegerField()
+
+    def get_number_of_teams(self):
+        return len(self.team_set.all())
+
+    def is_full(self):
+        return len(self.team_set.all()) >= self.capacity
+
+    def __str__(self):
+        return str(self.number)
+
+
+class Partner(models.Model):
+    name = models.CharField(max_length=60)
+    seasons = models.ManyToManyField('Season')
+
+    def __str__(self):
+        return self.name
+
+
+class Mentor(models.Model):
+    name = models.CharField(max_length=100)
+    description = RichTextField()
+    picture = models.ImageField(blank=True)
+    seasons = models.ManyToManyField('Season')
+    from_company = models.ForeignKey('Partner', null=True)
+    order = models.PositiveIntegerField(default=0, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+    class Meta(object):
+        ordering = ('order',)
 
 
 class Team(models.Model):
@@ -108,6 +137,13 @@ class Team(models.Model):
         unique_together = (('name', 'season'),)
 
 
+class TeamMembership(models.Model):
+    competitor = models.ForeignKey('Competitor')
+    team = models.ForeignKey('Team')
+    is_leader = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "{} {}".format(self.competitor, self.team)
 
 
 class Invitation(models.Model):
@@ -119,41 +155,3 @@ class Invitation(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.team, self.competitor)
-
-
-class Mentor(models.Model):
-    name = models.CharField(max_length=100)
-    description = RichTextField()
-    picture = models.ImageField(blank=True)
-    seasons = models.ManyToManyField('Season')
-    from_company = models.ForeignKey('Partner', null=True)
-    order = models.PositiveIntegerField(default=0, blank=False, null=False)
-
-    def __str__(self):
-        return self.name
-
-    class Meta(object):
-        ordering = ('order',)
-
-
-class Room(models.Model):
-    number = models.IntegerField()
-    season = models.ForeignKey(Season)
-    capacity = models.SmallIntegerField()
-
-    def get_number_of_teams(self):
-        return len(self.team_set.all())
-
-    def is_full(self):
-        return len(self.team_set.all()) >= self.capacity
-
-    def __str__(self):
-        return str(self.number)
-
-
-class Partner(models.Model):
-    name = models.CharField(max_length=60)
-    seasons = models.ManyToManyField('Season')
-
-    def __str__(self):
-        return self.name

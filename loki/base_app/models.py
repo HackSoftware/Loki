@@ -24,7 +24,7 @@ class Company(models.Model):
 
 
 class Partner(models.Model):
-    comapny = models.OneToOneField(Company, primary_key=True)
+    company = models.OneToOneField(Company, primary_key=True)
     description = RichTextField(blank=False)
     facebook = models.URLField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
@@ -174,7 +174,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     avatar = models.ImageField(blank=True, null=True)
     full_image = models.ImageField(blank=True, null=True)
 
-    education_info = models.ManyToManyField(EducationPlace, through='EducationInfo')
+    education_info = models.ManyToManyField(EducationPlace, through='EducationInfo', related_name='info')
 
     USERNAME_FIELD = 'email'
 
@@ -215,6 +215,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     #     competitor = Competitor(baseuser_ptr_id=self.id)
     #     competitor.save()
     #     competitor.__dict__.update(self.__dict__)
+
     #     return competitor.save()
 
 
@@ -226,8 +227,8 @@ class EducationInfo(models.Model):
     created_at = models.DateTimeField(editable=False)
     updated_at = models.DateTimeField()
 
-    faculty = models.ForeignKey(Faculty, blank=True, null=True)
-    subject = models.ForeignKey(Subject, blank=True, null=True)
+    faculty = models.ForeignKey(Faculty, blank=True, null=True, related_name="related_fac_to_user")
+    subject = models.ForeignKey(Subject, blank=True, null=True, related_name="related_subj_to_user")
 
     def save(self, *args, **kwargs):
         '''On save, update created_at and updated_at timestamps
