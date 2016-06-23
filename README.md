@@ -1,4 +1,8 @@
-# Loki
+# Loki Project
+
+  [![Build Status](https://travis-ci.org/HackSoftware/Loki.svg?branch=master)](https://travis-ci.org/HackSoftware/Loki)
+  [![Coverage Status](https://coveralls.io/repos/HackSoftware/Loki/badge.svg?branch=master)](https://coveralls.io/r/HackSoftware/Loki?branch=master)
+
 
 Loki is son of Odin. That project stores all the data of HackBulgaria.
 It takes care of all the courses and HackFMI! It is developed by HackBulgaria Software team!
@@ -24,13 +28,13 @@ In order to setup it, there are the following steps:
 <!-- -->
 
     $ sudo -u postgres createuser your_postgres_username
-    $ sudo -u postgres createdb -O your_postgres_username hack_training
+    $ sudo -u postgres createdb -O your_postgres_username your_postgres_database_name
 
 -   Setup local settings
 
 <!-- -->
 
-    $ cp example_local_settings.py local_settings.py
+    $ cp loki/loki/example_local_settings.py  loki/loki/local_settings.py
 
     Fill up the you local settings
 
@@ -47,19 +51,19 @@ In order to setup it, there are the following steps:
 
     $ python manage.py runserver
 
--   Install npm
+-   Install node
 
 <!-- -->
 
-    $ sudo apt-get install npm
-    & sudo apt-get install nodejs-legacy
+    Follow the https://nodejs.org/en/download/ in oder to download the latest version of npm and nodejs.
 
 -   Install bower
 
 <!-- -->
 
     $ sudo npm install -g bower
-
+    $ cd loki/website/static
+    $ bower install bower.json
 
 
 Celery
@@ -90,15 +94,17 @@ you need to set values to the following variables in the local_settings file :
 
 
 
-Email Confirmations  -------------------
+Email Confirmations
+-------------------
 
 In order to send confirmation emails, we must set the following variables in the local_settings file:
-EMAIL_USE_TLS = 'True/False'
-EMAIL_HOST = 'host'
-EMAIL_PORT = 'port'
-EMAIL_HOST_USER = 'host_user'
-EMAIL_HOST_PASSWORD = 'password'
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+    
+    EMAIL_USE_TLS = "True/False"
+    EMAIL_HOST = "host"
+    EMAIL_PORT = "port"
+    EMAIL_HOST_USER = "host_user"
+    EMAIL_HOST_PASSWORD = "password"
+    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
 The email backend is controlled by the
@@ -110,12 +116,11 @@ Basic Commands
 
 ### Setting Up Your Users
 
--   To create an **superuser account**, use this command:
+To create an **superuser account**, use this command:
 
-        $ python manage.py createsuperuser
+    $ python manage.py createsuperuser
 
-
-- 
+ 
 ### Tests
 
 #### Running tests
