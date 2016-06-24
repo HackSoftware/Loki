@@ -9,82 +9,102 @@ from education.models import (Student, Certificate, CheckIn, Course, Lecture, Te
                               SourceCodeTest, ProgrammingLanguage)
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
+from seed import factories
+import factory
 
 
 class CheckInTest(TestCase):
 
     def setUp(self):
-        self.student = Student.objects.create(
-            email='sten@abv.bg',
-            mac="12-34-56-78-9A-BC",
-        )
-        self.teacher = Teacher.objects.create(
-            email='teach@teach.bg'
-        )
+        # self.student = Student.objects.create(
+        #     email='sten@abv.bg',
+        #     mac="12-34-56-78-9A-BC",
+        # )
+        self.student = factories.StudentFactory()
+        # self.teacher = Teacher.objects.create(
+        #     email='teach@teach.bg'
+        # )
+        self.teacher = factories.TeacherFactory()
         self.student_no_mac = Student.objects.create(
             email='rado@abv.bg',
         )
-        self.course = Course.objects.create(
-            description='Test',
-            name='Test',
-            application_until=date_decrease(30),
-            SEO_description='Test',
-            SEO_title='Test',
-            url='haskell-12',
-            start_time=date_decrease(29),
-            end_time=date_decrease(2),
-            generate_certificates_until=date_decrease(1),
-        )
 
-        self.course_assignment = CourseAssignment.objects.create(
-            group_time=1,
-            course=self.course,
-            user=self.student,
-        )
+        # self.course = Course.objects.create(
+        #     description='Test',
+        #     name='Test',
+        #     application_until=date_decrease(30),
+        #     SEO_description='Test',
+        #     SEO_title='Test',
+        #     url='haskell-12',
+        #     start_time=date_decrease(29),
+        #     end_time=date_decrease(2),
+        #     generate_certificates_until=date_decrease(1),
+        # )
+        self.company = factories.CompanyFactory()
+        self.partner = factories.PartnerFactory(company=self.company)
+        self.course = factories.CourseFactory()
+        # self.course_assignment = CourseAssignment.objects.create(
+        #     group_time=1,
+        #     course=self.course,
+        #     user=self.student,
+        # )
+        self.courseAssignmet = factories.\
+            CourseAssignmentFactory(course=self.course,
+                                    user=self.student)
+        self.courseAssignmet.favourite_partners.add(self.partner)
 
-        self.check_in_on_start = CheckIn.objects.create(
-            mac="12-34-56-78-9A-BE",
-            student=self.student,
-        )
+        # self.check_in_on_start = CheckIn.objects.create(
+        #     mac="12-34-56-78-9A-BE",
+        #     student=self.student,
+        # )
+        self.check_in_on_start = factories.CheckInFactory(student=self.student)
         self.check_in_on_start.date = date_decrease(29)
         self.check_in_on_start.save()
+        
 
-        self.check_in_after_start = CheckIn.objects.create(
-            mac="12-34-56-78-9A-BE",
-            student=self.student,
-        )
+        # self.check_in_after_start = CheckIn.objects.create(
+        #     mac="12-34-56-78-9A-BE",
+        #     student=self.student,
+        # )
+        self.check_in_after_start = factories.CheckInFactory(student=self.student)
         self.check_in_after_start.date = date_decrease(20)
         self.check_in_after_start.save()
 
-        self.check_in_on_end = CheckIn.objects.create(
-            mac="12-34-56-78-9A-BE",
-            student=self.student,
-        )
+
+        # self.check_in_on_end = CheckIn.objects.create(
+        #     mac="12-34-56-78-9A-BE",
+        #     student=self.student,
+        # )
+        self.check_in_on_end  =  factories.CheckInFactory(student=self.student)
         self.check_in_on_end.date = date_decrease(2)
         self.check_in_on_end.save()
 
-        self.check_in_after_course = CheckIn.objects.create(
-            mac="12-34-56-78-9A-BE",
-            student=self.student,
-        )
+        # self.check_in_after_course = CheckIn.objects.create(
+        #     mac="12-34-56-78-9A-BE",
+        #     student=self.student,
+        # )
+        self.check_in_after_course =  factories.CheckInFactory(student=self.student)
         self.check_in_after_course.date = date_decrease(1)
         self.check_in_after_course.save()
 
-        self.check_in_before_course = CheckIn.objects.create(
-            mac="12-34-56-78-9A-BE",
-            student=self.student,
-        )
+
+        # self.check_in_before_course = CheckIn.objects.create(
+        #     mac="12-34-56-78-9A-BE",
+        #     student=self.student,
+        # )
+        self.check_in_before_course =  factories.CheckInFactory(student=self.student)
         self.check_in_before_course.date = date_decrease(30)
         self.check_in_before_course.save()
 
     def test_check_in_with_mac_and_user(self):
         data = {
-            'mac': '12-34-56-78-9A-BC',
+            'mac': factory.Sequence(lambda n: 'd0:00:ad:{}:d8:e9'.format(n)),
             'token': CHECKIN_TOKEN,
         }
         url = reverse('education:set_check_in')
         self.client.post(url, data, format='json')
-        self.assertIn(self.student.mac, CheckIn.objects.get(mac='12-34-56-78-9A-BC').student.mac)
+        import pytest;pytest.set_trace()
+        self.assertIn(self.student.mac, CheckIn.objects.get(mac=data['mac']).mac)
 
     def test_check_in_with_mac_and_no_user(self):
         data = {

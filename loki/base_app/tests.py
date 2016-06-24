@@ -7,6 +7,7 @@ from rest_framework import status
 from .models import BaseUser, RegisterOrigin
 from .helper import get_activation_url
 from website.forms import RegisterForm
+from rest_framework.test import APIClient
 
 from faker import Factory
 from seed import factories
@@ -187,95 +188,79 @@ class PersonalUserInformationTests(TestCase):
         self.baseuser.is_vegeterian = True
         self.baseuser.needs_work = True
 
-
-        self.skill = factories.SkillFactory()
-
         # make baseuser student
         self.student = factories.StudentFactory(
             baseuser_ptr_id=self.baseuser.id,
         )
 
-        # self.student.save()
         self.student.__dict__.update(self.__dict__)
-        # self.student.save()
-        self.course = factories.CourseFactory()
-        # self.course = Course.objects.create(
-        #     name='Programming 101',
-        #     application_until='2015-03-03',
-        #     generate_certificates_until=date_decrease(1),
-        # )
+
+        self.skill = factories.SkillFactory()
         self.season = factories.SeasonFactory()
-
+        self.room = factories.RoomFactory(season=self.season)
+        self.fmi_partner = factories.HackFmiPartnerFactory()
+        self.fmi_partner2 = factories.HackFmiPartnerFactory()
+        self.mentor = factories.MentorFactory(from_company=self.fmi_partner)
         self.team = factories.TeamFactory()
-    #     self.team = Team.objects.create(
-    #         name='My Team',
-    #     )
-    #     self.ca = CourseAssignment.objects.create(
-    #         course=self.course,
-    #         user=self.student,
-    #         group_time=1,
-    #     )
-    #     self.team.save()
-    #     self.team.add_member(
-    #         self.baseuser.get_competitor(), True
-    #     )
+        # self.dtud
+        self.courseAssignmet = factories.\
+            CourseAssignmentFactory(course=self.course,
+                                    user=self.student)
+        self.courseAssignmet.favourite_partners.add(self.partner)
+        self.competitor = factories.CompetitorFactory(
+            baseuser_ptr_id=self.baseuser.id,)
+        self.team.add_member(competitor=self.competitor)
 
-    #     self.certificate = Certificate.objects.create(
-    #         assignment=self.ca,
-    #     )
+        # cert = factories.CertificateFactory(assignment_id=self.courseAssignmet.id)
+        self.city = factories.CityFactory()
 
-    #     self.city = City.objects.create(
-    #         name="Sofia"
-    #     )
+    def test_me_returns_full_team_membership_set(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.baseuser)
+        url_me = reverse('base_app:me')
+        response = self.client.get(url_me, format='json')
+        resul_teammembership_set = response.\
+            data['competitor']['teammembership_set'][0]
+        self.assertEqual(resul_teammembership_set['team']['name'],
+                         self.team.name)
 
-    # def test_me_returns_full_team_membership_set(self):
+    def test_me_returns_full_courseassignments_set(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.baseuser)
+        url_me = reverse('base_app:me')
+        response = self.client.get(url_me, format='json')
+        # pp = pprint.PrettyPrinter(indent=2)
+        # pp.pprint(response.data)
+        first_courseassignment = response.\
+            data['student']['courseassignment_set'][0]
+        self.assertEqual(first_courseassignment['course']['name'],
+                         self.course.name)
+
+    # def test_me_returns_certificate(self):
     #     self.client = APIClient()
     #     self.client.force_authenticate(user=self.baseuser)
     #     url_me = reverse('base_app:me')
     #     response = self.client.get(url_me, format='json')
-    #     resul_teammembership_set = response.data['competitor']['teammembership_set'][0]
-    #     self.assertEqual(resul_teammembership_set['team']['name'], self.team.name)
+    #     certificate_token = response.\
+    #         data['student']['courseassignment_set'][0]['certificate']['token']
+    #     self.assertEqual(certificate_token, str(self.certificate.token))
 
+    def test_baseuser_update(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.baseuser)
+        update_url = reverse('base_app:update_baseuser')
+        data = {'github_account': 'http://github.com/Ivo'}
+        response = self.client.patch(update_url, data, format='json')
+        baseuser = BaseUser.objects.get(id=self.baseuser.id)
 
+        self.assertEqual(baseuser.github_account, data['github_account'])
 
+    def test_patch_empty_birth_place(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.baseuser)
+        update_url = reverse('base_app:update_baseuser')
+        data = {'birth_place': self.city.id}
 
-
-
-
-#     def test_me_returns_full_courseassignments_set(self):
-#         self.client = APIClient()
-#         self.client.force_authenticate(user=self.baseuser)
-#         url_me = reverse('base_app:me')
-#         response = self.client.get(url_me, format='json')
-#         # pp = pprint.PrettyPrinter(indent=2)
-#         # pp.pprint(response.data)
-#         first_courseassignment = response.data['student']['courseassignment_set'][0]
-#         self.assertEqual(first_courseassignment['course']['name'], self.course.name)
-
-#     def test_me_returns_certificate(self):
-#         self.client = APIClient()
-#         self.client.force_authenticate(user=self.baseuser)
-#         url_me = reverse('base_app:me')
-#         response = self.client.get(url_me, format='json')
-#         certificate_token = response.data['student']['courseassignment_set'][0]['certificate']['token']
-#         self.assertEqual(certificate_token, str(self.certificate.token))
-
-#     def test_baseuser_update(self):
-#         self.client = APIClient()
-#         self.client.force_authenticate(user=self.baseuser)
-#         update_url = reverse('base_app:update_baseuser')
-#         data = {'github_account': 'http://github.com/Ivo'}
-#         response = self.client.patch(update_url, data, format='json')
-#         baseuser = BaseUser.objects.get(id=self.baseuser.id)
-
-#         self.assertEqual(baseuser.github_account, data['github_account'])
-
-#     def test_patch_empty_birth_place(self):
-#         self.client = APIClient()
-#         self.client.force_authenticate(user=self.baseuser)
-#         update_url = reverse('base_app:update_baseuser')
-#         data = {'birth_place': self.city.id}
-
-#         self.client.patch(update_url, data, format='json')
-#         baseuser = BaseUser.objects.get(id=self.baseuser.id)
-#         self.assertEqual(baseuser.birth_place, self.city)
+        self.client.patch(update_url, data, format='json')
+        baseuser = BaseUser.objects.get(id=self.baseuser.id)
+        self.assertEqual(baseuser.birth_place, self.city)

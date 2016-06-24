@@ -40,21 +40,21 @@ class Partner(models.Model):
         ordering = ('ordering',)
 
     def __str__(self):
-        return self.comapny.name
+        return self.company.name
 
 
 class GeneralPartner(models.Model):
     partner = models.OneToOneField(Partner, primary_key=True)
 
     def __str__(self):
-        return self.partner.comapny.name
+        return self.partner.company.name
 
 
 class HostingPartner(models.Model):
     partner = models.OneToOneField(Partner, primary_key=True)
 
     def __str__(self):
-        return self.partner.comapny.name
+        return self.partner.company.name
 
 
 class City(models.Model):

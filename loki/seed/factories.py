@@ -52,7 +52,7 @@ class CityFactory(factory.DjangoModelFactory):
     class Meta:
         model = base_app_models.City
 
-    name = faker.name()
+    name = factory.Sequence(lambda n: 'city {}'.format(n))
 
 
 class EducationPlaceFactory(factory.DjangoModelFactory):
@@ -165,13 +165,13 @@ class SkillFactory(factory.DjangoModelFactory):
     name = faker.name()
 
 
-class StudentFactory(factory.DjangoModelFactory):
+class StudentFactory(BaseUserFactory):
     class Meta:
         model = education_models.Student
 
     mac = faker.mac_address()
-    phone = faker.phone_number()
-    skype = faker.name()
+    phone = faker.text(max_nb_chars=20)
+    skype = faker.text(max_nb_chars=20)
 
 
 class CourseFactory(factory.DjangoModelFactory):
@@ -197,7 +197,7 @@ class CourseFactory(factory.DjangoModelFactory):
     SEO_description = faker.word()
     SEO_title = faker.word()
     start_time = faker.date_time()
-    url = faker.slug()
+    url = factory.Sequence(lambda n: 'url {}'.format(n))
     video = faker.url()
     generate_certificates_until = faker.date()
 
@@ -207,13 +207,23 @@ class CourseAssignmentFactory(factory.DjangoModelFactory):
         model = education_models.CourseAssignment
 
     course = factory.SubFactory(CourseFactory)
+    user = factory.SubFactory(StudentFactory)
     cv = faker.file_name(category=None, extension=None)
     favourite_partners = factory.RelatedFactory(PartnerFactory)
-    group_time = faker.random_number()
+    group_time = int(faker.random_element(elements=('1', '2')))
     is_attending = faker.boolean()
-    user = factory.SubFactory(StudentFactory)
-    student_presence = faker.random_number()
+    student_presence = faker.random_number(digits=1)
     is_online = faker.boolean()
+
+
+class TeacherFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.Teacher
+
+    mac = faker.mac_address()
+    phone = faker.text(max_nb_chars=20)
+    signature = factory.django.ImageField()
+    teached_courses = factory.RelatedFactory(CourseFactory)
 
 
 class StudentWithAssignmentFactory(StudentFactory):
@@ -228,7 +238,7 @@ class CompetitorFactory(BaseUserFactory):
     is_vegetarian = faker.boolean()
     known_skills = factory.RelatedFactory(SkillFactory)
     faculty_number = faker.random_number()
-    shirt_size = faker.random_number()
+    shirt_size = faker.random_element(elements=('1', '2', '3', '4'))
     needs_work = faker.boolean()
     social_links = faker.text()
     registered = faker.boolean()
@@ -265,7 +275,7 @@ class RoomFactory(factory.DjangoModelFactory):
 
     number = faker.random_number()
     season = factory.SubFactory(SeasonFactory)
-    capacity = faker.random_number()
+    capacity = faker.random_number(digits=1)
 
 
 class MentorFactory(factory.DjangoModelFactory):
@@ -276,7 +286,7 @@ class MentorFactory(factory.DjangoModelFactory):
     description = faker.text()
     picture = factory.django.ImageField()
     seasons = factory.RelatedFactory(SeasonFactory)
-    from_company = factory.SubFactory(PartnerFactory)
+    from_company = factory.SubFactory(HackFmiPartnerFactory)
     order = faker.random_number()
 
 
@@ -302,7 +312,7 @@ class TeamMembershipFactory(factory.DjangoModelFactory):
     competitor = factory.SubFactory(CompetitorFactory)
     team = factory.SubFactory(TeamFactory)
     is_leader = faker.boolean()
-    place = faker.random_number()
+    place = faker.random_number(digits=1)
 
 
 class TeamWithCompetitor(TeamFactory):
@@ -313,3 +323,20 @@ class TeamWithCompetitor(TeamFactory):
     members = factory.RelatedFactory(TeamMembershipFactory,
                                      'team',
                                      competitor=competitor)
+
+
+class CertificateFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.Certificate
+
+    token = faker.word()
+    assignment = factory.RelatedFactory(CourseAssignmentFactory)
+
+
+class CheckInFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.CheckIn
+
+    mac = factory.Sequence(lambda n: 'd0:00:ad:{0}:d8:e9'.format(n))
+    student = factory.SubFactory(StudentFactory)
+    date = faker.date()
