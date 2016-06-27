@@ -202,7 +202,6 @@ class PersonalUserInformationTests(TestCase):
         self.fmi_partner2 = factories.HackFmiPartnerFactory()
         self.mentor = factories.MentorFactory(from_company=self.fmi_partner)
         self.team = factories.TeamFactory()
-        # self.dtud
         self.courseAssignmet = factories.\
             CourseAssignmentFactory(course=self.course,
                                     user=self.student)

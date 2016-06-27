@@ -340,3 +340,115 @@ class CheckInFactory(factory.DjangoModelFactory):
     mac = factory.Sequence(lambda n: 'd0:00:ad:{0}:d8:e9'.format(n))
     student = factory.SubFactory(StudentFactory)
     date = faker.date()
+
+
+class LectureFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.Lecture
+
+    course = factory.SubFactory(CourseFactory)
+    date = faker.date_time()
+
+
+class WorkingAtFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.WorkingAt
+
+    student = factory.SubFactory(StudentFactory)
+    company = factory.SubFactory(CompanyFactory)
+    location = factory.SubFactory(CityFactory)
+    course = factory.SubFactory(CourseFactory)
+    came_working = faker.boolean(chance_of_getting_true=0)
+    company_name = faker.company()
+    start_date = faker.date_time()
+    end_date = faker.date_time()
+    title = faker.word()
+    description = faker.text()
+
+
+class TaskFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.Task
+
+    course = factory.SubFactory(CourseFactory)
+    description = factory.\
+        Sequence(lambda n: 'https://github.com/zad{}/solution.py'.format(n))
+    is_exam = faker.boolean(chance_of_getting_true=0)
+    name = faker.text(max_nb_chars=128)
+    week = faker.random_number(digits=1)
+    gradable = faker.boolean(chance_of_getting_true=100)
+
+
+class ProgrammingLanguageFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.ProgrammingLanguage
+
+    name = faker.word()
+
+
+class TestFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.Test
+
+    UNITTEST = 0
+
+    TYPE_CHOICE = (
+        (UNITTEST, 'unittest'),
+    )
+
+    task = factory.RelatedFactory(TaskFactory)
+    language = factory.SubFactory(ProgrammingLanguageFactory)
+    test_type = faker.\
+        random_element(elements=(str(elem[0]) for elem in TYPE_CHOICE))
+    extra_options = faker.file_name(category=None, extension='json')
+
+
+class SourceCodeTestFactory(TestFactory):
+    class Meta:
+        model = education_models.SourceCodeTest
+
+    code = faker.text()
+
+
+class BinaryFileTestFactory(TestFactory):
+    class Meta:
+        model = education_models.BinaryFileTest
+
+    file = faker.file_name(category=None, extension=None)
+
+
+class SolutionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.Solution
+
+    PENDING = 0
+    RUNNING = 1
+    OK = 2
+    NOT_OK = 3
+    SUBMITED = 4
+    MISSING = 5
+    SUBMITTED_WITHOUT_GRADING = 6
+
+    STATUS_CHOICE = (
+        (PENDING, 'pending'),
+        (RUNNING, 'running'),
+        (OK, 'ok'),
+        (NOT_OK, 'not_ok'),
+        (SUBMITED, 'submitted'),
+        (MISSING, 'missing'),
+        (SUBMITTED_WITHOUT_GRADING, 'submitted_without_grading'),
+    )
+
+    task = factory.SubFactory(TaskFactory)
+    student = factory.SubFactory(StudentFactory)
+    url = faker.url()
+    code = faker.text()
+    build_id = faker.random_number()
+    check_status_location = faker.text(max_nb_chars=128)
+    created_at = faker.date_time()
+    test_output = faker.text()
+    status = faker.\
+        random_element(elements=(str(el[0]) for el in STATUS_CHOICE))
+    return_code = faker.random_number()
+    file = faker.file_name(category=None, extension=None)
+
