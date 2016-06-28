@@ -5,12 +5,13 @@ from django.core.urlresolvers import reverse
 from rest_framework.test import APIClient
 from base_app.models import BaseUser, Company, City
 from education.models import (Student, Certificate, CheckIn, Course, Lecture, Teacher,
-                              CourseAssignment, StudentNote, WorkingAt, Task, Solution,
+                              CourseAssignment, StudentNote, WorkingAt, Task, Solution, Test,
                               SourceCodeTest, ProgrammingLanguage)
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
 from seed import factories
 from faker import Factory
+import time
 
 faker = Factory.create()
 
@@ -23,7 +24,7 @@ class CheckInTest(TestCase):
 
         self.teacher = factories.TeacherFactory()
         self.student_no_mac = Student.objects.create(
-            email='rado@abv.bg',
+            email=faker.email(),
         )
         self.company = factories.CompanyFactory()
         self.partner = factories.PartnerFactory(company=self.company)
@@ -57,17 +58,15 @@ class CheckInTest(TestCase):
         self.check_in_before_course.date = date_decrease(30)
         self.check_in_before_course.save()
 
-    # CAN NOT understand this test
-
-    # def test_check_in_with_mac_and_user(self):
-    #     data = {
-    #         'mac':faker.mac_address(),
-    #         'token': CHECKIN_TOKEN,
-    #     }
-    #     url = reverse('education:set_check_in')
-    #     resp = self.client.post(url, data, format='json')
-    #     import pytest;pytest.set_trace()
-    #     self.assertIn(self.student.mac, CheckIn.objects.get(mac=data['mac']).student.mac)
+    def test_check_in_with_mac_and_user(self):
+        data = {
+            'mac': self.student.mac,
+            'token': CHECKIN_TOKEN,
+        }
+        url = reverse('education:set_check_in')
+        self.client.post(url, data, format='json')
+        self.assertIn(self.student.mac,
+                      CheckIn.objects.get(mac=data['mac']).student.mac)
 
     def test_check_in_with_mac_and_no_user(self):
         data = {
@@ -90,8 +89,8 @@ class CheckInTest(TestCase):
         self.student_no_mac.mac = data['mac']
         self.student_no_mac.save()
         call_command('check_macs')
-        self.\
-            assertEqual(CheckIn.objects.get(mac=data['mac']).student, self.student_no_mac)
+        self.assertEqual(CheckIn.objects.
+                         get(mac=data['mac']).student, self.student_no_mac)
 
     def test_get_check_ins_for_specific_course(self):
         self.client = APIClient()
@@ -196,44 +195,54 @@ class TeachersAPIsTests(TestCase):
         self.client.force_authenticate(user=self.teacher)
         data = {
             'assignment': self.course_assignment.id,
-            'text': 'Very good student!'
+            'text': faker.text()
         }
         url = reverse('education:note')
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 201)
-        note = StudentNote.objects.filter(assignment=self.course_assignment).first()
-        self.assertEqual(note.text, 'Very good student!')
+        note = StudentNote.objects.filter(
+            assignment=self.course_assignment).first()
+        self.assertEqual(note.text, data['text'])
 
     def test_create_student_note_invalid_teacher(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.teacher)
         data = {
             'assignment': self.course_assignment2.id,
-            'text': 'Very good student!'
+            'text': faker.text()
         }
         url = reverse('education:note')
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 403)
-        note = StudentNote.objects.filter(assignment=self.course_assignment2).first()
+        note = StudentNote.objects.filter(
+            assignment=self.course_assignment2).first()
         self.assertIsNone(note)
 
 
 class CheckPresenceTests(TestCase):
 
     def setUp(self):
-        self.course1 = factories.CourseFactory(start_time=date_decrease(30),
-                                               end_time=date_increase(30),
-                                               generate_certificates_until=date_decrease(1))
-        self.course2 = factories.CourseFactory(start_time=date_decrease(30),
-                                               end_time=date_increase(30),
-                                               generate_certificates_until=date_decrease(1))
+        self.course1 = factories.CourseFactory(
+            start_time=date_decrease(30),
+            end_time=date_increase(30),
+            generate_certificates_until=date_decrease(1))
+        self.course2 = factories.CourseFactory(
+            start_time=date_decrease(30),
+            end_time=date_increase(30),
+            generate_certificates_until=date_decrease(1))
 
-        self.lecture1 = factories.LectureFactory(course=self.course1,
-                                                 date=date_decrease(1))
-        self.lecture2 = factories.LectureFactory(course=self.course1,
-                                                 date=date_decrease(2))
-        self.lecture3 = factories.LectureFactory(course=self.course1,
-                                                 date=date_decrease(3))
+        self.lecture1 = factories.LectureFactory(
+            course=self.course1,
+            date=date_decrease(1)
+        )
+        self.lecture2 = factories.LectureFactory(
+            course=self.course1,
+            date=date_decrease(2)
+        )
+        self.lecture3 = factories.LectureFactory(
+            course=self.course1,
+            date=date_decrease(3)
+        )
 
         self.student = factories.StudentFactory()
         self.course_assignment = factories.CourseAssignmentFactory(
@@ -294,17 +303,23 @@ class CheckMacsTests(TestCase):
             email=faker.email())
         self.student_no_mac = factories.StudentFactory(
             email=faker.email())
-        self.check_1 = factories.CheckInFactory(student=self.student_no_mac)
+        self.check_1 = factories.CheckInFactory(
+            student=self.student_no_mac
+        )
         self.check_1.date = date_decrease(1)
         self.check_1.save()
 
-        self.check_2 = factories.CheckInFactory(mac=self.check_1.mac,
-                                                student=self.student_no_mac)
+        self.check_2 = factories.CheckInFactory(
+            mac=self.check_1.mac,
+            student=self.student_no_mac
+        )
         self.check_2.date = date_decrease(2)
         self.check_2.save()
 
-        self.check_3 = factories.CheckInFactory(mac=self.check_1.mac,
-                                                student=self.student_no_mac)
+        self.check_3 = factories.CheckInFactory(
+            mac=self.check_1.mac,
+            tudent=self.student_no_mac
+        )
         self.check_3.date = date_decrease(3)
         self.check_3.save()
 
@@ -348,7 +363,7 @@ class WorkingAtTests(TestCase):
 
     def setUp(self):
         self.student = Student.objects.create(
-            email='sten@abv.bg'
+            email=faker.email()
         )
         self.company = factories.CompanyFactory()
         self.city = factories.CityFactory()
@@ -441,7 +456,7 @@ class TasksTests(TestCase):
 
     def setUp(self):
         self.student = factories.StudentFactory(
-            email='sten@abv.bg',
+            email=faker.email(),
         )
 
         self.course = factories.CourseFactory()
@@ -472,12 +487,12 @@ class TasksTests(TestCase):
 class SolutionsTests(TestCase):
 
     def setUp(self):
-        self.student = Student.objects.create(
-            email='sten@abv.bg',
+        self.student = factories.StudentFactory(
+            email=faker.email(),
         )
 
-        self.student2 = Student.objects.create(
-            email='ivo@abv.bg',
+        self.student2 = factories.StudentFactory(
+            email=faker.email(),
         )
 
         self.course = factories.CourseFactory()
@@ -495,17 +510,17 @@ class SolutionsTests(TestCase):
 
         self.task_with_no_solutions = factories.TaskFactory(
             course=self.course,
+            gradable=False,
         )
 
         self.python = factories.ProgrammingLanguageFactory()
 
         self.test_for_task_with_no_solutions = factories.SourceCodeTestFactory(
-            task=self.task_with_no_solutions,
+            task_id=self.task_with_no_solutions.id,
             language=self.python,
         )
-
         self.test = factories.SourceCodeTestFactory(
-            task=self.task,
+            task_id=self.task.id,
             language=self.python,
         )
 
@@ -520,81 +535,104 @@ class SolutionsTests(TestCase):
         )
 
         self.certificate = factories.CertificateFactory(
-            assignment=self.assignment,
+            assignment_id=self.assignment.id,
         )
 
-        self.teacher = factories.TeacherFactory()
+        self.teacher = factories.TeacherFactory(email=faker.email())
 
         self.teacher.teached_courses.add(self.course)
         self.teacher.teached_courses.add(self.course2)
         self.teacher.save()
 
-        self.teacher2 = factories.TeacherFactory()
+        self.teacher2 = factories.TeacherFactory(email=faker.email())
 
         self.teacher2.teached_courses.add(self.course2)
         self.teacher.save()
 
-    def test_teacher_get_student_solutions(self):
+        self.course3 = factories.CourseFactory()
+        self.assignment3 = factories.CourseAssignmentFactory(
+            user=self.student,
+            course=self.course3,
+        )
+
+        self.task3 = factories.TaskFactory(
+            course=self.course3)
+
+        self.test = factories.SourceCodeTestFactory(
+            task_id=self.task3.id,
+            language=self.python,
+        )
+
+        self.solution3 = factories.SolutionFactory(
+            student=self.student,
+            task=self.task3,
+        )
+
+        self.teacher3 = factories.TeacherFactory(email=faker.email())
+        self.teacher3.teached_courses.add(self.course3)
+        self.teacher3.save()
+
+    def test_teacher_get_all_student_solutions(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.teacher)
-        # course_count = self.teacher.teached_courses.count()
         url = reverse('education:student_solutions')
         response = self.client.get(url, format='json')
-        self.assertNotEqual(0, len(response.data))
+        self.assertEqual(2, len(response.data))
 
     def test_teacher_get_student_solutions_for_other_course(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.teacher2)
-        # course_count = self.teacher.teached_courses.count()
         url = reverse('education:student_solutions')
         response = self.client.get(url, format='json')
         self.assertEqual(0, len(response.data))
 
+    def test_teacher_get_student_solutions_for_his_course(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.teacher3)
+        url = reverse('education:student_solutions')
+        response = self.client.get(url, format='json')
+        self.assertEqual(1, len(response.data))
+
     def test_get_solutions(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.student)
-
         url = reverse('education:solution')
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(2, len(response.data))
 
     def test_get_solutions_only_yours(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.student2)
-
         url = reverse('education:solution')
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
 
     def test_post_solution_for_ungradable_task(self):
-        logged_student = self.student2
         self.client = APIClient()
-        self.client.force_authenticate(user=logged_student)
-
+        self.client.force_authenticate(user=self.student2)
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'https://github.com/lolo/solution.py'
+            'url': self.solution2.url,
         }
 
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 201)  # 201 Created
-        expected = Solution.STATUS_CHOICE[Solution.SUBMITTED_WITHOUT_GRADING][1]
+        expected = Solution.\
+            STATUS_CHOICE[Solution.SUBMITTED_WITHOUT_GRADING][1]
         self.assertEqual(expected, response.data['status'])
 
     def test_post_solution_for_ungradable_task_for_non_existing_task(self):
-        logged_student = self.student2
         self.client = APIClient()
-        self.client.force_authenticate(user=logged_student)
-
+        self.client.force_authenticate(user=self.student2)
         url = reverse('education:solution')
         data = {
             'submitted': True,
             'status': None,
-            'task': 147,
-            'code': 'asdf',
+            'task': faker.random_number(),
+            'code': faker.text(),
             'url': None
         }
 
@@ -602,23 +640,24 @@ class SolutionsTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_post_solution_for_ungradable_test_with_incorrect_github_url(self):
-        logged_student = self.student2
         self.client = APIClient()
-        self.client.force_authenticate(user=logged_student)
+        self.client.force_authenticate(user=self.student2)
 
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'sdsadqweqwesda'
+            'url': faker.url()
         }
 
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 400)
 
+        not_github_url = faker.url()
+        self.assertNotIn("github.com", not_github_url)
         url = reverse('education:solution')
         data = {
             'task': self.task_with_no_solutions.id,
-            'url': 'https://docs.angularjs.org/api/ng/directive/select'
+            'url': not_github_url,
         }
 
         response = self.client.post(url, data, format='json')
@@ -634,15 +673,14 @@ class SolutionsTests(TestCase):
         self.assertEqual(response.status_code, 201)
 
     def test_post_solution_for_ungradable_task_without_url(self):
-        logged_student = self.student2
         self.client = APIClient()
-        self.client.force_authenticate(user=logged_student)
+        self.client.force_authenticate(user=self.student2)
 
         url = reverse('education:solution')
 
         data = {
             'task': self.task_with_no_solutions.id,
-            'code': 'asdafasda'
+            'code': faker.text(),
         }
 
         response = self.client.post(url, data, format='json')
@@ -652,33 +690,23 @@ class SolutionsTests(TestCase):
     def test_post_solutions_filter(self):
         logged_student = self.student
 
-        course2 = Course.objects.create(
-            name="Java2",
-            application_until=date_decrease(30),
-            url="https://hackbulgaria.com/course/Javata-1/",
-            start_time=date_decrease(29),
-            end_time=date_decrease(2),
-            generate_certificates_until=date_decrease(1),
-        )
+        course2 = factories.CourseFactory()
 
-        task2 = Task.objects.create(
+        task2 = factories.TaskFactory(
             course=course2,
-            description="https://github.com/lqddlq/README.md",
-            name="Task3 Name",
-            week=1,
             gradable=False,
         )
 
-        Solution.objects.create(
+        factories.SolutionFactory(
             student=logged_student,
             task=task2,
-            url='https://github.com/lqdddsadaslsq/solution.py',
         )
 
         self.client = APIClient()
         self.client.force_authenticate(user=logged_student)
 
         url = reverse('education:solution')
+
         data = {
             'task__course__id': course2.id
         }
@@ -686,97 +714,79 @@ class SolutionsTests(TestCase):
         response = self.client.get(url, data, format='json')
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(Solution.objects.filter(student=logged_student).count(), 2)
+        self.\
+            assertEqual(Solution.objects.
+                        filter(student=logged_student).count(), 3)
         self.assertEqual(len(response.data), 1)
 
     def test_certificate(self):
         c = Client()
-        url = reverse('education:certificate', kwargs={'token': self.certificate.token})
+
+        url = reverse('education:certificate',
+                      kwargs={'token': self.certificate.token})
+
         response = c.get(url)
+
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Source Link')
         self.assertContains(response, 'Not sent')
 
-# class CourseAsignmentTests(TestCase):
 
-#     def setUp(self):
-#         self.student = Student.objects.create(
-#             email='kosta@abv.bg',
-#             mac="12:34:56:78:9A:BC",
-#         )
-#         self.course = Course.objects.create(
-#             name="Java2",
-#             application_until=date_decrease(30),
-#             url="https://hackbulgaria.com/course/Javata-1/",
-#             start_time=date_decrease(29),
-#             end_time=date_decrease(2),
-#             generate_certificates_until=date_decrease(1),
-#         )
+class CourseAsignmentTests(TestCase):
 
-#     def test_if_data_not_full(self):
-#         logged_student = self.student
-#         self.client = APIClient()
-#         self.client.force_authenticate(user=logged_student)
+    def setUp(self):
+        self.student = factories.StudentFactory(
+            email=faker.email(),
+        )
+        self.course = factories.CourseFactory()
+        self.teacher = factories.TeacherFactory(email=faker.email())
+        self.teacher.teached_courses.add(self.course)
+        self.teacher.save()
 
-#         url = reverse('education:course_assignment')
+    def test_if_data_is_full(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.teacher)
 
-#         data = {
-#             'course__id': self.course.id
-#         }
+        url = reverse('education:get_ca_for_course')
+        factories.CourseAssignmentFactory(
+            user=self.student,
+            course=self.course,)
 
-#         response = self.client.patch(url, data, format='json')
-#         self.assertEqual(response.status_code, 403)
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.status_code, 200)
 
-#     def test_if_data_is_full(self):
-#         logged_student = self.student
-#         self.client = APIClient()
-#         self.client.force_authenticate(user=logged_student)
+    def test_if_data_not_full(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.teacher)
 
-#         url = reverse('education:course_assignment')
+        url = reverse('education:get_ca_for_course')
+        factories.CourseAssignmentFactory(
+            user=self.student)
 
-#         data = {
-#             'student_presence': 1,
-#             'user': self.student.id,
-#             'studentnote_set': "",
-#         }
-
-#         response = self.client.patch(url, data, format='json')
-#         print(response.data)
-#         self.assertEqual(response.status_code, 200)
+        response = self.client.get(url, format='json')
+        self.assertEqual(response.data, [])
 
 
 class TestSolutionTests(TestCase):
 
     def setUp(self):
-        self.student = Student.objects.create(
-            email='test@test.com',
-            mac="12:34:56:78:9A:BC",
+        self.student = factories.StudentFactory(
+            email=faker.email(),
         )
 
-        self.course = Course.objects.create(
-            name="Java",
-            application_until=date_decrease(30),
-            url="https://hackbulgaria.com/course/haskell-1/",
-            start_time=date_decrease(29),
-            end_time=date_decrease(2),
-            generate_certificates_until=date_decrease(1),
-        )
+        self.course = factories.CourseFactory()
 
-        self.assignment = CourseAssignment.objects.create(
+        self.assignment = factories.CourseAssignmentFactory(
             user=self.student,
             course=self.course,
-            group_time=1,
         )
 
-        self.task = Task.objects.create(
+        self.task = factories.TaskFactory(
             course=self.course,
-            description="https://github.com/testasdasdtest/README.md",
-            name="Task Name 1",
-            week=1,
             gradable=False,
         )
 
-        self.python = ProgrammingLanguage.objects.create(
+        self.python = factories.ProgrammingLanguageFactory(
             name="python"
         )
 
@@ -857,21 +867,21 @@ class TestSolutionTests(TestCase):
     #     self.assertIsNotNone(solution.build_id)
     #     self.assertIsNotNone(solution.check_status_location)
 
-    # def test_solution_status(self):
-    #     self.client = APIClient()
-    #     self.client.force_authenticate(user=self.student)
+    def test_solution_status(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student)
 
-    #     url = reverse('education:solution')
-    #     data = {
-    #         'task': self.task.id,
-    #         'url': 'https://github.com/testsolutionasdtest/solution.py',
-    #         'code': "print('da')",
-    #     }
+        url = reverse('education:solution')
+        data = {
+            'task': self.task.id,
+            'url': 'https://github.com/testsolutionasdtest/solution.py',
+            'code': faker.text(),
+        }
 
-    #     response = self.client.post(url, data, format='json')
-    #     self.assertEqual(response.status_code, 201)
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, 201)
 
-    #     solution = Solution.objects.get(task=self.task, student=self.student)
-    #     url = reverse('education:solution_status', kwargs={'pk': solution.id})
-    #     time.sleep(6)
-    #     response = self.client.get(url, format='json')
+        solution = Solution.objects.get(task=self.task, student=self.student)
+        url = reverse('education:solution_status', kwargs={'pk': solution.id})
+        time.sleep(6)
+        response = self.client.get(url, format='json')

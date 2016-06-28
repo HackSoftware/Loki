@@ -174,6 +174,7 @@ class StudentFactory(BaseUserFactory):
     skype = faker.text(max_nb_chars=20)
 
 
+
 class CourseFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.Course
@@ -329,8 +330,8 @@ class CertificateFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.Certificate
 
-    token = faker.word()
     assignment = factory.RelatedFactory(CourseAssignmentFactory)
+    token = faker.word()
 
 
 class CheckInFactory(factory.DjangoModelFactory):
@@ -390,16 +391,10 @@ class TestFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.Test
 
-    UNITTEST = 0
-
-    TYPE_CHOICE = (
-        (UNITTEST, 'unittest'),
-    )
-
     task = factory.RelatedFactory(TaskFactory)
     language = factory.SubFactory(ProgrammingLanguageFactory)
     test_type = faker.\
-        random_element(elements=(str(elem[0]) for elem in TYPE_CHOICE))
+        random_element(elements=('0',))
     extra_options = faker.file_name(category=None, extension='json')
 
 
@@ -421,34 +416,37 @@ class SolutionFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.Solution
 
-    PENDING = 0
-    RUNNING = 1
-    OK = 2
-    NOT_OK = 3
-    SUBMITED = 4
-    MISSING = 5
-    SUBMITTED_WITHOUT_GRADING = 6
-
-    STATUS_CHOICE = (
-        (PENDING, 'pending'),
-        (RUNNING, 'running'),
-        (OK, 'ok'),
-        (NOT_OK, 'not_ok'),
-        (SUBMITED, 'submitted'),
-        (MISSING, 'missing'),
-        (SUBMITTED_WITHOUT_GRADING, 'submitted_without_grading'),
-    )
-
     task = factory.SubFactory(TaskFactory)
     student = factory.SubFactory(StudentFactory)
-    url = faker.url()
+
+    '''Non-gradable tasks require a github url'''
+
+    url = factory.\
+        Sequence(lambda n: 'https://github.com/zad{}/solution.py'.format(n))
     code = faker.text()
     build_id = faker.random_number()
     check_status_location = faker.text(max_nb_chars=128)
     created_at = faker.date_time()
     test_output = faker.text()
     status = faker.\
-        random_element(elements=(str(el[0]) for el in STATUS_CHOICE))
+        random_element(elements=('0', '1', '2', '3', '4', '5', '6'))
     return_code = faker.random_number()
     file = faker.file_name(category=None, extension=None)
 
+
+class StudentNoteFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.StudentNote
+
+    text = faker.text()
+    assignment = factory.SubFactory(CourseAssignmentFactory)
+    author = factory.SubFactory(TeacherFactory)
+    post_time = faker.date_time()
+
+
+class GraderRequestFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.GraderRequest
+
+    request_info = faker.text(max_nb_chars=140)
+    nonce = faker.random_number(digits=3)

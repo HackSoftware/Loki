@@ -188,9 +188,9 @@ class PersonalUserInformationTests(TestCase):
         self.baseuser.is_vegeterian = True
         self.baseuser.needs_work = True
 
-        # make baseuser student
         self.student = factories.StudentFactory(
             baseuser_ptr_id=self.baseuser.id,
+            email=self.baseuser.email
         )
 
         self.student.__dict__.update(self.__dict__)
@@ -202,15 +202,18 @@ class PersonalUserInformationTests(TestCase):
         self.fmi_partner2 = factories.HackFmiPartnerFactory()
         self.mentor = factories.MentorFactory(from_company=self.fmi_partner)
         self.team = factories.TeamFactory()
-        self.courseAssignmet = factories.\
+        self.courseAssignment = factories.\
             CourseAssignmentFactory(course=self.course,
                                     user=self.student)
-        self.courseAssignmet.favourite_partners.add(self.partner)
+        self.courseAssignment.favourite_partners.add(self.partner)
         self.competitor = factories.CompetitorFactory(
             baseuser_ptr_id=self.baseuser.id,)
         self.team.add_member(competitor=self.competitor)
 
-        # cert = factories.CertificateFactory(assignment_id=self.courseAssignmet.id)
+        self.certificate = factories.CertificateFactory(
+            assignment_id=self.courseAssignment.id,
+            assignment=self.courseAssignment)
+
         self.city = factories.CityFactory()
 
     def test_me_returns_full_team_membership_set(self):
@@ -228,21 +231,19 @@ class PersonalUserInformationTests(TestCase):
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
-        # pp = pprint.PrettyPrinter(indent=2)
-        # pp.pprint(response.data)
         first_courseassignment = response.\
             data['student']['courseassignment_set'][0]
         self.assertEqual(first_courseassignment['course']['name'],
                          self.course.name)
 
-    # def test_me_returns_certificate(self):
-    #     self.client = APIClient()
-    #     self.client.force_authenticate(user=self.baseuser)
-    #     url_me = reverse('base_app:me')
-    #     response = self.client.get(url_me, format='json')
-    #     certificate_token = response.\
-    #         data['student']['courseassignment_set'][0]['certificate']['token']
-    #     self.assertEqual(certificate_token, str(self.certificate.token))
+    def test_me_returns_certificate(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.baseuser)
+        url_me = reverse('base_app:me')
+        response = self.client.get(url_me, format='json')
+        certificate_token = response.\
+            data['student']['courseassignment_set'][0]['certificate']['token']
+        self.assertEqual(certificate_token, str(self.certificate.token))
 
     def test_baseuser_update(self):
         self.client = APIClient()
