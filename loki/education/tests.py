@@ -12,6 +12,7 @@ from loki.settings import CHECKIN_TOKEN
 from seed import factories
 from faker import Factory
 import time
+from django.core.exceptions import ValidationError
 
 faker = Factory.create()
 
@@ -318,7 +319,7 @@ class CheckMacsTests(TestCase):
 
         self.check_3 = factories.CheckInFactory(
             mac=self.check_1.mac,
-            tudent=self.student_no_mac
+            student=self.student_no_mac
         )
         self.check_3.date = date_decrease(3)
         self.check_3.save()
@@ -483,7 +484,7 @@ class TasksTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
 
-
+   
 class SolutionsTests(TestCase):
 
     def setUp(self):
@@ -686,6 +687,37 @@ class SolutionsTests(TestCase):
         response = self.client.post(url, data, format='json')
 
         self.assertEqual(response.status_code, 400)
+
+    def test_post_solution_ungradable_task_without_url_file_code(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student2)
+
+        url = reverse('education:solution')
+
+        data = {
+            'task': self.task_with_no_solutions.id,
+            'code': None,
+            'url': None,
+            'file': None
+        }
+
+        self.client.post(url, data, format='json')
+        self.assertRaises(ValidationError)
+
+    def test_post_solution_ungradable_task_without_url_file(self):
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.student2)
+
+        url = reverse('education:solution')
+
+        data = {
+            'task': self.task_with_no_solutions.id,
+            'url': None,
+            'file': None
+        }
+
+        self.client.post(url, data, format='json')
+        self.assertRaises(ValidationError)
 
     def test_post_solutions_filter(self):
         logged_student = self.student

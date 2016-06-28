@@ -4,6 +4,7 @@ from faker import Factory
 from base_app import models as base_app_models
 from hack_fmi import models as hack_fmi_models
 from education import models as education_models
+from website import models as website_models
 
 
 faker = Factory.create()
@@ -450,3 +451,34 @@ class GraderRequestFactory(factory.DjangoModelFactory):
 
     request_info = faker.text(max_nb_chars=140)
     nonce = faker.random_number(digits=3)
+
+
+class SnippetFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = website_models.Snippet
+
+    label = faker.text(max_nb_chars=80)
+    text = faker.text()
+
+
+class CourseDescriptionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = website_models.CourseDescription
+
+    course = factory.RelatedFactory(CourseFactory)
+    logo = faker.text(max_nb_chars=255)
+    custom_logo = factory.django.ImageField()
+    url = faker.text(max_nb_chars=80)
+    video_image = factory.django.ImageField()
+    blog_article = faker.text(max_nb_chars=255)
+
+    course_intensity = faker.random_number()
+    course_days = faker.text(max_nb_chars=255)
+    paid_course = faker.boolean(chance_of_getting_true=0)
+    course_summary = faker.text()
+    teacher_preview = faker.text()
+    realization = faker.text()
+    price = faker.text()
+    address = faker.text(max_nb_chars=255)
+    SEO_description = faker.text(max_nb_chars=255)
+    SEO_title = faker.text(max_nb_chars=255)

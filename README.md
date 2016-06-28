@@ -124,3 +124,11 @@ After you have installed all of the requirements, you can run the tests with:
 
     $ python manage.py test
 
+
+Linting & pep8
+--------------
+
+In order to check if everything is ok according to pep8 rules, you can use
+[flake8] (https://pypi.python.org/pypi/flake8) from the project root:
+		
+	$ flake8
