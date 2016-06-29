@@ -45,9 +45,9 @@ class Command(BaseCommand):
                             logo=image_link,
                             jobs_link=url,
                         )
-                    except IntegrityError as err:
+                    except IntegrityError:
                         pass
                     # print(company_id_updated)
-            except ConnectionError as err:
+            except ConnectionError:
                 pass
             company_id_updated -= 1

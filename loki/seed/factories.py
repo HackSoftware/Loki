@@ -175,7 +175,6 @@ class StudentFactory(BaseUserFactory):
     skype = faker.text(max_nb_chars=20)
 
 
-
 class CourseFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.Course

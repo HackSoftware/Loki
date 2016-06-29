@@ -12,17 +12,6 @@ from rest_framework.test import APIClient
 from faker import Factory
 from seed import factories
 
-import unittest
-
-from datetime import date
-
-from hack_fmi.models import Skill, Team
-from .helper import get_activation_url
-from hack_fmi.helper import date_decrease
-from education.models import Course, CourseAssignment, Student, Certificate
-from website.forms import RegisterForm
-
-
 faker = Factory.create()
 
 
@@ -250,7 +239,7 @@ class PersonalUserInformationTests(TestCase):
         self.client.force_authenticate(user=self.baseuser)
         update_url = reverse('base_app:update_baseuser')
         data = {'github_account': 'http://github.com/Ivo'}
-        response = self.client.patch(update_url, data, format='json')
+        self.client.patch(update_url, data, format='json')
         baseuser = BaseUser.objects.get(id=self.baseuser.id)
 
         self.assertEqual(baseuser.github_account, data['github_account'])

@@ -41,7 +41,7 @@ def set_check_in(request):
     if settings.CHECKIN_TOKEN != token:
         return HttpResponse(status=511)
 
-    student = Student.objects.filter(mac__iexact=mac).first()
+    student = Student.objects.filter(mac=mac).first()
     if not student:
         student = None
     try:

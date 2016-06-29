@@ -63,7 +63,6 @@ class TestWebsite(TestCase):
 
         # import pytest;pytest.set_trace()
 
-    
     # def test_course(self):
     #     url = reverse('website:course_detail')
     #     course = factories.CourseFactory()
@@ -74,5 +73,3 @@ class TestWebsite(TestCase):
 
     #     response = self.client.post(url, data)
     #     self.assertEqual(response.status_code, 200)
-
-

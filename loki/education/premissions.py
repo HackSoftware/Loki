@@ -1,5 +1,5 @@
 from rest_framework import permissions
-from .models import CourseAssignment, Course
+from .models import CourseAssignment
 
 
 class IsStudent(permissions.BasePermission):

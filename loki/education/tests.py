@@ -4,9 +4,9 @@ from django.core.urlresolvers import reverse
 
 from rest_framework.test import APIClient
 from base_app.models import BaseUser, Company, City
-from education.models import (Student, Certificate, CheckIn, Course, Lecture, Teacher,
-                              CourseAssignment, StudentNote, WorkingAt, Task, Solution, Test,
-                              SourceCodeTest, ProgrammingLanguage)
+from education.models import (Student, CheckIn, Lecture,
+                              CourseAssignment, StudentNote, WorkingAt,
+                              Solution, SourceCodeTest)
 from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
 from seed import factories
@@ -484,7 +484,7 @@ class TasksTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 1)
 
-   
+
 class SolutionsTests(TestCase):
 
     def setUp(self):
