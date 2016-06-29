@@ -154,6 +154,9 @@ class UserManager(BaseUserManager):
         return self.__create_user(email, password, full_name, is_staff=True,
                                   is_active=True, is_superuser=True)
 
+    def create(self, **kwargs):
+        return self.create_user(**kwargs)
+
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20)

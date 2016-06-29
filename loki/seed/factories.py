@@ -100,10 +100,11 @@ class BaseUserFactory(factory.DjangoModelFactory):
     class Meta:
         model = base_app_models.BaseUser
 
+    password = 'ivoepanda'
     first_name = faker.first_name()
     last_name = faker.last_name()
     email = faker.email()
-    password = faker.word()
+    # password = faker.word()
     birth_place = factory.SubFactory(CityFactory)
 
     github_account = faker.url()

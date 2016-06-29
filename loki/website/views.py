@@ -81,6 +81,7 @@ def log_in(request):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             user = authenticate(email=email, password=password)
+            # import ipdb; ipdb.set_trace()  # breakpoint 173af957 //
             if user is not None:
                 if user.is_active:
                     login(request, user)
