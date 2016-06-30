@@ -173,7 +173,7 @@ class TestWebsite(TestCase):
         self.response_302(response)
 
     def test_course_detail_no_course_description(self):
-        course = factories.CourseFactory()
+        course = factories.CourseFactory(url=faker.slug())
 
         url = reverse('website:course_details',
                       kwargs={"course_url": course.url})
@@ -182,7 +182,7 @@ class TestWebsite(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_course_detail_with_course_description(self):
-        course = factories.CourseFactory()
+        course = factories.CourseFactory(url=faker.slug())
         url = reverse('website:course_details',
                       kwargs={"course_url": course.url})
 
