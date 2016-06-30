@@ -199,7 +199,7 @@ class CourseFactory(factory.DjangoModelFactory):
     SEO_description = faker.word()
     SEO_title = faker.word()
     start_time = faker.date_time()
-    url = factory.Sequence(lambda n: 'url {}'.format(n))
+    url = faker.slug()
     video = faker.url()
     generate_certificates_until = faker.date()
 
@@ -468,7 +468,7 @@ class CourseDescriptionFactory(factory.DjangoModelFactory):
     course = factory.RelatedFactory(CourseFactory)
     logo = faker.text(max_nb_chars=255)
     custom_logo = factory.django.ImageField()
-    url = faker.text(max_nb_chars=80)
+    url = faker.slug()
     video_image = factory.django.ImageField()
     blog_article = faker.text(max_nb_chars=255)
 

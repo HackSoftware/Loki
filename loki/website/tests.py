@@ -2,8 +2,10 @@ from test_plus.test import TestCase
 from django.test import Client
 from django.core.urlresolvers import reverse
 from seed import factories
+from post_office.models import EmailTemplate
 from base_app.models import GeneralPartner
 from faker import Factory
+from base_app.models import BaseUser
 
 faker = Factory.create()
 
@@ -169,29 +171,120 @@ class TestWebsite(TestCase):
         response = self.client.get(url)
 
         self.response_302(response)
-    # def test_course(self):
-    #     url = reverse('website:course_detail')
-    #     course = factories.CourseFactory()
 
-    #     data = {
-    #         'course_url': course.url
-    #     }
+    def test_course_detail_no_course_description(self):
+        course = factories.CourseFactory()
 
-    #     response = self.client.post(url, data)
-    #     self.assertEqual(response.status_code, 200)
+        url = reverse('website:course_details',
+                      kwargs={"course_url": course.url})
 
-    # def test_forgotten_password_from_existing_user(self):
-    #     url = reverse('website:forgotten_password')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
 
-    #     data = {
-    #         'email': self.baseuser.email
-    #     }
+    def test_course_detail_with_course_description(self):
+        course = factories.CourseFactory()
+        url = reverse('website:course_details',
+                      kwargs={"course_url": course.url})
 
-    #     import ipdb; ipdb.set_trace()  # breakpoint e2c6d81b //
-    #     response = self.client.post(url, data)
+        factories.CourseDescriptionFactory(
+            course_id=course.id,
+            course=course,
+            url=course.url,
+        )
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'website/course_details.html')
+        self.assertIsNotNone(response.context['snippets'])
+        self.assertIsNotNone(response.context['course_days'])
 
-    #     self.response_200(response)
+    def test_register_get_query(self):
+        url = reverse('website:register')
 
-    #     self.assertEqual(response.context['message'],
-    #                     '''Email за промяна на паролата
-    #                        беше изпратен на посочения адрес''')
+        get_resp = self.client.get(url)
+
+        self.response_200(get_resp)
+        self.assertIsNotNone(get_resp.context['form'])
+
+    def test_register_if_not_registered(self):
+        self.user_register = EmailTemplate.objects.create(
+            name='user_register',
+            subject='Регистриран потребител',
+            content=faker.paragraph()
+        )
+        data = {
+            'first_name': faker.first_name(),
+            'last_name': faker.last_name(),
+            'email': faker.email(),
+            'password': 'sdfsdfd13',
+            'studies_at': faker.city(),
+            'start_date': faker.date(pattern="%d-%m-%Y"),
+            'end_date': faker.date(pattern="%d-%m-%Y"),
+
+        }
+        url = reverse('website:register')
+
+        post_resp = self.client.post(url, data)
+
+        self.response_200(post_resp)
+
+        made_user = BaseUser.objects.last()
+        self.assertEqual(BaseUser.objects.filter(email=data['email']).count(),
+                         1)
+        self.assertEqual(made_user.email, data['email'])
+        self.assertEqual(made_user.first_name,
+                         data['first_name'])
+        self.assertEqual(made_user.last_name, data['last_name'])
+        self.assertTrue(made_user.check_password(data['password']))
+        self.assertTemplateUsed(post_resp, 'website/auth/thanks.html')
+
+    def test_register_anonymous_required(self):
+        self.baseuser.is_active = True
+        self.baseuser.save()
+        self.client.login(email=self.baseuser.email,
+                          password=factories.BaseUserFactory.password)
+
+        url = reverse('website:register')
+
+        post_resp = self.client.get(url)
+
+        self.response_302(post_resp)
+
+    def test_forgotten_password_from_existing_user(self):
+        self.pass_reset = EmailTemplate.objects.create(
+            name='password_reset',
+            subject='Смяна на парола',
+            content=faker.paragraph()
+        )
+
+        url = reverse('website:forgotten_password')
+
+        data = {
+            'email': self.baseuser.email
+        }
+
+        response = self.client.post(url, data)
+
+        self.response_200(response)
+
+        self.assertEqual(response.context['message'],
+                         'Email за промяна на паролата беше изпратен на посочения адрес')
+
+    def test_forgotten_password_from_non_existing_user(self):
+        self.pass_reset = EmailTemplate.objects.create(
+            name='password_reset',
+            subject='Смяна на парола',
+            content=faker.paragraph()
+        )
+
+        url = reverse('website:forgotten_password')
+
+        data = {
+            'email': faker.email()
+        }
+
+        response = self.client.post(url, data)
+
+        self.response_200(response)
+
+        self.assertEqual(response.context['message'],
+                         'Потребител с посочения email не е открит')
