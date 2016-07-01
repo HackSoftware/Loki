@@ -1,9 +1,10 @@
+import json
+import os
+
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.apps import apps
 
-import json
-import os
 
 FIXTURE_FOLDER = 'fixtures'
 CURRENT_APP = __name__.split('.')[0]

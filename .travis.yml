@@ -5,7 +5,8 @@ addons:
   postgresql: '9.3'
 services: postgresql
 install:
-- pip install -r requirements.txt 
+- pip install -r requirements/base.txt
+- pip install -r requirements/test.txt 
 before_script:
 - psql -c 'CREATE DATABASE testdb;' -U postgres
 script:

@@ -28,8 +28,7 @@ class Command(BaseCommand):
             # filters tree elements by depth of 2, when base is considered 0
             blob_tree_elements = filter(
                 lambda x:
-                    'README.md' in x.path
-                    and x.path.count('/') > 1 and x.type == 'blob', api_repo_tree.tree
+                    'README.md' in x.path and x.path.count('/') > 1 and x.type == 'blob', api_repo_tree.tree
             )
 
             for element in blob_tree_elements:

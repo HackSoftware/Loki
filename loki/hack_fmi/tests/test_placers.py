@@ -30,7 +30,7 @@ class PlacerTests(APITestCase):
         M2 = Mentor.objects.filter(name='M2').first()
         M3 = Mentor.objects.filter(name='M3').first()
         M4 = Mentor.objects.filter(name='M4').first()
-        M5 = Mentor.objects.filter(name='M5').first()
+        # M5 = Mentor.objects.filter(name='M5').first()
         Team.objects.filter(name='T1').first().mentors.add(M1, M2, M3)
         Team.objects.filter(name='T2').first().mentors.add(M1, M2, M3, M4)
         Team.objects.filter(name='T3').first().mentors.add(M2, M3, M4)
@@ -62,7 +62,6 @@ class PlacerTests(APITestCase):
             return None
 
         SLOTS = ["S{}".format(i) for i in range(1, 5)]
-
 
         INPUT = [(team.name,
                   [mentor.name for mentor in Team.objects.filter(name=team.name).first().mentors.all()])
@@ -121,7 +120,7 @@ class PlacerTests(APITestCase):
                 "leftovers": leftovers
             }
 
-        placing = attempt_placing(
+        attempt_placing(
             teams=teams_with_choice,
             mentors=chosen_mentors,
             slots=SLOTS,

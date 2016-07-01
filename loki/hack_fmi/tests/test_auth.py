@@ -1,9 +1,6 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
-from rest_framework.test import APIClient
-
 from base_app.models import BaseUser
-from ..models import Competitor, Skill
+from ..models import Skill
 
 import unittest
 

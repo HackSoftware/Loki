@@ -10,8 +10,10 @@ from rest_framework.exceptions import PermissionDenied
 from post_office import mail
 
 from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
-from .serializers import (SkillSerializer, TeamSerializer,
-                          Invitation, InvitationSerializer, MentorSerializer, SeasonSerializer, PublicTeamSerializer, OnBoardingCompetitorSerializer)
+from .serializers import (SkillSerializer, TeamSerializer, Invitation,
+                          InvitationSerializer, MentorSerializer,
+                          SeasonSerializer, PublicTeamSerializer,
+                          OnBoardingCompetitorSerializer)
 from .premissions import IsHackFMIUser, IsTeamLeaderOrReadOnly
 from .helper import send_team_delete_email
 

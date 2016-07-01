@@ -5,9 +5,10 @@ from django.contrib.sites.requests import RequestSite
 from django.core.urlresolvers import reverse
 from operator import itemgetter
 from fuzzywuzzy import fuzz
-from .models import Subject, School, Academy, BaseUserRegisterToken, BaseUserPasswordResetToken
 from .helper import get_activation_url
 from post_office import mail
+from .models import (Subject, School, Academy,
+                     BaseUserRegisterToken, BaseUserPasswordResetToken)
 
 
 FILTER_UNDER_TRESHOLD = 30

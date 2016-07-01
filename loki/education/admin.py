@@ -9,6 +9,7 @@ from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckI
 from .forms import FixJsonFieldDisplayInInheritedClassAdminForm
 
 
+@admin.register(Student)
 class StudentAdmin(ImportExportActionModelAdmin):
     resource_class = StudentResource
 
@@ -29,9 +30,8 @@ class StudentAdmin(ImportExportActionModelAdmin):
     def get_courses(self, obj):
         return obj.courses.all()
 
-admin.site.register(Student, StudentAdmin)
 
-
+@admin.register(StudentNote)
 class StudentNoteAdmin(admin.ModelAdmin):
     list_display = [
         'assignment',
@@ -41,9 +41,8 @@ class StudentNoteAdmin(admin.ModelAdmin):
 
     list_display_links = ['assignment']
 
-admin.site.register(StudentNote, StudentNoteAdmin)
 
-
+@admin.register(Teacher)
 class TeacherAdmin(admin.ModelAdmin):
     list_display = [
         'id',
@@ -54,9 +53,8 @@ class TeacherAdmin(admin.ModelAdmin):
     ]
     list_display_links = ['email']
 
-admin.site.register(Teacher, TeacherAdmin)
 
-
+@admin.register(CourseAssignment)
 class CourseAssignmentAdmin(ImportExportActionModelAdmin):
     resource_class = CourseAssignmentResource
 
@@ -73,9 +71,8 @@ class CourseAssignmentAdmin(ImportExportActionModelAdmin):
     search_fields = ['user__first_name', 'user__last_name', 'user__email']
     list_display_links = ['user']
 
-admin.site.register(CourseAssignment, CourseAssignmentAdmin)
 
-
+@admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = [
         'id',
@@ -84,18 +81,16 @@ class CourseAdmin(admin.ModelAdmin):
 
     list_display_links = ['name']
 
-admin.site.register(Course, CourseAdmin)
 
-
+@admin.register(Lecture)
 class LectureAdmin(admin.ModelAdmin):
     list_display = [
         'date',
         'course'
     ]
 
-admin.site.register(Lecture, LectureAdmin)
 
-
+@admin.register(CheckIn)
 class CheckInAdmin(admin.ModelAdmin):
     list_display = [
         'date',
@@ -103,8 +98,6 @@ class CheckInAdmin(admin.ModelAdmin):
         'student'
     ]
     search_fields = ['mac', 'student__email']
-
-admin.site.register(CheckIn, CheckInAdmin)
 
 
 class WorkingAtAdmin(ImportExportActionModelAdmin):
@@ -136,6 +129,7 @@ class WorkingAtAdmin(ImportExportActionModelAdmin):
 admin.site.register(WorkingAt, WorkingAtAdmin)
 
 
+@admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
 
     list_display = [
@@ -156,9 +150,8 @@ class TaskAdmin(admin.ModelAdmin):
     def submited_solutions(self, task):
         return len(task.solution_set.all())
 
-admin.site.register(Task, TaskAdmin)
 
-
+@admin.register(ProgrammingLanguage)
 class ProgrammingLanguageAdmin(admin.ModelAdmin):
 
     list_display = [
@@ -171,9 +164,8 @@ class ProgrammingLanguageAdmin(admin.ModelAdmin):
 
     search_fields = ['name']
 
-admin.site.register(ProgrammingLanguage, ProgrammingLanguageAdmin)
 
-
+@admin.register(SourceCodeTest)
 class SourceCodeTestAdmin(admin.ModelAdmin):
     list_display = [
         'task',
@@ -188,9 +180,8 @@ class SourceCodeTestAdmin(admin.ModelAdmin):
 
     search_fields = ['task']
 
-admin.site.register(SourceCodeTest, SourceCodeTestAdmin)
 
-
+@admin.register(BinaryFileTest)
 class BinaryFileTestAdmin(admin.ModelAdmin):
     form = FixJsonFieldDisplayInInheritedClassAdminForm
 
@@ -207,9 +198,8 @@ class BinaryFileTestAdmin(admin.ModelAdmin):
 
     search_fields = ['task']
 
-admin.site.register(BinaryFileTest, BinaryFileTestAdmin)
 
-
+@admin.register(Solution)
 class SolutionAdmin(admin.ModelAdmin):
     form = FixJsonFieldDisplayInInheritedClassAdminForm
 
@@ -257,11 +247,12 @@ class SolutionAdmin(admin.ModelAdmin):
 
     search_fields = ['id', 'task__name', 'student__first_name']
 
-admin.site.register(Solution, SolutionAdmin)
+# admin.site.register(Solution, SolutionAdmin)
 
 admin.site.register(Certificate)
 
 
+@admin.register(GraderRequest)
 class GraderRequestAdmin(admin.ModelAdmin):
 
     list_display = [
@@ -276,9 +267,8 @@ class GraderRequestAdmin(admin.ModelAdmin):
 
     search_fields = ['nonce']
 
-admin.site.register(GraderRequest, GraderRequestAdmin)
 
-
+@admin.register(RetestSolution)
 class RetestSolutionAdmin(admin.ModelAdmin):
 
     list_display = [
@@ -294,5 +284,3 @@ class RetestSolutionAdmin(admin.ModelAdmin):
     ]
 
     search_fields = ['test_id']
-
-admin.site.register(RetestSolution, RetestSolutionAdmin)

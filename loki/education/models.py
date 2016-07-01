@@ -1,5 +1,4 @@
 import uuid
-import datetime
 
 from django.db import models
 from ckeditor.fields import RichTextField

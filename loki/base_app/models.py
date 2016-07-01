@@ -1,9 +1,11 @@
 from django.utils import timezone
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import (AbstractBaseUser,
+                                        BaseUserManager, PermissionsMixin)
+from ckeditor.fields import RichTextField
+
 from loki.settings import MEDIA_ROOT
 
-from ckeditor.fields import RichTextField
 
 
 class Company(models.Model):
@@ -24,7 +26,7 @@ class Company(models.Model):
 
 
 class Partner(models.Model):
-    comapny = models.OneToOneField(Company, primary_key=True)
+    company = models.OneToOneField(Company, primary_key=True)
     description = RichTextField(blank=False)
     facebook = models.URLField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
@@ -40,21 +42,21 @@ class Partner(models.Model):
         ordering = ('ordering',)
 
     def __str__(self):
-        return self.comapny.name
+        return self.company.name
 
 
 class GeneralPartner(models.Model):
     partner = models.OneToOneField(Partner, primary_key=True)
 
     def __str__(self):
-        return self.partner.comapny.name
+        return self.partner.company.name
 
 
 class HostingPartner(models.Model):
     partner = models.OneToOneField(Partner, primary_key=True)
 
     def __str__(self):
-        return self.partner.comapny.name
+        return self.partner.company.name
 
 
 class City(models.Model):
@@ -154,6 +156,9 @@ class UserManager(BaseUserManager):
         return self.__create_user(email, password, full_name, is_staff=True,
                                   is_active=True, is_superuser=True)
 
+    def create(self, **kwargs):
+        return self.create_user(**kwargs)
+
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20)
@@ -174,7 +179,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     avatar = models.ImageField(blank=True, null=True)
     full_image = models.ImageField(blank=True, null=True)
 
-    education_info = models.ManyToManyField(EducationPlace, through='EducationInfo')
+    education_info = models.ManyToManyField(EducationPlace, through='EducationInfo', related_name='info')
 
     USERNAME_FIELD = 'email'
 
@@ -215,6 +220,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     #     competitor = Competitor(baseuser_ptr_id=self.id)
     #     competitor.save()
     #     competitor.__dict__.update(self.__dict__)
+
     #     return competitor.save()
 
 
@@ -226,8 +232,8 @@ class EducationInfo(models.Model):
     created_at = models.DateTimeField(editable=False)
     updated_at = models.DateTimeField()
 
-    faculty = models.ForeignKey(Faculty, blank=True, null=True)
-    subject = models.ForeignKey(Subject, blank=True, null=True)
+    faculty = models.ForeignKey(Faculty, blank=True, null=True, related_name="related_fac_to_user")
+    subject = models.ForeignKey(Subject, blank=True, null=True, related_name="related_subj_to_user")
 
     def save(self, *args, **kwargs):
         '''On save, update created_at and updated_at timestamps

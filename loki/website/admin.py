@@ -1,23 +1,25 @@
 from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
-from .models import SuccessStoryPerson, SuccessVideo, Snippet, CourseDescription
+from .models import (SuccessStoryPerson, SuccessVideo, Snippet,
+                     CourseDescription)
 
 
+@admin.register(SuccessStoryPerson)
 class SuccessStoryPersonAdmin(SortableAdminMixin, admin.ModelAdmin):
     pass
-admin.site.register(SuccessStoryPerson, SuccessStoryPersonAdmin)
 
 
+@admin.register(SuccessVideo)
 class SuccessVideoAdmin(admin.ModelAdmin):
     pass
-admin.site.register(SuccessVideo, SuccessVideoAdmin)
 
 
+@admin.register(Snippet)
 class SnippetAdmin(admin.ModelAdmin):
     pass
-admin.site.register(Snippet, SnippetAdmin)
 
 
+@admin.register(CourseDescription)
 class CourseDescriptionAdmin(admin.ModelAdmin):
     list_display = [
         'id',
@@ -33,5 +35,3 @@ class CourseDescriptionAdmin(admin.ModelAdmin):
     ]
 
     search_fields = ['course']
-
-admin.site.register(CourseDescription, CourseDescriptionAdmin)

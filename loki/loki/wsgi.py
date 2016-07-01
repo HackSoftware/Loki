@@ -1,3 +1,4 @@
+from django.core.wsgi import get_wsgi_application
 """
 WSGI config for loki project.
 
@@ -10,5 +11,4 @@ https://docs.djangoproject.com/en/1.7/howto/deployment/wsgi/
 import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "loki.settings")
 
-from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

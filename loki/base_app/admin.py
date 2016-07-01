@@ -1,8 +1,10 @@
 from django.contrib import admin
 
 from base_app.models import BaseUser
-from .models import (Company, Partner, City, GeneralPartner, EducationPlace, University, Faculty,
-                     Subject, School, Academy, EducationInfo, HostingPartner, RegisterOrigin)
+from .models import (Company, Partner, City, GeneralPartner,
+                     EducationPlace, University, Faculty,
+                     Subject, School, Academy, EducationInfo,
+                     HostingPartner, RegisterOrigin)
 
 
 @admin.register(BaseUser)

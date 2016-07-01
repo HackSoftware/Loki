@@ -1,3 +1,4 @@
+# flake8: noqa
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 
 
@@ -47,7 +48,6 @@ INSTALLED_APPS = (
     'base_app',
     'hack_conf',
     'education',
-    'hr',
     'status',
     'website',
 )
@@ -107,7 +107,7 @@ REST_FRAMEWORK = {
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-#TODO: Just for the begining
+# TODO: Just for the begining
 CORS_ORIGIN_ALLOW_ALL = True
 
 try:
