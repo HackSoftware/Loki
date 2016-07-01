@@ -1,8 +1,12 @@
+import time
+
 from django.core.management import call_command
+from django.core.exceptions import ValidationError
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
 
 from rest_framework.test import APIClient
+
 from base_app.models import BaseUser, Company, City
 from education.models import (Student, CheckIn, Lecture,
                               CourseAssignment, StudentNote, WorkingAt,
@@ -11,8 +15,6 @@ from hack_fmi.helper import date_increase, date_decrease
 from loki.settings import CHECKIN_TOKEN
 from seed import factories
 from faker import Factory
-import time
-from django.core.exceptions import ValidationError
 
 faker = Factory.create()
 
@@ -35,29 +37,6 @@ class CheckInTest(TestCase):
             CourseAssignmentFactory(course=self.course,
                                     user=self.student)
         self.courseAssignmet.favourite_partners.add(self.partner)
-
-        self.check_in_on_start = factories.CheckInFactory(student=self.student)
-        self.check_in_on_start.date = date_decrease(29)
-        self.check_in_on_start.save()
-
-        self.check_in_after_start = factories.\
-            CheckInFactory(student=self.student)
-        self.check_in_after_start.date = date_decrease(20)
-        self.check_in_after_start.save()
-
-        self.check_in_on_end = factories.CheckInFactory(student=self.student)
-        self.check_in_on_end.date = date_decrease(2)
-        self.check_in_on_end.save()
-
-        self.check_in_after_course = factories.\
-            CheckInFactory(student=self.student)
-        self.check_in_after_course.date = date_decrease(1)
-        self.check_in_after_course.save()
-
-        self.check_in_before_course = factories.\
-            CheckInFactory(student=self.student)
-        self.check_in_before_course.date = date_decrease(30)
-        self.check_in_before_course.save()
 
     def test_check_in_with_mac_and_user(self):
         data = {
@@ -310,20 +289,6 @@ class CheckMacsTests(TestCase):
         self.check_1.date = date_decrease(1)
         self.check_1.save()
 
-        self.check_2 = factories.CheckInFactory(
-            mac=self.check_1.mac,
-            student=self.student_no_mac
-        )
-        self.check_2.date = date_decrease(2)
-        self.check_2.save()
-
-        self.check_3 = factories.CheckInFactory(
-            mac=self.check_1.mac,
-            student=self.student_no_mac
-        )
-        self.check_3.date = date_decrease(3)
-        self.check_3.save()
-
     def test_student_enters_mac(self):
         self.client = APIClient()
         self.client.force_authenticate(user=self.student_no_mac)
@@ -371,10 +336,6 @@ class WorkingAtTests(TestCase):
 
         self.course = factories.CourseFactory()
         self.course2 = factories.CourseFactory()
-        self.course_assignment = factories.CourseAssignmentFactory(
-            user=self.student,
-            course=self.course,
-        )
 
     def test_post_workingat_creates_instance(self):
         self.client = APIClient()
@@ -462,14 +423,8 @@ class TasksTests(TestCase):
 
         self.course = factories.CourseFactory()
 
-        self.course2 = factories.CourseFactory()
-
         self.task = factories.TaskFactory(
             course=self.course,
-        )
-
-        self.task2 = factories.TaskFactory(
-            course=self.course2,
         )
 
     def test_get_tasks(self):
@@ -515,15 +470,6 @@ class SolutionsTests(TestCase):
         )
 
         self.python = factories.ProgrammingLanguageFactory()
-
-        self.test_for_task_with_no_solutions = factories.SourceCodeTestFactory(
-            task_id=self.task_with_no_solutions.id,
-            language=self.python,
-        )
-        self.test = factories.SourceCodeTestFactory(
-            task_id=self.task.id,
-            language=self.python,
-        )
 
         self.solution = factories.SolutionFactory(
             student=self.student,
@@ -752,12 +698,12 @@ class SolutionsTests(TestCase):
         self.assertEqual(len(response.data), 1)
 
     def test_certificate(self):
-        c = Client()
+        client = Client()
 
         url = reverse('education:certificate',
                       kwargs={'token': self.certificate.token})
 
-        response = c.get(url)
+        response = client.get(url)
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Source Link')
@@ -822,11 +768,6 @@ class TestSolutionTests(TestCase):
             name="python"
         )
 
-        # self.grader_request = GraderRequest.objects.create(
-        #     request_info="POST /grade",
-        #     nonce=105
-        # )
-
         self.test = SourceCodeTest.objects.create(
             task=self.task,
             language=self.python,
@@ -853,51 +794,6 @@ class TestSolutionTests(TestCase):
         # In order to check the build_id a grader mockup is needed
         # self.assertIsNotNone(solution.build_id)
         # self.assertIsNotNone(solution.check_status_location)
-
-    '''
-    This test checks if a solution with github_url is tested corectly in the grader
-    In order to work properly we need to mockup the grader
-    A manual check after one run of the test (with correct nounce) showed that the
-    code in the grader is the expected one
-    '''
-    # def test_grading_solution_with_github_link(self):
-    #     self.client = APIClient()
-    #     self.client.force_authenticate(user=self.student)
-
-    #     task = Task.objects.create(
-    #         course=self.course,
-    #         description="https://github.com/testasdasdtest/README.md",
-    #         name="Task Name 2",
-    #         week=1,
-    #         gradable=True,
-    #     )
-
-    #     self.grader_request = GraderRequest.objects.create(
-    #         request_info="POST /grade",
-    #         nonce=500
-    #     )
-
-    #     test = Test.objects.create(
-    #         task=task,
-    #         language=self.python,
-    #         code="CODE HERE!",
-    #         test_type=Test.UNITTEST,
-    #         github_url=""
-    #     )
-
-    #     url = reverse('education:solution')
-    #     data = {
-    #         'task': task.id,
-    #         'url': 'https://github.com/HackBulgaria/Programming101-Python/blob/master/week02/materials/food_diary.py',
-    #     }
-
-    #     response = self.client.post(url, data, format='json')
-    #     self.assertEqual(response.status_code, 201)
-
-    #     solution = Solution.objects.get(task=task, student=self.student)
-    #     self.assertEqual(solution.student, self.student)
-    #     self.assertIsNotNone(solution.build_id)
-    #     self.assertIsNotNone(solution.check_status_location)
 
     def test_solution_status(self):
         self.client = APIClient()

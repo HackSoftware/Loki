@@ -1,16 +1,18 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-from post_office import mail
 
-from post_office.models import EmailTemplate
-from rest_framework import status
-from .models import BaseUser, RegisterOrigin
-from .helper import get_activation_url
-from website.forms import RegisterForm
 from rest_framework.test import APIClient
+from rest_framework import status
+
+from post_office import mail
+from post_office.models import EmailTemplate
 
 from faker import Factory
 from seed import factories
+
+from base_app.models import BaseUser, RegisterOrigin
+from base_app.helper import get_activation_url
+from website.forms import RegisterForm
 
 faker = Factory.create()
 
@@ -58,7 +60,6 @@ class BaseUserRegistrationTests(TestCase):
         self.reg_form_with_faculty_ed_place.update(self.user_reg_form)
 
         self.reg_form_with_academy = {
-            # 'faculty': self.faculty.id,
             'educationplace': self.academy.id
         }
         self.reg_form_with_academy.update(self.user_reg_form)
@@ -174,8 +175,6 @@ class PersonalUserInformationTests(TestCase):
         self.course = factories.CourseFactory()
         self.baseuser = factories.BaseUserFactory()
         self.baseuser.is_active = True
-        self.baseuser.is_vegeterian = True
-        self.baseuser.needs_work = True
 
         self.student = factories.StudentFactory(
             baseuser_ptr_id=self.baseuser.id,
@@ -184,12 +183,6 @@ class PersonalUserInformationTests(TestCase):
 
         self.student.__dict__.update(self.__dict__)
 
-        self.skill = factories.SkillFactory()
-        self.season = factories.SeasonFactory()
-        self.room = factories.RoomFactory(season=self.season)
-        self.fmi_partner = factories.HackFmiPartnerFactory()
-        self.fmi_partner2 = factories.HackFmiPartnerFactory()
-        self.mentor = factories.MentorFactory(from_company=self.fmi_partner)
         self.team = factories.TeamFactory()
         self.courseAssignment = factories.\
             CourseAssignmentFactory(course=self.course,

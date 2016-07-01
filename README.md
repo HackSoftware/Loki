@@ -17,7 +17,7 @@ In order to setup it, there are the following steps:
 
 <!-- -->
 
-    $ pip install -r requirements.txt
+    $ pip install -r requirements/base.txt
 
 -   Setup Postgres
 
@@ -110,19 +110,24 @@ Basic Commands
 
 ### Setting Up Your Users
 
--   To create an **superuser account**, use this command:
+To create an **superuser account**, use this command:
 
-        $ python manage.py createsuperuser
+    $ python manage.py createsuperuser
 
-
-- 
+ 
 ### Tests
 
 #### Running tests
 
-After you have installed all of the requirements, you can run the tests with:
+Before running the tests, you need to install the right requirements for them:
+    
+    $ pip install -r requirements/test.txt
+  
+In order to run the tests, choose whichever command you prefer:
 
     $ python manage.py test
+
+    $ py.test
 
 
 Linting & pep8

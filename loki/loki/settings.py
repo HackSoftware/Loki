@@ -48,7 +48,6 @@ INSTALLED_APPS = (
     'base_app',
     'hack_conf',
     'education',
-    'hr',
     'status',
     'website',
 )

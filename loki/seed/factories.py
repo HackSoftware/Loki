@@ -1,6 +1,6 @@
 import factory
-
 from faker import Factory
+
 from base_app import models as base_app_models
 from hack_fmi import models as hack_fmi_models
 from education import models as education_models
@@ -425,14 +425,6 @@ class SolutionFactory(factory.DjangoModelFactory):
     url = factory.\
         Sequence(lambda n: 'https://github.com/zad{}/solution.py'.format(n))
     code = faker.text()
-    build_id = faker.random_number()
-    check_status_location = faker.text(max_nb_chars=128)
-    created_at = faker.date_time()
-    test_output = faker.text()
-    status = faker.\
-        random_element(elements=('0', '1', '2', '3', '4', '5', '6'))
-    return_code = faker.random_number()
-    file = faker.file_name(category=None, extension=None)
 
 
 class StudentNoteFactory(factory.DjangoModelFactory):

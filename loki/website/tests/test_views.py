@@ -1,10 +1,15 @@
-from test_plus.test import TestCase
 from django.test import Client
 from django.core.urlresolvers import reverse
-from seed import factories
+
+from test_plus.test import TestCase
+
 from post_office.models import EmailTemplate
-from base_app.models import GeneralPartner
+
 from faker import Factory
+
+from seed import factories
+
+from base_app.models import GeneralPartner
 from base_app.models import BaseUser
 
 faker = Factory.create()
@@ -23,12 +28,13 @@ class TestWebsite(TestCase):
         url = reverse('website:index')
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertIn('HackBulgaria', str(response.content))
+        self.assertIsNotNone(response.context['snippets'])
 
     def test_about(self):
         url = reverse('website:about')
         response = self.client.get(url)
-        self.assertIn('snippets', str(response.context))
+
+        self.assertIsNotNone(response.context['snippets'])
 
     def test_partners(self):
         company = factories.CompanyFactory()

@@ -2,7 +2,8 @@ from django.conf.urls import url
 from djoser.views import ActivationView, PasswordResetConfirmView
 
 from base_app.auth import RegistrationView, Login, PasswordResetView
-from base_app.views import (me, baseuser_update, base_user_update, education_place_suggest,
+from base_app.views import (me, baseuser_update, base_user_update,
+                            education_place_suggest,
                             user_activation, user_password_reset)
 
 

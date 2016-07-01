@@ -1,9 +1,11 @@
 from django.utils import timezone
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import (AbstractBaseUser,
+                                        BaseUserManager, PermissionsMixin)
+from ckeditor.fields import RichTextField
+
 from loki.settings import MEDIA_ROOT
 
-from ckeditor.fields import RichTextField
 
 
 class Company(models.Model):
