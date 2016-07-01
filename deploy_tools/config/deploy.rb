@@ -37,7 +37,7 @@ set :linked_dirs, fetch(:linked_dirs, []).push('media', 'static')
 namespace :deploy do
   task :pip_install do
     on roles(:all) do |h|
-      execute "/hack/loki/shared/virtualenv/bin/pip install -r /hack/loki/current/requirements.txt"
+      execute "/hack/loki/shared/virtualenv/bin/pip install -r /hack/loki/current/requirements/base.txt"
     end
   end
 
