@@ -7,6 +7,7 @@ from rest_framework import status, generics
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
+from rest_framework import mixins
 from post_office import mail
 
 from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
@@ -62,6 +63,7 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
         season = Season.objects.get(is_active=True)
         if season.make_team_dead_line < date.today():
             raise PermissionDenied("You are pass the deadline for creating teams!")
+        print("Dfgheklo")
         team = serializer.save()
         team.season = season
         team.add_member(self.request.user.get_competitor(), is_leader=True)

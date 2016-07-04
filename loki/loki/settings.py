@@ -102,7 +102,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
-    'UPLOADED_FILES_USE_URL': False
+    'UPLOADED_FILES_USE_URL': False,
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    )
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

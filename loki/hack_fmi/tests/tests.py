@@ -14,17 +14,231 @@ from ..models import (Skill, Competitor, TeamMembership,
 
 import unittest
 
+from seed import factories
 
-@unittest.skip('Skip until further implementation of Hackathon system')
+from faker import Factory
+
+faker = Factory.create()
+
+
 class SkillTests(APITestCase):
 
     def setUp(self):
-        self.skill = Skill.objects.create(name="C#")
+        self.skill = factories.SkillFactory()
 
     def test_get_skill(self):
         url = reverse('hack_fmi:skills')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class MentorListAPIViewTest(APITestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+
+        self.student = factories.StudentFactory(
+            email=faker.email()
+        )
+
+        self.company = factories.HackFmiPartnerFactory()
+        self.mentor = factories.MentorFactory(
+            from_company=self.company
+        )
+        self.active_season = factories.SeasonFactory(
+            is_active=True)
+
+        self.non_active_season = factories.SeasonFactory(
+            is_active=False)
+
+        self.mentor.seasons.add(self.active_season)
+        self.mentor.save()
+
+        self.mentor2 = factories.MentorFactory(
+            from_company=self.company
+        )
+        self.mentor2.seasons.add(self.non_active_season)
+        self.mentor2.save()
+
+        self.mentor3 = factories.MentorFactory(
+            from_company=self.company
+        )
+        self.mentor3.seasons.add(self.active_season)
+        self.mentor3.save()
+
+    def test_get_mentor_for_active_season(self):
+        self.client.force_authenticate(self.student)
+        url = reverse('hack_fmi:mentors')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        import ipdb; ipdb.set_trace()  # breakpoint c1eb1063 //
+        
+        self.assertEqual(response.data[0]['name'], self.mentor.name)
+
+    def test_get_active_mentors_from_active_season(self):
+        self.client.force_authenticate(self.student)
+        url = reverse('hack_fmi:mentors')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        active_seasons = Season.objects.filter(is_active=True)
+        self.assertEqual(active_seasons[0].mentor_set.count(), 2)
+
+
+class SeasonListViewTest(APITestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+
+        self.company = factories.HackFmiPartnerFactory()
+        self.mentor = factories.MentorFactory(
+            from_company=self.company
+        )
+        self.active_season = factories.SeasonFactory(
+            is_active=True)
+
+        self.non_active_season = factories.SeasonFactory(
+            is_active=False)
+
+    def test_get_active_season(self):
+        url = reverse('hack_fmi:season')
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['name'], self.active_season.name)
+        self.assertEqual(Season.objects.filter(is_active=True).count(), 1)
+
+
+class PublicTeamViewTest(APITestCase):
+
+    def setUp(self):
+
+        self.active_season = factories.SeasonFactory(
+            is_active=True)
+
+        self.room = factories.RoomFactory(season=self.active_season)
+
+        self.team = factories.TeamFactory(
+            season=self.active_season,
+            room=self.room)
+
+    def get_team_from_active_season(self):
+        url = reverse('hack_fmi:public_teams')
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['name'], self.team.name)
+
+    def get_team_from_non_active_season(self):
+        url = reverse('hack_fmi:public_teams')
+
+        non_active_season = factories.SeasonFactory(
+            is_active=False)
+        non_active_team = factories.TeamFactory(season=non_active_season)
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotEqual(response.data[0]['name'], non_active_team.name)
+
+
+class TeamAPITest(APITestCase):
+
+    def setUp(self):
+        self.active_season = factories.SeasonFactory(
+            is_active=True)
+
+        self.non_active_season = factories.SeasonFactory(
+            is_active=False)
+
+        self.room = factories.RoomFactory(season=self.active_season)
+
+        self.team = factories.TeamFactory(
+            season=self.active_season,
+            room=self.room)
+
+        self.non_active_team = factories.TeamFactory(
+            season=self.non_active_season,
+            room=self.room)
+
+        self.competitor = factories.CompetitorFactory(
+            email=faker.email()
+        )
+
+        self.competitor2 = factories.CompetitorFactory(
+            email=faker.email()
+        )
+        # self.team.add_member(
+        #     competitor=self.competitor2,
+        #     is_leader=True,
+        # )
+
+    def test_get_team_without_IsHackFMIUser_permission(self):
+        url = reverse('hack_fmi:teams')
+
+        response = self.client.get(url, kwargs={'pk': faker.random_number(digits=1)})
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_team_with_IsHackFMIUser_permission(self):
+        self.client.force_authenticate(self.competitor)
+        url = reverse('hack_fmi:teams')
+
+        response = self.client.get(url, kwargs={'pk': self.competitor.id})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_team_without_IsTeamLeader_permission(self):
+        url = reverse('hack_fmi:teams')
+
+        response = self.client.get(url, kwargs={'pk': faker.random_number(digits=1)})
+
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_get_team_with_IsTeamLeader_permission(self):
+        self.client.force_authenticate(self.competitor2)
+        url = reverse('hack_fmi:teams')
+
+        response = self.client.get(url, kwargs={'pk': self.competitor2.id})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_team_with_pk_from_active_season(self):
+        self.client.force_authenticate(user=self.competitor)
+
+        url = reverse('hack_fmi:teams')
+
+        response = self.client.get(url, kwargs={'pk': self.team.id})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_get_team_with_pk_from_non_active_season(self):
+        self.client.force_authenticate(user=self.competitor)
+        url = reverse('hack_fmi:teams')
+
+        response = self.client.get(url, kwargs={'pk': self.non_active_team.id})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Team.objects.filter(season__is_active=True).count(), 1)
+        self.assertEqual(response.data[0]['name'], self.team.name)
+
+    # def test_add_season_to_team(self):
+    #     self.client.force_authenticate(user=self.competitor)
+    #     url = reverse('hack_fmi:teams')
+    #     response = self.client.get(url, kwargs={'pk': self.team.id})
+    #     data = {
+    #         'name': "nameee"
+
+    #     }
+    #     response = self.client.post(url, data, kwargs={'pk': self.team.id})
+    #     import ipdb; ipdb.set_trace()
+
+
+
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')
