@@ -7,7 +7,6 @@ from ckeditor.fields import RichTextField
 from loki.settings import MEDIA_ROOT
 
 
-
 class Company(models.Model):
     name = models.CharField(max_length=100, unique=True)
     logo_url = models.URLField(blank=True)

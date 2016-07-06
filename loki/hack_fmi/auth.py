@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from djoser import views
 
 from .serializers import CompetitorSerializer
-from .premissions import IsHackFMIUser
+from .permissions import IsHackFMIUser
 
 
 class Login(views.LoginView):

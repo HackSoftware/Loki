@@ -9,7 +9,7 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
 
-from rest_framework import serializers
+from rest_framework import serializers, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
@@ -30,6 +30,7 @@ from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
 
 from education.helper import (check_macs_for_student, mac_is_used_by_another_student)
 from .tasks import submit_solution
+from rest_framework import mixins
 
 
 @csrf_exempt
@@ -53,13 +54,22 @@ def set_check_in(request):
     return HttpResponse(status=200)
 
 
-@api_view(['GET'])
-@permission_classes((IsAuthenticated,))
-def get_lectures(request):
-    course_id = request.GET.get('course_id')
-    lectures = Lecture.objects.filter(course_id=course_id)
-    serializer = LectureSerializer(lectures, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+class GetLectures(mixins.ListModelMixin, generics.GenericAPIView):
+
+    serializer_class = LectureSerializer
+
+    def get_queryset(self, request):
+        course_id = self.request.GET.get('course_id')
+        return Lecture.objects.filter(course_id=course_id)
+
+
+# @api_view(['GET'])
+# @permission_classes((IsAuthenticated,))
+# def get_lectures(request):
+#     course_id = request.GET.get('course_id')
+#     lectures = Lecture.objects.filter(course_id=course_id)
+#     serializer = LectureSerializer(lectures, many=True)
+#     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])

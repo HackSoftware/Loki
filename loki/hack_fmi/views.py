@@ -14,10 +14,13 @@ from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
 from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           InvitationSerializer, MentorSerializer,
                           SeasonSerializer, PublicTeamSerializer,
-                          OnBoardingCompetitorSerializer)
-from .premissions import IsHackFMIUser, IsTeamLeaderOrReadOnly
+                          OnBoardingCompetitorSerializer,
+                          TeamMembershipSerializer,)
+from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly, IsMemberOfTeam,
+                          IsTeamMembershipInActiveSeason,
+                          IsSeasonDeadlineUpToDate)
 from .helper import send_team_delete_email
-
+# from hack_fmi.permissions import isMemberOfTeam
 
 from base_app.helper import try_open
 import json
@@ -48,12 +51,12 @@ class PublicTeamView(generics.ListAPIView):
 
 
 class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
-    permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly)
+    permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
+                          IsSeasonDeadlineUpToDate)
     serializer_class = TeamSerializer
 
     def get_queryset(self):
         queryset = Team.objects.filter(season__is_active=True)
-        # TODO: Use django filters
         needed_id = self.kwargs.get('pk', None)
         if needed_id:
             queryset = queryset.filter(pk=needed_id)
@@ -61,33 +64,47 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         season = Season.objects.get(is_active=True)
-        if season.make_team_dead_line < date.today():
-            raise PermissionDenied("You are pass the deadline for creating teams!")
-        print("Dfgheklo")
         team = serializer.save()
         team.season = season
         team.add_member(self.request.user.get_competitor(), is_leader=True)
         team.save()
 
 
-@api_view(['POST'])
-@permission_classes((IsHackFMIUser,))
-def leave_team(request):
-    logged_competitor = request.user.get_competitor()
-    logged_competitor_teams = logged_competitor.team_set
-    current_season = Season.objects.get(is_active=True)
-    team = logged_competitor_teams.get(season=current_season)
+class TeamMembershipAPI(generics.DestroyAPIView):
+    permission_classes = (IsHackFMIUser, IsMemberOfTeam,
+                          IsTeamMembershipInActiveSeason,)
 
-    if team.get_leader() == logged_competitor:
-        send_team_delete_email(team)
-        team.delete()
-        return Response(status=status.HTTP_200_OK)
+    serializer_class = TeamMembershipSerializer
 
-    TeamMembership.objects.get(
-        competitor=logged_competitor,
-        team=team
-    ).delete()
-    return Response(status=status.HTTP_200_OK)
+    def get_queryset(self):
+        return TeamMembership.objects.all()
+
+    def perform_destroy(self, instance):
+        if instance.is_leader is True:
+            team = instance.team
+            send_team_delete_email(team)
+            team.delete()
+        instance.delete()
+
+
+# @api_view(['POST'])
+# @permission_classes((IsHackFMIUser,))
+# def leave_team(request):
+#     logged_competitor = request.user.get_competitor()
+#     logged_competitor_teams = logged_competitor.team_set
+#     current_season = Season.objects.get(is_active=True)
+#     team = logged_competitor_teams.get(season=current_season)
+
+#     if team.get_leader() == logged_competitor:
+#         send_team_delete_email(team)
+#         team.delete()
+#         return Response(status=status.HTTP_200_OK)
+
+#     TeamMembership.objects.get(
+#         competitor=logged_competitor,
+#         team=team
+#     ).delete()
+#     return Response(status=status.HTTP_200_OK)
 
 
 class InvitationView(APIView):

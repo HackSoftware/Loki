@@ -57,7 +57,6 @@ class PublicTeamSerializer(serializers.ModelSerializer):
         read_only=True,
         source='technologies',
     )
-    season = SeasonSerializer(many=False, read_only=True)
 
     room = serializers.StringRelatedField()
 
@@ -77,12 +76,11 @@ class PublicTeamSerializer(serializers.ModelSerializer):
             'room',
             'picture',
             'place',
-            'season',
         )
 
 
 class TeamMembershipSerializer(serializers.ModelSerializer):
-    team = PublicTeamSerializer(many=False, read_only=True)
+    # team = PublicTeamSerializer(many=False, read_only=True)
 
     class Meta:
         model = TeamMembership
@@ -194,7 +192,7 @@ class TeamSerializer(serializers.ModelSerializer):
         """
         season = Season.objects.get(is_active=True)
         if any('mentors' in key for key in data):
-            if data['mentors'] > season.max_mentor_pick:
+            if len(data['mentors']) > season.max_mentor_pick:
                 raise serializers.ValidationError("You are not allowed to pick that much mentors")
         return data
 
