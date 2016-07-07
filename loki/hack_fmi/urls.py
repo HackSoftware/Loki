@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from .views import (SkillListView, TeamAPI, InvitationView,
-                    MentorListView, SeasonListView, AssignMentor, PublicTeamView,
+                    MentorListView, SeasonListView, PublicTeamView,
                     get_schedule, schedule_json, OnBoardCompetitor, TeamMembershipAPI)
 from .auth import Login, me
 
@@ -24,7 +24,7 @@ urlpatterns = [
 
     url(r'^api/me/$', me, name='me'),
     url(r'^api/season/$', SeasonListView.as_view(), name='season'),
-    url(r'^api/assign-mentor/$', AssignMentor.as_view(), name='assign_mentor'),
+    url(r'^api/team-mentorship/(?P<pk>[0-9]+)?', TeamMembershipAPI.as_view(), name='team_mentorship'),
 
     url(r'^api/schedule/', get_schedule, name="get_schedule"),
     url(r'^api/schedule-json/', schedule_json, name="schedule_json"),

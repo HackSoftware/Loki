@@ -439,7 +439,7 @@ class TeamMembershipAPITest(TestCase):
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertIsNotNone(self.team)
+        # self.assertEqual(Team.objects.filter(name=self.team.name).count(), 1)
         self.assertEqual(TeamMembership.objects.filter(competitor=self.competitor).count(), 0)
 
     def test_delete_team_if_competitor_is_leader(self):
@@ -990,83 +990,148 @@ class SeasonTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
-@unittest.skip('Skip until further implementation of Hackathon system')
-class MentorTests(APITestCase):
+class TeamMentorshipTest(TestCase):
 
     def setUp(self):
-        self.skills = Skill.objects.create(name="C#")
-        # TODO: Fix dates not to be hardcoded
-        self.season = Season.objects.create(
-            name="HackFMI 1",
-            topic='TestTopic',
+        self.client = APIClient()
+        self.skills = factories.SkillFactory()
+
+        self.season = factories.SeasonFactory(
             is_active=True,
-            sign_up_deadline=date_increase(10),
-            mentor_pick_start_date=date_increase(-15),
-            mentor_pick_end_date=date_increase(25),
-            make_team_dead_line=date_increase(20),
+            max_mentor_pick=1,
         )
-        self.competitor_leader = Competitor.objects.create(
-            email='ivo@abv.bg',
-            full_name='Ivo Naidobriq',
-            faculty_number='123',
+        self.competitor_leader = factories.CompetitorFactory(
+            email=faker.email(),
         )
-        self.team = Team.objects.create(
-            name='Pandas',
-            idea_description='GameDevelopers',
-            repository='https://github.com/HackSoftware',
+        self.team = factories.TeamFactory(
             season=self.season,
         )
-        self.team_membership = TeamMembership.objects.create(
+        self.team_membership = factories.TeamMembershipFactory(
             competitor=self.competitor_leader,
             team=self.team,
             is_leader=True,
         )
-        self.mentor = Mentor.objects.create(
-            name='Sten',
-            description='I help!',
+        self.company = factories.HackFmiPartnerFactory()
+        self.mentor = factories.MentorFactory(
+            from_company=self.company,
         )
-        self.mentor2 = Mentor.objects.create(
-            name='Sten2',
-            description='I help!',
+        self.mentor2 = factories.MentorFactory(
+            from_company=self.company,
         )
 
-    def test_get_mentors(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.competitor_leader)
-        url = reverse('hack_fmi:mentors')
+    def test_get_to_assign_mentor_if_not_hackFMI_user(self):
+        competitor = factories.CompetitorFactory(
+            email=faker.email(),)
+
+        self.client.force_authenticate(competitor)
+
+        url = reverse('hack_fmi:team_mentorship')
+
         response = self.client.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.response_405(response)
 
     def test_assign_mentor_to_leader_team(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.competitor_leader)
-        url = reverse('hack_fmi:assign_mentor')
-        data = {'id': self.mentor.id, 'team_id': self.team.id}
-        self.client.put(url, data, format='json')
-        name = self.team.mentors.get(id=self.mentor.id)
-        self.assertEqual(str(name), "Sten")
-
-    def test_assign_more_than_allowed_mentors(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.competitor_leader)
-        url = reverse('hack_fmi:assign_mentor')
-        data = {'id': self.mentor.id, 'team_id': self.team.id}
-        self.client.put(url, data, format='json')
-        data = {'id': self.mentor2.id, 'team_id': self.team.id}
-        response = self.client.put(url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_assign_mentor_after_endtime(self):
-        self.season.mentor_pick_end_date = "2013-5-1"
+        self.season.mentor_pick_start_date = date_decrease(10)
+        self.season.mentor_pick_end_date = date_increase(10)
         self.season.save()
 
-        self.client = APIClient()
         self.client.force_authenticate(user=self.competitor_leader)
-        url = reverse('hack_fmi:assign_mentor')
+
+        url = reverse('hack_fmi:team_mentorship')
+
+        data = {'mentors': [self.mentor.id], 'id': self.team.id}
+
+        response = self.client.put(url, data)
+
+        self.response_200(response)
+        self.assertIsNotNone(self.team.mentors.get(id=self.mentor.id))
+        self.assertEqual(self.team.mentors.count(), 1)
+
+    def test_assign_mentor_if_not_leader_team(self):
+        self.season.mentor_pick_start_date = date_decrease(10)
+        self.season.mentor_pick_end_date = date_increase(10)
+        self.season.save()
+
+        self.team_membership.is_leader = False
+        self.team_membership.save()
+
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        url = reverse('hack_fmi:team_mentorship')
+
         data = {'id': self.mentor.id, 'team_id': self.team.id}
-        response = self.client.put(url, data, format='json')
+
+        response = self.client.put(url, data)
+
+        self.response_403(response)
+
+    def test_assign_more_than_allowed_mentors(self):
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        url = reverse('hack_fmi:team_mentorship')
+
+        data = {'id': self.mentor.id, 'team_id': self.team.id}
+        self.client.put(url, data)
+
+        data = {'id': self.mentor2.id, 'team_id': self.team.id}
+
+        response = self.client.put(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_assign_mentor_before_startdate(self):
+        self.season.mentor_pick_start_date = date_increase(10)
+        self.season.save()
+
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        url = reverse('hack_fmi:team_mentorship')
+        data = {'id': self.mentor.id, 'team_id': self.team.id}
+
+        response = self.client.put(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_assign_mentor_after_enddate(self):
+        self.season.mentor_pick_end_date = date_decrease(10)
+        self.season.save()
+
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        url = reverse('hack_fmi:team_mentorship')
+        data = {'id': self.mentor.id, 'team_id': self.team.id}
+
+        response = self.client.put(url, data)
+
+        self.response_403(response)
+
+    def test_remove_mentor_from_team_if_not_teamleader(self):
+        self.team_membership.is_leader = False
+        self.team_membership.save()
+
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        url = reverse('hack_fmi:team_mentorship')
+
+        data = {'id': self.mentor.id, 'team_id': self.team.id}
+
+        response = self.client.post(url, data)
+
+        self.response_403(response)
+
+    def test_remove_mentor_from_team(self):
+
+        self.client.force_authenticate(user=self.competitor_leader)
+
+        url = reverse('hack_fmi:team_mentorship')
+
+        data = {'id': self.mentor.id, 'team_id': self.team.id}
+
+        response = self.client.post(url, data)
+
+        self.response_200(response)
+        self.assertEqual(self.team.mentors.count(), 0)
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')

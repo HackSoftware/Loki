@@ -23,6 +23,16 @@ class IsTeamLeaderOrReadOnly(permissions.BasePermission):
         return obj.get_leader() == request.user.get_competitor()
 
 
+class IsTeamLeader(permissions.BasePermission):
+    message = "You are not a leader of this team!"
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.team.get_leader() == request.user.get_competitor()
+
+
 class IsMemberOfTeam(permissions.BasePermission):
     message = "You are not a member of this team!"
 
@@ -44,4 +54,19 @@ class IsSeasonDeadlineUpToDate(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
 
-        return obj.season.make_team_dead_line < date.today()
+        return obj.team.season.make_team_dead_line < date.today()
+
+
+class IsMentorPickUpToDate(permissions.BasePermission):
+    message = "You cannot choose a mentor right now!"
+
+    def has_object_permission(self, request, view, obj):
+        today = date.today()
+        return obj.season.mentor_pick_start_date > today or obj.season.mentor_pick_end_date < today
+
+
+class CanAttachMentors(permissions.BasePermission):
+    message = "This team cannot attach other members!"
+
+    def has_object_permission(self, request, view, obj):
+        return obj.mentors.all() >= obj.season.max_mentor_pick

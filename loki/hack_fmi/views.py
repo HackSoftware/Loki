@@ -4,21 +4,23 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import mixins
 from post_office import mail
 
-from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
+from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season, TeamMentorship
 from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           InvitationSerializer, MentorSerializer,
                           SeasonSerializer, PublicTeamSerializer,
                           OnBoardingCompetitorSerializer,
-                          TeamMembershipSerializer,)
+                          TeamMembershipSerializer,
+                          TeamMentorshipSerializer)
 from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly, IsMemberOfTeam,
-                          IsTeamMembershipInActiveSeason,
-                          IsSeasonDeadlineUpToDate)
+                          IsTeamMembershipInActiveSeason, IsTeamLeader, 
+                          IsSeasonDeadlineUpToDate,IsMentorPickUpToDate,
+                          CanAttachMentors,)
 from .helper import send_team_delete_email
 # from hack_fmi.permissions import isMemberOfTeam
 
@@ -56,11 +58,7 @@ class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
     serializer_class = TeamSerializer
 
     def get_queryset(self):
-        queryset = Team.objects.filter(season__is_active=True)
-        needed_id = self.kwargs.get('pk', None)
-        if needed_id:
-            queryset = queryset.filter(pk=needed_id)
-        return queryset
+        return Team.objects.all()
 
     def perform_create(self, serializer):
         season = Season.objects.get(is_active=True)
@@ -80,6 +78,7 @@ class TeamMembershipAPI(generics.DestroyAPIView):
         return TeamMembership.objects.all()
 
     def perform_destroy(self, instance):
+        # Remove team if teamleader leaves
         if instance.is_leader is True:
             team = instance.team
             send_team_delete_email(team)
@@ -87,24 +86,15 @@ class TeamMembershipAPI(generics.DestroyAPIView):
         instance.delete()
 
 
-# @api_view(['POST'])
-# @permission_classes((IsHackFMIUser,))
-# def leave_team(request):
-#     logged_competitor = request.user.get_competitor()
-#     logged_competitor_teams = logged_competitor.team_set
-#     current_season = Season.objects.get(is_active=True)
-#     team = logged_competitor_teams.get(season=current_season)
+class TeamMentorshipAPI(mixins.CreateModelMixin,
+                        mixins.DestroyModelMixin,
+                        generics.GenericAPIView):
 
-#     if team.get_leader() == logged_competitor:
-#         send_team_delete_email(team)
-#         team.delete()
-#         return Response(status=status.HTTP_200_OK)
+    permission_classes = (IsHackFMIUser, IsTeamLeader,
+                          IsMentorPickUpToDate)
 
-#     TeamMembership.objects.get(
-#         competitor=logged_competitor,
-#         team=team
-#     ).delete()
-#     return Response(status=status.HTTP_200_OK)
+    serializer_class = TeamMentorshipSerializer
+    queryset = TeamMentorship.objects.all()
 
 
 class InvitationView(APIView):
@@ -176,45 +166,6 @@ class InvitationView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class AssignMentor(APIView):
-    permission_classes = (IsHackFMIUser,)
-
-    def put(self, request, format=None):
-        logged_competitor = request.user.get_competitor()
-        mentor = Mentor.objects.get(id=request.data['id'])
-        season = Season.objects.get(is_active=True)
-        team = Team.objects.get(id=request.data['team_id'])
-
-        today = date.today()
-        if season.mentor_pick_start_date > today or season.mentor_pick_end_date < today:
-            error = {"error": "В момента не може да избирате ментор."}
-            return Response(error, status.HTTP_403_FORBIDDEN)
-
-        if len(team.mentors.all()) >= season.max_mentor_pick:
-            error = {"error": "Този отбор не може да има повече ментори."}
-            return Response(error, status.HTTP_403_FORBIDDEN)
-
-        if not team.get_leader() == logged_competitor:
-            error = {"error": "Не си лидер на този отбор, за да избираш ментори."}
-            return Response(error, status.HTTP_403_FORBIDDEN)
-
-        team.mentors.add(mentor)
-        return Response(status=status.HTTP_200_OK)
-
-    # TODO: Fix methods
-    def post(self, request, format=None):
-        logged_competitor = request.user.get_competitor()
-        mentor = Mentor.objects.get(id=request.data['id'])
-        team = Team.objects.get(id=request.data['team_id'])
-
-        if not team.get_leader() == logged_competitor:
-            error = {"error": "Не си лидер на този отбор, за да избираш ментори."}
-            return Response(error, status.HTTP_403_FORBIDDEN)
-
-        team.mentors.remove(mentor)
-        return Response(status=status.HTTP_200_OK)
-
-
 @api_view(['GET'])
 def get_schedule(request):
     content = ""
@@ -226,6 +177,7 @@ def get_schedule(request):
 
 
 @api_view(['GET'])
+# @permission_classes((AllowAny, ))
 def schedule_json(request):
     content = {
         "placed": {},

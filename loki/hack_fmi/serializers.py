@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Skill, Competitor, Team, TeamMembership, Season, Invitation, Mentor
+from .models import Skill, Competitor, Team, TeamMembership, Season, Invitation, Mentor, TeamMentorship
 
 
 class SkillSerializer(serializers.ModelSerializer):
@@ -88,6 +88,16 @@ class TeamMembershipSerializer(serializers.ModelSerializer):
             'competitor',
             'team',
             'is_leader',
+        )
+
+
+class TeamMentorshipSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TeamMentorship
+        fields = (
+            'mentor',
+            'team',
         )
 
 
@@ -186,16 +196,18 @@ class TeamSerializer(serializers.ModelSerializer):
             'place',
         )
 
-    def validate(self, data):
-        """
-         Check that number of mentors is less than allowed.
-        """
-        season = Season.objects.get(is_active=True)
-        if any('mentors' in key for key in data):
-            if len(data['mentors']) > season.max_mentor_pick:
-                raise serializers.ValidationError("You are not allowed to pick that much mentors")
-        return data
+    # def validate(self, data):
+    #     """
+    #      Check that number of mentors is less than allowed.
+    #     # """
+    #     # season = Season.objects.get(is_active=True)
+    #     # if any('mentors' in key for key in data):
+    #     #     if len(data['mentors']) > season.max_mentor_pick:
+    #     #         raise serializers.ValidationError("You are not allowed to pick that much mentors")
+    #     # return data
 
+    # def validate_mentors(self, data):
+    #     pass
 
 class InvitationSerializer(serializers.ModelSerializer):
     team = TeamSerializer(many=False, read_only=True)
