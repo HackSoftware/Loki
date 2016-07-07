@@ -1,5 +1,6 @@
 from rest_framework import permissions
 from datetime import date
+from hack_fmi.models import Team
 
 
 class IsHackFMIUser(permissions.BasePermission):
@@ -54,15 +55,18 @@ class IsSeasonDeadlineUpToDate(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
 
-        return obj.team.season.make_team_dead_line < date.today()
+        return obj.season.make_team_dead_line < date.today()
 
 
-class IsMentorPickUpToDate(permissions.BasePermission):
-    message = "You cannot choose a mentor right now!"
+class IsMentorDatePickUpToDate(permissions.BasePermission):
+    message = "You cannot choose a mentor in this season's period!"
 
-    def has_object_permission(self, request, view, obj):
+    def has_permission(self, request, view):
+        if not request.data:
+            return True
         today = date.today()
-        return obj.season.mentor_pick_start_date > today or obj.season.mentor_pick_end_date < today
+        team = Team.objects.get(id=request.data['team'])
+        return team.season.mentor_pick_start_date < today and team.season.mentor_pick_end_date > today
 
 
 class CanAttachMentors(permissions.BasePermission):
@@ -70,3 +74,11 @@ class CanAttachMentors(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return obj.mentors.all() >= obj.season.max_mentor_pick
+
+
+class IsTeamInActiveSeason(permissions.BasePermission):
+    message = "This team is not in an active season!"
+
+    def has_object_permission(self, request, view, obj):
+
+        return obj.season.is_active is True

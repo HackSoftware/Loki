@@ -1,4 +1,3 @@
-from datetime import date
 from django.conf import settings
 
 from rest_framework.views import APIView
@@ -19,8 +18,8 @@ from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           TeamMentorshipSerializer)
 from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly, IsMemberOfTeam,
                           IsTeamMembershipInActiveSeason, IsTeamLeader, 
-                          IsSeasonDeadlineUpToDate,IsMentorPickUpToDate,
-                          CanAttachMentors,)
+                          IsSeasonDeadlineUpToDate,IsMentorDatePickUpToDate,
+                          CanAttachMentors, IsTeamInActiveSeason)
 from .helper import send_team_delete_email
 # from hack_fmi.permissions import isMemberOfTeam
 
@@ -54,7 +53,7 @@ class PublicTeamView(generics.ListAPIView):
 
 class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
     permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
-                          IsSeasonDeadlineUpToDate)
+                          IsSeasonDeadlineUpToDate, IsTeamInActiveSeason)
     serializer_class = TeamSerializer
 
     def get_queryset(self):
@@ -91,10 +90,16 @@ class TeamMentorshipAPI(mixins.CreateModelMixin,
                         generics.GenericAPIView):
 
     permission_classes = (IsHackFMIUser, IsTeamLeader,
-                          IsMentorPickUpToDate)
+                          IsMentorDatePickUpToDate)
 
     serializer_class = TeamMentorshipSerializer
     queryset = TeamMentorship.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
 
 class InvitationView(APIView):

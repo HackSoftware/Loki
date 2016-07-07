@@ -10,7 +10,8 @@ from post_office.models import EmailTemplate
 
 from ..helper import date_increase, date_decrease
 from ..models import (Skill, Competitor, TeamMembership,
-                      Season, Team, Invitation, Mentor, Room)
+                      Season, Team, Invitation, Mentor, Room,
+                      TeamMentorship)
 import unittest
 
 from seed import factories
@@ -39,7 +40,6 @@ class MentorListAPIViewTest(TestCase):
         self.student = factories.StudentFactory(
             email=faker.email()
         )
-
         self.company = factories.HackFmiPartnerFactory()
         self.active_season = factories.SeasonFactory(
             is_active=True)
@@ -51,14 +51,12 @@ class MentorListAPIViewTest(TestCase):
             from_company=self.company
         )
         self.active_season.mentor_set.add(self.mentor)
-        # self.mentor.seasons.add(self.active_season)
         self.active_season.save()
 
         self.mentor2 = factories.MentorFactory(
             from_company=self.company
         )
         self.non_active_season.mentor_set.add(self.mentor2)
-        # self.mentor2.seasons.add(self.non_active_season)
         self.non_active_season.save()
 
         self.mentor3 = factories.MentorFactory(
@@ -72,7 +70,6 @@ class MentorListAPIViewTest(TestCase):
         url = reverse('hack_fmi:mentors')
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
         self.assertEqual(response.data[0]['name'], self.mentor.name)
 
     def test_get_active_mentors_from_active_season(self):
@@ -81,7 +78,6 @@ class MentorListAPIViewTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         active_seasons = Season.objects.filter(is_active=True)
-        # import ipdb; ipdb.set_trace()  # breakpoint 781c70c1 //
         self.assertEqual(active_seasons[0].mentor_set.count(), 2)
 
 
@@ -283,7 +279,7 @@ class TeamAPITest(TestCase):
 
         response = self.client.patch(url, data)
 
-        self.response_404(response)
+        self.response_403(response)
 
     def test_get_team_with_IsSeasonDeadlineUpToDate_permission(self):
         self.active_season.make_team_dead_line = date_increase(100)
@@ -322,24 +318,6 @@ class TeamAPITest(TestCase):
         response = self.client.patch(url, data)
 
         self.response_403(response)
-
-    def test_add_team_to_active_season(self):
-        factories.TeamMembershipFactory(
-            competitor=self.competitor,
-            team=self.team,
-            is_leader=True,
-        )
-        self.client.force_authenticate(user=self.competitor)
-        url = reverse('hack_fmi:teams')
-        data = {
-            'name': faker.name(),
-            'idea_description': faker.paragraph(),
-            'mentors': self.mentor.id
-        }
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIsNotNone(Team.objects.get(name=data['name']))
-        self.assertIsNotNone(Team.objects.get(idea_description=data['idea_description']))
 
 
 class TeamMembershipAPITest(TestCase):
@@ -747,7 +725,7 @@ class InvitationTests(APITestCase):
             mentor_pick_end_date=date_increase(10),
             make_team_dead_line=date_increase(10),
         )
-        self.competitor_leader = Competitor.objects.create(
+        self.competitor = Competitor.objects.create(
             email='ivo@abv.bg',
             full_name='Ivo Naidobriq',
             faculty_number='123',
@@ -998,16 +976,16 @@ class TeamMentorshipTest(TestCase):
 
         self.season = factories.SeasonFactory(
             is_active=True,
-            max_mentor_pick=1,
+            # max_mentor_pick=1,
         )
-        self.competitor_leader = factories.CompetitorFactory(
+        self.competitor = factories.CompetitorFactory(
             email=faker.email(),
         )
         self.team = factories.TeamFactory(
             season=self.season,
         )
         self.team_membership = factories.TeamMembershipFactory(
-            competitor=self.competitor_leader,
+            competitor=self.competitor,
             team=self.team,
             is_leader=True,
         )
@@ -1019,7 +997,7 @@ class TeamMentorshipTest(TestCase):
             from_company=self.company,
         )
 
-    def test_get_to_assign_mentor_if_not_hackFMI_user(self):
+    def test_assign_mentor_if_not_hackFMI_user(self):
         competitor = factories.CompetitorFactory(
             email=faker.email(),)
 
@@ -1027,82 +1005,78 @@ class TeamMentorshipTest(TestCase):
 
         url = reverse('hack_fmi:team_mentorship')
 
-        response = self.client.get(url)
+        data = {'team': self.team.id,
+                'mentor': self.mentor.id,
+                }
 
-        self.response_405(response)
+        response = self.client.post(url, data)
 
-    def test_assign_mentor_to_leader_team(self):
-        self.season.mentor_pick_start_date = date_decrease(10)
-        self.season.mentor_pick_end_date = date_increase(10)
-        self.season.save()
-
-        self.client.force_authenticate(user=self.competitor_leader)
-
-        url = reverse('hack_fmi:team_mentorship')
-
-        data = {'mentors': [self.mentor.id], 'id': self.team.id}
-
-        response = self.client.put(url, data)
-
-        self.response_200(response)
-        self.assertIsNotNone(self.team.mentors.get(id=self.mentor.id))
-        self.assertEqual(self.team.mentors.count(), 1)
+        self.response_403(response)
 
     def test_assign_mentor_if_not_leader_team(self):
-        self.season.mentor_pick_start_date = date_decrease(10)
-        self.season.mentor_pick_end_date = date_increase(10)
-        self.season.save()
+        self.team.season.mentor_pick_start_date = date_decrease(10)
+        self.team.season.mentor_pick_end_date = date_increase(10)
+        self.team.save()
 
         self.team_membership.is_leader = False
         self.team_membership.save()
 
-        self.client.force_authenticate(user=self.competitor_leader)
+        self.client.force_authenticate(user=self.competitor)
 
         url = reverse('hack_fmi:team_mentorship')
 
-        data = {'id': self.mentor.id, 'team_id': self.team.id}
+        data = {'team': self.team.id,
+                'mentor': self.mentor.id,
+                }
 
-        response = self.client.put(url, data)
+        response = self.client.post(url, data)
 
         self.response_403(response)
 
-    def test_assign_more_than_allowed_mentors(self):
-        self.client.force_authenticate(user=self.competitor_leader)
+    # def test_assign_more_than_allowed_mentors(self):
+    #     self.client.force_authenticate(user=self.competitor)
 
-        url = reverse('hack_fmi:team_mentorship')
+    #     url = reverse('hack_fmi:team_mentorship')
 
-        data = {'id': self.mentor.id, 'team_id': self.team.id}
-        self.client.put(url, data)
+    #     data = {'id': self.mentor.id, 'team_id': self.team.id}
+    #     self.client.put(url, data)
 
-        data = {'id': self.mentor2.id, 'team_id': self.team.id}
+    #     data = {'id': self.mentor2.id, 'team_id': self.team.id}
 
-        response = self.client.put(url, data)
+    #     response = self.client.put(url, data)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    #     self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_assign_mentor_before_startdate(self):
-        self.season.mentor_pick_start_date = date_increase(10)
-        self.season.save()
+        self.team.season.mentor_pick_start_date = date_increase(10)
+        self.team.season.mentor_pick_end_date = date_increase(10)
+        self.team.season.save()
 
-        self.client.force_authenticate(user=self.competitor_leader)
+        self.client.force_authenticate(user=self.competitor)
 
         url = reverse('hack_fmi:team_mentorship')
-        data = {'id': self.mentor.id, 'team_id': self.team.id}
 
-        response = self.client.put(url, data)
+        data = {'team': self.team.id,
+                'mentor': self.mentor.id,
+                }
+        response = self.client.post(url, data)
 
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.response_403(response)
 
     def test_assign_mentor_after_enddate(self):
-        self.season.mentor_pick_end_date = date_decrease(10)
-        self.season.save()
+        self.team.season.mentor_pick_start_date = date_decrease(10)
+        self.team.season.mentor_pick_end_date = date_decrease(10)
+        self.team.season.save()
 
-        self.client.force_authenticate(user=self.competitor_leader)
+        self.client.force_authenticate(user=self.competitor)
 
         url = reverse('hack_fmi:team_mentorship')
-        data = {'id': self.mentor.id, 'team_id': self.team.id}
 
-        response = self.client.put(url, data)
+        data = {'team': self.team.id,
+                'mentor': self.mentor.id,
+                }
+
+        response = self.client.post(url, data)
 
         self.response_403(response)
 
@@ -1110,28 +1084,52 @@ class TeamMentorshipTest(TestCase):
         self.team_membership.is_leader = False
         self.team_membership.save()
 
-        self.client.force_authenticate(user=self.competitor_leader)
+        self.client.force_authenticate(user=self.competitor)
 
-        url = reverse('hack_fmi:team_mentorship')
+        mentorship = factories.TeamMentorshipFactory(
+            team=self.team,
+            mentor=self.mentor)
 
-        data = {'id': self.mentor.id, 'team_id': self.team.id}
+        url = reverse('hack_fmi:team_mentorship', kwargs={'pk': mentorship.id})
 
-        response = self.client.post(url, data)
+        response = self.client.delete(url)
 
         self.response_403(response)
 
     def test_remove_mentor_from_team(self):
 
-        self.client.force_authenticate(user=self.competitor_leader)
+        self.client.force_authenticate(user=self.competitor)
 
+        mentorship = factories.TeamMentorshipFactory(
+            team=self.team,
+            mentor=self.mentor)
+
+        url = reverse('hack_fmi:team_mentorship', kwargs={'pk': mentorship.id})
+
+        self.assertEqual(TeamMentorship.objects.filter(team=self.team).count(), 1)
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(TeamMentorship.objects.filter(team=self.team).count(), 0)
+
+    def test_assign_mentor_to_team(self):
+        self.team.season.mentor_pick_start_date = date_decrease(10)
+        self.team.season.mentor_pick_end_date = date_increase(10)
+        self.team.season.save()
+
+        self.client.force_authenticate(user=self.competitor)
         url = reverse('hack_fmi:team_mentorship')
-
-        data = {'id': self.mentor.id, 'team_id': self.team.id}
-
+        data = {
+            'team': self.team.id,
+            'mentor': self.mentor.id,
+        }
         response = self.client.post(url, data)
 
-        self.response_200(response)
-        self.assertEqual(self.team.mentors.count(), 0)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        result_mentorship = TeamMentorship.objects.get(team=data['team'])
+        self.assertIsNotNone(result_mentorship)
+        self.assertIsNotNone(TeamMentorship.objects.get(mentor=data['mentor']))
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')

@@ -317,6 +317,14 @@ class TeamMembershipFactory(factory.DjangoModelFactory):
     is_leader = faker.boolean()
 
 
+class TeamMentorshipFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = hack_fmi_models.TeamMentorship
+
+    mentor = factory.SubFactory(MentorFactory)
+    team = factory.SubFactory(TeamFactory)
+
+
 class TeamWithCompetitor(TeamFactory):
     class Meta:
         exclude = ('competitor')

@@ -96,8 +96,8 @@ class TeamMentorshipSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamMentorship
         fields = (
-            'mentor',
             'team',
+            'mentor',
         )
 
 
@@ -208,6 +208,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
     # def validate_mentors(self, data):
     #     pass
+
 
 class InvitationSerializer(serializers.ModelSerializer):
     team = TeamSerializer(many=False, read_only=True)

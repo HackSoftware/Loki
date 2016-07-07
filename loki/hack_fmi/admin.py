@@ -75,4 +75,3 @@ class RoomAdmin(admin.ModelAdmin):
 @admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin):
     list_display = ('name',)
-
