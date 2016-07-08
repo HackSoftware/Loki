@@ -210,16 +210,36 @@ class TeamSerializer(serializers.ModelSerializer):
     #     pass
 
 
+class InvitationTeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = (
+            'id',
+            'name'
+        )
+
+
 class InvitationSerializer(serializers.ModelSerializer):
-    team = TeamSerializer(many=False, read_only=True)
+    team = InvitationTeamSerializer(read_only=True)
+    competitor_email = serializers.EmailField(required=True, write_only=True)
 
     class Meta:
         model = Invitation
         fields = (
             'id',
             'team',
-            'competitor',
+            'competitor_email'
         )
+
+    def validate(self, data):
+        if not Competitor.objects.filter(email=data['competitor_email']).exists():
+            raise serializers.ValidationError("Competitor with this email does not exists")
+
+        competitor_email = data.pop('competitor_email')
+        competitor = Competitor.objects.get(email=competitor_email)
+        data['competitor'] = competitor
+
+        return data
 
 
 class OnBoardingCompetitorSerializer(serializers.ModelSerializer):

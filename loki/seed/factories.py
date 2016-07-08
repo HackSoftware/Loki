@@ -482,3 +482,11 @@ class CourseDescriptionFactory(factory.DjangoModelFactory):
     address = faker.text(max_nb_chars=255)
     SEO_description = faker.text(max_nb_chars=255)
     SEO_title = faker.text(max_nb_chars=255)
+
+
+class InvitationFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = hack_fmi_models.Invitation
+
+    team = factory.SubFactory(TeamFactory)
+    competitor = factory.SubFactory(CompetitorFactory)

@@ -1,6 +1,7 @@
 from rest_framework import permissions
 from datetime import date
-from hack_fmi.models import Team
+from hack_fmi.models import (Team, Competitor, Invitation, TeamMembership,
+                             Season)
 
 
 class IsHackFMIUser(permissions.BasePermission):
@@ -82,3 +83,57 @@ class IsTeamInActiveSeason(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
 
         return obj.season.is_active is True
+
+
+class IsTeamleaderOrCantCreate(permissions.BasePermission):
+    message = "Only team leaders can invite members to team"
+
+    def has_object_permission(self, request, view, obj):
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.team.get_leader() == request.user.get_competitor()
+
+
+class IsInvitationSentToInvitedMember(permissions.BasePermission):
+    message = "The member you invite has unconfirmed invitations!"
+
+    def has_object_permission(self, request, view, obj):
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        competitor = Competitor.objects.get(email=request.data['competitor_email'])
+        return Invitation.objects.filter(competitor=competitor).count() is not 0
+
+
+class IsInvitedMemberAlreadyInYourTeam(permissions.BasePermission):
+
+    message = "The member you are trying to add is already in your team!!"
+
+    def has_permission(self, request, view):
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        competitor = Competitor.objects.get(email=request.data['competitor_email'])
+
+        return TeamMembership.objects.filter(competitor=competitor).count() is 0
+
+
+class CanInviteMoreMembers(permissions.BasePermission):
+
+    active_season = Season.objects.get(is_active=True)
+
+    message = "You cannot invite more than {} in your team".format(active_season.max_team_members_count)
+
+    def has_permission(self, request, view):
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        user_team = TeamMembership.objects.get(competitor=request.user).team
+        members_in_team = TeamMembership.objects.filter(team=user_team).count()
+
+        return members_in_team < user_team.season.max_team_members_count
