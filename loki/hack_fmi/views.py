@@ -23,8 +23,10 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMentorDatePickUpToDate,
                           IsTeamInActiveSeason, CanInviteMoreMembers,
                           IsTeamleaderOrCantCreate,
-                          IsInvitationSentToInvitedMember,
-                          IsInvitedMemberAlreadyInYourTeam)
+                          # IsInvitationSentToInvitedMember,
+                          IsInvitedMemberAlreadyInYourTeam,
+                          IsInvitedMemberAlreadyInOtherTeam,
+                          CanDeleteInvitation)
 from .helper import send_team_delete_email
 
 from base_app.helper import try_open
@@ -113,13 +115,20 @@ class InvitationView(mixins.CreateModelMixin,
 
     permission_classes = (IsHackFMIUser, IsTeamleaderOrCantCreate,
                           IsInvitedMemberAlreadyInYourTeam,
-                          CanInviteMoreMembers)
+                          IsInvitedMemberAlreadyInOtherTeam,
+                          CanInviteMoreMembers,
+                          CanDeleteInvitation,)
 
     serializer_class = InvitationSerializer
 
     def get_queryset(self):
         return Invitation.objects.filter(competitor=self.request.user,
                                          team__season__is_active=True)
+
+    def get_object(self):
+        obj = Invitation.objects.get(id=self.kwargs['pk'])
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -143,72 +152,15 @@ class InvitationView(mixins.CreateModelMixin,
 
         serializer.save(team=team)
 
+    def perform_destroy(self, instance):
 
+            # Remove team if teamleader leaves
 
-
-
-
-
-
-
-    # def post(self, request, format=None):
-        # logged_competitor = request.user.get_competitor()
-        # current_season = Season.objects.get(is_active=True)
-        # membership = TeamMembership.objects.get(competitor=logged_competitor, team__season=current_season)
-        # invited_competitor = Competitor.objects.filter(email=request.data['email']).first()
-        # if not invited_competitor:
-        #     error = {"error": "Този потребител все още не е регистриран в системата."}
-        #     return Response(error, status=status.HTTP_403_FORBIDDEN)
-        # if Invitation.objects.filter(team=membership.team, competitor=invited_competitor).first():
-        #     error = {"error": "Вече си изпратил покана на този участник. Изчакай да потвърди!"}
-        #     return Response(error, status=status.HTTP_403_FORBIDDEN)
-
-        # if membership.team in invited_competitor.team_set.all():
-        #     error = {"error": "Този участник вече е в отбора ти!"}
-        #     return Response(error, status=status.HTTP_403_FORBIDDEN)
-
-        # if len(membership.team.teammembership_set.all()) >= current_season.max_team_members_count:
-        #     error = {"error": "В този отбор вече има повече от 6 човека. "
-        #                       "Трябва някой да напусне отбора за да можеш да приемш тази покана!"}
-        #     return Response(error, status=status.HTTP_403_FORBIDDEN)
-
-        # if membership.is_leader:
-        #     Invitation.objects.create(team=membership.team, competitor=invited_competitor)
-        #     message = {"message": "Успешно изпратихте поканата за включване в отбора!"}
-        #     sender = settings.DEFAULT_FROM_EMAIL
-        #     mail.send(
-        #         invited_competitor.email,
-        #         sender,
-        #         template='hackfmi_team_invite',
-        #     )
-        #     return Response(message, status=status.HTTP_201_CREATED)
-        # message = {"message": "Трябва да бъдете лидер, за да каните хора!"}
-        # return Response(message, status=status.HTTP_403_FORBIDDEN)
-
-    # def put(self, request, format=None):
-    #     logged_competitor = request.user.get_competitor()
-    #     invitation = Invitation.objects.get(id=request.data['id'])
-    #     current_season = Season.objects.get(is_active=True)
-    #     if invitation.competitor != logged_competitor:
-    #         error = {"error": "Тази покана не е за теб."}
-    #         return Response(error, status=status.HTTP_403_FORBIDDEN)
-    #     if logged_competitor.team_set.filter(season=current_season):
-    #         error = {"error": "Вече имаш отбор. Напусни го и тогава можеш да приемеш нова покана."}
-    #         return Response(error, status=status.HTTP_403_FORBIDDEN)
-
-    #     TeamMembership.objects.create(competitor=logged_competitor, team=invitation.team)
-    #     invitation.delete()
-    #     message = {"message": "Успешно се присъединихте към отбора."}
-    #     return Response(message, status=status.HTTP_200_OK)
-
-    # def delete(self, request, format=None):
-    #     logged_competitor = request.user.get_competitor()
-    #     invitation = Invitation.objects.get(id=request.data['id'])
-    #     if invitation.competitor != logged_competitor:
-    #         error = {"error": "Тази покана не е за теб."}
-    #         return Response(error, status=status.HTTP_403_FORBIDDEN)
-    #     invitation.delete()
-    #     return Response(status=status.HTTP_200_OK)
+        if instance.team.get_leader():
+            membership = TeamMembership.objects.filter(team=instance.team,
+                                                       competitor=instance.competitor)
+            membership.delete()
+        instance.delete()
 
 
 @api_view(['GET'])

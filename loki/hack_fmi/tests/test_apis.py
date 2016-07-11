@@ -2,6 +2,7 @@ from django.core.management.base import CommandError
 from django.core.management import call_command
 from django.core.urlresolvers import reverse
 from post_office import mail
+from django.db import IntegrityError
 
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
@@ -546,7 +547,7 @@ class InvitationTests(TestCase):
         self.assertEqual(Invitation.objects.all()[0].team.id, self.team.id)
         self.assertEqual(Invitation.objects.all()[0].competitor.id, self.competitor_not_leader.id)
 
-    def test_test_send_invitation_not_from_leader(self):
+    def test_send_invitation_not_from_leader(self):
         competitor = factories.CompetitorFactory(
             email=faker.email(),
         )
@@ -576,14 +577,14 @@ class InvitationTests(TestCase):
     def test_send_invitation_twice_to_same_competitor(self):
         self.client.force_authenticate(user=self.competitor)
 
-        factories.InvitationFactory(
+        Invitation.objects.create(
             team=self.team,
             competitor=self.competitor_not_leader,
         )
         url = reverse('hack_fmi:invitation')
         data = {'competitor_email': self.competitor_not_leader.email}
         response = self.client.post(url, data)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_send_invitation_when_team_is_full(self):
         self.client.force_authenticate(user=self.competitor)
@@ -653,6 +654,27 @@ class InvitationTests(TestCase):
         self.assertEqual(len(response.data), 1)
         self.assertEqual(Invitation.objects.all().count(), 1)
 
+    def test_send_invitation_to_user_that_already_has_team(self):
+        self.client.force_authenticate(self.competitor)
+
+        team = factories.TeamFactory(
+            name=faker.name(),
+            season=self.season,
+        )
+
+        factories.TeamMembershipFactory(
+            team=team,
+            competitor=self.competitor_not_leader,
+        )
+
+        url = reverse('hack_fmi:invitation')
+        data = {
+            'competitor_email': self.competitor_not_leader.email
+        }
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     # def test_accept_invitation(self):
     #     self.client.force_authenticate(user=self.competitor_not_leader)
 
@@ -703,38 +725,100 @@ class InvitationTests(TestCase):
 
     #     response = self.client.put(url, data)
     #     self.response_403(response)
+    def test_decline_non_confirmed_invitation_if_leader(self):
+        self.client.force_authenticate(user=self.competitor)
 
-    # def test_decline_invitation(self):
-    #     self.client.force_authenticate(user=self.competitor_not_leader)
+        invitation = factories.InvitationFactory(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
+        url = reverse('hack_fmi:invitation', kwargs={'pk': invitation.id})
+        response = self.client.delete(url)
 
-    #     invitation = Invitation.objects.create(
-    #         team=self.team,
-    #         competitor=self.competitor_not_leader
-    #     )
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Invitation.objects.all().count(), 0)
 
-    #     url = reverse('hack_fmi:invitation')
-    #     data = {'id': invitation.id}
-    #     response = self.client.delete(url, data)
+    def test_decline_confirmed_invitation_if_leader(self):
+        self.client.force_authenticate(user=self.competitor)
 
-    #     # self.assertEqual(response.status_code, 204)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(TeamMembership.objects.filter(team=invitation.team, competitor=invitation.competitor).count(), 0)
-    #     self.assertEqual(Invitation.objects.all().count(), 0)
+        factories.TeamMembershipFactory(
+            team=self.team,
+            competitor=self.competitor_not_leader,
+        )
 
-    # def test_decline_invitation_that_is_not_yours(self):
-    #     self.client.force_authenticate(user=self.competitor)
-    #     invitation = Invitation.objects.create(
-    #         team=self.team,
-    #         competitor=self.competitor_not_leader
-    #     )
+        invitation = factories.InvitationFactory(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
 
-    #     url = reverse('hack_fmi:invitation')
-    #     data = {'id': invitation.id}
+        self.assertEqual(TeamMembership.objects.filter(team=invitation.team, competitor=invitation.competitor).count(), 1)
+        self.assertEqual(Invitation.objects.all().count(), 1)
 
-    #     response = self.client.delete(url, data)
+        url = reverse('hack_fmi:invitation', kwargs={'pk': invitation.id})
 
-    #     self.response_403(response)
-    #     self.assertEqual(TeamMembership.objects.filter(competitor=invitation.competitor).count(), 0)
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(TeamMembership.objects.filter(team=invitation.team, competitor=invitation.competitor).count(), 0)
+        self.assertEqual(Invitation.objects.all().count(), 0)
+
+    def test_decline_confirmed_invitation_if_not_leader(self):
+        self.client.force_authenticate(user=self.competitor_not_leader)
+
+        factories.TeamMembershipFactory(
+            team=self.team,
+            competitor=self.competitor_not_leader,
+        )
+
+        invitation = factories.InvitationFactory(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
+        self.assertEqual(TeamMembership.objects.filter(team=invitation.team, competitor=invitation.competitor).count(), 1)
+        self.assertEqual(Invitation.objects.all().count(), 1)
+
+        url = reverse('hack_fmi:invitation', kwargs={'pk': invitation.id})
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(TeamMembership.objects.filter(team=invitation.team, competitor=invitation.competitor).count(), 0)
+        self.assertEqual(Invitation.objects.all().count(), 0)
+
+    def test_decline_non_confirmed_invitation_if_not_leader(self):
+        self.client.force_authenticate(user=self.competitor_not_leader)
+
+        invitation = factories.InvitationFactory(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
+        self.assertEqual(Invitation.objects.all().count(), 1)
+
+        url = reverse('hack_fmi:invitation', kwargs={'pk': invitation.id})
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(TeamMembership.objects.filter(team=invitation.team, competitor=invitation.competitor).count(), 0)
+        self.assertEqual(Invitation.objects.all().count(), 0)
+
+    def test_decline_invitation_that_is_not_yours(self):
+        competitor = factories.CompetitorFactory(
+            email=faker.email()
+        )
+
+        self.client.force_authenticate(user=competitor)
+
+        invitation = factories.InvitationFactory(
+            team=self.team,
+            competitor=self.competitor_not_leader
+        )
+        self.assertEqual(Invitation.objects.all().count(), 1)
+        url = reverse('hack_fmi:invitation', kwargs={'pk': invitation.id})
+
+        response = self.client.delete(url)
+
+        self.response_403(response)
+        self.assertEqual(TeamMembership.objects.filter(competitor=invitation.competitor).count(), 0)
+        self.assertEqual(Invitation.objects.all().count(), 1)
 
 
 # @unittest.skip('Skip until further implementation of Hackathon system')

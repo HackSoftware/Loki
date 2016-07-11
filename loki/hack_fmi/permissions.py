@@ -88,24 +88,25 @@ class IsTeamInActiveSeason(permissions.BasePermission):
 class IsTeamleaderOrCantCreate(permissions.BasePermission):
     message = "Only team leaders can invite members to team"
 
-    def has_object_permission(self, request, view, obj):
+    def has_permission(self, request, view):
 
-        if request.method in permissions.SAFE_METHODS:
-            return True
+        if request.method == "POST":
+            user = request.user.get_competitor()
+            membership = TeamMembership.objects.get(competitor=user)
+            return membership.is_leader
 
-        return obj.team.get_leader() == request.user.get_competitor()
+        return True
 
+# class IsInvitationSentToInvitedMember(permissions.BasePermission):
+#     message = "The member you invite has unconfirmed invitations!"
 
-class IsInvitationSentToInvitedMember(permissions.BasePermission):
-    message = "The member you invite has unconfirmed invitations!"
+#     def has_object_permission(self, request, view, obj):
 
-    def has_object_permission(self, request, view, obj):
-
-        if request.method in permissions.SAFE_METHODS:
-            return True
-
-        competitor = Competitor.objects.get(email=request.data['competitor_email'])
-        return Invitation.objects.filter(competitor=competitor).count() is not 0
+#         if request.method in permissions.SAFE_METHODS:
+#             return True
+        
+#         competitor = Competitor.objects.get(email=request.data['competitor_email'])
+#         return Invitation.objects.filter(competitor=competitor).count() is not 0
 
 
 class IsInvitedMemberAlreadyInYourTeam(permissions.BasePermission):
@@ -114,12 +115,26 @@ class IsInvitedMemberAlreadyInYourTeam(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        if request.method in permissions.SAFE_METHODS:
-            return True
+        if request.method == "POST":
+            competitor = Competitor.objects.filter(email=request.data['competitor_email'])
+            leader_team = TeamMembership.objects.get(competitor=request.user).team
+            return TeamMembership.objects.filter(competitor=competitor, team=leader_team).count() is 0
 
-        competitor = Competitor.objects.get(email=request.data['competitor_email'])
+        return True
 
-        return TeamMembership.objects.filter(competitor=competitor).count() is 0
+
+class IsInvitedMemberAlreadyInOtherTeam(permissions.BasePermission):
+
+    message = '''You you have already been a member of any existing team.
+                 Please leave that team and then in order to accept the invitation!'''
+
+    def has_permission(self, request, view):
+
+        if request.method == "POST":
+            competitor = Competitor.objects.filter(email=request.data['competitor_email'])
+            return TeamMembership.objects.filter(competitor=competitor).count() is 0
+
+        return True
 
 
 class CanInviteMoreMembers(permissions.BasePermission):
@@ -130,10 +145,21 @@ class CanInviteMoreMembers(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        if request.method in permissions.SAFE_METHODS:
-            return True
+        if request.method == "POST":
+            user_team = TeamMembership.objects.get(competitor=request.user).team
+            members_in_team = TeamMembership.objects.filter(team=user_team).count()
 
-        user_team = TeamMembership.objects.get(competitor=request.user).team
-        members_in_team = TeamMembership.objects.filter(team=user_team).count()
+            return members_in_team < user_team.season.max_team_members_count
+        return True
 
-        return members_in_team < user_team.season.max_team_members_count
+
+class CanDeleteInvitation(permissions.BasePermission):
+
+    message = "This invitation is not dedicated to you!"
+
+    def has_object_permission(self, request, view, obj):
+        if request.method == 'DELETE':
+            if TeamMembership.objects.filter(competitor=request.user, is_leader=True).count() is not 0:
+                return True
+            return request.user.get_competitor() == obj.competitor
+        return True

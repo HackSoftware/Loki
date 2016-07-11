@@ -18,7 +18,7 @@ urlpatterns = [
 
     url(r'^api/team-membership/(?P<pk>[0-9]+)/$', TeamMembershipAPI.as_view(), name='team_membership'),
 
-    url(r'^api/invitation/$', InvitationView.as_view(), name='invitation'),
+    url(r'^api/invitation/(?P<pk>[0-9]+)?', InvitationView.as_view(), name='invitation'),
     # Auth
     url(r'^api/login/', Login.as_view(), name='login'),
     # url(r'^api/logout/$', LogoutView.as_view(), name='logout'),
