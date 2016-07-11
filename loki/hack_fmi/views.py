@@ -1,14 +1,12 @@
-from django.conf import settings
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics
+from rest_framework import status, generics, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import mixins
-from post_office import mail
+# from post_office import mail
 
-from .models import (Skill, Competitor, Team, TeamMembership,
+from .models import (Skill, Team, TeamMembership,
                      Mentor, Season, TeamMentorship)
 from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           InvitationSerializer, MentorSerializer,
@@ -21,12 +19,8 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
                           IsTeamLeader, IsSeasonDeadlineUpToDate,
                           IsMentorDatePickUpToDate,
-                          IsTeamInActiveSeason, CanInviteMoreMembers,
-                          IsTeamleaderOrCantCreate,
-                          # IsInvitationSentToInvitedMember,
-                          IsInvitedMemberAlreadyInYourTeam,
-                          IsInvitedMemberAlreadyInOtherTeam,
-                          CanDeleteInvitation)
+                          IsTeamInActiveSeason
+                          )
 from .helper import send_team_delete_email
 
 from base_app.helper import try_open
@@ -108,16 +102,7 @@ class TeamMentorshipAPI(mixins.CreateModelMixin,
         return self.destroy(request, *args, **kwargs)
 
 
-class InvitationView(mixins.CreateModelMixin,
-                     mixins.ListModelMixin,
-                     mixins.DestroyModelMixin,
-                     generics.GenericAPIView):
-
-    permission_classes = (IsHackFMIUser, IsTeamleaderOrCantCreate,
-                          IsInvitedMemberAlreadyInYourTeam,
-                          IsInvitedMemberAlreadyInOtherTeam,
-                          CanInviteMoreMembers,
-                          CanDeleteInvitation,)
+class InvitationView(viewsets.ModelViewSet):
 
     serializer_class = InvitationSerializer
 
@@ -130,15 +115,6 @@ class InvitationView(mixins.CreateModelMixin,
         self.check_object_permissions(self.request, obj)
         return obj
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
-    def get(self, request, *args, **kwargs):
-        return self.list(request, *args, **kwargs)
-
-    def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
-
     def perform_create(self, serializer):
         team = TeamMembership.objects.get(competitor=self.request.user, team__season__is_active=True).team
 
@@ -148,19 +124,18 @@ class InvitationView(mixins.CreateModelMixin,
         #     competitor.email,
         #     sender,
         #     template='hackfmi_team_invite',
-        # )
+# )
 
         serializer.save(team=team)
 
-    def perform_destroy(self, instance):
-
-            # Remove team if teamleader leaves
-
-        if instance.team.get_leader():
-            membership = TeamMembership.objects.filter(team=instance.team,
-                                                       competitor=instance.competitor)
-            membership.delete()
-        instance.delete()
+    def accept(self, request, *args, **kwargs):
+        invitation = self.get_object()
+        TeamMembership.objects.create(
+            team=invitation.team,
+            competitor=invitation.competitor
+        )
+        invitation.delete()
+        return Response("You have accepted this invitation!")
 
 
 @api_view(['GET'])

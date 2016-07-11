@@ -1,7 +1,8 @@
 from rest_framework import permissions
 from datetime import date
-from hack_fmi.models import (Team, Competitor, Invitation, TeamMembership,
-                             Season)
+from hack_fmi.models import (Team, Competitor, TeamMembership,
+                             Season
+                             )
 
 
 class IsHackFMIUser(permissions.BasePermission):
@@ -92,8 +93,7 @@ class IsTeamleaderOrCantCreate(permissions.BasePermission):
 
         if request.method == "POST":
             user = request.user.get_competitor()
-            membership = TeamMembership.objects.get(competitor=user)
-            return membership.is_leader
+            return TeamMembership.objects.filter(competitor=user, is_leader=True).exists()
 
         return True
 
@@ -104,7 +104,7 @@ class IsTeamleaderOrCantCreate(permissions.BasePermission):
 
 #         if request.method in permissions.SAFE_METHODS:
 #             return True
-        
+
 #         competitor = Competitor.objects.get(email=request.data['competitor_email'])
 #         return Invitation.objects.filter(competitor=competitor).count() is not 0
 
@@ -153,13 +153,29 @@ class CanInviteMoreMembers(permissions.BasePermission):
         return True
 
 
-class CanDeleteInvitation(permissions.BasePermission):
+class IsInvitationNotForLoggedUser(permissions.BasePermission):
 
     message = "This invitation is not dedicated to you!"
 
     def has_object_permission(self, request, view, obj):
-        if request.method == 'DELETE':
-            if TeamMembership.objects.filter(competitor=request.user, is_leader=True).count() is not 0:
-                return True
-            return request.user.get_competitor() == obj.competitor
-        return True
+
+        if TeamMembership.objects.filter(competitor=request.user, is_leader=True).count() is not 0:
+            return True
+        return request.user.get_competitor() == obj.competitor
+
+
+class IsInvitedUserInTeam(permissions.BasePermission):
+
+    message = "You have already been a member in another team!"
+
+    def has_object_permission(self, request, view, obj):
+
+        return not TeamMembership.objects.filter(competitor=obj.competitor).exists()
+
+
+class CanNotAcceptIfTeamLeader(permissions.BasePermission):
+
+    message = "You are a leader of your team and cannot accept any invitations!"
+
+    def has_object_permission(self, request, view, obj):
+        return not TeamMembership.objects.filter(competitor=request.user, is_leader=True).exists()

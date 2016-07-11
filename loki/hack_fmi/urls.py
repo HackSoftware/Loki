@@ -6,6 +6,44 @@ from .views import (SkillListView, TeamAPI, InvitationView,
                     TeamMentorshipAPI)
 from .auth import Login, me
 
+from .permissions import (IsHackFMIUser,
+                          CanInviteMoreMembers,
+                          IsTeamleaderOrCantCreate,
+                          IsInvitedMemberAlreadyInYourTeam,
+                          IsInvitedMemberAlreadyInOtherTeam,
+                          IsInvitationNotForLoggedUser,
+                          IsInvitedUserInTeam,
+                          CanNotAcceptIfTeamLeader
+                          )
+
+
+invitation_list = InvitationView.as_view({
+    'get': 'list',
+    'post': 'create',
+},
+    permission_classes=[IsHackFMIUser,
+                        IsTeamleaderOrCantCreate,
+                        IsInvitedMemberAlreadyInYourTeam,
+                        IsInvitedMemberAlreadyInOtherTeam,
+                        CanInviteMoreMembers
+                        ]
+)
+
+invitation_detail = InvitationView.as_view({
+    'delete': 'destroy',
+},
+    permission_classes=[IsHackFMIUser,
+                        IsInvitationNotForLoggedUser, ]
+)
+
+invitation_accept = InvitationView.as_view({
+    'post': 'accept',
+},
+    permission_classes=[IsHackFMIUser,
+                        IsInvitedUserInTeam,
+                        IsInvitationNotForLoggedUser,
+                        CanNotAcceptIfTeamLeader]
+)
 
 urlpatterns = [
     url(r'^api/skills/$', SkillListView.as_view(), name='skills'),
@@ -18,7 +56,10 @@ urlpatterns = [
 
     url(r'^api/team-membership/(?P<pk>[0-9]+)/$', TeamMembershipAPI.as_view(), name='team_membership'),
 
-    url(r'^api/invitation/(?P<pk>[0-9]+)?', InvitationView.as_view(), name='invitation'),
+    url(r'^api/invitation/$', invitation_list, name='invitation-list'),
+    url(r'^api/invitation/(?P<pk>[0-9]+)/$', invitation_detail, name='invitation-detail'),
+    url(r'^api/invitation/(?P<pk>[0-9]+)/accept$', invitation_accept, name='invitation-accept'),
+
     # Auth
     url(r'^api/login/', Login.as_view(), name='login'),
     # url(r'^api/logout/$', LogoutView.as_view(), name='logout'),
