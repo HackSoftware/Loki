@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import mixins
 # from post_office import mail
+from .signals import send_invitation
 
 from .models import (Skill, Team, TeamMembership,
                      Mentor, Season, TeamMentorship)
@@ -43,7 +44,7 @@ class SeasonView(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
 
     def get_object(self):
-        return Season.objects.get(is_active=True)
+        return Season.objects.filter(is_active=True)
 
     serializer_class = SeasonSerializer
 
@@ -120,14 +121,6 @@ class InvitationView(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         team = TeamMembership.objects.get(competitor=self.request.user, team__season__is_active=True).team
-
-        #TODO: signals for email sending
-        # sender = settings.DEFAULT_FROM_EMAIL
-        # mail.send(
-        #     competitor.email,
-        #     sender,
-        #     template='hackfmi_team_invite',
-# )
 
         serializer.save(team=team)
 

@@ -519,8 +519,8 @@ class InvitationTests(TestCase):
 
         self.template = EmailTemplate.objects.create(
             name='hackfmi_team_invite',
-            subject='Покана за отбор във HackFMI',
-            content='Покана за отбор във HackFMI.',
+            subject='Invitation for HackFMI membership',
+            content=faker.paragraph(),
         )
 
         self.season = factories.SeasonFactory(
