@@ -80,7 +80,7 @@ class MentorListAPIViewTest(TestCase):
         self.assertEqual(active_seasons[0].mentor_set.count(), 2)
 
 
-class SeasonListViewTest(TestCase):
+class SeasonViewTest(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -101,8 +101,18 @@ class SeasonListViewTest(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data[0]['name'], self.active_season.name)
+
+        self.assertEqual(response.data['name'], self.active_season.name)
         self.assertEqual(Season.objects.filter(is_active=True).count(), 1)
+
+    def test_season_deactivates_automatically(self):
+        new_active_season = factories.SeasonFactory(
+            is_active=True,
+        )
+
+        self.assertEqual(Season.objects.filter(is_active=True).count(), 1)
+        self.assertFalse(Season.objects.get(name=self.active_season.name).is_active)
+        self.assertTrue(Season.objects.get(name=new_active_season.name).is_active)
 
 
 class PublicTeamViewTest(TestCase):
@@ -801,46 +811,6 @@ class InvitationTests(TestCase):
         self.response_403(response)
         self.assertEqual(TeamMembership.objects.filter(competitor=invitation.competitor).count(), 0)
         self.assertEqual(Invitation.objects.all().count(), 1)
-
-
-# @unittest.skip('Skip until further implementation of Hackathon system')
-# class SeasonTests(APITestCase):
-
-#     def setUp(self):
-#         self.skills = Skill.objects.create(name="C#")
-#         Season.objects.create(
-#             name="HackFMI 1",
-#             topic='TestTopic1',
-#             is_active=True,
-#             sign_up_deadline=date_increase(10),
-#             mentor_pick_start_date=date_increase(15),
-#             mentor_pick_end_date=date_increase(25),
-#             make_team_dead_line=date_increase(20),
-#         )
-#         Season.objects.create(
-#             name="HackFMI 2",
-#             topic='TestTopic2',
-#             is_active=True,
-#             sign_up_deadline=date_increase(10),
-#             mentor_pick_start_date=date_increase(15),
-#             mentor_pick_end_date=date_increase(25),
-#             make_team_dead_line=date_increase(20),
-#         )
-#         self.competitor = Competitor.objects.create(
-#             email='ivo@abv.bg',
-#             full_name='Ivo Naidobriq',
-#             faculty_number='123',
-#         )
-
-#     def test_season_deactivates_automatically(self):
-#         self.assertFalse(Season.objects.get(name="HackFMI 1").is_active)
-
-#     def test_get_season(self):
-#         self.client = APIClient()
-#         self.client.force_authenticate(user=self.competitor)
-#         url = reverse('hack_fmi:season')
-#         response = self.client.get(url)
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
 
 class TeamMentorshipTest(TestCase):

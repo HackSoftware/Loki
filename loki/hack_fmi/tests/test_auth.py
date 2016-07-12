@@ -1,30 +1,24 @@
-from django.test import TestCase
-from base_app.models import BaseUser
-from ..models import Skill
+from rest_framework.test import APIClient
+from test_plus.test import TestCase
+from django.core.urlresolvers import reverse
 
-import unittest
+# from ..models import Skill
+
+from seed import factories
+
+from faker import Factory
+
+faker = Factory.create()
 
 
-@unittest.skip('Skip until further implementation of Hackathon system')
 class AuthenticationTests(TestCase):
 
     def setUp(self):
-        self.user = BaseUser.objects.create_user(
-            email="test@test.bg",
-            password="123",
-            full_name='Test Testov'
-        )
-        self.user.is_active = True
-        self.user.save()
-        self.competitor = BaseUser.objects.create_user(
-            email="comp@comp.bg",
-            password="123",
-            full_name='Comp compov'
-        )
-        self.competitor.is_active = True
-        self.competitor.make_competitor()
-        self.competitor.save()
-        self.skill = Skill.objects.create(name='C#')
+        self.client = APIClient()
+        self.baseuser = factories.BaseUserFactory()
+
+        self.baseuser.is_active = True
+        self.baseuser.save()
 
     # def test_onboard_competitor_add_data_to_profile(self):
     #     self.client = APIClient()
@@ -57,20 +51,67 @@ class AuthenticationTests(TestCase):
     #         Competitor.objects.first().email
     #     )
 
-    # def test_login_base_user(self):
-    #     data = {
-    #         'password': '123',
-    #         'email': 'test@test.bg'
-    #     }
-    #     url = reverse('hack_fmi:login')
-    #     response = self.client.post(url, data, format='json')
-    #     self.assertEqual(response.status_code, 206)
+    def test_login_base_user(self):
+        data = {
+            'email': self.baseuser.email,
+            'password': factories.BaseUserFactory.password,
+        }
+        url = reverse('hack_fmi:login')
+        response = self.client.post(url, data)
 
-    # def test_login_competitor(self):
-    #     data = {
-    #         'password': '123',
-    #         'email': 'comp@comp.bg'
-    #     }
-    #     url = reverse('hack_fmi:login')
-    #     response = self.client.post(url, data, format='json')
-    #     self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 206)
+
+    def test_login_base_user_with_wrong_pass(self):
+        data = {
+            'email': self.baseuser.email,
+            'password': faker.password(),
+        }
+        url = reverse('hack_fmi:login')
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_login_competitor(self):
+        competitor = factories.CompetitorFactory(
+            baseuser_ptr_id=self.baseuser.id,
+        )
+        competitor.is_active = True
+        # CompetitorFactory does not hash the parent password
+        competitor.set_password(competitor.password)
+        competitor.save()
+
+        data = {
+            'email': competitor.email,
+            'password': factories.CompetitorFactory.password,
+        }
+
+        url = reverse('hack_fmi:login')
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_competitor_with_wrong_pass(self):
+        competitor = factories.CompetitorFactory(
+            baseuser_ptr_id=self.baseuser.id,
+        )
+        competitor.is_active = True
+        competitor.set_password(competitor.password)
+        competitor.save()
+
+        data = {
+            'email': competitor.email,
+            'password': faker.password(),
+        }
+
+        url = reverse('hack_fmi:login')
+        response = self.client.post(url, data)
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_logout(self):
+        self.client.force_authenticate(self.baseuser)
+
+        url = reverse('hack_fmi:logout')
+        response = self.client.post(url)
+
+        self.response_200(response)

@@ -39,9 +39,12 @@ class MentorListView(generics.ListAPIView):
     serializer_class = MentorSerializer
 
 
-class SeasonListView(generics.ListAPIView):
+class SeasonView(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
-    queryset = Season.objects.filter(is_active=True)
+
+    def get_object(self):
+        return Season.objects.get(is_active=True)
+
     serializer_class = SeasonSerializer
 
 

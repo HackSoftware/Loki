@@ -1,10 +1,12 @@
 from django.conf.urls import url
 
 from .views import (SkillListView, TeamAPI, InvitationView,
-                    MentorListView, SeasonListView, PublicTeamView,
+                    MentorListView, SeasonView, PublicTeamView,
                     get_schedule, schedule_json, OnBoardCompetitor, TeamMembershipAPI,
                     TeamMentorshipAPI)
 from .auth import Login, me
+
+from djoser import views
 
 from .permissions import (IsHackFMIUser,
                           CanInviteMoreMembers,
@@ -50,11 +52,15 @@ urlpatterns = [
 
     url(r'^api/teams/(?P<pk>[0-9]+)?', TeamAPI.as_view(), name='teams'),
 
+    url(r'^api/season/$', SeasonView.as_view(), name='season'),
+
     url(r'^api/public-teams/', PublicTeamView.as_view(), name='public_teams'),
 
     url(r'^api/mentors/$', MentorListView.as_view(), name='mentors'),
 
     url(r'^api/team-membership/(?P<pk>[0-9]+)/$', TeamMembershipAPI.as_view(), name='team_membership'),
+
+    url(r'^api/team-mentorship/(?P<pk>[0-9]+)?', TeamMentorshipAPI.as_view(), name='team_mentorship'),
 
     url(r'^api/invitation/$', invitation_list, name='invitation-list'),
     url(r'^api/invitation/(?P<pk>[0-9]+)/$', invitation_detail, name='invitation-detail'),
@@ -62,11 +68,9 @@ urlpatterns = [
 
     # Auth
     url(r'^api/login/', Login.as_view(), name='login'),
-    # url(r'^api/logout/$', LogoutView.as_view(), name='logout'),
+    url(r'^api/logout/$', views.LogoutView.as_view(), name='logout'),
 
     url(r'^api/me/$', me, name='me'),
-    url(r'^api/season/$', SeasonListView.as_view(), name='season'),
-    url(r'^api/team-mentorship/(?P<pk>[0-9]+)?', TeamMentorshipAPI.as_view(), name='team_mentorship'),
 
     url(r'^api/schedule/', get_schedule, name="get_schedule"),
     url(r'^api/schedule-json/', schedule_json, name="schedule_json"),
