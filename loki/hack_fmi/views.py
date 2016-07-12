@@ -4,8 +4,6 @@ from rest_framework import status, generics, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import mixins
-# from post_office import mail
-from .signals import send_invitation
 
 from .models import (Skill, Team, TeamMembership,
                      Mentor, Season, TeamMentorship)

@@ -1,7 +1,7 @@
 # from django.core.management.base import CommandError
 # from django.core.management import call_command
 from django.core.urlresolvers import reverse
-# from post_office import mail
+from post_office import mail
 
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -554,6 +554,7 @@ class InvitationTests(TestCase):
         self.assertEquals(Invitation.objects.count(), 1)
         self.assertEqual(Invitation.objects.all()[0].team.id, self.team.id)
         self.assertEqual(Invitation.objects.all()[0].competitor.id, self.competitor_not_leader.id)
+        self.assertEqual(mail.get_queued().last().message, self.template.content)
 
     def test_send_invitation_not_from_leader(self):
         competitor = factories.CompetitorFactory(
