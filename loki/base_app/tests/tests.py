@@ -159,13 +159,6 @@ class BaseUserRegistrationTests(TestCase):
         self.assertTrue('?origin=' in url_with_origin)
         self.assertFalse('?origin=' in url_without_origin)
 
-    def test_login(self):
-        reg_url = reverse('base_app:register')
-        self.client.post(reg_url, self.user_data, format='json')
-
-        login_url = reverse('base_app:login')
-        self.client.post(login_url, self.user_data, format='json')
-
 
 class PersonalUserInformationTests(TestCase):
 
@@ -205,8 +198,9 @@ class PersonalUserInformationTests(TestCase):
         response = self.client.get(url_me, format='json')
         resul_teammembership_set = response.\
             data['competitor']['teammembership_set'][0]
-        self.assertEqual(resul_teammembership_set['team']['name'],
-                         self.team.name)
+
+        self.assertEqual(resul_teammembership_set['team'],
+                         self.team.id)
 
     def test_me_returns_full_courseassignments_set(self):
         self.client = APIClient()

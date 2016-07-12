@@ -42,7 +42,7 @@ class SeasonView(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
 
     def get_object(self):
-        return Season.objects.filter(is_active=True)
+        return Season.objects.filter(is_active=True).first()
 
     serializer_class = SeasonSerializer
 

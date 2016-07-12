@@ -5,6 +5,7 @@ from .views import (SkillListView, TeamAPI, InvitationView,
                     get_schedule, schedule_json, OnBoardCompetitor, TeamMembershipAPI,
                     TeamMentorshipAPI)
 from .auth import Login, me
+from .signals import send_invitation
 
 from djoser import views
 
