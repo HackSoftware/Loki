@@ -18,13 +18,14 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
                           IsTeamLeader, IsSeasonDeadlineUpToDate,
                           IsMentorDatePickUpToDate,
-                          IsTeamInActiveSeason, IsTeamleaderOrCantCreate,
+                          IsTeamInActiveSeason, IsTeamleaderOrCantCreateIvitation,
                           IsInvitedMemberAlreadyInYourTeam,
                           IsInvitedMemberAlreadyInOtherTeam,
-                          CanInviteMoreMembers,
-                          IsInvitationNotForLoggedUser,
+                          CanInviteMoreMembersInTeam,
+                          CanAcceptWronglyDedicatedIvitation,
                           IsInvitedUserInTeam,
-                          CanNotAcceptIfTeamLeader,
+                          CanNotAcceptInvitationIfTeamLeader,
+                          CanAttachMoreMentorsToTeam,
                           )
 
 from .helper import send_team_delete_email
@@ -99,7 +100,8 @@ class TeamMentorshipAPI(mixins.CreateModelMixin,
                         generics.GenericAPIView):
 
     permission_classes = (IsHackFMIUser, IsTeamLeader,
-                          IsMentorDatePickUpToDate)
+                          IsMentorDatePickUpToDate,
+                          CanAttachMoreMentorsToTeam)
 
     serializer_class = TeamMentorshipSerializer
     queryset = TeamMentorship.objects.all()
@@ -111,7 +113,7 @@ class TeamMentorshipAPI(mixins.CreateModelMixin,
         return self.destroy(request, *args, **kwargs)
 
 
-class InvitationView(viewsets.ModelViewSet):
+class InvitationViewSet(viewsets.ModelViewSet):
 
     serializer_class = InvitationSerializer
 
@@ -143,28 +145,28 @@ class InvitationView(viewsets.ModelViewSet):
         invitation_list = cls.as_view({
             'get': 'list',
             'post': 'create',
-            },
+        },
             permission_classes=[IsHackFMIUser,
-                                IsTeamleaderOrCantCreate,
+                                IsTeamleaderOrCantCreateIvitation,
                                 IsInvitedMemberAlreadyInYourTeam,
                                 IsInvitedMemberAlreadyInOtherTeam,
-                                CanInviteMoreMembers]
+                                CanInviteMoreMembersInTeam]
         )
 
         invitation_detail = cls.as_view({
             'delete': 'destroy',
-            },
+        },
             permission_classes=[IsHackFMIUser,
-                                IsInvitationNotForLoggedUser]
+                                CanAcceptWronglyDedicatedIvitation]
         )
 
         invitation_accept = cls.as_view({
             'post': 'accept',
-            },
+        },
             permission_classes=[IsHackFMIUser,
                                 IsInvitedUserInTeam,
-                                IsInvitationNotForLoggedUser,
-                                CanNotAcceptIfTeamLeader]
+                                CanAcceptWronglyDedicatedIvitation,
+                                CanNotAcceptInvitationIfTeamLeader]
         )
 
         return locals()

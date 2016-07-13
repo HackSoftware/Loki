@@ -7,9 +7,9 @@ from ..models import Invitation
 
 
 @receiver(post_save, sender=Invitation)
-def send_invitation(**kwargs):
+def send_invitation(instance, **kwargs):
 
-    competitor = kwargs.get('instance').competitor
+    competitor = instance.competitor
 
     sender = settings.DEFAULT_FROM_EMAIL
 

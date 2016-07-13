@@ -1,7 +1,7 @@
 from rest_framework import permissions
 from datetime import date
 from hack_fmi.models import (Team, Competitor, TeamMembership,
-                             Season)
+                             Season, TeamMentorship)
 
 
 class IsHackFMIUser(permissions.BasePermission):
@@ -68,14 +68,12 @@ class IsMentorDatePickUpToDate(permissions.BasePermission):
         return team.season.mentor_pick_start_date < today and team.season.mentor_pick_end_date > today
 
 
-class CanAttachMentors(permissions.BasePermission):
-    """
-    TODO: Not used
-    """
-    message = "This team cannot attach other members!"
+class CanAttachMoreMentorsToTeam(permissions.BasePermission):
+    message = "This team cannot attach other mentors!"
 
     def has_object_permission(self, request, view, obj):
-        return obj.mentors.all() >= obj.season.max_mentor_pick
+        count_mentorships = TeamMentorship.objects.filter(team=obj.team).count()
+        return count_mentorships >= obj.team.season.max_mentor_pick
 
 
 class IsTeamInActiveSeason(permissions.BasePermission):
@@ -85,7 +83,7 @@ class IsTeamInActiveSeason(permissions.BasePermission):
         return obj.season.is_active is True
 
 
-class IsTeamleaderOrCantCreate(permissions.BasePermission):
+class IsTeamleaderOrCantCreateIvitation(permissions.BasePermission):
     message = "Only team leaders can invite members to team"
 
     def has_permission(self, request, view):
@@ -95,7 +93,7 @@ class IsTeamleaderOrCantCreate(permissions.BasePermission):
             return TeamMembership.objects.filter(competitor=user, is_leader=True).exists()
 
         """
-        TODO: **Short** explanation why we are returning True
+        Return True if you just want to see all the invitations without creating a new invitation.
         """
         return True
 
@@ -111,7 +109,7 @@ class IsInvitedMemberAlreadyInYourTeam(permissions.BasePermission):
             return TeamMembership.objects.filter(competitor=competitor, team=leader_team).count() == 0
 
         """
-        TODO: **Short** explanation why we are returning True
+        Return True if you just want to see all the invitations without creating a new invitation.
         """
         return True
 
@@ -127,12 +125,12 @@ class IsInvitedMemberAlreadyInOtherTeam(permissions.BasePermission):
             return TeamMembership.objects.filter(competitor=competitor).count() == 0
 
         """
-        TODO: **Short** explanation why we are returning True
+        Return True if you just want to see all the invitations without creating a new invitation.
         """
         return True
 
 
-class CanInviteMoreMembers(permissions.BasePermission):
+class CanInviteMoreMembersInTeam(permissions.BasePermission):
     active_season = Season.objects.get(is_active=True)
 
     message = "You cannot invite more than {} in your team".format(active_season.max_team_members_count)
@@ -145,12 +143,12 @@ class CanInviteMoreMembers(permissions.BasePermission):
             return members_in_team < user_team.season.max_team_members_count
 
         """
-        TODO: **Short** explanation why we are returning True
+        Return True if you just want to see all the invitations without creating a new invitation.
         """
         return True
 
 
-class IsInvitationNotForLoggedUser(permissions.BasePermission):
+class CanAcceptWronglyDedicatedIvitation(permissions.BasePermission):
 
     message = "This invitation is not dedicated to you!"
 
@@ -169,7 +167,7 @@ class IsInvitedUserInTeam(permissions.BasePermission):
         return not TeamMembership.objects.filter(competitor=obj.competitor).exists()
 
 
-class CanNotAcceptIfTeamLeader(permissions.BasePermission):
+class CanNotAcceptInvitationIfTeamLeader(permissions.BasePermission):
 
     message = "You are a leader of your team and cannot accept any invitations!"
 

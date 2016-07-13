@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from .views import (SkillListView, TeamAPI, InvitationView,
+from .views import (SkillListView, TeamAPI, InvitationViewSet,
                     MentorListView, SeasonView, PublicTeamView,
                     get_schedule, schedule_json, OnBoardCompetitor, TeamMembershipAPI,
                     TeamMentorshipAPI)
@@ -9,18 +9,12 @@ from .auth import Login, me
 
 from djoser import views
 
-from .permissions import (IsHackFMIUser,
-                          CanInviteMoreMembers,
-                          IsTeamleaderOrCantCreate,
-                          IsInvitedMemberAlreadyInYourTeam,
-                          IsInvitedMemberAlreadyInOtherTeam,
-                          IsInvitationNotForLoggedUser,
-                          IsInvitedUserInTeam,
-                          CanNotAcceptIfTeamLeader
-                          )
+invitation_urls = InvitationViewSet.get_urls()
 
-
-invitation_urls = InvitationView.get_urls()
+"""
+  Every time a query is send, depending on the exact type of the query,
+  a different method of the InvitationViewSet is called.
+"""
 
 urlpatterns = [
     url(r'^api/skills/$', SkillListView.as_view(), name='skills'),
