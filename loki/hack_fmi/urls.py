@@ -23,25 +23,24 @@ from .permissions import (IsHackFMIUser,
 invitation_list = InvitationView.as_view({
     'get': 'list',
     'post': 'create',
-},
+    },
     permission_classes=[IsHackFMIUser,
                         IsTeamleaderOrCantCreate,
                         IsInvitedMemberAlreadyInYourTeam,
                         IsInvitedMemberAlreadyInOtherTeam,
-                        CanInviteMoreMembers
-                        ]
+                        CanInviteMoreMembers]
 )
 
 invitation_detail = InvitationView.as_view({
     'delete': 'destroy',
-},
+    },
     permission_classes=[IsHackFMIUser,
-                        IsInvitationNotForLoggedUser, ]
+                        IsInvitationNotForLoggedUser]
 )
 
 invitation_accept = InvitationView.as_view({
     'post': 'accept',
-},
+    },
     permission_classes=[IsHackFMIUser,
                         IsInvitedUserInTeam,
                         IsInvitationNotForLoggedUser,

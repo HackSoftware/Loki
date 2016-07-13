@@ -131,10 +131,6 @@ class Team(models.Model):
             if membership.is_leader:
                 return membership.competitor
 
-    def clean(self):
-        print("clean")
-        pass
-
     def __str__(self):
         return self.name
 

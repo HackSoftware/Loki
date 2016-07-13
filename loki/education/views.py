@@ -63,15 +63,6 @@ class GetLectures(mixins.ListModelMixin, generics.GenericAPIView):
         return Lecture.objects.filter(course_id=course_id)
 
 
-# @api_view(['GET'])
-# @permission_classes((IsAuthenticated,))
-# def get_lectures(request):
-#     course_id = request.GET.get('course_id')
-#     lectures = Lecture.objects.filter(course_id=course_id)
-#     serializer = LectureSerializer(lectures, many=True)
-#     return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 def get_check_ins(request):
