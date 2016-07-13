@@ -163,6 +163,7 @@ class BaseUserRegistrationTests(TestCase):
 class PersonalUserInformationTests(TestCase):
 
     def setUp(self):
+        self.client = APIClient()
         self.company = factories.CompanyFactory()
         self.partner = factories.PartnerFactory(company=self.company)
         self.course = factories.CourseFactory()
@@ -192,7 +193,6 @@ class PersonalUserInformationTests(TestCase):
         self.city = factories.CityFactory()
 
     def test_me_returns_full_team_membership_set(self):
-        self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
@@ -203,7 +203,6 @@ class PersonalUserInformationTests(TestCase):
                          self.team.id)
 
     def test_me_returns_full_courseassignments_set(self):
-        self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
@@ -213,7 +212,6 @@ class PersonalUserInformationTests(TestCase):
                          self.course.name)
 
     def test_me_returns_certificate(self):
-        self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
@@ -222,7 +220,6 @@ class PersonalUserInformationTests(TestCase):
         self.assertEqual(certificate_token, str(self.certificate.token))
 
     def test_baseuser_update(self):
-        self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
         update_url = reverse('base_app:update_baseuser')
         data = {'github_account': 'http://github.com/Ivo'}
@@ -231,12 +228,19 @@ class PersonalUserInformationTests(TestCase):
 
         self.assertEqual(baseuser.github_account, data['github_account'])
 
-    def test_patch_empty_birth_place(self):
-        self.client = APIClient()
+    def test_update_empty_birth_place(self):
         self.client.force_authenticate(user=self.baseuser)
         update_url = reverse('base_app:update_baseuser')
         data = {'birth_place': self.city.id}
 
-        self.client.patch(update_url, data, format='json')
+        self.client.patch(update_url, data)
         baseuser = BaseUser.objects.get(id=self.baseuser.id)
         self.assertEqual(baseuser.birth_place, self.city)
+
+    def test_try_to_update_user_info_if_not_authenticated(self):
+        update_url = reverse('base_app:update_baseuser')
+        data = {'birth_place': self.city.id}
+
+        response = self.client.patch(update_url, data)
+        self.response_401(response)
+    

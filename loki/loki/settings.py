@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'djcelery',
     'crispy_forms',
 
-    'hack_fmi',
+    'hack_fmi.apps.HackFMIConfig',
     'base_app',
     'hack_conf',
     'education',
