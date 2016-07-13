@@ -104,7 +104,6 @@ class BaseUserFactory(factory.DjangoModelFactory):
     first_name = faker.first_name()
     last_name = faker.last_name()
     email = faker.email()
-    # password = faker.word()
     birth_place = factory.SubFactory(CityFactory)
 
     github_account = faker.url()
@@ -133,15 +132,6 @@ class EducationInfoFactory(factory.DjangoModelFactory):
 
     faculty = factory.SubFactory(FacultyFactory)
     subject = factory.SubFactory(SubjectFactory)
-
-
-class BaseUserWithEducationInfo(BaseUserFactory):
-    class Meta:
-        exclude = ("city", "place")
-    city = factory.SubFactory(CityFactory)
-    place = EducationPlaceFactory(city=city)
-    education_info = factory.RelatedFactory(EducationInfoFactory,
-                                            'user', place=place)
 
 
 class BaseUserRegisterTokenFactory(factory.DjangoModelFactory):
