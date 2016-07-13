@@ -217,7 +217,7 @@ class InvitationSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        competitor = Competitor.objects.get(email=data['competitor_email'])
+        competitor = Competitor.objects.filter(email=data['competitor_email'])
 
         if Invitation.objects.filter(competitor=competitor).count() > 0:
             raise serializers.ValidationError("You have already sent a an invitation for that user!")

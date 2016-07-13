@@ -18,8 +18,15 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
                           IsTeamLeader, IsSeasonDeadlineUpToDate,
                           IsMentorDatePickUpToDate,
-                          IsTeamInActiveSeason
+                          IsTeamInActiveSeason, IsTeamleaderOrCantCreate,
+                          IsInvitedMemberAlreadyInYourTeam,
+                          IsInvitedMemberAlreadyInOtherTeam,
+                          CanInviteMoreMembers,
+                          IsInvitationNotForLoggedUser,
+                          IsInvitedUserInTeam,
+                          CanNotAcceptIfTeamLeader,
                           )
+
 from .helper import send_team_delete_email
 
 from base_app.helper import try_open
@@ -130,6 +137,37 @@ class InvitationView(viewsets.ModelViewSet):
         )
         invitation.delete()
         return Response("You have accepted this invitation!")
+
+    @classmethod
+    def get_urls(cls):
+        invitation_list = cls.as_view({
+            'get': 'list',
+            'post': 'create',
+            },
+            permission_classes=[IsHackFMIUser,
+                                IsTeamleaderOrCantCreate,
+                                IsInvitedMemberAlreadyInYourTeam,
+                                IsInvitedMemberAlreadyInOtherTeam,
+                                CanInviteMoreMembers]
+        )
+
+        invitation_detail = cls.as_view({
+            'delete': 'destroy',
+            },
+            permission_classes=[IsHackFMIUser,
+                                IsInvitationNotForLoggedUser]
+        )
+
+        invitation_accept = cls.as_view({
+            'post': 'accept',
+            },
+            permission_classes=[IsHackFMIUser,
+                                IsInvitedUserInTeam,
+                                IsInvitationNotForLoggedUser,
+                                CanNotAcceptIfTeamLeader]
+        )
+
+        return locals()
 
 
 @api_view(['GET'])
