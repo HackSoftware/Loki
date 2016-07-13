@@ -1,4 +1,4 @@
-from django.test import TestCase
+from test_plus.test import TestCase
 from django.core.urlresolvers import reverse
 
 from rest_framework.test import APIClient
@@ -243,4 +243,3 @@ class PersonalUserInformationTests(TestCase):
 
         response = self.client.patch(update_url, data)
         self.response_401(response)
-    

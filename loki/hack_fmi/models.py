@@ -147,8 +147,9 @@ class TeamMentorship(models.Model):
     team = models.ForeignKey(Team)
 
     def clean(self):
-        #TODO: Take in mind the season max_mentor_count
-        pass
+        """
+        TODO: Take in mind the season max_mentor_count
+        """
 
 
 class TeamMembership(models.Model):
