@@ -80,8 +80,6 @@ class PublicTeamSerializer(serializers.ModelSerializer):
 
 
 class TeamMembershipSerializer(serializers.ModelSerializer):
-    # team = PublicTeamSerializer(many=False, read_only=True)
-
     class Meta:
         model = TeamMembership
         fields = (
@@ -196,19 +194,6 @@ class TeamSerializer(serializers.ModelSerializer):
             'place',
         )
 
-    # def validate(self, data):
-    #     """
-    #      Check that number of mentors is less than allowed.
-    #     # """
-    #     # season = Season.objects.get(is_active=True)
-    #     # if any('mentors' in key for key in data):
-    #     #     if len(data['mentors']) > season.max_mentor_pick:
-    #     #         raise serializers.ValidationError("You are not allowed to pick that much mentors")
-    #     # return data
-
-    # def validate_mentors(self, data):
-    #     pass
-
 
 class InvitationTeamSerializer(serializers.ModelSerializer):
     class Meta:
@@ -232,7 +217,8 @@ class InvitationSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        competitor = Competitor.objects.filter(email=data['competitor_email'])
+        competitor = Competitor.objects.get(email=data['competitor_email'])
+
         if Invitation.objects.filter(competitor=competitor).count() > 0:
             raise serializers.ValidationError("You have already sent a an invitation for that user!")
 
