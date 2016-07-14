@@ -25,7 +25,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 INSTALLED_APPS = (
     'post_office',
-    'suit',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -130,36 +129,6 @@ EMAIL_BACKEND = 'post_office.EmailBackend'
 
 TEMPLATE_CONTEXT_PROCESSORS = TCP + [
     'django.core.context_processors.request']
-
-SUIT_CONFIG = {
-    # header
-    'ADMIN_NAME': 'HackBulgaria',
-    'HEADER_DATE_FORMAT': 'l, j. F Y',
-    'HEADER_TIME_FORMAT': 'H:i',
-
-    # forms
-    'SHOW_REQUIRED_ASTERISK': True,  # Default True
-    'CONFIRM_UNSAVED_CHANGES': True,  # Default True
-
-    # menu
-    'SEARCH_URL': '/admin/hack_fmi/competitor/',
-    'MENU_ICONS': {
-        'auth': 'icon-lock',
-    },
-    'MENU_OPEN_FIRST_CHILD': True,  # Default True
-    'MENU_EXCLUDE': ('auth.group',),
-    'MENU': (
-        {'app': 'base_app', 'icon': 'icon-user'},
-        {'app': 'website', 'icon': 'icon-cog'},
-        {'app': 'education', 'icon': 'icon-pencil'},
-        {'app': 'hack_conf', 'icon': 'icon-briefcase'},
-        {'app': 'hack_fmi', 'icon': 'icon-certificate'},
-        {'app': 'post_office', 'icon': 'icon-envelope'},
-    ),
-
-    # misc
-    'LIST_PER_PAGE': 100
-}
 
 
 GRADER_GRADE_PATH = "/grade"
