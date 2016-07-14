@@ -24,6 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Application definition
 
 INSTALLED_APPS = (
+    'post_office',
     'suit',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -37,7 +38,6 @@ INSTALLED_APPS = (
     'corsheaders',
     'djoser',
     'ckeditor',
-    'post_office',
     'adminsortable2',
     'django_resized',
     'import_export',
@@ -127,9 +127,9 @@ CKEDITOR_CONFIGS = {
 
 EMAIL_BACKEND = 'post_office.EmailBackend'
 
-TEMPLATE_CONTEXT_PROCESSORS = TCP + (
-    'django.core.context_processors.request',
-)
+
+TEMPLATE_CONTEXT_PROCESSORS = TCP + [
+    'django.core.context_processors.request']
 
 SUIT_CONFIG = {
     # header
