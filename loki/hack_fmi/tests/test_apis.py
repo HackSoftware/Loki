@@ -436,7 +436,7 @@ class TeamAPITest(TestCase):
             'technologies': [skill.id, ],
 
         }
-        registered_team = factories.TeamFactory(**team_data)
+        factories.TeamFactory(**team_data)
 
         self.assertTrue(Team.objects.filter(name=team_data['name']).exists())
 
