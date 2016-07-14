@@ -75,12 +75,11 @@ class CanAttachMoreMentorsToTeam(permissions.BasePermission):
         if request.method == "POST":
             count_mentorships = TeamMentorship.objects.filter(team=obj.team).count()
             return count_mentorships >= obj.team.season.max_mentor_pick
+        """
+        When we remove mentor from team(request method is "DELETE")
+        we don't need to check the season's max_mentor_pick count.
+        """
         return True
-
-    """
-    When we remove mentor from team(request method is "DELETE")
-    we don't need to check the season's max_mentor_pick count.
-    """
 
 
 class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
@@ -89,13 +88,11 @@ class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method in permissions.SAFE_METHODS:
             return True
-
+        """
+        We check whether a team with that name alredy exists when we register or change a team
+        (POST and PATCH), otherwise we return True.
+        """
         return not Team.objects.filter(name=request.data['name']).exists()
-
-    """
-    We check whether a team with that name alredy exists when we register or change a team
-    (POST and PATCH), otherwise we return True.
-    """
 
 
 class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
@@ -104,12 +101,11 @@ class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
             return not TeamMembership.objects.filter(competitor=request.user, is_leader=True).exists()
+        """
+        TeamLeaders cant send POST queries in order to register another team, since they have their own one.
+        TeamLeaders can only change and see their own teams(GET and PATCH queries return True)
+        """
         return True
-
-    """
-    TeamLeaders cant send POST queries in order to register another team, since they have their own one.
-    TeamLeaders can only change and see their own teams(GET and PATCH queries return True)
-    """
 
 
 class IsTeamInActiveSeason(permissions.BasePermission):
