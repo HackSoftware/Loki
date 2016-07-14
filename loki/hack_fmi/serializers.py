@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Skill, Competitor, Team, TeamMembership, Season, Invitation, Mentor
+from .models import Skill, Competitor, Team, TeamMembership, Season, Invitation, Mentor, TeamMentorship
 
 
 class SkillSerializer(serializers.ModelSerializer):
@@ -57,7 +57,6 @@ class PublicTeamSerializer(serializers.ModelSerializer):
         read_only=True,
         source='technologies',
     )
-    season = SeasonSerializer(many=False, read_only=True)
 
     room = serializers.StringRelatedField()
 
@@ -77,19 +76,26 @@ class PublicTeamSerializer(serializers.ModelSerializer):
             'room',
             'picture',
             'place',
-            'season',
         )
 
 
 class TeamMembershipSerializer(serializers.ModelSerializer):
-    team = PublicTeamSerializer(many=False, read_only=True)
-
     class Meta:
         model = TeamMembership
         fields = (
             'competitor',
             'team',
             'is_leader',
+        )
+
+
+class TeamMentorshipSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TeamMentorship
+        fields = (
+            'team',
+            'mentor',
         )
 
 
@@ -154,13 +160,6 @@ class TeamSerializer(serializers.ModelSerializer):
         source='technologies',
     )
 
-    mentors = serializers.PrimaryKeyRelatedField(
-        many=True,
-        read_only=False,
-        queryset=Mentor.objects.all(),
-        required=False,
-    )
-
     mentors_full = MentorSerializer(
         many=True,
         read_only=True,
@@ -179,7 +178,6 @@ class TeamSerializer(serializers.ModelSerializer):
             'repository',
             'technologies',
             'technologies_full',
-            'mentors',
             'mentors_full',
             'need_more_members',
             'members_needed_desc',
@@ -188,27 +186,42 @@ class TeamSerializer(serializers.ModelSerializer):
             'place',
         )
 
-    def validate(self, data):
-        """
-         Check that number of mentors is less than allowed.
-        """
-        season = Season.objects.get(is_active=True)
-        if any('mentors' in key for key in data):
-            if data['mentors'] > season.max_mentor_pick:
-                raise serializers.ValidationError("You are not allowed to pick that much mentors")
-        return data
+
+class InvitationTeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Team
+        fields = (
+            'id',
+            'name'
+        )
 
 
 class InvitationSerializer(serializers.ModelSerializer):
-    team = TeamSerializer(many=False, read_only=True)
+    team = InvitationTeamSerializer(read_only=True)
+    competitor_email = serializers.EmailField(required=True, write_only=True)
 
     class Meta:
         model = Invitation
         fields = (
             'id',
             'team',
-            'competitor',
+            'competitor_email'
         )
+
+    def validate(self, data):
+        competitor = Competitor.objects.filter(email=data['competitor_email'])
+
+        if Invitation.objects.filter(competitor=competitor).count() > 0:
+            raise serializers.ValidationError("You have already sent a an invitation for that user!")
+
+        if not competitor.exists():
+            raise serializers.ValidationError("Competitor with this email does not exists!")
+
+        competitor_email = data.pop('competitor_email')
+        competitor = Competitor.objects.get(email=competitor_email)
+        data['competitor'] = competitor
+
+        return data
 
 
 class OnBoardingCompetitorSerializer(serializers.ModelSerializer):

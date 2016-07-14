@@ -107,7 +107,8 @@ class Mentor(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=100)
     members = models.ManyToManyField('Competitor', through='TeamMembership')
-    mentors = models.ManyToManyField('Mentor', blank=True)
+
+    mentors = models.ManyToManyField('Mentor', through='TeamMentorship')
     technologies = models.ManyToManyField('Skill', blank=True)
     idea_description = models.TextField()
     repository = models.URLField(blank=True)
@@ -135,6 +136,16 @@ class Team(models.Model):
 
     class Meta:
         unique_together = (('name', 'season'),)
+
+
+class TeamMentorship(models.Model):
+    mentor = models.ForeignKey(Mentor)
+    team = models.ForeignKey(Team)
+
+    def clean(self):
+        """
+        TODO: Take in mind the season max_mentor_count
+        """
 
 
 class TeamMembership(models.Model):

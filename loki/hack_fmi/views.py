@@ -1,22 +1,36 @@
-from datetime import date
-from django.conf import settings
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import status, generics, viewsets
+from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.exceptions import PermissionDenied
-from post_office import mail
+from rest_framework import mixins
 
-from .models import Skill, Competitor, Team, TeamMembership, Mentor, Season
+from .models import (Skill, Team, TeamMembership,
+                     Mentor, Season, TeamMentorship)
 from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           InvitationSerializer, MentorSerializer,
                           SeasonSerializer, PublicTeamSerializer,
-                          OnBoardingCompetitorSerializer)
-from .premissions import IsHackFMIUser, IsTeamLeaderOrReadOnly
-from .helper import send_team_delete_email
+                          OnBoardingCompetitorSerializer,
+                          TeamMembershipSerializer,
+                          TeamMentorshipSerializer,
+                          )
+from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
+                          IsMemberOfTeam, IsTeamMembershipInActiveSeason,
+                          IsTeamLeader, IsSeasonDeadlineUpToDate,
+                          IsMentorDatePickUpToDate,
+                          IsTeamInActiveSeason, IsTeamleaderOrCantCreateIvitation,
+                          IsInvitedMemberAlreadyInYourTeam,
+                          IsInvitedMemberAlreadyInOtherTeam,
+                          CanInviteMoreMembersInTeam,
+                          CanAcceptWronglyDedicatedIvitation,
+                          IsInvitedUserInTeam,
+                          CanNotAcceptInvitationIfTeamLeader,
+                          CanAttachMoreMentorsToTeam,
+                          CantCreateTeamWithTeamNameThatAlreadyExists,
+                          TeamLiederCantCreateOtherTeam
+                          )
 
+from .helper import send_team_delete_email
 
 from base_app.helper import try_open
 import json
@@ -34,9 +48,12 @@ class MentorListView(generics.ListAPIView):
     serializer_class = MentorSerializer
 
 
-class SeasonListView(generics.ListAPIView):
+class SeasonView(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
-    queryset = Season.objects.filter(is_active=True)
+
+    def get_object(self):
+        return Season.objects.filter(is_active=True).first()
+
     serializer_class = SeasonSerializer
 
 
@@ -47,153 +64,116 @@ class PublicTeamView(generics.ListAPIView):
 
 
 class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
-    permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly)
+    permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
+                          IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
+                          CantCreateTeamWithTeamNameThatAlreadyExists,
+                          TeamLiederCantCreateOtherTeam)
     serializer_class = TeamSerializer
 
     def get_queryset(self):
-        queryset = Team.objects.filter(season__is_active=True)
-        # TODO: Use django filters
-        needed_id = self.kwargs.get('pk', None)
-        if needed_id:
-            queryset = queryset.filter(pk=needed_id)
-        return queryset
+        return Team.objects.all()
 
     def perform_create(self, serializer):
         season = Season.objects.get(is_active=True)
-        if season.make_team_dead_line < date.today():
-            raise PermissionDenied("You are pass the deadline for creating teams!")
         team = serializer.save()
         team.season = season
         team.add_member(self.request.user.get_competitor(), is_leader=True)
         team.save()
 
 
-@api_view(['POST'])
-@permission_classes((IsHackFMIUser,))
-def leave_team(request):
-    logged_competitor = request.user.get_competitor()
-    logged_competitor_teams = logged_competitor.team_set
-    current_season = Season.objects.get(is_active=True)
-    team = logged_competitor_teams.get(season=current_season)
+class TeamMembershipAPI(generics.DestroyAPIView):
+    permission_classes = (IsHackFMIUser, IsMemberOfTeam,
+                          IsTeamMembershipInActiveSeason,)
 
-    if team.get_leader() == logged_competitor:
-        send_team_delete_email(team)
-        team.delete()
-        return Response(status=status.HTTP_200_OK)
+    serializer_class = TeamMembershipSerializer
 
-    TeamMembership.objects.get(
-        competitor=logged_competitor,
-        team=team
-    ).delete()
-    return Response(status=status.HTTP_200_OK)
+    def get_queryset(self):
+        return TeamMembership.objects.all()
+
+    def perform_destroy(self, instance):
+        # Remove team if teamleader leaves
+        if instance.is_leader is True:
+            team = instance.team
+            send_team_delete_email(team)
+            team.delete()
+        instance.delete()
 
 
-class InvitationView(APIView):
-    permission_classes = (IsHackFMIUser,)
+class TeamMentorshipAPI(mixins.CreateModelMixin,
+                        mixins.DestroyModelMixin,
+                        generics.GenericAPIView):
 
-    def post(self, request, format=None):
-        logged_competitor = request.user.get_competitor()
-        current_season = Season.objects.get(is_active=True)
-        membership = TeamMembership.objects.get(competitor=logged_competitor, team__season=current_season)
-        invited_competitor = Competitor.objects.filter(email=request.data['email']).first()
-        if not invited_competitor:
-            error = {"error": "Този потребител все още не е регистриран в системата."}
-            return Response(error, status=status.HTTP_403_FORBIDDEN)
-        if Invitation.objects.filter(team=membership.team, competitor=invited_competitor).first():
-            error = {"error": "Вече си изпратил покана на този участник. Изчакай да потвърди!"}
-            return Response(error, status=status.HTTP_403_FORBIDDEN)
+    permission_classes = (IsHackFMIUser, IsTeamLeader,
+                          IsMentorDatePickUpToDate,
+                          CanAttachMoreMentorsToTeam)
 
-        if membership.team in invited_competitor.team_set.all():
-            error = {"error": "Този участник вече е в отбора ти!"}
-            return Response(error, status=status.HTTP_403_FORBIDDEN)
+    serializer_class = TeamMentorshipSerializer
+    queryset = TeamMentorship.objects.all()
 
-        if len(membership.team.teammembership_set.all()) >= current_season.max_team_members_count:
-            error = {"error": "В този отбор вече има повече от 6 човека. "
-                              "Трябва някой да напусне отбора за да можеш да приемш тази покана!"}
-            return Response(error, status=status.HTTP_403_FORBIDDEN)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
-        if membership.is_leader:
-            Invitation.objects.create(team=membership.team, competitor=invited_competitor)
-            message = {"message": "Успешно изпратихте поканата за включване в отбора!"}
-            sender = settings.DEFAULT_FROM_EMAIL
-            mail.send(
-                invited_competitor.email,
-                sender,
-                template='hackfmi_team_invite',
-            )
-            return Response(message, status=status.HTTP_201_CREATED)
-        message = {"message": "Трябва да бъдете лидер, за да каните хора!"}
-        return Response(message, status=status.HTTP_403_FORBIDDEN)
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
 
-    def get(self, request, format=None):
-        logged_competitor = request.user.get_competitor()
-        invitations = Invitation.objects.filter(competitor=logged_competitor)
-        serializer = InvitationSerializer(invitations, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def put(self, request, format=None):
-        logged_competitor = request.user.get_competitor()
-        invitation = Invitation.objects.get(id=request.data['id'])
-        current_season = Season.objects.get(is_active=True)
-        if invitation.competitor != logged_competitor:
-            error = {"error": "Тази покана не е за теб."}
-            return Response(error, status=status.HTTP_403_FORBIDDEN)
-        if logged_competitor.team_set.filter(season=current_season):
-            error = {"error": "Вече имаш отбор. Напусни го и тогава можеш да приемеш нова покана."}
-            return Response(error, status=status.HTTP_403_FORBIDDEN)
+class InvitationViewSet(viewsets.ModelViewSet):
 
-        TeamMembership.objects.create(competitor=logged_competitor, team=invitation.team)
+    serializer_class = InvitationSerializer
+
+    def get_queryset(self):
+        return Invitation.objects.filter(competitor=self.request.user,
+                                         team__season__is_active=True)
+
+    def get_object(self):
+        obj = Invitation.objects.get(id=self.kwargs['pk'])
+        self.check_object_permissions(self.request, obj)
+        return obj
+
+    def perform_create(self, serializer):
+        team = TeamMembership.objects.get(competitor=self.request.user, team__season__is_active=True).team
+
+        serializer.save(team=team)
+
+    def accept(self, request, *args, **kwargs):
+        invitation = self.get_object()
+        TeamMembership.objects.create(
+            team=invitation.team,
+            competitor=invitation.competitor
+        )
         invitation.delete()
-        message = {"message": "Успешно се присъединихте към отбора."}
-        return Response(message, status=status.HTTP_200_OK)
+        return Response("You have accepted this invitation!")
 
-    def delete(self, request, format=None):
-        logged_competitor = request.user.get_competitor()
-        invitation = Invitation.objects.get(id=request.data['id'])
-        if invitation.competitor != logged_competitor:
-            error = {"error": "Тази покана не е за теб."}
-            return Response(error, status=status.HTTP_403_FORBIDDEN)
-        invitation.delete()
-        return Response(status=status.HTTP_200_OK)
+    @classmethod
+    def get_urls(cls):
+        invitation_list = cls.as_view({
+            'get': 'list',
+            'post': 'create',
+        },
+            permission_classes=[IsHackFMIUser,
+                                IsTeamleaderOrCantCreateIvitation,
+                                IsInvitedMemberAlreadyInYourTeam,
+                                IsInvitedMemberAlreadyInOtherTeam,
+                                CanInviteMoreMembersInTeam]
+        )
 
+        invitation_detail = cls.as_view({
+            'delete': 'destroy',
+        },
+            permission_classes=[IsHackFMIUser,
+                                CanAcceptWronglyDedicatedIvitation]
+        )
 
-class AssignMentor(APIView):
-    permission_classes = (IsHackFMIUser,)
+        invitation_accept = cls.as_view({
+            'post': 'accept',
+        },
+            permission_classes=[IsHackFMIUser,
+                                IsInvitedUserInTeam,
+                                CanAcceptWronglyDedicatedIvitation,
+                                CanNotAcceptInvitationIfTeamLeader]
+        )
 
-    def put(self, request, format=None):
-        logged_competitor = request.user.get_competitor()
-        mentor = Mentor.objects.get(id=request.data['id'])
-        season = Season.objects.get(is_active=True)
-        team = Team.objects.get(id=request.data['team_id'])
-
-        today = date.today()
-        if season.mentor_pick_start_date > today or season.mentor_pick_end_date < today:
-            error = {"error": "В момента не може да избирате ментор."}
-            return Response(error, status.HTTP_403_FORBIDDEN)
-
-        if len(team.mentors.all()) >= season.max_mentor_pick:
-            error = {"error": "Този отбор не може да има повече ментори."}
-            return Response(error, status.HTTP_403_FORBIDDEN)
-
-        if not team.get_leader() == logged_competitor:
-            error = {"error": "Не си лидер на този отбор, за да избираш ментори."}
-            return Response(error, status.HTTP_403_FORBIDDEN)
-
-        team.mentors.add(mentor)
-        return Response(status=status.HTTP_200_OK)
-
-    # TODO: Fix methods
-    def post(self, request, format=None):
-        logged_competitor = request.user.get_competitor()
-        mentor = Mentor.objects.get(id=request.data['id'])
-        team = Team.objects.get(id=request.data['team_id'])
-
-        if not team.get_leader() == logged_competitor:
-            error = {"error": "Не си лидер на този отбор, за да избираш ментори."}
-            return Response(error, status.HTTP_403_FORBIDDEN)
-
-        team.mentors.remove(mentor)
-        return Response(status=status.HTTP_200_OK)
+        return locals()
 
 
 @api_view(['GET'])
@@ -207,6 +187,7 @@ def get_schedule(request):
 
 
 @api_view(['GET'])
+# @permission_classes((AllowAny, ))
 def schedule_json(request):
     content = {
         "placed": {},

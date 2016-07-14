@@ -1,5 +1,5 @@
 from rest_framework.test import APITestCase
-from ..models import Season, Team, Mentor
+from ..models import Season, Team, Mentor, TeamMentorship
 
 
 class PlacerTests(APITestCase):
@@ -30,10 +30,34 @@ class PlacerTests(APITestCase):
         M2 = Mentor.objects.filter(name='M2').first()
         M3 = Mentor.objects.filter(name='M3').first()
         M4 = Mentor.objects.filter(name='M4').first()
-        # M5 = Mentor.objects.filter(name='M5').first()
-        Team.objects.filter(name='T1').first().mentors.add(M1, M2, M3)
-        Team.objects.filter(name='T2').first().mentors.add(M1, M2, M3, M4)
-        Team.objects.filter(name='T3').first().mentors.add(M2, M3, M4)
+
+        T1 = Team.objects.get(name='T1')
+        T2 = Team.objects.get(name='T2')
+        T3 = Team.objects.get(name='T3')
+
+        TeamMentorship.objects.create(mentor=M1,
+                                      team=T1)
+        TeamMentorship.objects.create(mentor=M2,
+                                      team=T1)
+        TeamMentorship.objects.create(mentor=M3,
+                                      team=T1)
+
+        TeamMentorship.objects.create(mentor=M1,
+                                      team=T2)
+        TeamMentorship.objects.create(mentor=M2,
+                                      team=T2)
+        TeamMentorship.objects.create(mentor=M3,
+                                      team=T2)
+        TeamMentorship.objects.create(mentor=M4,
+                                      team=T2)
+
+        TeamMentorship.objects.create(mentor=M2,
+                                      team=T3)
+        TeamMentorship.objects.create(mentor=M3,
+                                      team=T3)
+        TeamMentorship.objects.create(mentor=M4,
+                                      team=T3)
+
         self.INPUT = [
             (team.name,
              [mentor.name for mentor in Team.objects.filter(name=team.name).first().mentors.all()])

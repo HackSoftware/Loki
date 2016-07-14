@@ -240,7 +240,7 @@ class SeasonFactory(factory.DjangoModelFactory):
     class Meta:
         model = hack_fmi_models.Season
 
-    name = faker.name()
+    name = factory.Sequence(lambda n: "season{}".format(n))
     topic = faker.word()
     front_page = faker.paragraph()
     min_team_members_count = faker.random_number(digits=1)
@@ -250,7 +250,7 @@ class SeasonFactory(factory.DjangoModelFactory):
     mentor_pick_start_date = faker.date()
     mentor_pick_end_date = faker.date()
     max_mentor_pick = faker.random_number(digits=1)
-    is_active = faker.boolean()
+    is_active = faker.boolean(chance_of_getting_true=0)
 
 
 class HackFmiPartnerFactory(factory.DjangoModelFactory):
@@ -274,7 +274,7 @@ class MentorFactory(factory.DjangoModelFactory):
     class Meta:
         model = hack_fmi_models.Mentor
 
-    name = faker.name()
+    name = factory.Sequence(lambda n: "mentor{}".format(n))
     description = faker.text()
     picture = factory.django.ImageField()
     seasons = factory.RelatedFactory(SeasonFactory)
@@ -295,6 +295,7 @@ class TeamFactory(factory.DjangoModelFactory):
     need_more_members = faker.boolean()
     room = factory.SubFactory(RoomFactory)
     picture = factory.django.ImageField()
+    place = faker.random_number(digits=1)
 
 
 class TeamMembershipFactory(factory.DjangoModelFactory):
@@ -304,7 +305,14 @@ class TeamMembershipFactory(factory.DjangoModelFactory):
     competitor = factory.SubFactory(CompetitorFactory)
     team = factory.SubFactory(TeamFactory)
     is_leader = faker.boolean()
-    place = faker.random_number(digits=1)
+
+
+class TeamMentorshipFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = hack_fmi_models.TeamMentorship
+
+    mentor = factory.SubFactory(MentorFactory)
+    team = factory.SubFactory(TeamFactory)
 
 
 class TeamWithCompetitor(TeamFactory):
@@ -464,3 +472,11 @@ class CourseDescriptionFactory(factory.DjangoModelFactory):
     address = faker.text(max_nb_chars=255)
     SEO_description = faker.text(max_nb_chars=255)
     SEO_title = faker.text(max_nb_chars=255)
+
+
+class InvitationFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = hack_fmi_models.Invitation
+
+    team = factory.SubFactory(TeamFactory)
+    competitor = factory.SubFactory(CompetitorFactory)

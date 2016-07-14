@@ -300,12 +300,10 @@ class CheckMacsTests(TestCase):
 
 
 class TestGetCompanies(TestCase):
-
-    def setUp(self):
-        factories.CompanyFactory()
-        factories.CompanyFactory()
-
     def test_get_all_companies(self):
+        factories.CompanyFactory()
+        factories.CompanyFactory()
+
         count = Company.objects.count()
         url = reverse('education:get_companies')
         response = self.client.get(url, format='json')

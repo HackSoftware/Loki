@@ -1,4 +1,4 @@
-from django.test import TestCase
+from test_plus.test import TestCase
 from django.core.urlresolvers import reverse
 
 from rest_framework.test import APIClient
@@ -159,17 +159,11 @@ class BaseUserRegistrationTests(TestCase):
         self.assertTrue('?origin=' in url_with_origin)
         self.assertFalse('?origin=' in url_without_origin)
 
-    def test_login(self):
-        reg_url = reverse('base_app:register')
-        self.client.post(reg_url, self.user_data, format='json')
-
-        login_url = reverse('base_app:login')
-        self.client.post(login_url, self.user_data, format='json')
-
 
 class PersonalUserInformationTests(TestCase):
 
     def setUp(self):
+        self.client = APIClient()
         self.company = factories.CompanyFactory()
         self.partner = factories.PartnerFactory(company=self.company)
         self.course = factories.CourseFactory()
@@ -199,17 +193,16 @@ class PersonalUserInformationTests(TestCase):
         self.city = factories.CityFactory()
 
     def test_me_returns_full_team_membership_set(self):
-        self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
         resul_teammembership_set = response.\
             data['competitor']['teammembership_set'][0]
-        self.assertEqual(resul_teammembership_set['team']['name'],
-                         self.team.name)
+
+        self.assertEqual(resul_teammembership_set['team'],
+                         self.team.id)
 
     def test_me_returns_full_courseassignments_set(self):
-        self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
@@ -219,7 +212,6 @@ class PersonalUserInformationTests(TestCase):
                          self.course.name)
 
     def test_me_returns_certificate(self):
-        self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
@@ -228,7 +220,6 @@ class PersonalUserInformationTests(TestCase):
         self.assertEqual(certificate_token, str(self.certificate.token))
 
     def test_baseuser_update(self):
-        self.client = APIClient()
         self.client.force_authenticate(user=self.baseuser)
         update_url = reverse('base_app:update_baseuser')
         data = {'github_account': 'http://github.com/Ivo'}
@@ -237,12 +228,18 @@ class PersonalUserInformationTests(TestCase):
 
         self.assertEqual(baseuser.github_account, data['github_account'])
 
-    def test_patch_empty_birth_place(self):
-        self.client = APIClient()
+    def test_update_empty_birth_place(self):
         self.client.force_authenticate(user=self.baseuser)
         update_url = reverse('base_app:update_baseuser')
         data = {'birth_place': self.city.id}
 
-        self.client.patch(update_url, data, format='json')
+        self.client.patch(update_url, data)
         baseuser = BaseUser.objects.get(id=self.baseuser.id)
         self.assertEqual(baseuser.birth_place, self.city)
+
+    def test_try_to_update_user_info_if_not_authenticated(self):
+        update_url = reverse('base_app:update_baseuser')
+        data = {'birth_place': self.city.id}
+
+        response = self.client.patch(update_url, data)
+        self.response_401(response)

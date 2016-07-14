@@ -3,7 +3,7 @@ from education import views
 
 urlpatterns = [
     url(r'^api/set-check-in/$', views.set_check_in, name='set_check_in'),
-    url(r'^api/get-lectures/$', views.get_lectures, name='get_lectures'),
+    url(r'^api/get-lectures/$', views.GetLectures.as_view(), name='get_lectures'),
     url(r'^api/get-check-ins/$', views.get_check_ins, name='get_check_ins'),
     url(r'^api/get-courses/$', views.get_courses, name='get_courses'),
     url(r'^api/student-update/$', views.student_update, name='student_update'),

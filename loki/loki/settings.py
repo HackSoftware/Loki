@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'djcelery',
     'crispy_forms',
 
-    'hack_fmi',
+    'hack_fmi.apps.HackFMIConfig',
     'base_app',
     'hack_conf',
     'education',
@@ -102,7 +102,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
-    'UPLOADED_FILES_USE_URL': False
+    'UPLOADED_FILES_USE_URL': False,
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

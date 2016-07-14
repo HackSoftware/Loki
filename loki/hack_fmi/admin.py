@@ -1,82 +1,77 @@
 from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
 
-from .models import Competitor, Skill, Team, TeamMembership, Invitation, Mentor, Season, Room, Partner
+from .models import (Competitor, Skill, Team, TeamMembership,
+                     Invitation, Mentor, Season, Room, Partner,
+                     TeamMentorship,)
 
 
+@admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
     list_display = ('name',)
 
-    class Meta:
-        model = Skill
 
-
+@admin.register(Competitor)
 class CompetitorAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'email', 'shirt_size')
+    list_display = ('first_name',
+                    'last_name',
+                    'email',
+                    'shirt_size')
 
-    class Meta:
-        model = Competitor
 
-
+@admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'idea_description', 'room', 'season', 'get_members')
+    list_display = ('name',
+                    'idea_description',
+                    'room',
+                    'season',
+                    'get_members')
 
     list_filter = ('season',)
 
     def get_members(self, obj):
         return ", ".join([c.full_name for c in obj.members.all()])
 
-    class Meta:
-        model = Team
 
-
+@admin.register(TeamMembership)
 class TeamMembershipAdmin(admin.ModelAdmin):
-    list_display = ('competitor', 'team', 'is_leader')
+    list_display = ('competitor',
+                    'team',
+                    'is_leader')
 
-    class Meta:
-        model = TeamMembership
+
+@admin.register(TeamMentorship)
+class TeamMentorshipAdmin(admin.ModelAdmin):
+    list_display = ('mentor',
+                    'team')
 
 
+@admin.register(Invitation)
 class InvitationAdmin(admin.ModelAdmin):
-    list_display = ('team', 'competitor')
-
-    class Meta:
-        model = Invitation
+    list_display = ('team',
+                    'competitor')
 
 
+@admin.register(Mentor)
 class MentorAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ('name', 'description', 'from_company')
+    list_display = ('name',
+                    'description',
+                    'from_company')
 
-    class Meta:
-        model = Mentor
 
-
+@admin.register(Season)
 class SeasonAdmin(admin.ModelAdmin):
-    list_display = ('name', 'is_active')
-
-    class Meta:
-        model = Season
+    list_display = ('name',
+                    'is_active')
 
 
+@admin.register(Room)
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ('number', 'season', 'capacity')
+    list_display = ('number',
+                    'season',
+                    'capacity')
 
-    class Meta:
-        model = Room
 
-
+@admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin):
     list_display = ('name',)
-
-    class Meta:
-        model = Partner
-
-admin.site.register(Team, TeamAdmin)
-admin.site.register(Skill, SkillAdmin)
-admin.site.register(Competitor, CompetitorAdmin)
-admin.site.register(TeamMembership, TeamMembershipAdmin)
-admin.site.register(Invitation, InvitationAdmin)
-admin.site.register(Mentor, MentorAdmin)
-admin.site.register(Season, SeasonAdmin)
-admin.site.register(Partner, PartnerAdmin)
-admin.site.register(Room, RoomAdmin)
