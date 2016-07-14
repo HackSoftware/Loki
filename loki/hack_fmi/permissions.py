@@ -72,8 +72,44 @@ class CanAttachMoreMentorsToTeam(permissions.BasePermission):
     message = "This team cannot attach other mentors!"
 
     def has_object_permission(self, request, view, obj):
-        count_mentorships = TeamMentorship.objects.filter(team=obj.team).count()
-        return count_mentorships >= obj.team.season.max_mentor_pick
+        if request.method == "POST":
+            count_mentorships = TeamMentorship.objects.filter(team=obj.team).count()
+            return count_mentorships >= obj.team.season.max_mentor_pick
+        return True
+
+    """
+    When we remove mentor from team(request method is "DELETE")
+    we don't need to check the season's max_mentor_pick count.
+    """
+
+
+class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
+    message = "A team with that name already exists!"
+
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return not Team.objects.filter(name=request.data['name']).exists()
+
+    """
+    We check whether a team with that name alredy exists when we register or change a team
+    (POST and PATCH), otherwise we return True.
+    """
+
+
+class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
+    message = "You are a teamleader and cant register another team!"
+
+    def has_permission(self, request, view):
+        if request.method == "POST":
+            return not TeamMembership.objects.filter(competitor=request.user, is_leader=True).exists()
+        return True
+
+    """
+    TeamLeaders cant send POST queries in order to register another team, since they have their own one.
+    TeamLeaders can only change and see their own teams(GET and PATCH queries return True)
+    """
 
 
 class IsTeamInActiveSeason(permissions.BasePermission):

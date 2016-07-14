@@ -9,12 +9,11 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
 
-from rest_framework import serializers, generics
+from rest_framework import serializers, generics, status, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, generics, mixins
 from base_app.models import City, Company
 
 from .premissions import IsStudent, IsTeacher, IsTeacherForCA
@@ -30,7 +29,6 @@ from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
 
 from education.helper import (check_macs_for_student, mac_is_used_by_another_student)
 from .tasks import submit_solution
-from rest_framework import mixins
 
 
 @csrf_exempt

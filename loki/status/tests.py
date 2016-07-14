@@ -10,6 +10,8 @@ from education.models import CheckIn, Student
 TODO: Check what is happening here.
 unskip when sure
 """
+
+
 @unittest.skip
 class SanityCheckerTest(TestCase):
 

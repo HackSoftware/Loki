@@ -160,13 +160,6 @@ class TeamSerializer(serializers.ModelSerializer):
         source='technologies',
     )
 
-    mentors = serializers.PrimaryKeyRelatedField(
-        many=True,
-        read_only=False,
-        queryset=Mentor.objects.all(),
-        required=False,
-    )
-
     mentors_full = MentorSerializer(
         many=True,
         read_only=True,
@@ -185,7 +178,6 @@ class TeamSerializer(serializers.ModelSerializer):
             'repository',
             'technologies',
             'technologies_full',
-            'mentors',
             'mentors_full',
             'need_more_members',
             'members_needed_desc',

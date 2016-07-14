@@ -26,6 +26,8 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsInvitedUserInTeam,
                           CanNotAcceptInvitationIfTeamLeader,
                           CanAttachMoreMentorsToTeam,
+                          CantCreateTeamWithTeamNameThatAlreadyExists,
+                          TeamLiederCantCreateOtherTeam
                           )
 
 from .helper import send_team_delete_email
@@ -63,7 +65,9 @@ class PublicTeamView(generics.ListAPIView):
 
 class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
     permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
-                          IsSeasonDeadlineUpToDate, IsTeamInActiveSeason)
+                          IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
+                          CantCreateTeamWithTeamNameThatAlreadyExists,
+                          TeamLiederCantCreateOtherTeam)
     serializer_class = TeamSerializer
 
     def get_queryset(self):

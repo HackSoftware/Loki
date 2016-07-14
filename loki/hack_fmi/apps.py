@@ -8,5 +8,4 @@ class HackFMIConfig(AppConfig):
 
     def ready(self):
 
-        # import signal handlers
         import hack_fmi.signals.handlers

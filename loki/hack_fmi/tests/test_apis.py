@@ -1,5 +1,8 @@
 import unittest
 from django.core.urlresolvers import reverse
+from django.core.management import call_command
+from django.core.management.base import CommandError
+
 from post_office import mail
 
 from rest_framework import status
@@ -9,7 +12,7 @@ from post_office.models import EmailTemplate
 
 from ..helper import date_increase, date_decrease
 from ..models import (TeamMembership,
-                      Season, Team, Invitation,
+                      Season, Team, Invitation, Room,
                       TeamMentorship, Mentor)
 
 from seed import factories
@@ -145,7 +148,6 @@ class PublicTeamViewTest(TestCase):
             season=active_season,
             room=room,
         )
-
         non_active_season = factories.SeasonFactory(
             is_active=False
         )
@@ -155,7 +157,6 @@ class PublicTeamViewTest(TestCase):
             season=non_active_season,
             room=room_for_non_active_season,
         )
-
         url = reverse('hack_fmi:public_teams')
 
         teams_in_active_season = Team.objects.filter(season__is_active=True).count()
@@ -176,7 +177,6 @@ class TeamAPITest(TestCase):
         self.active_season = factories.SeasonFactory(
             is_active=True,
         )
-
         self.room = factories.RoomFactory(season=self.active_season)
 
     def test_non_hackfmi_user_cant_get_to_team(self):
@@ -396,6 +396,86 @@ class TeamAPITest(TestCase):
 
         self.response_403(response)
 
+    def test_whether_when_you_register_your_own_team_you_become_leader_of_that_team(self):
+        skill = factories.SkillFactory()
+        competitor = factories.CompetitorFactory(
+            email=faker.email(),
+        )
+
+        team_data = {
+            'name': faker.name(),
+            'idea_description': faker.text(),
+            'repository': faker.url(),
+            'technologies': [skill.id, ],
+
+        }
+
+        self.assertFalse(Team.objects.filter(name=team_data['name']).exists())
+        self.client.force_authenticate(user=competitor)
+
+        url = reverse('hack_fmi:teams')
+        response = self.client.post(url, team_data)
+
+        self.response_201(response)
+        self.assertTrue(Team.objects.filter(name=team_data['name']).exists())
+        self.assertEqual(len(response.data['members']), 1)
+        self.assertEqual(len(response.data['technologies']), 1)
+        self.assertTrue(TeamMembership.objects.filter(competitor=competitor, is_leader=True).exists())
+        self.assertEqual(TeamMentorship.objects.all().count(), 0)
+
+    def test_cant_register_team_that_has_the_same_name(self):
+        skill = factories.SkillFactory()
+        competitor = factories.CompetitorFactory(
+            email=faker.email(),
+        )
+
+        team_data = {
+            'name': faker.name(),
+            'idea_description': faker.text(),
+            'repository': faker.url(),
+            'technologies': [skill.id, ],
+
+        }
+        registered_team = factories.TeamFactory(**team_data)
+
+        self.assertTrue(Team.objects.filter(name=team_data['name']).exists())
+
+        self.client.force_authenticate(user=competitor)
+
+        url = reverse('hack_fmi:teams')
+        response = self.client.post(url, team_data)
+
+        self.response_403(response)
+
+    def test_cant_register_other_team_if_you_are_a_leader_of_already_existing_team(self):
+        skill = factories.SkillFactory()
+        competitor = factories.CompetitorFactory(
+            email=faker.email()
+        )
+        existing_team = factories.TeamFactory()
+        factories.TeamMembershipFactory(
+            competitor=competitor,
+            team=existing_team,
+            is_leader=True
+        )
+
+        self.client.force_authenticate(competitor)
+
+        team_data = {
+            'name': faker.name(),
+            'idea_description': faker.text(),
+            'repository': faker.url(),
+            'technologies': [skill.id, ],
+
+        }
+        self.assertFalse(Team.objects.filter(name=team_data['name']).exists())
+
+        url = reverse('hack_fmi:teams')
+        response = self.client.post(url, team_data)
+
+        self.response_403(response)
+        self.assertFalse(Team.objects.filter(name=team_data['name']).exists())
+
 
 class TeamMembershipAPITest(TestCase):
 
@@ -523,66 +603,6 @@ class TeamMembershipAPITest(TestCase):
         self.assertFalse(TeamMembership.objects.filter(competitor=self.competitor).exists())
 
 
-@unittest.skip('Skip until further implementation of Hackathon system')
-class TeamRegistrationTests(TestCase):
-
-    def setUp(self):
-        self.skills = Skill.objects.create(name="C#")
-        self.season = Season.objects.create(
-            name="season",
-            topic='TestTopic',
-            is_active=True,
-            sign_up_deadline=date_increase(10),
-            mentor_pick_start_date=date_increase(15),
-            mentor_pick_end_date=date_increase(25),
-            make_team_dead_line=date_increase(20)
-        )
-        self.competitor = Competitor.objects.create(
-            email='ivo@abv.bg',
-            full_name='Ivo Naidobriq',
-            faculty_number='123',
-        )
-        self.team_data = {
-            'name': 'Pandas',
-            'idea_description': 'GameDevelopers',
-            'repository': 'https://github.com/HackSoftware',
-            'technologies': [self.skills.id]
-        }
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.competitor)
-
-    def test_register_team(self):
-        url = reverse('hack_fmi:teams')
-        response = self.client.post(url, self.team_data, format='json')
-        self.assertEqual(len(response.data['members']), 1)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(len(response.data['technologies']), 1)
-        self.assertEqual(len(response.data['technologies_full']), 1)
-
-    def test_registered_team_has_leader(self):
-        url = reverse('hack_fmi:teams')
-        self.client.post(url, self.team_data, format='json')
-        team_membership = TeamMembership.objects.first()
-        self.assertEqual(self.competitor, team_membership.competitor)
-        self.assertTrue(team_membership.is_leader)
-
-    def test_register_more_than_one_team(self):
-        url = reverse('hack_fmi:register_team')
-        first_response = self.client.post(url, self.team_data, format='json')
-
-        data = {
-            'name': 'Pandass',
-            'idea_description': 'GameDeveloperss',
-            'repository': 'https://github.com/HackSoftwares',
-            'technologies': [self.skills.id],
-        }
-        url = reverse('hack_fmi:register_team')
-        second_response = self.client.post(url, data, format='json')
-        self.assertEqual(first_response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(second_response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(Team.objects.count(), 1)
-
-
 class InvitationTests(TestCase):
 
     def setUp(self):
@@ -643,7 +663,7 @@ class InvitationTests(TestCase):
         self.client.force_authenticate(user=competitor)
 
         url = reverse('hack_fmi:invitation-list')
-        data = {'competitor_email': faker.email() + faker.word()}
+        data = {'competitor_email': faker.word() + faker.email()}
         response = self.client.post(url, data,)
 
         self.response_403(response)
@@ -664,7 +684,7 @@ class InvitationTests(TestCase):
         self.client.force_authenticate(user=recipient)
 
         url = reverse('hack_fmi:invitation-list')
-        data = {'competitor_email': faker.email() + faker.word()}
+        data = {'competitor_email': faker.word() + faker.email()}
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -1236,7 +1256,7 @@ class RoomTests(TestCase):
             )
         for i in [1, 4, 10]:
             Room.objects.create(
-                number=100+i,
+                number=100 + i,
                 season=self.season,
                 capacity=i,
             )
@@ -1249,7 +1269,7 @@ class RoomTests(TestCase):
     def test_more_teams_than_rooms(self):
         for i in range(10):
             Team.objects.create(
-                name='Pandas{0}'.format(i+15),
+                name='Pandas{0}'.format(i + 15),
                 idea_description='GameDevelopers',
                 repository='https://github.com/HackSoftware',
                 season=self.season,
