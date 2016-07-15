@@ -38,7 +38,7 @@ class CourseAssignment(models.Model):
 
     course = models.ForeignKey('Course')
     cv = models.FileField(blank=True, null=True, upload_to='cvs')
-    favourite_partners = models.ManyToManyField('base_app.Partner', null=True, blank=True)
+    favourite_partners = models.ManyToManyField('base_app.Partner', blank=True)
     group_time = models.SmallIntegerField(choices=GROUP_TIME_CHOICES)
     is_attending = models.BooleanField(default=True)
     user = models.ForeignKey('Student')
@@ -57,7 +57,7 @@ class Course(models.Model):
     git_repository = models.CharField(blank=True, max_length=256)
     image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
     name = models.CharField(blank=False, max_length=64)
-    partner = models.ManyToManyField('base_app.Partner', null=True, blank=True)
+    partner = models.ManyToManyField('base_app.Partner', blank=True)
     short_description = models.CharField(blank=True, max_length=300)
     show_on_index = models.BooleanField(default=False)
     is_free = models.BooleanField(default=True)
