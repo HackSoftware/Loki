@@ -12,7 +12,8 @@ class Login(views.LoginView):
 
     def action(self, serializer):
         response = super(Login, self).action(serializer)
-        user = serializer.object
+
+        user = serializer.user
         if not user.get_competitor():
             response.status_code = 206
         return response

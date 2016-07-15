@@ -54,9 +54,9 @@ class InvitationAdmin(admin.ModelAdmin):
 
 @admin.register(Mentor)
 class MentorAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ('name',
+    list_display = ['name',
                     'description',
-                    'from_company')
+                    'from_company']
 
 
 @admin.register(Season)

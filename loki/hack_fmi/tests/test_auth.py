@@ -114,4 +114,4 @@ class AuthenticationTests(TestCase):
         url = reverse('hack_fmi:logout')
         response = self.client.post(url)
 
-        self.response_200(response)
+        self.assertEqual(response.status_code, 204)

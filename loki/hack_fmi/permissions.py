@@ -163,9 +163,21 @@ class IsInvitedMemberAlreadyInOtherTeam(permissions.BasePermission):
 
 
 class CanInviteMoreMembersInTeam(permissions.BasePermission):
-    active_season = Season.objects.get(is_active=True)
 
-    message = "You cannot invite more than {} in your team".format(active_season.max_team_members_count)
+    def __getattr__(self, name):
+        """
+        Since https://github.com/tomchristie/django-rest-framework/blob/master/rest_framework/views.py#L320
+        is calling getattr and we want to have a good message with the max number of mentors
+        We redefine __getattr__ to return the proper message when getattr(permission, 'message', None) is called.
+        This is bad design from DRF.
+        """
+        if name == 'message':
+            active_season = Season.objects.get(is_active=True)
+
+            message = "You cannot invite more than {} in your team".format(active_season.max_team_members_count)
+            return message
+
+        return object.__getattribute__(self, name)
 
     def has_permission(self, request, view):
         if request.method == "POST":

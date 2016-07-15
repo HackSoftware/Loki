@@ -619,6 +619,13 @@ class InvitationTests(TestCase):
         )
 
     def test_send_invitation_for_team(self):
+        """
+        Every time a test is run, SeasonFactory generates random max_team_members_count.
+        That's why we intentionaly specifi max_team_members_count.
+        """
+        self.season.max_team_members_count = 2
+        self.season.save()
+
         recipient = factories.CompetitorFactory(
             email=faker.email(),
         )
@@ -669,6 +676,13 @@ class InvitationTests(TestCase):
         self.response_403(response)
 
     def test_send_invitation_to_not_existing_user(self):
+        """
+        Every time a test is run, SeasonFactory generates random max_team_members_count.
+        That's why we intentionaly specifi max_team_members_count.
+        """
+        self.season.max_team_members_count = 2
+        self.season.save()
+
         recipient = factories.CompetitorFactory(
             email=faker.email(),
         )
