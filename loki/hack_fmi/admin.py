@@ -57,7 +57,6 @@ class MentorAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ['name',
                     'description',
                     'from_company']
-    list_display_links = None
 
 
 @admin.register(Season)

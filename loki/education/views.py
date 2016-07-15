@@ -162,7 +162,7 @@ def working_at(request):
     if request.method == 'POST':
         serializer = WorkingAtSerializer(data=request.data)
         if serializer.is_valid():
-            company = Company.objects.filter(name__iexact=serializer.data['company_name']).first()
+            company = Company.objects.filter(name__iexact=serializer.initial_data['company_name']).first()
             if company:
                 obj = serializer.save(student=request.user.student, company=company)
             else:
@@ -174,7 +174,7 @@ def working_at(request):
         working_at_entry = get_object_or_404(WorkingAt, id=request.data['working_at_id'])
         serializer = WorkingAtSerializer(working_at_entry, data=request.data, partial=True)
         if serializer.is_valid():
-            company = Company.objects.filter(name__iexact=serializer.data['company_name']).first()
+            company = Company.objects.filter(name__iexact=working_at_entry.company_name).first()
             if company:
                 obj = serializer.save(student=request.user.student, company=company)
             else:
