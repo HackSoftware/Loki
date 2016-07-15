@@ -179,7 +179,6 @@ class CanInviteMoreMembersInTeam(permissions.BasePermission):
 
         return object.__getattribute__(self, name)
 
-
     def has_permission(self, request, view):
         if request.method == "POST":
             user_team = TeamMembership.objects.get(competitor=request.user).team
