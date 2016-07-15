@@ -183,7 +183,7 @@ class TestWebsite(TestCase):
 
         url = reverse('website:course_details',
                       kwargs={"course_url": course.url})
-        
+
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
