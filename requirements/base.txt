@@ -1,4 +1,4 @@
-pipamqp==1.4.9
+amqp==1.4.9
 anyjson==0.3.3
 billiard==3.3.0.23
 celery==3.1.23 
@@ -13,6 +13,7 @@ django-ckeditor==4.4.7
 django-cors-headers==1.0.0
 django-crispy-forms==1.6.0
 django-filter==0.11.0
+django-model-utils==2.4
 django-import-export==0.2.7
 django-model-utils==2.4
 django-post-office==2.0.7
