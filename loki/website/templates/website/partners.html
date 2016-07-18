@@ -9,12 +9,17 @@
         <p class="lead">{{ snippets.become_a_partner.text }}</p>
       </div>
     </div>
-    
-    {% include "website/partners_snippet.html" with partners_heading=snippets.general_partners.text partners=general_partners partners_per_row=4 %}
+    {% if general_partners %}    
+      {% include "website/partners_snippet.html" with partners_heading=snippets.general_partners.text partners=general_partners partners_per_row=4 %}
+    {% endif %}
 
-    {% include "website/partners_snippet.html" with partners_heading=snippets.hosting_partners.text partners=hosting_partners partners_per_row=4 %}
+    {% if hosting_partners %}
+      {% include "website/partners_snippet.html" with partners_heading=snippets.hosting_partners.text partners=hosting_partners partners_per_row=4 %}
+    {% endif %} 
 
-    {% include "website/partners_snippet.html" with partners_heading=snippets.index_partners_description.text partners=partners partners_per_row=4 %}
+    {% if partners %}
+      {% include "website/partners_snippet.html" with partners_heading=snippets.index_partners_description.text partners=partners partners_per_row=4 %}
+    {% endif %}
 
   </div>
 {% endautoescape %}
