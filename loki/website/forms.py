@@ -11,7 +11,7 @@ INPUTS = {
     'hidden': forms.HiddenInput
 }
 
-
+# w = widget
 def w(input_type, value=None):
     element = INPUTS.get(input_type, None)
 
