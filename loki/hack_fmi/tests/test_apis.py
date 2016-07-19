@@ -1,9 +1,10 @@
 import unittest
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.management import call_command
 from django.core.management.base import CommandError
 
-from post_office import mail
+from django.core.mail import EmailMultiAlternatives
 
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -608,12 +609,6 @@ class InvitationTests(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.template = EmailTemplate.objects.create(
-            name='hackfmi_team_invite',
-            subject='Invitation for HackFMI membership',
-            content=faker.paragraph(),
-        )
-
         self.season = factories.SeasonFactory(
             is_active=True,
         )
@@ -652,7 +647,22 @@ class InvitationTests(TestCase):
         self.assertEquals(Invitation.objects.count(), 1)
         self.assertEqual(Invitation.objects.first().team.id, team.id)
         self.assertEqual(Invitation.objects.first().competitor.id, receiver.id)
-        self.assertEqual(mail.get_queued().last().message, self.template.content)
+
+    def test_if_email_is_sent_to_user(self):
+        competitor = factories.CompetitorFactory(
+            email=faker.email()
+        )
+        subject = "Invitation for hackFMI membership"
+        body = faker.paragraph()
+
+        msg = EmailMultiAlternatives(subject=subject,
+                                     body=body,
+                                     from_email=settings.DJANGO_DEFAULT_FROM_EMAIL,
+                                     to=[competitor.email])
+
+        response = msg.send()
+
+        self.assertEqual(response, 1)
 
     def test_non_leaders_cant_send_invitations(self):
         competitor = factories.CompetitorFactory(

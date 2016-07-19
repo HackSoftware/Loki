@@ -4,7 +4,7 @@ from django.contrib.auth.models import (AbstractBaseUser,
                                         BaseUserManager, PermissionsMixin)
 from ckeditor.fields import RichTextField
 
-from loki.settings import MEDIA_ROOT
+from loki.settings.common import MEDIA_ROOT
 
 
 class Company(models.Model):
