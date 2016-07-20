@@ -13,7 +13,7 @@ Local development setup
 The project is using:
 
 -   Python 3.5+
--   Django 1.8+
+-   Django 1.9+
 
 In order to setup it, there are the following steps:
 
@@ -30,13 +30,17 @@ In order to setup it, there are the following steps:
     $ sudo -u postgres createuser your_postgres_username
     $ sudo -u postgres createdb -O your_postgres_username your_postgres_database_name
 
--   Setup local settings
+-   Setup local environment variables
 
 <!-- -->
 
-    $ cp loki/loki/example_local_settings.py  loki/loki/local_settings.py
+    $ cd loki/
 
-    Fill up the you local settings
+There is an example_env_variables file, from which you can see the exact environment variables you need to export:
+
+    export DJANGO_DEBUG="True/False"
+    export DJANGO_SECRET_KEY="your_django_secret_key"
+
 
 -   Run migrations
 
@@ -73,42 +77,37 @@ This project is using Celery for async tasks such as email sending and working w
 
 In order to run Celery, you are going to need **RabbitMQ Server**
 
-The following variables are taking care of everything, you just have to add it in our local_settings file:
+The following variables are taking care of everything, you just have to export it:
 
-    BROKER_URL="amqp://guest:guest@localhost//"
+    export BROKER_URL="amqp://guest:guest@localhost//"
 
-Afer this, you can run Celery:
+Afer that, you can run Celery:
 
     $ celery -A loki worker -B
 
 Grader
 ------
 
-We use [Grader](https://github.com/HackBulgaria/HackTester) in order to test the solution sent by student. In order to use the Grader API
+We use [Grader](https://github.com/HackBulgaria/HackTester) in order to test the solution sent by student. In order to use the Grader API you need to set values
+to the following variables:
 
-you need to set values to the following variables in the local_settings file :
-
-    GRADER_ADDRESS = "grader-address"
-    GRADER_API_KEY = "grader-api-key"
-    GRADER_API_SECRET = "your-grader-api-secret-key"
-
+    export GRADER_ADDRESS="grader-address"
+    export GRADER_API_KEY="grader-api-key"
+    export GRADER_API_SECRET="your-grader-api-secret-key"
 
 
-Email Confirmations
--------------------
-
-In order to send confirmation emails, we must set the following variables in the local_settings file:
-    
-    EMAIL_USE_TLS = "True/False"
-    EMAIL_HOST = "host"
-    EMAIL_PORT = "port"
-    EMAIL_HOST_USER = "host_user"
-    EMAIL_HOST_PASSWORD = "password"
-    DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
+Email Confirmations & Mailgun
+-----------------------------
 
 The email backend is controlled by the
-`EMAIL_BACKEND` variable, which you can set up in the settings file 
+`DJANGO_EMAIL_BACKEND` env variable, which for local setups
+defaults to `django.core.mail.backends.console.EmailBackend`
+
+For production, it will be pointed at
+`anymail.backends.mailgun.MailgunBackend` and you are going
+to set `MAILGUN_API_KEY` env variable as it follows:
+    
+    export MAILGUN_API_KEY="your_mailgun_api_key"
 
 
 Basic Commands
@@ -135,10 +134,22 @@ In order to run the tests, choose whichever command you prefer:
     $ py.test
 
 
+
+***In case you get permission error:***
+
+Since the local database we use is Postgres, the tests try to create
+their own database,so you need to grant the Postgres user with CREATEDB
+permission:
+
+    $ sudo -u postgres psql
+    postgres=# ALTER USER username CREATEDB;
+
+
 Linting & pep8
 --------------
 
 In order to check if everything is ok according to pep8 rules, you can use
 [flake8] (https://pypi.python.org/pypi/flake8) from the project root:
-		
+	
+    $ cd loki/	
 	$ flake8
