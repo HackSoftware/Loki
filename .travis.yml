@@ -8,6 +8,8 @@ install:
 - pip install -r requirements/base.txt
 - pip install -r requirements/test.txt 
 before_script:
+- sudo -u postgres createuser loki_user
+- sudo -u postgres createdb -O loki_user loki
 - psql -c 'CREATE DATABASE testdb;' -U postgres
 script:
 - python loki/manage.py migrate
