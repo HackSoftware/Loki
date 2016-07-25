@@ -10,7 +10,7 @@
     <title>HackBulgaria - Курсове по програмиране</title>
     <meta name="description" content="Курсове по програмиране, в които писането на код е задължение, а лекциите са за домашно.">
     <link rel="icon" href="{{ STATIC_URL }}website_images/favicon.ico">
-  
+
     <meta property="og:title" content="HackBulgaria - Курсове по програмиране"/>
     <meta property="og:site_name" content="Hack Bulgaria"/>
     <meta property="og:description" content="Курсове по програмиране, в които писането на код е задължение, а лекциите са за домашно."/>
@@ -46,14 +46,14 @@
     <div id="header">
       <div class="container">
         <div class="row">
-      
+
           <div class="col-md-3">
             <a href="/"><img src="{{ STATIC_URL }}website_images/hackbulgaria_logo.png" id="logo"></a>
           </div>
-         
+
           <!-- Navigation -->
           <ul id="main-navigation" class="col-md-7 col-md-offset-2">
-            <li><a class="{% menu_active 'website:index' %}" href="{% url 'website:index' %}">Начало</a></li> 
+            <li><a class="{% menu_active 'website:index' %}" href="{% url 'website:index' %}">Начало</a></li>
             <li><a class="{% menu_active 'website:about' %}" href="{% url 'website:about' %}">За нас</a></li>
             <li>
               <div class="btn-group">
@@ -69,7 +69,7 @@
             <li><a href="{% url 'website:profile' %}">Профил</a></li>
             <li><a href="{% url 'website:logout' %}">Изход</a></li>
             {% else %}
-            
+
             {% comment "Defer register/login until fully migrated" %}
             <li><a href="{% url 'website:register' %}">Регистрация</a></li>
             <li><a href="{% url 'website:login' %}">Вход</a></li>

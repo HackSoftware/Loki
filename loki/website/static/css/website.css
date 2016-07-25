@@ -377,7 +377,9 @@ body {
   .text-card {
     width: 100% !important;
     min-height: 100px;
-    padding-top: 0px; } }
+    padding-top: 0px; }
+
+  }
 .login-container {
   max-width: 400px;
   margin-top: 50px;
@@ -392,10 +394,22 @@ body {
   .login-container .profile-img-container {
     text-align: center;
     margin-bottom: 50px; }
-    .login-container .profile-img-container .img-circle {
+  .login-container .profile-img-container .img-circle {
       width: 96px;
       height: 96px;
       border: 2px solid; }
+  .login-container .reg-img-container .img-circle {
+        width: 22px;
+        height: 22px;
+        margin-left: 340px;
+        margin-top: -232px;}
+  @media screen and (max-width: 600px) {
+    .login-container .reg-img-container .img-circle {
+      margin-left: 280px;} }
+      @media screen and (max-width: 340px) {
+        .login-container .reg-img-container .img-circle {
+          margin-left: 260px;
+          margin-top: -272px;} }
   .login-container .btn-login {
     width: 100%;
     margin-bottom: 20px; }

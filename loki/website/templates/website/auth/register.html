@@ -14,32 +14,31 @@
         <form method="POST" action="" class="register-form" >
             {{form|crispy}}
             {% csrf_token %}
-            <!-- <p id="password_info"></p> -->
             <button type="submit" class="btn btn-warning btn-login" >Hack on!</button>
             <a href="{% url 'website:login' %}">
                 Вече имаш регистрация?
             </a>
         </form>
+        <div class="reg-img-container">
+            <img class="img-circle" data-toggle="popover" tabindex="0" data-content="Паролата трябва да има минимум 6 символа(поне 1 цифра и 1 буква)" src="{{ STATIC_URL }}website_images/registration_question.png" />
+        </div>
     </div>
 </div>
 
 {% endblock %}
 
 {% block 'footer-scripts' %}
-<!-- <script type="text/javascript">
-  var password = document.getElementById('id_password');
-  if (password.value < 6 ) {
-    alert('fsdfsf');
-  } -->
-  <!-- // var ps_info = document.getElementById('password_info');
-  // $(password).mouseover(function () {
-  //     ps_info.innerHTML = "Password must be at least 6 characters.";
-  //  });
-  //  $(password).mouseout(function () {
-  //
-  //      ps_info.innerHTML = "";
-  //   }); -->
+<script type="text/javascript">
 
-<!-- </script> -->
-  <script type="text/javascript" src="{{ STATIC_URL }}js/fuzzysearch.js" ></script>
+  $(document).ready(function(){
+      $('[data-toggle="popover"]').popover({ trigger: "focus"});
+
+      var regQuestion = document.getElementsByClassName("reg-img-container")[0];
+      var regError =  document.getElementById('error_1_id_password');
+        if (typeof(regError) != 'undefined' && regError != null){
+           $(regQuestion).css({"margin-top" : "-26px"});
+        }
+  });
+ </script>
+  <!-- <script type="text/javascript" src="{{ STATIC_URL }}js/fuzzysearch.js" ></script> -->
 {% endblock %}
