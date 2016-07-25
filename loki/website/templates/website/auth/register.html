@@ -14,6 +14,7 @@
         <form method="POST" action="" class="register-form" >
             {{form|crispy}}
             {% csrf_token %}
+            <!-- <p id="password_info"></p> -->
             <button type="submit" class="btn btn-warning btn-login" >Hack on!</button>
             <a href="{% url 'website:login' %}">
                 Вече имаш регистрация?
@@ -25,5 +26,20 @@
 {% endblock %}
 
 {% block 'footer-scripts' %}
+<!-- <script type="text/javascript">
+  var password = document.getElementById('id_password');
+  if (password.value < 6 ) {
+    alert('fsdfsf');
+  } -->
+  <!-- // var ps_info = document.getElementById('password_info');
+  // $(password).mouseover(function () {
+  //     ps_info.innerHTML = "Password must be at least 6 characters.";
+  //  });
+  //  $(password).mouseout(function () {
+  //
+  //      ps_info.innerHTML = "";
+  //   }); -->
+
+<!-- </script> -->
   <script type="text/javascript" src="{{ STATIC_URL }}js/fuzzysearch.js" ></script>
 {% endblock %}

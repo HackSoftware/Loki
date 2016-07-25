@@ -164,16 +164,17 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
-    birth_place = models.ForeignKey(City, null=True, blank=True)
+    #maybe is_teacher is better than is_staff
+    # is_staff = models.BooleanField(default=False)
+    # birth_place = models.ForeignKey(City, null=True, blank=True)
 
     github_account = models.URLField(null=True, blank=True)
-    linkedin_account = models.URLField(null=True, blank=True)
-    twitter_account = models.URLField(null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
+    # linkedin_account = models.URLField(null=True, blank=True)
+    # description = models.TextField(null=True, blank=True)
+    # twitter_account = models.URLField(null=True, blank=True)
 
-    studies_at = models.CharField(blank=True, null=True, max_length=110)
     works_at = models.CharField(null=True, blank=True, max_length=110)
+    studies_at = models.CharField(blank=True, null=True, max_length=110)
 
     avatar = models.ImageField(blank=True, null=True)
     full_image = models.ImageField(blank=True, null=True)
