@@ -78,11 +78,12 @@
               </div>
             </li>
             {% else %}
-
-            {% comment "Defer register/login until fully migrated" %}
             <li><a href="{% url 'website:register' %}">Регистрация</a></li>
             <li><a href="{% url 'website:login' %}">Вход</a></li>
-            {% endcomment %}
+            <!-- {% comment "Defer register/login until fully migrated" %}
+            <li><a href="{% url 'website:register' %}">Регистрация</a></li>
+            <li><a href="{% url 'website:login' %}">Вход</a></li>
+            {% endcomment %} -->
 
             {% endif %}
           </ul>
