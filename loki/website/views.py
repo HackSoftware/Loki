@@ -107,10 +107,10 @@ def profile(request):
 def profile_edit(request):
     form = ProfileEditForm(instance=request.user)
     if request.method == 'POST':
-        form = ProfileEditForm(request.POST)
+        form = ProfileEditForm(request.POST, instance=request.user)
         if form.is_valid():
             user = form.save()
-            return render(request, 'website/profile.html')
+            return redirect('/profile')
     return render(request, "website/profile_edit.html", locals())
 
 

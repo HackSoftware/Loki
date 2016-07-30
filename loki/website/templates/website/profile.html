@@ -4,7 +4,11 @@
 <div class="container">
   <div class="row">
     <div class="col-md-3">
-      <img id="user-avatar" src={{user.avatar}}/>
+      {% if user.avatar == None %}
+        <img id="user-avatar" src="{{ STATIC_URL }}website_images/registration_question.png">
+      {% else %}
+        <img id="user-avatar" src={{user.avatar}}/>
+      {% endif %}
     </div>
     <div class="col-md-6 col-md-offset-1">
       <div id="usernames"> Здравей, {{user.first_name}} {{user.last_name}}!</div>
