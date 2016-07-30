@@ -1,6 +1,14 @@
 {% extends 'website/base.html' %}
 
 {% block 'page-content' %}
-
-<p> {{user.first_name}}: {{user.last_name}} </p>
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      <img id="user-avatar" src={{user.avatar}}/>
+    </div>
+    <div class="col-md-6 col-md-offset-1">
+      <div id="usernames"> Здравей, {{user.first_name}} {{user.last_name}}!</div>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -222,6 +222,19 @@ body {
 .container section:nth-of-type(2n + 1) div.text-card {
   float: right; }
 
+.container #user-avatar{
+  margin-top: 50px;
+  border: 2px solid #9D9898;
+  width: 300px;
+  height: 300px;
+  border-radius: 150px;
+}
+
+.container #usernames{
+  margin-top: 100px;
+  font-size: 30px;
+}
+
 .dropdown-menu {
   margin-top: 20px; }
 
