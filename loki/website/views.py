@@ -3,13 +3,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
+from django.forms import formset_factory
 
 from education.models import WorkingAt
 from base_app.models import Partner, GeneralPartner, BaseUser
 from base_app.services import send_activation_mail, send_forgotten_password_email
 from base_app.helper import get_or_none
 
-from .forms import RegisterForm, LoginForm
+from .forms import RegisterForm, LoginForm, ProfileEditForm
 from .decorators import anonymous_required
 
 
@@ -101,6 +102,16 @@ def logout_view(request):
 @login_required
 def profile(request):
     return render(request, 'website/profile.html', locals())
+
+@login_required
+def profile_edit(request):
+    form = ProfileEditForm(instance=request.user)
+    if request.method == 'POST':
+        form = ProfileEditForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            return render(request, 'website/profile.html')
+    return render(request, "website/profile_edit.html", locals())
 
 
 def forgotten_password(request):

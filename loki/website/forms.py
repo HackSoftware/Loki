@@ -1,4 +1,5 @@
 from django import forms
+from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from base_app.models import BaseUser, EducationInfo, EducationPlace, Faculty, Subject
@@ -137,3 +138,9 @@ class LoginForm(forms.Form):
         label="Email",
         widget=forms.TextInput(attrs={'placeholder': 'Email adress', 'autofocus': ''}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
+
+class ProfileEditForm(ModelForm):
+    class Meta:
+        model = BaseUser
+        fields = ['first_name', 'last_name', 'email', 'password', 'avatar']
