@@ -103,7 +103,7 @@ def logout_view(request):
 def profile(request):
     return render(request, 'website/profile.html', locals())
 
-@login_required
+@login_required(login_url='website:login')
 def profile_edit(request):
     form = ProfileEditForm(instance=request.user)
     if request.method == 'POST':
