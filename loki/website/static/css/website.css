@@ -58,6 +58,9 @@ body {
               cursor: pointer; }
           body #page-wrap #header #main-navigation li .active {
             border-bottom: 2px solid #F7931E; }
+            body #page-wrap #header #main-navigation #user-profile-menu {
+              width: 30px;
+              height: 30px; }
     body #page-wrap #faces {
       margin: 0; }
       body #page-wrap #faces #moto {
