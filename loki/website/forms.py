@@ -143,4 +143,4 @@ class LoginForm(forms.Form):
 class ProfileEditForm(ModelForm):
     class Meta:
         model = BaseUser
-        fields = ['first_name', 'last_name', 'email', 'avatar']
+        fields = ['first_name', 'last_name']

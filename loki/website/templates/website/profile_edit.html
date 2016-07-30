@@ -1,22 +1,23 @@
 {% extends 'website/base.html' %}
-
-{% block 'page-content' %}
 {% load crispy_forms_tags %}
 
-<div class="container login-container">
-    <div class="card card-container">
-        <div class="profile-img-container">
-            <img class="img-circle" src="{{ STATIC_URL }}website_images/hackman_head.png" />
-        </div>
-        {% if error %}
-            <div class="bg-warning error">{{error}}</div>
-        {% endif %}
-        <form method="POST" action="" class="register-form" >
-            {{form|crispy}}
-            {% csrf_token %}
-            <button type="submit" class="btn btn-warning btn-login" >Hack on!</button>
-        </form>
+{% block 'page-content' %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+      {% if user.avatar == None %}
+        <img id="user-avatar" src="{{ STATIC_URL }}website_images/registration_question.png">
+      {% else %}
+        <img id="user-avatar" src={{user.avatar}}/>
+      {% endif %}
     </div>
+    <div class="col-md-4 col-md-offset-1">
+      <form method="POST" enctype='multipart/form-data' action="" class="register-form" >
+          {{form|crispy}}
+          {% csrf_token %}
+          <button type="submit" class="btn btn-warning btn-login" >Save</button>
+      </form>
+    </div>
+  </div>
 </div>
-
 {% endblock %}
