@@ -99,7 +99,7 @@ def logout_view(request):
     return redirect(reverse('website:index'))
 
 
-@login_required
+@login_required(login_url='website:login')
 def profile(request):
     return render(request, 'website/profile.html', locals())
 
