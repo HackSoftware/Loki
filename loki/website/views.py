@@ -105,10 +105,9 @@ def profile(request):
 
 @login_required(login_url='website:login')
 def profile_edit(request):
-    form = ProfileEditForm(request.FILES or None, instance=request.user)
-    print(request.FILES)
+    form = ProfileEditForm(instance=request.user)
     if request.method == 'POST':
-        form = ProfileEditForm(request.POST, request.FILES or None, instance=request.user)
+        form = ProfileEditForm(request.POST, instance=request.user)
         if form.is_valid():
             user = form.save()
             return redirect('/profile')
