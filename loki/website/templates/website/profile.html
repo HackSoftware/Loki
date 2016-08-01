@@ -4,8 +4,8 @@
 <div class="container">
   <div class="row-profile">
     <div class="col-md-3">
-      {% if user.avatar == None %}
-        <img id="user-avatar" src="{{ STATIC_URL }}website_images/registration_question.png">
+      {% if not user.avatar %}
+        <img id="user-avatar" src="{{ STATIC_URL }}website_images/hackman_head.png">
       {% else %}
         <img id="user-avatar" src={{user.avatar}}/>
       {% endif %}
