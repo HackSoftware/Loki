@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from base_app.models import BaseUser, EducationInfo, EducationPlace, Faculty, Subject
 from base_app.helper import get_or_none, validate_password
-
+from image_cropping import ImageCropWidget
 
 INPUTS = {
     'text': forms.TextInput,
@@ -143,4 +143,4 @@ class LoginForm(forms.Form):
 class ProfileEditForm(ModelForm):
     class Meta:
         model = BaseUser
-        fields = ['first_name', 'last_name']
+        fields = ['first_name', 'last_name', 'cropping', 'avatar']

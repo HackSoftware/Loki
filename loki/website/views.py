@@ -3,7 +3,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
-from django.forms import formset_factory
 
 from education.models import WorkingAt
 from base_app.models import Partner, GeneralPartner, BaseUser
@@ -12,7 +11,7 @@ from base_app.helper import get_or_none
 
 from .forms import RegisterForm, LoginForm, ProfileEditForm
 from .decorators import anonymous_required
-
+from easy_thumbnails.files import get_thumbnailer
 
 def index(request):
     successors = SuccessStoryPerson.objects.filter(show_picture_on_site=True).order_by('?')[:6]
@@ -105,12 +104,18 @@ def profile(request):
 
 @login_required(login_url='website:login')
 def profile_edit(request):
+    # thumbnail_url = get_thumbnailer(request.user.full_image).get_thumbnail({
+    # 'size': (430, 360),
+    # 'box': request.user.cropping,
+    # 'crop': True,
+    # 'detail': True,
+    # }).url
     form = ProfileEditForm(instance=request.user)
     if request.method == 'POST':
         form = ProfileEditForm(request.POST, instance=request.user)
         if form.is_valid():
             user = form.save()
-            return redirect('/profile')
+            return redirect(reverse('website:profile'))
     return render(request, "website/profile_edit.html", locals())
 
 
