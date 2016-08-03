@@ -1,13 +1,14 @@
 {% extends 'website/base.html' %}
+{% load cropping thumbnail %}
 
 {% block 'page-content' %}
 <div class="container">
   <div class="row-profile">
     <div class="col-md-3">
-      {% if not user.avatar %}
+      {% if not user.full_image %}
         <img id="user-avatar" src="{{ STATIC_URL }}website_images/hackman_head.png">
       {% else %}
-        <img id="user-avatar" src={{user.avatar}}/>
+        <img id="user-avatar" src="{% cropped_thumbnail user 'cropping' %}"/>
       {% endif %}
     </div>
     <div class="col-md-6 col-md-offset-1">

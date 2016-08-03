@@ -58,9 +58,9 @@ body {
               cursor: pointer; }
           body #page-wrap #header #main-navigation li .active {
             border-bottom: 2px solid #F7931E; }
-            body #page-wrap #header #main-navigation #user-profile-menu {
-              width: 30px;
-              height: 30px; }
+        body #page-wrap #header #main-navigation #user-profile-menu {
+          width: 30px;
+          height: 30px; }
     body #page-wrap #faces {
       margin: 0; }
       body #page-wrap #faces #moto {
@@ -224,20 +224,13 @@ body {
   float: left; }
 .container section:nth-of-type(2n + 1) div.text-card {
   float: right; }
-
 .container #user-avatar {
   border: 2px solid #9D9898;
   width: 300px;
   height: 300px;
-  border-radius: 150px;
-}
-
+  border-radius: 150px; }
 .container #usernames {
-  font-size: 30px;
-}
-
-.row-profile {
-  margin-top: 50px; }
+  font-size: 30px; }
 
 .dropdown-menu {
   margin-top: 20px; }
@@ -394,9 +387,7 @@ body {
   .text-card {
     width: 100% !important;
     min-height: 100px;
-    padding-top: 0px; }
-
-  }
+    padding-top: 0px; } }
 .login-container {
   max-width: 400px;
   margin-top: 50px;
@@ -411,25 +402,25 @@ body {
   .login-container .profile-img-container {
     text-align: center;
     margin-bottom: 50px; }
-  .login-container .profile-img-container .img-circle {
+    .login-container .profile-img-container .img-circle {
       width: 96px;
       height: 96px;
       border: 2px solid; }
-  .login-container .reg-img-container .img-circle {
-        width: 22px;
-        height: 22px;
-        margin-left: 340px;
-        margin-top: -232px;}
-  @media screen and (max-width: 600px) {
-    .login-container .reg-img-container .img-circle {
-      margin-left: 280px;} }
-      @media screen and (max-width: 340px) {
-        .login-container .reg-img-container .img-circle {
-          margin-left: 260px;
-          margin-top: -272px;} }
   .login-container .btn-login {
     width: 100%;
     margin-bottom: 20px; }
+  .login-container .reg-img-container .img-circle {
+    width: 22px;
+    height: 22px;
+    margin-left: 340px;
+    margin-top: -232px; }
+    @media screen and (max-width: 600px) {
+      .login-container .reg-img-container .img-circle {
+        margin-left: 280px; } }
+    @media screen and (max-width: 340px) {
+      .login-container .reg-img-container .img-circle {
+        margin-left: 260px;
+        margin-top: -272px; } }
 
 #suggestion-dropdown {
   position: absolute;
@@ -468,5 +459,44 @@ body {
 
 .ui-state-hover, .ui-widget-content .ui-state-hover {
   background-color: #F7931E; }
+
+#div_id_full_image {
+  visibility: hidden;
+  height: 0; }
+
+.row-profile {
+  margin-top: 50px; }
+  .row-profile.edit-profile .editable-user-avatar {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    cursor: pointer;
+    text-align: center; }
+    .row-profile.edit-profile .editable-user-avatar .glyphicon {
+      font-size: 100px;
+      position: absolute;
+      width: 300px;
+      line-height: 300px;
+      color: white;
+      opacity: 0;
+      transition: all 1s ease; }
+    .row-profile.edit-profile .editable-user-avatar:before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      left: 0;
+      top: 0;
+      background-color: black;
+      opacity: 0;
+      transition: all 2s ease; }
+    .row-profile.edit-profile .editable-user-avatar:hover:before {
+      transition: all 1s ease;
+      opacity: 0.6; }
+    .row-profile.edit-profile .editable-user-avatar:hover .glyphicon {
+      transition: all 1s ease;
+      opacity: 1; }
 
 /*# sourceMappingURL=website.css.map */

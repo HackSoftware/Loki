@@ -1,23 +1,26 @@
 {% extends 'website/base.html' %}
 {% load crispy_forms_tags %}
-<!-- {% block 'head-content' %}
+{% load cropping thumbnail %}
 
+{% block 'head-content' %}
 {{ form.media }}
-
-{% endblock %} -->
+{% endblock %}
 
 {% block 'page-content' %}
 <div class="container">
-  <div class="row-profile">
-    <div class="col-md-3">
-      {% if user.avatar == None %}
-        <img id="user-avatar" src="{{ STATIC_URL }}website_images/registration_question.png">
-      {% else %}
-        <img id="user-avatar" src={{user.avatar}}/>
-      {% endif %}
+  <div class="row-profile edit-profile">
+    <div class="col-md-4">
+      <div class="editable-user-avatar ease1s">
+        <div class="glyphicon glyphicon-camera"></div>
+        {% if not user.full_image %}
+          <img id="user-avatar" src="{{ STATIC_URL }}website_images/hackman_head.png">
+        {% else %}
+          <img id="user-avatar" src="{% cropped_thumbnail user 'cropping' %}" />
+        {% endif %}
+      </div>
     </div>
     <div class="col-md-4 col-md-offset-1">
-      <form method="POST" enctype='multipart/form-data' action="" class="register-form" >
+      <form method="POST" id="cropping_form" enctype='multipart/form-data' action="" class="register-form" >
           {{form|crispy}}
           {% csrf_token %}
           <button type="submit" class="btn btn-warning btn-login" >Save</button>

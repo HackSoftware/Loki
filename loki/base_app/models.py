@@ -5,7 +5,7 @@ from django.contrib.auth.models import (AbstractBaseUser,
 from ckeditor.fields import RichTextField
 
 from loki.settings import MEDIA_ROOT
-from image_cropping import ImageRatioField, ImageCropField
+from image_cropping.fields import ImageRatioField, ImageCropField
 
 class Company(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -176,9 +176,9 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     works_at = models.CharField(null=True, blank=True, max_length=110)
     studies_at = models.CharField(blank=True, null=True, max_length=110)
 
-    avatar = models.ImageField(blank=True, null=True)
-    full_image = models.ImageField(blank=True, null=True)
-    cropping = ImageRatioField('full_image', '430x360')
+    avatar = ImageCropField(blank=True, null=True)
+    full_image = ImageCropField(upload_to='avatars/', blank=True, null=True)
+    cropping = ImageRatioField('full_image', '300x300')
 
     education_info = models.ManyToManyField(EducationPlace, through='EducationInfo', related_name='info')
 

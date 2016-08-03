@@ -97,25 +97,18 @@ def logout_view(request):
     logout(request)
     return redirect(reverse('website:index'))
 
-
 @login_required(login_url='website:login')
 def profile(request):
     return render(request, 'website/profile.html', locals())
 
 @login_required(login_url='website:login')
 def profile_edit(request):
-    # thumbnail_url = get_thumbnailer(request.user.full_image).get_thumbnail({
-    # 'size': (430, 360),
-    # 'box': request.user.cropping,
-    # 'crop': True,
-    # 'detail': True,
-    # }).url
     form = ProfileEditForm(instance=request.user)
     if request.method == 'POST':
-        form = ProfileEditForm(request.POST, instance=request.user)
+        form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             user = form.save()
-            return redirect(reverse('website:profile'))
+            return redirect(reverse('website:profile_edit'))
     return render(request, "website/profile_edit.html", locals())
 
 

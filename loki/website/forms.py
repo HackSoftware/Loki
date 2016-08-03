@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from base_app.models import BaseUser, EducationInfo, EducationPlace, Faculty, Subject
 from base_app.helper import get_or_none, validate_password
-from image_cropping import ImageCropWidget
+from image_cropping import ImageCropWidget, ImageCropField
 
 INPUTS = {
     'text': forms.TextInput,
@@ -136,11 +136,11 @@ class RegisterForm(forms.Form):
 class LoginForm(forms.Form):
     email = forms.EmailField(
         label="Email",
-        widget=forms.TextInput(attrs={'placeholder': 'Email adress', 'autofocus': ''}))
+        widget=forms.TextInput(attrs={'placeholder': 'Email address', 'autofocus': ''}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
 
 class ProfileEditForm(ModelForm):
     class Meta:
         model = BaseUser
-        fields = ['first_name', 'last_name', 'cropping', 'avatar']
+        fields = ('first_name', 'last_name', 'full_image', 'cropping')
