@@ -4,12 +4,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
 
-from education.models import WorkingAt
+from education.models import WorkingAt, Student
 from base_app.models import Partner, GeneralPartner, BaseUser
 from base_app.services import send_activation_mail, send_forgotten_password_email
 from base_app.helper import get_or_none
 
-from .forms import RegisterForm, LoginForm, ProfileEditForm
+from .forms import RegisterForm, LoginForm, ProfileEditForm, StudentForm
 from .decorators import anonymous_required
 from easy_thumbnails.files import get_thumbnailer
 
@@ -103,11 +103,19 @@ def profile(request):
 
 @login_required(login_url='website:login')
 def profile_edit(request):
-    form = ProfileEditForm(instance=request.user)
+    check_user_is_student = Student.objects.get(email=request.user.email)
+    form = StudentForm(instance=request.user) if check_user_is_student \
+            else ProfileEditForm(instance=request.user)
+
     if request.method == 'POST':
         form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
-        if form.is_valid():
-            user = form.save()
+        form = StudentForm(request.POST, instance=request.user)
+
+        form = StudentForm(request.POST, request.FILES, instance=request.user) if check_user_is_student \
+                else ProfileEditForm(request.POST, request.FILES, instance=request.user)
+        if form.is_valid() and student_form.is_valid():
+            # user = form.save()
+            form.save()
             return redirect(reverse('website:profile_edit'))
     return render(request, "website/profile_edit.html", locals())
 
