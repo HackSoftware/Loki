@@ -108,9 +108,6 @@ def profile_edit(request):
             else ProfileEditForm(instance=request.user)
 
     if request.method == 'POST':
-        form = ProfileEditForm(request.POST, request.FILES, instance=request.user)
-        form = StudentForm(request.POST, instance=request.user)
-
         form = StudentForm(request.POST, request.FILES, instance=request.user) if check_user_is_student \
                 else ProfileEditForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid() and student_form.is_valid():
