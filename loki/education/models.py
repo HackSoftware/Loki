@@ -12,7 +12,7 @@ from .exceptions import HasToBeRetested
 
 class Student(BaseUser):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
-    mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
+    mac = models.CharField(validators=[validate_mac], max_length=17, null=True)
     phone = models.CharField(null=True, blank=True, max_length=20)
     skype = models.CharField(null=True, blank=True, max_length=20)
 

@@ -27,6 +27,7 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'image_cropping',
     'post_office',
+    'betterforms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

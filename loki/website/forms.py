@@ -4,8 +4,11 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from base_app.models import BaseUser, EducationInfo, EducationPlace, Faculty, Subject
 from base_app.helper import get_or_none, validate_password
+from betterforms.multiform import MultiModelForm
 from education.models import Student
+from education.validators import validate_mac
 from image_cropping import ImageCropWidget, ImageCropField
+import re
 
 INPUTS = {
     'text': forms.TextInput,
@@ -141,12 +144,21 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
 
-class ProfileEditForm(ModelForm):
+class BaseEditForm(ModelForm):
     class Meta:
         model = BaseUser
         fields = ('first_name', 'last_name', 'full_image', 'cropping')
 
-class StudentForm(ModelForm):
+class StudentEditForm(ModelForm):
     class Meta:
         model = Student
-        fields = ('first_name', 'last_name', 'full_image', 'cropping', 'mac', 'skype')
+        fields = ('mac',)
+
+    def clean_mac(self):
+        mac = self.cleaned_data.get('mac')
+        print(mac)
+        regex = re.compile(r'^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$', re.IGNORECASE)
+        if not re.match(regex, mac):
+            print("yeeeeeeeeeeeeeeeeeeeeeeee")
+            raise ValidationError('{} is not a valid mac address'.format(mac))
+        return mac
