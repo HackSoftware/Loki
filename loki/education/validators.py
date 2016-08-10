@@ -9,7 +9,6 @@ def validate_mac(mac):
     # RegexValidator uses re.search, which has no use for us
     regex = re.compile(r'^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$', re.IGNORECASE)
     if not re.match(regex, mac):
-        print("yeeeeeeeeeeeeeeeeeeeeeeee")
         raise ValidationError(_('{} is not a valid mac address'.format(mac)), 'invalid_mac_address')
 
 
