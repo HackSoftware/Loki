@@ -4,6 +4,8 @@
 
 {% block 'head-content' %}
 {{ base_form.media }}
+{{ teacher_form.media }}
+{{ student_teacher_form.media }}
 {% endblock %}
 
 {% block 'page-content' %}
@@ -20,12 +22,11 @@
       </div>
     </div>
     <div class="col-md-4 col-md-offset-1">
-      <!-- {% if student_form.errors %} -->
-          <div>{{errors}}</div>
-      <!-- {% endif %} -->
           <form method="POST" id="cropping_form" enctype='multipart/form-data' action="" class="register-form" >
           {{base_form|crispy}}
           {{student_form|crispy}}
+          {{teacher_form|crispy}}
+          {{student_teacher_form|crispy}}
           {% csrf_token %}
           <button type="submit" class="btn btn-warning btn-login" >Save</button>
       </form>

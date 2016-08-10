@@ -4,12 +4,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
 
-from education.models import WorkingAt, Student
+from education.models import WorkingAt, Student, Teacher
 from base_app.models import Partner, GeneralPartner, BaseUser
 from base_app.services import send_activation_mail, send_forgotten_password_email
 from base_app.helper import get_or_none
 
-from .forms import RegisterForm, LoginForm, BaseEditForm, StudentEditForm
+from .forms import RegisterForm, LoginForm, BaseEditForm, StudentEditForm, TeacherEditForm, TeacherAndStudentEditForm
 from .decorators import anonymous_required
 from easy_thumbnails.files import get_thumbnailer
 
@@ -103,30 +103,56 @@ def profile(request):
 
 @login_required(login_url='website:login')
 def profile_edit(request):
+    # TODO Need to be re-write !!!
     base_form = BaseEditForm(instance=request.user)
-    student = Student.objects.get(email=request.user.email)
+    try:
+        student = Student.objects.get(email=request.user.email)
+    except Student.DoesNotExist:
+        student = None
+    try:
+        teacher = Teacher.objects.get(email=request.user.email)
+    except Teacher.DoesNotExist:
+        teacher = None
+
     if student:
         student_form = StudentEditForm(instance=student)
+    if teacher and not student:
+        teacher_form = TeacherEditForm(instance=teacher)
+    if student and teacher:
+        student_teacher_form = TeacherAndStudentEditForm(instance=teacher)
 
     if request.method == 'POST':
         base_form = BaseEditForm(request.POST, request.FILES, instance=request.user)
 
         if student:
             student_form = StudentEditForm(request.POST, instance=student)
-
+        if teacher and not student:
+            teacher_form = TeacherEditForm(request.POST, request.FILES,
+                                           instance=teacher)
+        if student and teacher:
+            student_teacher_form = TeacherAndStudentEditForm(request.POST,
+                                            request.FILES, instance=teacher)
         if base_form.is_valid():
             if student:
-                # Rado: Visualization Form Errors
                 if student_form.is_valid():
                     student_form.save()
                 else:
                     errors = student_form.errors
                     return render(request, "website/profile_edit.html", locals())
-            else:
-                base_form.save()
-
-                    # s.base_user_ptr = base_form.save()
-            # base_form.save()
+            if teacher and not student:
+                print("in teacher")
+                if teacher_form.is_valid():
+                    teacher_form.save()
+                else:
+                    errors = teacher_form.errors
+                    return render(request, "website/profile_edit.html", locals())
+            if student and teacher:
+                if student_teacher_form.is_valid():
+                    student_teacher_form.save()
+                else:
+                    errors = student_teacher_form.errors
+                    return render(request, "website/profile_edit.html", locals())
+            base_form.save()
             return redirect(reverse('website:profile_edit'))
     return render(request, "website/profile_edit.html", locals())
 

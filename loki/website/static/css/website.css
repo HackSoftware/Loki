@@ -178,6 +178,8 @@ body {
         body #page-wrap #videos .video .video-thumb {
           box-shadow: 0px 10px 20px #888888;
           width: 100%; }
+    body #page-wrap #before-footer {
+      margin-bottom: 15px; }
   body #footer {
     height: 100px;
     background: #F7931E;
