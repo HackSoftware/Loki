@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from base_app.models import BaseUser, EducationInfo, EducationPlace, Faculty, Subject
 from base_app.helper import get_or_none, validate_password
-from betterforms.multiform import MultiModelForm
 from education.models import Student, Teacher, StudentAndTeacherCommonModel
 from education.validators import validate_mac
 from image_cropping import ImageCropWidget, ImageCropField
