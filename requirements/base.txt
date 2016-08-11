@@ -1,7 +1,7 @@
 amqp==1.4.9
 anyjson==0.3.3
 billiard==3.3.0.23
-celery==3.1.23 
+celery==3.1.23
 coverage==3.7.1
 coveralls==0.5
 diff-match-patch==20121119
@@ -39,3 +39,4 @@ tablib==0.10.0
 tabulate==0.7.5
 Werkzeug==0.10.4
 wheel==0.24.0
+easy-thumbnails==2.3
