@@ -1,15 +1,14 @@
 from django import forms
 from django.forms import ModelForm
-from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from base_app.models import BaseUser, EducationInfo, EducationPlace, Faculty, Subject
+from base_app.models import (BaseUser, EducationInfo, EducationPlace, Faculty,
+                             Subject)
 from base_app.helper import get_or_none, validate_password
 from education.models import Student, Teacher, StudentAndTeacherCommonModel
 from education.validators import (validate_mac, validate_phone,
                                   validate_github_account)
 from image_cropping import ImageCropWidget, ImageCropField
-import re
 
 INPUTS = {
     'text': forms.TextInput,
