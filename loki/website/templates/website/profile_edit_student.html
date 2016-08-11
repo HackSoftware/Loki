@@ -3,27 +3,24 @@
 {% load cropping thumbnail %}
 
 {% block 'head-content' %}
-{{ base_form.media }}
-<!-- {{ teacher_form.media }}
-{{ student_teacher_form.media }} -->
+{{ student_form.media }}
 {% endblock %}
 
 {% block 'page-content' %}
 <div class="container">
   <div class="row-profile edit-profile">
     <div class="col-md-4">
-      <div class="editable-user-avatar ease1s">
-        <div class="glyphicon glyphicon-camera"></div>
+      <div class="col-md-3">
         {% if not user.full_image %}
           <img id="user-avatar" src="{{ STATIC_URL }}website_images/hackman_head.png">
         {% else %}
-          <img id="user-avatar" src="{% cropped_thumbnail user 'cropping' %}" />
+          <img id="user-avatar" src="{% cropped_thumbnail user 'cropping' %}"/>
         {% endif %}
       </div>
     </div>
     <div class="col-md-4 col-md-offset-1">
-          <form method="POST" id="cropping_form" enctype='multipart/form-data' action="" class="register-form" >
-          {{base_form|crispy}}
+          <form method="POST" enctype='multipart/form-data' action="" class="register-form" >
+          {{ student_form|crispy }}
           {% csrf_token %}
           <button type="submit" class="btn btn-warning btn-login" >Save</button>
       </form>

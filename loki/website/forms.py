@@ -1,11 +1,13 @@
 from django import forms
 from django.forms import ModelForm
+from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from base_app.models import BaseUser, EducationInfo, EducationPlace, Faculty, Subject
 from base_app.helper import get_or_none, validate_password
 from education.models import Student, Teacher, StudentAndTeacherCommonModel
-from education.validators import validate_mac
+from education.validators import (validate_mac, validate_phone,
+                                  validate_github_account)
 from image_cropping import ImageCropWidget, ImageCropField
 import re
 
@@ -27,7 +29,6 @@ def w(input_type, value=None):
 
     attrs = {'placeholder': value}
     return element(attrs=attrs)
-
 
 class RegisterForm(forms.Form):
     first_name = forms.CharField(label=_('Име'), widget=w('text', 'Име'))
@@ -67,23 +68,33 @@ class LoginForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'Email address', 'autofocus': ''}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
-
 class BaseEditForm(ModelForm):
     class Meta:
         model = BaseUser
-        fields = ('first_name', 'last_name', 'full_image', 'cropping')
+        fields = ('first_name', 'last_name', 'github_account', 'full_image',
+                  'cropping')
+
+    def clean_github_account(self):
+        github_account = self.cleaned_data.get("github_account")
+        validate_github_account(github_account)
+        return github_account
 
 class StudentEditForm(ModelForm):
     class Meta:
         model = Student
         fields = ('mac', 'skype', 'phone')
 
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone")
+        validate_phone(phone)
+        return phone
+
 class TeacherEditForm(ModelForm):
     class Meta:
         model = Teacher
         fields = ('mac', 'phone', 'signature',)
 
-class TeacherAndStudentEditForm(ModelForm):
-    class Meta:
-        model = Teacher
-        fields = ('signature',)
+    def clean_phone(self):
+        phone = self.cleaned_data.get("phone")
+        validate_phone(phone)
+        return phone

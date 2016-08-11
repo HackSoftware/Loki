@@ -76,7 +76,15 @@
                 <img id="user-profile-menu" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" src="{{ STATIC_URL }}website_images/hackman_head.png"/>
                   <ul class="dropdown-menu">
                     <li><a href="{% url 'website:profile' %}">Профил</a></li>
-                    <li><a href="{% url 'website:profile_edit' %}">Редакция</a></li>
+                    <li><a href="{% url 'website:profile_edit' %}">Редакция на профилни данни</a></li>
+
+                    {% if user.get_student %}
+                    <li><a href="{% url 'website:profile_edit_student' %}">Редакция на студентски данни</a></li>
+                    {% endif %}
+
+                    {% if user.get_teacher %}
+                    <li><a href="{% url 'website:profile_edit_teacher' %}">Редакция на учителски данни</a></li>
+                    {% endif %}
                     <li><a href="{% url 'website:logout' %}">Изход</a></li>
                   </ul>
               </div>
@@ -84,11 +92,6 @@
             {% else %}
             <li><a href="{% url 'website:register' %}">Регистрация</a></li>
             <li><a href="{% url 'website:login' %}">Вход</a></li>
-            <!-- {% comment "Defer register/login until fully migrated" %}
-            <li><a href="{% url 'website:register' %}">Регистрация</a></li>
-            <li><a href="{% url 'website:login' %}">Вход</a></li>
-            {% endcomment %} -->
-
             {% endif %}
           </ul>
 

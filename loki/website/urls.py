@@ -1,7 +1,8 @@
 from django.conf.urls import url
 
 from .views import (index, about, courses, partners, course_details, register,
-                    log_in, profile, profile_edit,logout_view, forgotten_password)
+                    log_in, profile, profile_edit, profile_edit_teacher,
+                    profile_edit_student, forgotten_password, logout_view,)
 
 urlpatterns = [
     url(r'^$', index, name='index'),
@@ -14,5 +15,7 @@ urlpatterns = [
     url(r'^register/$', register, name="register"),
     url(r'^profile/$', profile, name="profile"),
     url(r'^profile/edit/$', profile_edit, name="profile_edit"),
+    url(r'^profile/edit/student$', profile_edit_student, name="profile_edit_student"),
+    url(r'^profile/edit/teacher$', profile_edit_teacher, name="profile_edit_teacher"),
     url(r'^forgotten-password/$', forgotten_password, name="forgotten_password")
 ]
