@@ -12,8 +12,40 @@
       {% endif %}
     </div>
     <div class="col-md-6 col-md-offset-1">
-      <div id="usernames"> Здравей, {{user.first_name}} {{user.last_name}}!</div>
+      <table class="table">
+      <thead>
+        <tr>
+          <th id="user-name">{{user.first_name}} {{user.last_name}}</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Email<b></td>
+            <td>{{user.email}}</td>
+        </tr>
+        <tr>
+          <td><b>Github акаунт</b></td>
+          <td><a href={{user.github_account}}>{{user.github_account}}</a></td>
+        </tr>
+        {% if user.get_student %}
+        <tr>
+          <td><b>Телефонен номер<b></td>
+          <td>{{student.phone}}</td>
+        </tr>
+        <tr>
+          <td><b>Skype<b></td>
+          <td>{{student.skype}}</td>
+        </tr>
+        <tr>
+          <td><b>MAC<b></td>
+          <td>{{student.mac}}</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
     </div>
+
+
   </div>
 </div>
 {% endblock %}

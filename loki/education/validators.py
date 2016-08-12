@@ -8,7 +8,7 @@ from django.utils.translation import ugettext_lazy as _
 def validate_phone(phone_number):
     phone_pattern = "^(\+|)[0-9\s]+$"
     if not re.search(phone_pattern, phone_number):
-        raise ValidationError("Not a valid phone number")
+        raise ValidationError("Невалиден телефонен номер")
 
 def validate_mac(mac):
     # RegexValidator uses re.search, which has no use for us
@@ -20,7 +20,7 @@ def validate_mac(mac):
 def validate_github_account(github_account):
     github_pattern = "^http(|s):\/\/github.com\/[^\/]+$"
     if not re.search(github_pattern, github_account):
-        raise ValidationError("Not a valid Github account")
+        raise ValidationError("Невалиден Github акаунт")
 
 def validate_url(url):
     # Check if url is valid

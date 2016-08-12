@@ -100,6 +100,12 @@ def logout_view(request):
 
 @login_required(login_url='website:login')
 def profile(request):
+    user = BaseUser.objects.get(email=request.user.email)
+    try:
+        student = Student.objects.get(email=request.user.email)
+    except Student.DoesNotExist:
+        student = None
+    print(user.first_name)
     return render(request, 'website/profile.html', locals())
 
 @login_required(login_url='website:login')
