@@ -84,7 +84,7 @@ class StudentEditForm(ModelForm):
         fields = ('mac', 'skype', 'phone')
 
     def clean_phone(self):
-        phone = self.cleaned_data.get("phone")
+        phone = self.cleaned_data.get("phone").strip()
         validate_phone(phone)
         return phone
 

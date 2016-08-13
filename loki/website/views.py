@@ -132,7 +132,6 @@ def profile_edit_student(request):
     if request.method == 'POST':
         student_form = StudentEditForm(request.POST, request.FILES,
                                        instance=student)
-        print(student_form)
         if student_form.is_valid():
             student_form.save()
         else:
