@@ -105,6 +105,10 @@ def profile(request):
         student = Student.objects.get(email=request.user.email)
     except Student.DoesNotExist:
         student = None
+    try:
+        teacher = Teacher.objects.get(email=request.user.email)
+    except Teacher.DoesNotExist:
+        teacher = None
     print(user.first_name)
     return render(request, 'website/profile.html', locals())
 
