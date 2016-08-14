@@ -7,7 +7,6 @@ from django.utils.translation import ugettext_lazy as _
 
 def validate_phone(phone_number):
     phone_pattern = "^(\+|)[0-9\s]+$"
-    print(len(phone_number))
     if len(phone_number) != 0:
         if (len(phone_number) < 6) or \
             not re.search(phone_pattern, phone_number):
