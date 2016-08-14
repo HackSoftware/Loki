@@ -501,5 +501,7 @@ body {
       opacity: 1; }
   .row-profile #user-name {
     font-size: 20px; }
+  .row-profile #profile-socials {
+    font-size: 2em; }
 
 /*# sourceMappingURL=website.css.map */

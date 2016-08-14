@@ -120,6 +120,7 @@ def profile_edit(request):
 
         if base_form.is_valid():
             base_form.save()
+            return render(request, "website/profile.html", locals())
         else:
             errors = base_form.errors
             return redirect(reverse('website:profile_edit', locals()))
@@ -138,6 +139,10 @@ def profile_edit_student(request):
                                        instance=student)
         if student_form.is_valid():
             student_form.save()
+            if Teacher.objects.filter(email=request.user.email).exists():
+                teacher = Teacher.objects.get(email=request.user.email)
+                TeacherEditForm(request.POST, request.FILES,
+                                               instance=teacher).save()
         else:
             errors = student_form.errors
             return render(request, "website/profile_edit_student.html", locals())
@@ -145,6 +150,7 @@ def profile_edit_student(request):
 
 @login_required(login_url='website:login')
 def profile_edit_teacher(request):
+    # import pdb; pdb.set_trace()
     try:
         teacher = Teacher.objects.get(email=request.user.email)
     except Teacher.DoesNotExist:
@@ -157,6 +163,11 @@ def profile_edit_teacher(request):
         print(teacher_form)
         if teacher_form.is_valid():
             teacher_form.save()
+            # print(Student.objects.get(email=request.user.email))
+            if Student.objects.filter(email=request.user.email).exists():
+                student = Student.objects.get(email=request.user.email)
+                StudentEditForm(request.POST, request.FILES,
+                                               instance=student).save()
         else:
             errors = teacher_form.errors
             return render(request, "website/profile_edit_teacher.html", locals())
