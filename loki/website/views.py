@@ -122,7 +122,7 @@ def profile_edit(request):
             return render(request, "website/profile.html", locals())
         else:
             errors = base_form.errors
-            return redirect(reverse('website:profile_edit', locals()))
+            return render(request, "website/profile_edit.html", locals())
     return render(request, "website/profile_edit.html", locals())
 
 @login_required(login_url='website:login')

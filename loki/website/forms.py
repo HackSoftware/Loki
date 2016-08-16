@@ -74,7 +74,7 @@ class BaseEditForm(ModelForm):
                   'cropping')
 
     def clean_github_account(self):
-        github_account = self.cleaned_data.get("github_account")
+        github_account = self.cleaned_data.get("github_account").strip()
         validate_github_account(github_account)
         return github_account
 

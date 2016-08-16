@@ -21,8 +21,9 @@ def validate_mac(mac):
 
 def validate_github_account(github_account):
     github_pattern = "^http(|s):\/\/github.com\/[^\/]+$"
-    if not re.search(github_pattern, github_account):
-        raise ValidationError("Невалиден Github акаунт")
+    if len(github_account) != 0:
+        if not re.search(github_pattern, github_account):
+            raise ValidationError("Невалиден Github акаунт")
 
 def validate_url(url):
     # Check if url is valid
