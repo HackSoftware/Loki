@@ -7,16 +7,20 @@ from django.utils.translation import ugettext_lazy as _
 
 def validate_phone(phone_number):
     phone_pattern = "^(\+|)[0-9\s]+$"
-    if len(phone_number) != 0:
-        if (len(phone_number) < 6) or \
-            not re.search(phone_pattern, phone_number):
-            raise ValidationError("Невалиден телефонен номер")
+    if len(phone_number) == 0:
+        return
+
+    if (len(phone_number) < 6) or \
+        not re.search(phone_pattern, phone_number):
+        raise ValidationError("Невалиден телефонен номер")
 
 def validate_mac(mac):
     # RegexValidator uses re.search, which has no use for us
     regex = re.compile(r'^([0-9a-f]{2}[:]){5}([0-9a-f]{2})$', re.IGNORECASE)
-    if not re.match(regex, mac):
-        raise ValidationError(_('{} is not a valid mac address'.format(mac)),
+    if re.match(regex, mac):
+        return
+
+    raise ValidationError(_('{} is not a valid mac address'.format(mac)),
                                 'invalid_mac_address')
 
 def validate_github_account(github_account):
