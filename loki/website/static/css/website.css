@@ -244,9 +244,20 @@ body {
   margin-bottom: 40px; }
   .course-logo-container a:hover {
     text-decoration: none; }
+  .course-logo-container #course-avatar-active {
+    text-decoration: none; }
+    .course-logo-container #course-avatar-active:hover {
+      color: #f7931e; }
+  .course-logo-container #course-avatar-inactive {
+    text-decoration: none; }
+    .course-logo-container #course-avatar-inactive:hover {
+      color: #848484; }
+  .course-logo-container #course-name {
+    font-size: 16px; }
 
 .course-logo {
-  font-size: 22em; }
+  font-size: 12em;
+  position: relative; }
 
 .breadcrumb {
   margin-top: 20px; }

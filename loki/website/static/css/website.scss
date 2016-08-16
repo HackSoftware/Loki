@@ -360,10 +360,26 @@ $TabBorder: #C5C4C4;
     a:hover {
         text-decoration: none;
     }
+    #course-avatar-active {
+      text-decoration: none;
+        &:hover {
+        color: #f7931e;
+        }
+    }
+    #course-avatar-inactive {
+      text-decoration: none;
+        &:hover {
+        color: #848484;
+        }
+    }
+    #course-name {
+      font-size: 16px;
+    }
 }
 
 .course-logo {
-    font-size: 22em;
+    font-size: 12em;
+    position: relative;
 }
 
 .breadcrumb {

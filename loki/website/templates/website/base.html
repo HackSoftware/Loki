@@ -27,7 +27,7 @@
     {% block 'head-content' %}
 
     {% endblock %}
-
+    {% load cropping thumbnail %}
     <script type="text/javascript">
       !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
       n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -73,7 +73,11 @@
             {% if user.is_authenticated %}
             <li>
               <div class="btn-group">
-                <img id="user-profile-menu" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" src="{{ STATIC_URL }}website_images/hackman_head.png"/>
+                  {% if not user.full_image %}
+                    <img id="user-profile-menu" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" src="{{ STATIC_URL }}website_images/hackman_head.png"/>
+                  {% else %}
+                    <img id="user-profile-menu" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" src="{% cropped_thumbnail user 'cropping' %}"/>
+                  {% endif %}
                   <ul class="dropdown-menu">
                     <li><a href="{% url 'website:profile' %}">Профил</a></li>
                     <li><a href="{% url 'website:profile_edit' %}">Редакция на профилни данни</a></li>
