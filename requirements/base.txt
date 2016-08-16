@@ -1,7 +1,7 @@
 amqp==1.4.9
 anyjson==0.3.3
 billiard==3.3.0.23
-celery==3.1.23 
+celery==3.1.23
 coverage==3.7.1
 coveralls==0.5
 diff-match-patch==20121119
@@ -13,6 +13,7 @@ django-ckeditor==4.5.1
 django-cors-headers==1.1.0
 django-crispy-forms==1.6.0
 django-filter==0.11.0
+django-image-cropping==1.0.3
 django-import-export==0.4.5
 django-model-utils==2.4
 django-post-office==2.0.7
@@ -39,3 +40,4 @@ tablib==0.10.0
 tabulate==0.7.5
 Werkzeug==0.10.4
 wheel==0.24.0
+easy-thumbnails==2.3

@@ -43,23 +43,23 @@ def get_or_none(model, *args, **kwargs):
 
 
 def validate_password(value):
-    """Validates that a password is as least 7 characters long and has at least
+    """Validates that a password is as least 6 characters long and has at least
     1 digit and 1 letter.
     """
 
     min_length = 6
 
-    if len(value) < min_length:
+    if len(value) <= min_length:
         raise ValidationError(_('Password must be at least {0} characters '
                                 'long.').format(min_length))
 
     # check for digit
     if not any(char.isdigit() for char in value):
-        raise ValidationError(_('Password must container at least 1 digit.'))
+        raise ValidationError(_('Password must contain at least 1 digit.'))
 
     # check for letter
     if not any(char.isalpha() for char in value):
-        raise ValidationError(_('Password must container at least 1 letter.'))
+        raise ValidationError(_('Password must contain at least 1 letter.'))
 
 
 def get_activation_url(token, origin_name=None):

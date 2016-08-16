@@ -1,0 +1,30 @@
+{% extends 'website/base.html' %}
+{% load crispy_forms_tags %}
+{% load cropping thumbnail %}
+
+{% block 'head-content' %}
+{{ student_form.media }}
+{% endblock %}
+
+{% block 'page-content' %}
+<div class="container">
+  <div class="row-profile edit-profile">
+    <div class="col-md-4">
+      <div class="col-md-3">
+        {% if not user.full_image %}
+          <img id="user-avatar" src="{{ STATIC_URL }}website_images/hackman_head.png">
+        {% else %}
+          <img id="user-avatar" src="{% cropped_thumbnail user 'cropping' %}"/>
+        {% endif %}
+      </div>
+    </div>
+    <div class="col-md-4 col-md-offset-1">
+          <form method="POST" enctype='multipart/form-data' action="" class="register-form" >
+          {{ student_form|crispy }}
+          {% csrf_token %}
+          <button type="submit" class="btn btn-warning btn-login" >Save</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

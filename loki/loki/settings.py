@@ -1,6 +1,6 @@
 # flake8: noqa
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
-
+from easy_thumbnails.conf import Settings as thumbnail_settings
 
 """
 Django settings for loki project.
@@ -24,6 +24,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Application definition
 
 INSTALLED_APPS = (
+    'easy_thumbnails',
+    'image_cropping',
     'post_office',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -135,3 +137,7 @@ GRADER_GRADE_PATH = "/grade"
 GRADER_CHECK_PATH = "/check_result/{buildID}/"
 GRADER_GET_NONCE_PATH = "/nonce"
 POLLING_SLEEP_TIME = 1  # seconds
+
+THUMBNAIL_PROCESSORS = (
+    'image_cropping.thumbnail_processors.crop_corners',
+) + thumbnail_settings.THUMBNAIL_PROCESSORS

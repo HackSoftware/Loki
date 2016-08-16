@@ -58,6 +58,9 @@ body {
               cursor: pointer; }
           body #page-wrap #header #main-navigation li .active {
             border-bottom: 2px solid #F7931E; }
+        body #page-wrap #header #main-navigation #user-profile-menu {
+          width: 30px;
+          height: 30px; }
     body #page-wrap #faces {
       margin: 0; }
       body #page-wrap #faces #moto {
@@ -175,6 +178,8 @@ body {
         body #page-wrap #videos .video .video-thumb {
           box-shadow: 0px 10px 20px #888888;
           width: 100%; }
+    body #page-wrap #before-footer {
+      margin-bottom: 15px; }
   body #footer {
     height: 100px;
     background: #F7931E;
@@ -221,6 +226,12 @@ body {
   float: left; }
 .container section:nth-of-type(2n + 1) div.text-card {
   float: right; }
+.container #user-avatar {
+  border: 2px solid #9D9898;
+  width: 250px;
+  height: 250px; }
+.container #usernames {
+  font-size: 30px; }
 
 .dropdown-menu {
   margin-top: 20px; }
@@ -233,9 +244,20 @@ body {
   margin-bottom: 40px; }
   .course-logo-container a:hover {
     text-decoration: none; }
+  .course-logo-container #course-avatar-active {
+    text-decoration: none; }
+    .course-logo-container #course-avatar-active:hover {
+      color: #f7931e; }
+  .course-logo-container #course-avatar-inactive {
+    text-decoration: none; }
+    .course-logo-container #course-avatar-inactive:hover {
+      color: #848484; }
+  .course-logo-container #course-name {
+    font-size: 16px; }
 
 .course-logo {
-  font-size: 22em; }
+  font-size: 12em;
+  position: relative; }
 
 .breadcrumb {
   margin-top: 20px; }
@@ -399,6 +421,18 @@ body {
   .login-container .btn-login {
     width: 100%;
     margin-bottom: 20px; }
+  .login-container .reg-img-container .img-circle {
+    width: 22px;
+    height: 22px;
+    margin-left: 340px;
+    margin-top: -232px; }
+    @media screen and (max-width: 600px) {
+      .login-container .reg-img-container .img-circle {
+        margin-left: 280px; } }
+    @media screen and (max-width: 340px) {
+      .login-container .reg-img-container .img-circle {
+        margin-left: 260px;
+        margin-top: -272px; } }
 
 #suggestion-dropdown {
   position: absolute;
@@ -437,5 +471,48 @@ body {
 
 .ui-state-hover, .ui-widget-content .ui-state-hover {
   background-color: #F7931E; }
+
+#div_id_full_image {
+  visibility: hidden;
+  height: 0; }
+
+.row-profile {
+  margin-top: 50px;
+  font-size: 14px; }
+  .row-profile.edit-profile .editable-user-avatar {
+    width: 250px;
+    height: 250px;
+    position: relative;
+    cursor: pointer;
+    text-align: center; }
+    .row-profile.edit-profile .editable-user-avatar .glyphicon {
+      font-size: 50px;
+      position: absolute;
+      width: 250px;
+      line-height: 250px;
+      color: white;
+      opacity: 0;
+      transition: all 1s ease; }
+    .row-profile.edit-profile .editable-user-avatar:before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      background-color: black;
+      opacity: 0;
+      transition: all 2s ease; }
+    .row-profile.edit-profile .editable-user-avatar:hover:before {
+      transition: all 1s ease;
+      opacity: 0.6; }
+    .row-profile.edit-profile .editable-user-avatar:hover .glyphicon {
+      transition: all 1s ease;
+      opacity: 1; }
+  .row-profile #user-name {
+    font-size: 20px; }
+  .row-profile #profile-socials {
+    font-size: 2em; }
 
 /*# sourceMappingURL=website.css.map */
