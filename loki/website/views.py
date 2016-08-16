@@ -14,6 +14,7 @@ from .forms import (RegisterForm, LoginForm, BaseEditForm, StudentEditForm,
 from .decorators import anonymous_required
 from easy_thumbnails.files import get_thumbnailer
 
+
 def index(request):
     successors = SuccessStoryPerson.objects.filter(show_picture_on_site=True).order_by('?')[:6]
     partners = Partner.objects.all().order_by('?')
@@ -98,6 +99,7 @@ def logout_view(request):
     logout(request)
     return redirect(reverse('website:index'))
 
+
 @login_required(login_url='website:login')
 def profile(request):
     user = BaseUser.objects.get(email=request.user.email)
@@ -111,18 +113,21 @@ def profile(request):
         teacher = None
     return render(request, 'website/profile.html', locals())
 
+
 @login_required(login_url='website:login')
 def profile_edit(request):
     base_form = BaseEditForm(instance=request.user)
+
     if request.method == 'POST':
         base_form = BaseEditForm(request.POST, request.FILES, instance=request.user)
 
         if base_form.is_valid():
             base_form.save()
-            return render(request, "website/profile.html", locals())
         else:
             errors = base_form.errors
+
     return render(request, "website/profile_edit.html", locals())
+
 
 @login_required(login_url='website:login')
 def profile_edit_student(request):
@@ -146,6 +151,7 @@ def profile_edit_student(request):
             return render(request, "website/profile_edit_student.html", locals())
     return render(request, 'website/profile_edit_student.html', locals())
 
+
 @login_required(login_url='website:login')
 def profile_edit_teacher(request):
     try:
@@ -167,6 +173,7 @@ def profile_edit_teacher(request):
             errors = teacher_form.errors
             return render(request, "website/profile_edit_teacher.html", locals())
     return render(request, 'website/profile_edit_teacher.html', locals())
+
 
 def forgotten_password(request):
     if request.POST:
