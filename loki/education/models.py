@@ -96,7 +96,6 @@ class CourseApplyTask(models.Model):
     name = models.CharField(max_length=30)
     description = RichTextField(blank=False)
     url = models.URLField(null=True, blank=True)
-    apply_for_courses = models.ManyToManyField('Course')
 
     def __str__(self):
         return self.name
