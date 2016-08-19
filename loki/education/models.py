@@ -77,6 +77,7 @@ class Course(models.Model):
     url = models.SlugField(max_length=80, unique=True)
     video = models.URLField(blank=True)
     generate_certificates_until = models.DateField()
+    # number_of_tasks_for_apply = models.IntegerField()
 
     def application_opened(self):
         return self.application_until >= timezone.now().date()
