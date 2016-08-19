@@ -51,6 +51,7 @@ INSTALLED_APPS = (
     'education',
     'status',
     'website',
+    'applications',
 )
 
 MIDDLEWARE_CLASSES = (
