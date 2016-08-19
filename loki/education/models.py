@@ -77,13 +77,26 @@ class Course(models.Model):
     url = models.SlugField(max_length=80, unique=True)
     video = models.URLField(blank=True)
     generate_certificates_until = models.DateField()
-    # number_of_tasks_for_apply = models.IntegerField()
+    tasks_for_apply = models.ManyToManyField('CourseApplyTask')
 
     def application_opened(self):
         return self.application_until >= timezone.now().date()
 
     def is_active(self):
         return self.end_time >= timezone.now().date()
+
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return self.name
+
+
+class CourseApplyTask(models.Model):
+    name = models.CharField(max_length=30)
+    description = RichTextField(blank=False)
+    url = models.URLField(null=True, blank=True)
+    apply_for_courses = models.ManyToManyField('Course')
 
     def __str__(self):
         return self.name
