@@ -10,7 +10,7 @@ class ApplicationInfo(models.Model):
     end_date = models.DateTimeField()
     course = models.OneToOneField(Course)
 
-    def __str__():
+    def __str__(self):
         return "from {0} to {1} appling to {2}".format(self.start_date,
                                                       self.end_date,
                                                       self.course)
@@ -38,8 +38,13 @@ class Application(models.Model):
     works_at = models.CharField(null=True, blank=True, max_length=110)
     studies_at = models.CharField(blank=True, null=True, max_length=110)
 
+    def __str__(self):
+        return "{0} to {1}".format(self.user, self.application_info)
 
 class ApplicationProblemSolution(models.Model):
     application = models.ForeignKey(Application)
     problem = models.ForeignKey(ApplicationProblem)
     solution_url = models.URLField(null=True, blank=True)
+
+    def __str__(self):
+        return "{0} to {1}".format(self.problem, self.application)
