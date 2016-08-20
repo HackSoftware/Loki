@@ -2,7 +2,8 @@ from django.conf.urls import url
 
 from .views import (index, about, courses, partners, course_details, register,
                     log_in, profile, profile_edit, profile_edit_teacher,
-                    profile_edit_student, forgotten_password, logout_view, apply_course)
+                    profile_edit_student, forgotten_password, logout_view,
+                    apply_overview, apply_course)
 
 urlpatterns = [
     url(r'^$', index, name='index'),
@@ -21,5 +22,6 @@ urlpatterns = [
     url(r'^profile/edit/teacher$', profile_edit_teacher,
         name="profile_edit_teacher"),
     url(r'^forgotten-password/$', forgotten_password, name="forgotten_password"),
+    url(r'^apply/$', apply_overview, name="apply_overview"),
     url(r'^apply/(?P<course_url>[-\w]+)/$', apply_course, name="apply_course")
 ]
