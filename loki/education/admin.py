@@ -6,8 +6,8 @@ from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtR
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture,
                      CheckIn, StudentNote, WorkingAt, Task, Solution,
                      Certificate, ProgrammingLanguage, GraderRequest,
-                     RetestSolution, SourceCodeTest, BinaryFileTest,
-                     CourseApplyTask)
+                     RetestSolution, SourceCodeTest, BinaryFileTest)
+
 from .forms import FixJsonFieldDisplayInInheritedClassAdminForm
 
 
@@ -81,15 +81,6 @@ class CourseAdmin(admin.ModelAdmin):
         'name',
     ]
 
-    list_display_links = ['name']
-
-
-@admin.register(CourseApplyTask)
-class CourseApplyTaskAdmin(admin.ModelAdmin):
-    list_display = [
-        'id',
-        'name',
-    ]
     list_display_links = ['name']
 
 
