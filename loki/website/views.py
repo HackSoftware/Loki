@@ -196,23 +196,35 @@ def apply_course(request, course_url):
         course = Course.objects.get(url=course_url)
         if course:
             app_info = ApplicationInfo.objects.get(course=course)
-            app_problems = ApplicationProblem.objects.filter(application_info=app_info).count()
-            print("*"*40)
-            print(app_info)
+            app_problems = ApplicationProblem.objects.filter(application_info=app_info)
             print(app_problems)
-    except (ApplicationInfo.DoesNotExist, Course.DoesNotExist) as err:
+    except (ApplicationInfo.DoesNotExist, Course.DoesNotExist,
+            ApplicationProblem.DoesNotExist) as err:
         return redirect(reverse('website:profile'))
-
 
     if Application.objects.filter(user=request.user).exists():
-        return redirect(reverse('website:profile'))
+        return render(request, 'website/application/already_applied.html', locals())
 
-    apply_form = ApplyForm(tasks=app_problems)
+    apply_form = ApplyForm(tasks=app_problems.count())
 
     if request.method == 'POST':
         apply_form = ApplyForm(request.POST)
 
         if apply_form.is_valid():
-            apply_form.save()
+            application = Application.objects.create(
+                user=request.user,
+                application_info=app_info,
+                phone=apply_form.cleaned_data.get('phone'),
+                skype=apply_form.cleaned_data.get('skype'),
+                works_at=apply_form.cleaned_data.get('works_at'),
+                studies_at=apply_form.cleaned_data.get('studies_at'))
+            application.save()
+            # for app_problem in app_problems:
+            #     app_solution = ApplicationProblemSolution.objects.create(
+            #         application=application,
+            #         problem=app_problem,
+            #         solution_url=apply_form.cleaned_data.get('')
+            #     )
 
-    return render(request, 'website/apply.html', locals())
+
+    return render(request, 'website/application/apply.html', locals())
