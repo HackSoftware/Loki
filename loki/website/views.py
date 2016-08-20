@@ -4,10 +4,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
 
-from education.models import WorkingAt, Student, Teacher
+from education.models import WorkingAt, Student, Teacher, Course
 from base_app.models import Partner, GeneralPartner, BaseUser
 from base_app.services import send_activation_mail, send_forgotten_password_email
 from base_app.helper import get_or_none
+from applications.forms import ApplyForm
+from applications.models import Application, ApplicationInfo, ApplicationProblem
 
 from .forms import (RegisterForm, LoginForm, BaseEditForm, StudentEditForm,
                     TeacherEditForm)
@@ -185,3 +187,32 @@ def forgotten_password(request):
             message = "Email за промяна на паролата беше изпратен на посочения адрес"
             send_forgotten_password_email(request, baseuser)
     return render(request, 'website/auth/forgotten_password.html', locals())
+
+@login_required(login_url='website:login')
+def apply_course(request, course_url):
+    cd = get_object_or_404(CourseDescription, url=course_url)
+
+    try:
+        course = Course.objects.get(url=course_url)
+        if course:
+            app_info = ApplicationInfo.objects.get(course=course)
+            app_problems = ApplicationProblem.objects.filter(application_info=app_info).count()
+            print("*"*40)
+            print(app_info)
+            print(app_problems)
+    except (ApplicationInfo.DoesNotExist, Course.DoesNotExist) as err:
+        return redirect(reverse('website:profile'))
+
+
+    if Application.objects.filter(user=request.user).exists():
+        return redirect(reverse('website:profile'))
+
+    apply_form = ApplyForm(tasks=app_problems)
+
+    if request.method == 'POST':
+        apply_form = ApplyForm(request.POST)
+
+        if apply_form.is_valid():
+            apply_form.save()
+
+    return render(request, 'website/apply.html', locals())
