@@ -30,7 +30,7 @@ class ApplicationProblem(models.Model):
 
 
 class Application(models.Model):
-    application_info = models.ForeignKey(ApplicationInfo)
+    application_info = models.OneToOneField(ApplicationInfo)
     user = models.ForeignKey(BaseUser)
 
     phone = models.CharField(null=True, blank=True, max_length=20)
@@ -43,7 +43,7 @@ class Application(models.Model):
 
 class ApplicationProblemSolution(models.Model):
     application = models.ForeignKey(Application)
-    problem = models.ForeignKey(ApplicationProblem)
+    problem = models.OneToOneField(ApplicationProblem)
     solution_url = models.URLField(null=True, blank=True)
 
     def __str__(self):
