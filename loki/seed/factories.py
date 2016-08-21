@@ -189,7 +189,7 @@ class CourseFactory(factory.DjangoModelFactory):
     SEO_description = faker.word()
     SEO_title = faker.word()
     start_time = faker.date_time()
-    url = factory.Sequence(lambda n: 'url {}'.format(n))
+    url = faker.word()
     video = faker.url()
     generate_certificates_until = faker.date()
 
