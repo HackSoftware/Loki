@@ -4,23 +4,21 @@ from ckeditor.fields import RichTextField
 from education.models import Course
 from base_app.models import BaseUser
 
-# start and end date for appling to course
 class ApplicationInfo(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     course = models.OneToOneField(Course)
 
     def __str__(self):
-        return "from {0} to {1} appling to {2}".format(self.start_date,
-                                                      self.end_date,
-                                                      self.course)
+        return "From {0} to {1} applying to {2}".format(self.start_date,
+                                                        self.end_date,
+                                                        self.course)
 
 
 class ApplicationProblem(models.Model):
     application_info = models.ManyToManyField(ApplicationInfo)
     name = models.CharField(max_length=30)
     description = RichTextField(blank=False)
-    description_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -30,7 +28,7 @@ class ApplicationProblem(models.Model):
 
 
 class Application(models.Model):
-    application_info = models.OneToOneField(ApplicationInfo)
+    application_info = models.ForeignKey(ApplicationInfo)
     user = models.ForeignKey(BaseUser)
 
     phone = models.CharField(null=True, blank=True, max_length=20)
@@ -40,6 +38,9 @@ class Application(models.Model):
 
     def __str__(self):
         return "{0} to {1}".format(self.user, self.application_info)
+
+    class Meta:
+        unique_together = (("application_info", "user"),)
 
 class ApplicationProblemSolution(models.Model):
     application = models.ForeignKey(Application)

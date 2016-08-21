@@ -35,7 +35,7 @@ def apply_course(request, course_url):
                 skype=apply_form.cleaned_data.get('skype'),
                 works_at=apply_form.cleaned_data.get('works_at'),
                 studies_at=apply_form.cleaned_data.get('studies_at'))
-            application
+
             for index, app_problem in enumerate(app_problems):
                 ApplicationProblemSolution.objects.create(
                     application=application,
