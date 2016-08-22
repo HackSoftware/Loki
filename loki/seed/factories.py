@@ -14,8 +14,8 @@ class CompanyFactory(factory.DjangoModelFactory):
     class Meta:
         model = base_app_models.Company
 
-    name = factory.Sequence(lambda n: 'company {}'.format(n))
-    logo_url = faker.url()
+    name = factory.Sequence(lambda n: '{}-{}'.format(faker.word(), n))
+    logo_url = factory.LazyAttribute(lambda _: faker.url())
     logo = factory.django.ImageField(color='blue')
     jobs_link = faker.url()
 
@@ -455,7 +455,7 @@ class CourseDescriptionFactory(factory.DjangoModelFactory):
     class Meta:
         model = website_models.CourseDescription
 
-    course = factory.RelatedFactory(CourseFactory)
+    course = factory.SubFactory(CourseFactory)
     logo = faker.text(max_nb_chars=255)
     custom_logo = factory.django.ImageField()
     url = faker.slug()
