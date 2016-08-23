@@ -66,7 +66,6 @@ class TestWebsite(TestCase):
 
         course = factories.CourseFactory()
         courses = factories.CourseDescriptionFactory(
-            course_id=course.id,
             course=course)
 
         response = self.client.get(url)
@@ -210,7 +209,6 @@ class TestWebsite(TestCase):
                       kwargs={"course_url": course.url})
 
         factories.CourseDescriptionFactory(
-            course_id=course.id,
             course=course,
             url=course.url,
         )
