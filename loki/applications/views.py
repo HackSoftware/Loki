@@ -1,10 +1,11 @@
-from django.shortcuts import render
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 from .forms import ApplyForm
 from .models import (Application, ApplicationInfo,
-                    ApplicationProblem, ApplicationProblemSolution)
+                     ApplicationProblem, ApplicationProblemSolution)
 from website.models import CourseDescription
+
 
 @login_required(login_url='website:login')
 def apply_course(request, course_url):
@@ -15,8 +16,7 @@ def apply_course(request, course_url):
         if course:
             app_info = ApplicationInfo.objects.get(course=course)
             app_problems = ApplicationProblem.objects.filter(application_info=app_info)
-    except (ApplicationInfo.DoesNotExist, Course.DoesNotExist,
-            ApplicationProblem.DoesNotExist) as err:
+    except (ApplicationInfo.DoesNotExist, ApplicationProblem.DoesNotExist) as err:
         return redirect(reverse('website:profile'))
 
     if Application.objects.filter(user=request.user).exists():

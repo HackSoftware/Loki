@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import (Application, ApplicationProblemSolution, ApplicationProblem,
                      ApplicationInfo)
 
+
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
 
@@ -10,6 +11,7 @@ class ApplicationAdmin(admin.ModelAdmin):
         'user',
         'application_info',
     ]
+
 
 @admin.register(ApplicationProblemSolution)
 class ApplicationProblemSolutionAdmin(admin.ModelAdmin):
@@ -19,12 +21,14 @@ class ApplicationProblemSolutionAdmin(admin.ModelAdmin):
         'problem',
     ]
 
+
 @admin.register(ApplicationProblem)
 class ApplicationProblemAdmin(admin.ModelAdmin):
 
     list_display = [
         'name',
     ]
+
 
 @admin.register(ApplicationInfo)
 class ApplicationInfoAdmin(admin.ModelAdmin):

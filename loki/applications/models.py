@@ -4,6 +4,7 @@ from ckeditor.fields import RichTextField
 from education.models import Course
 from base_app.models import BaseUser
 
+
 class ApplicationInfo(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
@@ -41,6 +42,7 @@ class Application(models.Model):
 
     class Meta:
         unique_together = (("application_info", "user"),)
+
 
 class ApplicationProblemSolution(models.Model):
     application = models.ForeignKey(Application)

@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from test_plus.test import TestCase
 
-from seed.factories import faker, CourseFactory
+from seed.factories import CourseFactory
 from ..models import ApplicationInfo
 
 

@@ -4,18 +4,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
 
-from education.models import WorkingAt, Student, Teacher, Course
+from education.models import WorkingAt, Student, Teacher
 from base_app.models import Partner, GeneralPartner, BaseUser
 from base_app.services import send_activation_mail, send_forgotten_password_email
 from base_app.helper import get_or_none
-from applications.forms import ApplyForm
-from applications.models import (Application, ApplicationInfo,
-                                 ApplicationProblem, ApplicationProblemSolution)
 
 from .forms import (RegisterForm, LoginForm, BaseEditForm, StudentEditForm,
                     TeacherEditForm)
 from .decorators import anonymous_required
-from easy_thumbnails.files import get_thumbnailer
 
 
 def index(request):

@@ -7,6 +7,7 @@ from ckeditor.fields import RichTextField
 from loki.settings import MEDIA_ROOT
 from image_cropping.fields import ImageRatioField, ImageCropField
 
+
 class Company(models.Model):
     name = models.CharField(max_length=100, unique=True)
     logo_url = models.URLField(blank=True)

@@ -11,10 +11,12 @@ from .exceptions import HasToBeRetested
 
 
 class StudentAndTeacherCommonModel(models.Model):
-   mac = mac = models.CharField(validators=[validate_mac], max_length=17, null=True)
-   phone = models.CharField(null=True, blank=True, max_length=20)
-   class Meta:
-       abstract = True
+    mac = mac = models.CharField(validators=[validate_mac], max_length=17, null=True)
+    phone = models.CharField(null=True, blank=True, max_length=20)
+
+    class Meta:
+        abstract = True
+
 
 class Student(BaseUser, StudentAndTeacherCommonModel):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
@@ -89,7 +91,6 @@ class Course(models.Model):
 
     def __repr__(self):
         return self.name
-
 
 
 class CheckIn(models.Model):
