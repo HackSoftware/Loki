@@ -1,5 +1,4 @@
 from django.db import models
-from ckeditor.fields import RichTextField
 
 from education.models import Course
 from base_app.models import BaseUser
@@ -19,7 +18,7 @@ class ApplicationInfo(models.Model):
 class ApplicationProblem(models.Model):
     application_info = models.ManyToManyField(ApplicationInfo)
     name = models.CharField(max_length=30)
-    description = RichTextField(blank=False)
+    description_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return self.name

@@ -5,6 +5,7 @@ from base_app import models as base_app_models
 from hack_fmi import models as hack_fmi_models
 from education import models as education_models
 from website import models as website_models
+from applications import models as application_models
 
 
 faker = Factory.create()
@@ -14,8 +15,8 @@ class CompanyFactory(factory.DjangoModelFactory):
     class Meta:
         model = base_app_models.Company
 
-    name = factory.Sequence(lambda n: 'company {}'.format(n))
-    logo_url = faker.url()
+    name = factory.Sequence(lambda n: '{}-{}'.format(faker.word(), n))
+    logo_url = factory.LazyAttribute(lambda _: faker.url())
     logo = factory.django.ImageField(color='blue')
     jobs_link = faker.url()
 
@@ -189,7 +190,7 @@ class CourseFactory(factory.DjangoModelFactory):
     SEO_description = faker.word()
     SEO_title = faker.word()
     start_time = faker.date_time()
-    url = faker.word()
+    url = factory.Sequence(lambda n: '{}-{}'.format(faker.word(), n))
     video = faker.url()
     generate_certificates_until = faker.date()
 
@@ -455,7 +456,7 @@ class CourseDescriptionFactory(factory.DjangoModelFactory):
     class Meta:
         model = website_models.CourseDescription
 
-    course = factory.RelatedFactory(CourseFactory)
+    course = factory.SubFactory(CourseFactory)
     logo = faker.text(max_nb_chars=255)
     custom_logo = factory.django.ImageField()
     url = faker.slug()
@@ -480,3 +481,43 @@ class InvitationFactory(factory.DjangoModelFactory):
 
     team = factory.SubFactory(TeamFactory)
     competitor = factory.SubFactory(CompetitorFactory)
+
+
+class ApplicationInfoFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = application_models.ApplicationInfo
+
+    course = factory.SubFactory(CourseFactory)
+    start_date = faker.date_time()
+    end_date = faker.date_time()
+
+
+class ApplicationProblemFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = application_models.ApplicationProblem
+
+    name = faker.text(max_nb_chars=30)
+    description_url = faker.url()
+    application_info = factory.RelatedFactory(ApplicationInfoFactory)
+
+
+class ApplicationFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = application_models.Application
+
+    application_info =  factory.SubFactory(ApplicationInfoFactory)
+    user =  factory.SubFactory(BaseUserFactory)
+
+    phone = faker.text(max_nb_chars=20)
+    skype = faker.text(max_nb_chars=30)
+    works_at = faker.text(max_nb_chars=110)
+    studies_at = faker.text(max_nb_chars=110)
+
+
+class ApplicationProblemSolutionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = application_models.ApplicationProblemSolution
+
+    application = factory.SubFactory(ApplicationFactory)
+    problem = factory.SubFactory(ApplicationProblemFactory)
+    solution_url = faker.url()

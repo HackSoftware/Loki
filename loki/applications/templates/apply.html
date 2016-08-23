@@ -4,7 +4,7 @@
 {% block 'page-content' %}
 <div class="container">
   <div class="row-profile edit-profile">
-    <div class="col-md-4 col-md-offset-1">
+    <div class="col-md-4 col-md-offset-5">
           <form method="POST" enctype='multipart/form-data' action="" class="register-form" >
           {{ apply_form|crispy }}
           {% csrf_token %}
