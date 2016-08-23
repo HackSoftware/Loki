@@ -5,7 +5,7 @@ from base_app import models as base_app_models
 from hack_fmi import models as hack_fmi_models
 from education import models as education_models
 from website import models as website_models
-from application import models as application_models
+from applications import models as application_models
 
 
 faker = Factory.create()
@@ -501,7 +501,7 @@ class ApplicationProblemFactory(factory.DjangoModelFactory):
     application_info = factory.RelatedFactory(ApplicationInfoFactory)
 
 
-class Application(factory.DjangoModelFactory):
+class ApplicationFactory(factory.DjangoModelFactory):
     class Meta:
         model = application_models.Application
 
