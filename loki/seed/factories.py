@@ -498,7 +498,17 @@ class ApplicationProblemFactory(factory.DjangoModelFactory):
 
     name = faker.text(max_nb_chars=30)
     description_url = faker.url()
-    application_info = factory.RelatedFactory(ApplicationInfoFactory)
+
+    # @factory.post_generation
+    # def application_info(self, create, extracted, **kwargs):
+    #     if not create:
+    #         # Simple build, do nothing.
+    #         return
+    #
+    #     if extracted:
+    #         # A list of groups were passed in, use them
+    #         for app_info in extracted:
+    #             self.application_info.add(app_info)
 
 
 class ApplicationFactory(factory.DjangoModelFactory):
