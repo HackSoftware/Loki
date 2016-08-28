@@ -26,9 +26,8 @@
     <section class="row">
       <div class="active-courses-container container-fluid">
         {% for course in courses %}
+        <!-- {% if course.is_active %} -->
           <div class="course-logo-container col-md-3">
-            {% if course.course.is_active %}
-            {{ course.course.name }}
               <a href="{{ course.url }}">
                 {% if course.custom_logo != "" %}
                   <img class="video-thumb" src="{{ MEDIA_URL }}{{ course.custom_logo }}">
@@ -36,15 +35,15 @@
                   <i id="course-avatar-active" class="course-logo {{ course.logo }}"></i>
                 {% endif %}
               </a>
-              <h3 id="course-name">{{ course.course.name }}</h3>
+              <h3 id="course-name">{{ course.name }}</h3>
               <a href="{{ course.url }}">
-              {% if course.course.is_active %}
+              {% if course.is_active %}
                 <button class="btn btn-primary">Научете повече</button>
               {% endif %}
                 <!-- <button class="btn btn-danger">Курсът приключи</button> -->
               </a>
-            {% endif %}
           </div>
+          <!-- {% endif %} -->
         {% endfor %}
       </div>
     </section>

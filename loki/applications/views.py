@@ -47,7 +47,7 @@ def apply_course(request, course_url):
     return render(request, 'apply.html', locals())
 
 def apply_overview(request):
-    courses = CourseDescription.objects.all().order_by('-course__start_time')
+    courses = [x for x in Course.objects.all() if x.is_active()]
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
     return render(request, 'apply_overview.html', locals())
