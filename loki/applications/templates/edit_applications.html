@@ -4,12 +4,23 @@
 {% block 'page-content' %}
 <div class="container">
   <div class="row-profile edit-profile">
-    <h3>user applications</h3>
-    {% for application in user_applications %}
-    <ul class="nav nav-tabs">
-      <li><a href="#">{{ application.application_info.course }}</a></li>
+    <ul class="nav nav-tabs nav-justified">
+      <!-- <li class="active"><a data-toggle="tab" href="#home">Информация</a></li> -->
+      {% for application in user_applications %}
+        <li><a data-toggle="tab" href="#app">{{ application.application_info.course }}</a></li>
+      {% endfor %}
     </ul>
-    {% endfor %}
+    <div class="tab-content">
+      <div id="app">
+        <form method="POST" enctype='multipart/form-data' action="" class="register-form" >
+          {{ form|crispy }}
+          {% csrf_token %}
+          <button type="submit" class="btn btn-warning btn-login">Обнови</button>
+        </form>
+      </div>
+    </div>
+
   </div>
 </div>
+
 {% endblock %}
