@@ -46,8 +46,6 @@ def apply_course(request, course_url):
             return render(request, 'already_applied.html', locals())
     return render(request, 'apply.html', locals())
 
-
-@login_required(login_url='website:login')
 def apply_overview(request):
     courses = CourseDescription.objects.all().order_by('-course__start_time')
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
