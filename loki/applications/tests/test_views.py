@@ -24,7 +24,7 @@ class TestApplicationViews(TestCase):
 
     def test_non_registered_user_cannot_see_apply_overview(self):
         self.get('website:apply_overview')
-        self.response_302()
+        self.response_200()
 
     def test_registered_user_can_see_apply_overview(self):
         with self.login(username=self.user.email, password=BaseUserFactory.password):

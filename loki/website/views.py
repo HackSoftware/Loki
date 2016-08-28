@@ -86,8 +86,9 @@ def log_in(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    print(request.POST)
-                    return redirect(request.GET["next"])
+                    if request.GET.get("next"):
+                        return redirect(request.GET["next"])
+                    return redirect(reverse('website:index'))
                 else:
                     error = "Моля активирай акаунта си"
             else:
