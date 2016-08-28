@@ -5,6 +5,11 @@
 <div class="container">
   <div class="row-profile edit-profile">
     <h3>user applications</h3>
+    {% for application in user_applications %}
+    <ul class="nav nav-tabs">
+      <li><a href="#">{{ application.application_info.course }}</a></li>
+    </ul>
+    {% endfor %}
   </div>
 </div>
 {% endblock %}

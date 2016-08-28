@@ -20,7 +20,7 @@ def apply_course(request, course_url):
     except (ApplicationInfo.DoesNotExist, ApplicationProblem.DoesNotExist) as err:
         return redirect(reverse('website:profile'))
 
-    if Application.objects.filter(user=request.user).exists():
+    if Application.objects.filter(user=request.user, application_info=app_info).exists():
         return render(request, 'already_applied.html', locals())
 
     apply_form = ApplyForm(tasks=app_problems.count())
@@ -54,4 +54,6 @@ def apply_overview(request):
 
 @login_required(login_url='website:login')
 def edit_applications(request):
+    user_applications = Application.objects.filter(user=request.user).all()
+    print(user_applications)
     return render(request, 'edit_applications.html', locals())
