@@ -21,8 +21,6 @@ class TestApplicationViews(TestCase):
         self.user.save()
         self.course_description = CourseDescriptionFactory(course=self.course)
         self.application_info = ApplicationInfoFactory(course=self.course)
-        # self.application = ApplicationFactory(application_info=self.application_info,
-                                            #   user=self.user)
 
     def test_non_registered_user_cannot_see_apply_overview(self):
         self.get('website:apply_overview')
@@ -96,7 +94,7 @@ class TestApplicationViews(TestCase):
 
         self.assertEqual(1, application.count())
 
-    def test_applying_for_second_time(self):
+    def test_applying_for_the_same_course(self):
         self.assertEqual(0, Application.objects.count())
         application = ApplicationFactory(user=self.user, application_info=self.application_info)
 

@@ -4,7 +4,8 @@ from django.core.urlresolvers import reverse
 from .forms import ApplyForm
 from .models import (Application, ApplicationInfo,
                      ApplicationProblem, ApplicationProblemSolution)
-from website.models import CourseDescription
+from website.models import CourseDescription, Snippet
+from education.models import Course
 
 
 @login_required(login_url='website:login')
@@ -48,4 +49,7 @@ def apply_course(request, course_url):
 
 @login_required(login_url='website:login')
 def apply_overview(request):
+    courses = CourseDescription.objects.all().order_by('-course__start_time')
+    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
+
     return render(request, 'apply_overview.html', locals())
