@@ -51,3 +51,7 @@ def apply_overview(request):
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
     return render(request, 'apply_overview.html', locals())
+
+@login_required(login_url='website:login')
+def edit_applications(request):
+    return render(request, 'edit_applications.html', locals())
