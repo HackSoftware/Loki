@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -85,7 +86,8 @@ def log_in(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return redirect(reverse('website:index'))
+                    print(request.POST)
+                    return redirect(request.GET["next"])
                 else:
                     error = "Моля активирай акаунта си"
             else:

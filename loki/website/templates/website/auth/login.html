@@ -14,7 +14,9 @@
         <form action="" method="POST" >
             {{ form|crispy }}
             {% csrf_token %}
-            <input type="submit" value="Вход" class="btn btn-warning btn-login" />
+            <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+            <button type="submit" class="btn btn-warning btn-login">Вход</button>
+            <!-- <input type="submit" value="Вход" class="btn btn-warning btn-login"/> -->
             <a href="{% url 'website:register' %}">
                 Още не си се регистрирал?
             </a><br>
