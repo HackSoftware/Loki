@@ -2,15 +2,12 @@ from django.test import Client
 from django.core.urlresolvers import reverse
 
 from test_plus.test import TestCase
-
 from post_office.models import EmailTemplate
-
 from faker import Factory
 
-from seed import factories
-
-from base_app.models import GeneralPartner
-from base_app.models import BaseUser
+from loki.seed import factories
+from loki.base_app.models import GeneralPartner
+from loki.base_app.models import BaseUser
 
 faker = Factory.create()
 
@@ -23,6 +20,10 @@ class TestWebsite(TestCase):
         self.student = factories.StudentFactory(
             baseuser_ptr_id=self.baseuser.id,
             email=self.baseuser.email)
+        self.teacher = factories.TeacherFactory(
+            baseuser_ptr_id=self.baseuser.id,
+            email=self.baseuser.email
+        )
 
     def test_index(self):
         url = reverse('website:index')
@@ -178,6 +179,19 @@ class TestWebsite(TestCase):
 
         self.response_302(response)
 
+    def test_profile_edit(self):
+        self.baseuser.is_active = True
+        self.baseuser.save()
+        self.client.login(email=self.baseuser.email,
+                          password=factories.BaseUserFactory.password)
+
+        url = reverse('website:profile_edit')
+
+        response = self.client.get(url)
+
+        self.response_200(response)
+        self.assertTemplateUsed(response, 'website/profile_edit.html')
+
     def test_course_detail_no_course_description(self):
         course = factories.CourseFactory(url=faker.slug())
 
@@ -222,10 +236,6 @@ class TestWebsite(TestCase):
             'last_name': faker.last_name(),
             'email': faker.email(),
             'password': 'sdfsdfd13',
-            'studies_at': faker.city(),
-            'start_date': faker.date(pattern="%d-%m-%Y"),
-            'end_date': faker.date(pattern="%d-%m-%Y"),
-
         }
         url = reverse('website:register')
 

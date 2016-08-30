@@ -1,9 +1,9 @@
 from datetime import datetime
+
 from rest_framework.decorators import api_view
-# from rest_framework.decorators permission_classes
 from rest_framework.response import Response
 
-from education.models import CheckIn
+from loki.education.models import CheckIn
 
 
 @api_view(['GET'])

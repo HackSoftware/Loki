@@ -1,7 +1,61 @@
 {% extends 'website/base.html' %}
+{% load cropping thumbnail %}
 
 {% block 'page-content' %}
+<div class="container">
+  <div class="row-profile">
+    <div class="col-md-3">
+      {% if not user.full_image %}
+        <img id="user-avatar" src="{{ STATIC_URL }}website_images/hackman_head.png">
+      {% else %}
+        <img id="user-avatar" src="{% cropped_thumbnail user 'cropping' %}"/>
+      {% endif %}
+    </div>
+    <div class="col-md-6 col-md-offset-1">
+      <table class="table">
+      <thead>
+        <tr>
+          <th id="user-name">{{user.first_name}} {{user.last_name}}</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>Email<b></td>
+            <td>{{user.email}}</td>
+        </tr>
+        <tr>
+          <td><i id="profile-socials" class="fa fa-github fa-3x"></i></td>
+          <td><a href={{user.github_account}} target="_blank">{{user.github_account}}</a></td>
+        </tr>
+        {% if user.get_student %}
+        <tr>
+          <td><i id="profile-socials" class="fa fa-skype"></i></td>
+          <td>{{student.skype}}</td>
+        </tr>
+        <tr>
+          <td><b>Телефонен номер<b></td>
+          <td>{{student.phone}}</td>
+        </tr>
+        <tr>
+          <td><b>MAC<b></td>
+          <td>{{student.mac}}</td>
+        </tr>
+        {% endif%}
+        {% if user.get_teacher and not user.get_student %}
+        <tr>
+          <td><b>Телефонен номер<b></td>
+          <td>{{teacher.phone}}</td>
+        </tr>
+        <tr>
+          <td><b>MAC<b></td>
+          <td>{{teacher.mac}}</td>
+        </tr>
+        {% endif %}
+      </tbody>
+    </table>
+    </div>
 
-<h1>A profile page here for the user: {{user.email}} {{user.first_name}} {{user.last_name}}</h1>
 
+  </div>
+</div>
 {% endblock %}

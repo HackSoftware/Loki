@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
-from education.models import CheckIn, Student
+
+from loki.education.models import CheckIn, Student
 
 
 class Command(BaseCommand):

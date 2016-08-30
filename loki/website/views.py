@@ -3,14 +3,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
-
-from education.models import WorkingAt
-from base_app.models import Partner, GeneralPartner, BaseUser
-from base_app.services import send_activation_mail, send_forgotten_password_email
-from base_app.helper import get_or_none
-
-from .forms import RegisterForm, LoginForm
+from .forms import (RegisterForm, LoginForm, BaseEditForm, StudentEditForm,
+                    TeacherEditForm)
 from .decorators import anonymous_required
+
+from loki.education.models import WorkingAt, Student, Teacher
+from loki.base_app.models import Partner, GeneralPartner, BaseUser
+from loki.base_app.services import send_activation_mail, send_forgotten_password_email
+from loki.base_app.helper import get_or_none
 
 
 def index(request):
@@ -98,9 +98,79 @@ def logout_view(request):
     return redirect(reverse('website:index'))
 
 
-@login_required
+@login_required(login_url='website:login')
 def profile(request):
+    user = BaseUser.objects.get(email=request.user.email)
+    try:
+        student = Student.objects.get(email=request.user.email)
+    except Student.DoesNotExist:
+        student = None
+    try:
+        teacher = Teacher.objects.get(email=request.user.email)
+    except Teacher.DoesNotExist:
+        teacher = None
     return render(request, 'website/profile.html', locals())
+
+
+@login_required(login_url='website:login')
+def profile_edit(request):
+    base_form = BaseEditForm(instance=request.user)
+
+    if request.method == 'POST':
+        base_form = BaseEditForm(request.POST, request.FILES, instance=request.user)
+
+        if base_form.is_valid():
+            base_form.save()
+        else:
+            errors = base_form.errors
+
+    return render(request, "website/profile_edit.html", locals())
+
+
+@login_required(login_url='website:login')
+def profile_edit_student(request):
+    try:
+        student = Student.objects.get(email=request.user.email)
+    except Student.DoesNotExist:
+        return redirect(reverse('website:profile'))
+    student_form = StudentEditForm(instance=student)
+
+    if request.method == 'POST':
+        student_form = StudentEditForm(request.POST, request.FILES,
+                                       instance=student)
+        if student_form.is_valid():
+            student_form.save()
+            if Teacher.objects.filter(email=request.user.email).exists():
+                teacher = Teacher.objects.get(email=request.user.email)
+                TeacherEditForm(request.POST, request.FILES,
+                                instance=teacher).save()
+        else:
+            errors = student_form.errors
+            return render(request, "website/profile_edit_student.html", locals())
+    return render(request, 'website/profile_edit_student.html', locals())
+
+
+@login_required(login_url='website:login')
+def profile_edit_teacher(request):
+    try:
+        teacher = Teacher.objects.get(email=request.user.email)
+    except Teacher.DoesNotExist:
+        return redirect(reverse('website:profile'))
+    teacher_form = TeacherEditForm(instance=teacher)
+
+    if request.method == 'POST':
+        teacher_form = TeacherEditForm(request.POST, request.FILES,
+                                       instance=teacher)
+        if teacher_form.is_valid():
+            teacher_form.save()
+            if Student.objects.filter(email=request.user.email).exists():
+                student = Student.objects.get(email=request.user.email)
+                StudentEditForm(request.POST, request.FILES,
+                                instance=student).save()
+        else:
+            errors = teacher_form.errors
+            return render(request, "website/profile_edit_teacher.html", locals())
+    return render(request, 'website/profile_edit_teacher.html', locals())
 
 
 def forgotten_password(request):

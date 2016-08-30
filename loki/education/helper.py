@@ -8,7 +8,8 @@ import requests
 from PIL import Image
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from education.models import CheckIn, Student, GraderRequest
+
+from .models import CheckIn, Student, GraderRequest
 
 
 def crop_image(x1, y1, x2, y2, path):
@@ -52,7 +53,6 @@ def get_and_update_req_nonce(req_and_resource):
         nonce = 1
         GraderRequest.objects.create(nonce=nonce, request_info=req_and_resource)
         return str(nonce)
-
 
 def generate_grader_headers(body, req_and_resource):
     nonce = get_and_update_req_nonce(req_and_resource)

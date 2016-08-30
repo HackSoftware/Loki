@@ -49,7 +49,7 @@ body {
                                 color: black;
                                 &:hover, {
                                     border: none;
-                                } 
+                                }
                             }
                         }
                     }
@@ -77,7 +77,11 @@ body {
                         border-bottom: 2px solid $orange;
                     }
                 }
-            
+
+                #user-profile-menu {
+                    width: 30px;
+                    height: 30px;
+                }
             }
         }
 
@@ -125,7 +129,7 @@ body {
                     width: 50%;
 
                 }
-                
+
                 &:hover {
                     box-shadow: 0px 10px 20px #222222;
                 }
@@ -137,20 +141,20 @@ body {
                     font-size: 120%;
                     font-weight: 600;
                     padding: 10px;
-                }   
+                }
                 .position {
                     padding: 10px;
                     font-size: 90%;
                 }
                 .person-description {
-                    @media screen and (max-width: 980px) {                        
+                    @media screen and (max-width: 980px) {
                         font-size: 0.67em;
-                    } 
+                    }
                 }
                 @extend .ease1s;
             }
         }
-        
+
         #action-buttons {
             padding-top: 20px;
             padding-bottom: 30px;
@@ -223,7 +227,7 @@ body {
             padding-top: 10px;
             padding-bottom: 40px;
             margin-top: 40px;
-            
+
             .video {
                 padding: 10px;
                 &:hover .video-thumb{
@@ -242,6 +246,10 @@ body {
                     @extend .ease1s;
                 }
             }
+        }
+
+        #before-footer {
+          margin-bottom: 15px;
         }
     }
 
@@ -314,14 +322,27 @@ $TabBorder: #C5C4C4;
   background-color: $ModerateCompetition;
 }
 
-.container section {
-    &:nth-of-type(2n + 1) {
-        div.cards {
-            float: left;
+.container {
+    section {
+        &:nth-of-type(2n + 1) {
+            div.cards {
+                float: left;
+            }
+            div.text-card {
+                float: right;
+            }
         }
-        div.text-card {
-            float: right;
-        }
+    }
+
+    #user-avatar{
+        border: 2px solid #9D9898;
+        width: 250px;
+        height: 250px;
+        // border-radius: 125px;
+    }
+
+    #usernames{
+        font-size: 30px;
     }
 }
 
@@ -339,10 +360,26 @@ $TabBorder: #C5C4C4;
     a:hover {
         text-decoration: none;
     }
+    #course-avatar-active {
+      text-decoration: none;
+        &:hover {
+        color: #f7931e;
+        }
+    }
+    #course-avatar-inactive {
+      text-decoration: none;
+        &:hover {
+        color: #848484;
+        }
+    }
+    #course-name {
+      font-size: 16px;
+    }
 }
 
 .course-logo {
-    font-size: 22em;
+    font-size: 12em;
+    position: relative;
 }
 
 .breadcrumb {
@@ -536,7 +573,7 @@ $TabBorder: #C5C4C4;
     max-width:400px;
     margin-top:50px;
     margin-bottom:50px;
-    
+
     .error{
         font-weight: bold;
         color:#a94442;
@@ -560,6 +597,24 @@ $TabBorder: #C5C4C4;
         width:100%;
         margin-bottom:20px;
     }
+
+    .reg-img-container {
+      .img-circle {
+        width: 22px;
+        height: 22px;
+        margin-left: 340px;
+        margin-top: -232px;
+
+        @media screen and (max-width: 600px) {
+          margin-left: 280px;
+        }
+
+        @media screen and (max-width: 340px) {
+          margin-left: 260px;
+          margin-top: -272px;
+        }
+      }
+    }
 }
 
 
@@ -570,16 +625,16 @@ $TabBorder: #C5C4C4;
     border:1px solid #ccc;
     background-color:white;
     display:none;
-    
+
     ul{
         list-style-type: none;
         padding:0;
         margin:0;
-        
+
         li{
             white-space: nowrap;
             cursor: pointer;
-            
+
             &.selected{
                 background-color: #9E9E9E;
             }
@@ -614,4 +669,70 @@ $TabBorder: #C5C4C4;
 
 .ui-state-hover, .ui-widget-content .ui-state-hover {
     background-color: #F7931E;
+}
+
+#div_id_full_image{
+  visibility: hidden;
+  height:0;
+}
+
+.row-profile {
+  margin-top: 50px;
+  font-size: 14px;
+
+
+  &.edit-profile {
+
+    .editable-user-avatar {
+      width:250px;
+      height:250px;
+      position:relative;
+      cursor:pointer;
+      text-align: center;
+
+      .glyphicon{
+        font-size:50px;
+        position:absolute;
+        width:250px;
+        line-height:250px;
+        color:white;
+        opacity:0;
+        transition: all 1s ease;
+      }
+
+      &:before{
+        content: "";
+        display:block;
+        position:absolute;
+        width:100%;
+        height:100%;
+        // border-radius: 50%;
+        left:0;
+        top:0;
+        background-color:black;
+        opacity:0;
+        transition: all 2s ease;
+      }
+
+      &:hover{
+        &:before {
+          transition: all 1s ease;
+          opacity:0.6;
+        }
+        .glyphicon{
+          transition: all 1s ease;
+          opacity:1;
+        }
+      }
+    }
+  }
+
+  #user-name {
+    font-size: 20px;
+  }
+
+  #profile-socials {
+    font-size: 2em;
+  }
+
 }

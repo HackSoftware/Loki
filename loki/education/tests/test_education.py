@@ -7,13 +7,14 @@ from django.core.urlresolvers import reverse
 
 from rest_framework.test import APIClient
 
-from base_app.models import BaseUser, Company, City
-from education.models import (Student, CheckIn, Lecture,
-                              CourseAssignment, StudentNote, WorkingAt,
-                              Solution, SourceCodeTest)
-from hack_fmi.helper import date_increase, date_decrease
+from loki.base_app.models import BaseUser, Company, City
+from loki.education.models import (Student, CheckIn, Lecture,
+                                   CourseAssignment, StudentNote, WorkingAt,
+                                   Solution, SourceCodeTest)
+from loki.hack_fmi.helper import date_increase, date_decrease
+from loki.seed import factories
+
 from django.conf import settings
-from seed import factories
 from faker import Factory
 
 faker = Factory.create()

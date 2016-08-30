@@ -1,7 +1,7 @@
 from django.db import models
 
 from ckeditor.fields import RichTextField
-from base_app.models import BaseUser
+from loki.base_app.models import BaseUser
 
 
 class Season(models.Model):

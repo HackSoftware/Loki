@@ -16,7 +16,7 @@ from ..models import (TeamMembership,
                       Season, Team, Invitation, Room,
                       TeamMentorship, Mentor)
 
-from seed import factories
+from loki.seed import factories
 
 from faker import Factory
 

@@ -1,7 +1,8 @@
 from rest_framework import permissions
 from datetime import date
-from hack_fmi.models import (Team, Competitor, TeamMembership,
-                             Season, TeamMentorship)
+
+from .models import (Team, Competitor, TeamMembership,
+                     Season, TeamMentorship)
 
 
 class IsHackFMIUser(permissions.BasePermission):

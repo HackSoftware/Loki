@@ -1,7 +1,8 @@
 from django.db import models
-from education.models import Course
 
 from ckeditor.fields import RichTextField
+
+from loki.education.models import Course
 
 
 class SuccessStoryPerson(models.Model):

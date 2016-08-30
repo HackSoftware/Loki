@@ -12,8 +12,7 @@ from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           SeasonSerializer, PublicTeamSerializer,
                           OnBoardingCompetitorSerializer,
                           TeamMembershipSerializer,
-                          TeamMentorshipSerializer,
-                          )
+                          TeamMentorshipSerializer)
 from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
                           IsTeamLeader, IsSeasonDeadlineUpToDate,
@@ -27,12 +26,11 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           CanNotAcceptInvitationIfTeamLeader,
                           CanAttachMoreMentorsToTeam,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
-                          TeamLiederCantCreateOtherTeam
-                          )
-
+                          TeamLiederCantCreateOtherTeam)
 from .helper import send_team_delete_email
 
-from base_app.helper import try_open
+from loki.base_app.helper import try_open
+
 import json
 
 

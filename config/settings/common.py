@@ -50,13 +50,15 @@ INSTALLED_APPS = (
     'djcelery',
     'crispy_forms',
     'anymail',
+    'easy_thumbnails',
+    'image_cropping',
 
-    'hack_fmi.apps.HackFMIConfig',
-    'base_app',
-    'hack_conf',
-    'education',
-    'status',
-    'website',
+    'loki.hack_fmi.apps.HackFMIConfig',
+    'loki.base_app.apps.BaseAppConfig',
+    'loki.hack_conf',
+    'loki.education',
+    'loki.status',
+    'loki.website',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -77,10 +79,10 @@ DEBUG = env.bool('DJANGO_DEBUG', False)
 
 # URL Configuration
 # ------------------------------------------------------------------------------
-ROOT_URLCONF = 'loki.urls'
+ROOT_URLCONF = 'config.urls'
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#wsgi-application
-WSGI_APPLICATION = 'loki.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # AUTHENTICATION CONFIGURATION
@@ -118,7 +120,9 @@ STATIC_ROOT = str(ROOT_DIR('../static'))
 STATIC_URL = '/static/'
 
 # See: https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
-STATICFILES_DIRS = str(ROOT_DIR.path('static'))
+STATICFILES_DIRS = (
+    str(ROOT_DIR.path('static')),
+)
 
 # See: http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

@@ -1,5 +1,5 @@
 from django import template
-from website.models import CourseDescription
+from loki.website.models import CourseDescription
 
 register = template.Library()
 

@@ -2,27 +2,30 @@ import uuid
 
 from django.db import models
 from ckeditor.fields import RichTextField
-from base_app.models import BaseUser, City, Company
 from jsonfield import JSONField
+
+from loki.base_app.models import BaseUser, City, Company
 
 from django.utils import timezone
 from .validators import validate_mac
 from .exceptions import HasToBeRetested
 
 
-class Student(BaseUser):
+class StudentAndTeacherCommonModel(models.Model):
+   mac = mac = models.CharField(validators=[validate_mac], max_length=17, null=True)
+   phone = models.CharField(null=True, blank=True, max_length=20)
+   class Meta:
+       abstract = True
+
+class Student(BaseUser, StudentAndTeacherCommonModel):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
-    mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
-    phone = models.CharField(null=True, blank=True, max_length=20)
     skype = models.CharField(null=True, blank=True, max_length=20)
 
     def __str__(self):
         return self.full_name
 
 
-class Teacher(BaseUser):
-    mac = models.CharField(validators=[validate_mac], max_length=17, null=True, blank=True)
-    phone = models.CharField(null=True, blank=True, max_length=20)
+class Teacher(BaseUser, StudentAndTeacherCommonModel):
     signature = models.ImageField(upload_to="teachers_signatures", null=True, blank=True)
     teached_courses = models.ManyToManyField('Course')
 

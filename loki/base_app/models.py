@@ -4,7 +4,9 @@ from django.contrib.auth.models import (AbstractBaseUser,
                                         BaseUserManager, PermissionsMixin)
 from ckeditor.fields import RichTextField
 
-from loki.settings.common import MEDIA_ROOT
+from django.conf import settings
+
+from image_cropping.fields import ImageRatioField, ImageCropField
 
 
 class Company(models.Model):
@@ -15,7 +17,7 @@ class Company(models.Model):
 
     def get_logo(self):
         if self.logo:
-            return MEDIA_ROOT + 'logos/' + str(self.pk) + '.JPG'
+            return settings.MEDIA_ROOT + 'logos/' + str(self.pk) + '.JPG'
 
     def __str__(self):
         return self.name
@@ -165,18 +167,20 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+
     birth_place = models.ForeignKey(City, null=True, blank=True)
 
     github_account = models.URLField(null=True, blank=True)
     linkedin_account = models.URLField(null=True, blank=True)
-    twitter_account = models.URLField(null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    twitter_account = models.URLField(null=True, blank=True)
 
-    studies_at = models.CharField(blank=True, null=True, max_length=110)
     works_at = models.CharField(null=True, blank=True, max_length=110)
+    studies_at = models.CharField(blank=True, null=True, max_length=110)
 
-    avatar = models.ImageField(blank=True, null=True)
-    full_image = models.ImageField(blank=True, null=True)
+    avatar = ImageCropField(blank=True, null=True)
+    full_image = ImageCropField(upload_to='avatars/', blank=True, null=True)
+    cropping = ImageRatioField('full_image', '300x300')
 
     education_info = models.ManyToManyField(EducationPlace, through='EducationInfo', related_name='info')
 
