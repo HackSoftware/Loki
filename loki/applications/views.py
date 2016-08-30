@@ -43,12 +43,10 @@ def apply_overview(request):
 def edit_applications(request):
     user_applications = Application.objects.filter(user=request.user).all()
     app_form = {}
-    initial_data = {}
 
     for application in user_applications:
-        tasks = application.application_info.applicationproblem_set.all()
-        print("APPLICATION")
         print(application)
+        tasks = application.application_info.applicationproblem_set.all()
         initial_data = {'phone': application.phone,
                         'skype': application.skype,
                         'works_at': application.works_at,
@@ -59,20 +57,13 @@ def edit_applications(request):
 
         form = ApplyForm(tasks=tasks.count(),
                          initial=initial_data)
-
+        print(initial_data)
         app_form[application.application_info.course] = form
-
-
-
         if request.method == 'POST':
-            form = ApplyForm(request.POST, tasks=tasks.count(), initial=initial_data)
-            print(form)
+            form = ApplyForm(request.POST, tasks=tasks.count(),
+                             initial=initial_data)
             if form.is_valid():
-                form.save(application.application_info, tasks, request.user)
-                return render(request, 'edit_applications.html', locals())
-
-        print(form)
-
-
+                form.update(application.application_info, tasks, request.user)
+                app_form[application.application_info.course] = form
 
     return render(request, 'edit_applications.html', locals())

@@ -39,3 +39,17 @@ class ApplyForm(forms.Form):
                 problem=app_problem,
                 solution_url=self.cleaned_data.get('task_{0}'.format(index+1))
             )
+
+    def update(self, app_info, app_problems, user):
+        application = Application.objects.get(user=user, application_info=app_info)
+        application.phone=self.cleaned_data.get('phone')
+        application.skype=self.cleaned_data.get('skype')
+        application.works_at=self.cleaned_data.get('works_at')
+        application.studies_at=self.cleaned_data.get('studies_at')
+        application.save()
+
+        for index, app_problem in enumerate(app_problems):
+            solution = ApplicationProblemSolution.objects.get(application=application,
+                       problem=app_problem)
+            solution.solution_url = self.cleaned_data.get('task_{0}'.format(index+1))
+            solution.save()
