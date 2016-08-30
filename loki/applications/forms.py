@@ -16,6 +16,8 @@ class ApplyForm(forms.Form):
         super(ApplyForm, self).__init__(*args, **kwargs)
         self.fields['task_field_count'].initial = task_fields
         for index in range(int(task_fields)):
-            # generate extra fields in the number specified via extra_fields
+            task_label = 'Задача {0}'.format(index+1)
+            # generate task fields
             self.fields['task_{index}'.format(index=index+1)] = \
-                forms.URLField()
+                forms.URLField(label=task_label,
+                               widget=w('text', 'Решение на задача'))

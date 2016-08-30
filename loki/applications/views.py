@@ -56,7 +56,7 @@ def apply_overview(request):
 def edit_applications(request):
     user_applications = Application.objects.filter(user=request.user).all()
     print(user_applications)
-    forms = []
+    app_form = {}
 
     for application in user_applications:
         tasks = application.application_info.applicationproblem_set.count()
@@ -67,8 +67,8 @@ def edit_applications(request):
                                   'skype': application.skype,
                                   'works_at': application.works_at,
                                   'studies_at': application.studies_at})
+        print(application.application_info.course)
+        app_form[application.application_info.course] = form
 
-        forms.append(form)
-
-
+    print(app_form)
     return render(request, 'edit_applications.html', locals())

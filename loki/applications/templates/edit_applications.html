@@ -1,3 +1,4 @@
+
 {% extends 'website/base.html' %}
 {% load crispy_forms_tags %}
 
@@ -5,20 +6,27 @@
 <div class="container">
   <div class="row-profile edit-profile">
     <ul class="nav nav-tabs nav-justified">
-      <!-- <li class="active"><a data-toggle="tab" href="#home">Информация</a></li> -->
-      {% for application in user_applications %}
-        <li><a data-toggle="tab" href="#app">{{ application.application_info.course }}</a></li>
+      <li class="active"><a data-toggle="tab" href="#app_info">Информация</a></li>
+      {% for app, form in app_form.items %}
+        <li><a data-toggle="tab" href="#{{ app.id }}">{{ app }}</a></li>
       {% endfor %}
     </ul>
-    <div class="tab-content">
-      <div id="app">
+  </div>
+  <div class="tab-content">
+    <div id="app_info" class="tab-pane fade in active">
+      <h3>ddskfhakdfjhd</h3>
+    </div>
+    {% for app, form in app_form.items %}
+      <div id="{{ app.id }}" class="col-md-6 col-md-offset-3 tab-pane fade">
+        <div id="edit-app"></div>
         <form method="POST" enctype='multipart/form-data' action="" class="register-form" >
-          {{ form|crispy }}
+          {{ form | crispy }}
           {% csrf_token %}
-          <button type="submit" class="btn btn-warning btn-login">Обнови</button>
+          <button id="update-app" type="submit" class="btn btn-warning btn-login">Обнови</button>
         </form>
       </div>
-    </div>
+
+    {% endfor %}
 
   </div>
 </div>
