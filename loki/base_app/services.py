@@ -86,7 +86,6 @@ def fuzzy_search_education_place(words):
 
 def send_activation_mail(request, user):
     to_email = user.email
-    from_email = settings.EMAIL_HOST_USER
 
     BaseUserRegisterToken.objects.filter(user=user).delete()
 
@@ -98,18 +97,17 @@ def send_activation_mail(request, user):
     # TODO: fix deprecation error (RequestSite)
     mail.send(
         to_email,
-        from_email,
+        sender=settings.DJANGO_DEFAULT_FROM_EMAIL,
         template='user_register',
         context={'protocol': request.is_secure() and 'https' or 'http',
                  'domain': RequestSite(request).domain,
                  'url': get_activation_url(user_token.token, request.GET.get('origin', None))
                  }
-            )
+    )
 
 
 def send_forgotten_password_email(request, user):
     to_email = user.email
-    from_email = settings.EMAIL_HOST_USER
 
     BaseUserPasswordResetToken.objects.filter(user=user).delete()
 
@@ -121,7 +119,7 @@ def send_forgotten_password_email(request, user):
     # TODO: fix deprecation error (RequestSite)
     mail.send(
         to_email,
-        from_email,
+        sender=settings.DJANGO_DEFAULT_FROM_EMAIL,
         template='password_reset',
         context={'protocol': request.is_secure() and 'https' or 'http',
                  'domain': RequestSite(request).domain,

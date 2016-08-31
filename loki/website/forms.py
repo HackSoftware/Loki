@@ -2,19 +2,18 @@ from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
-from base_app.models import (BaseUser, EducationInfo, EducationPlace, Faculty,
-                             Subject)
-from base_app.helper import get_or_none, validate_password
-from education.models import Student, Teacher, StudentAndTeacherCommonModel
-from education.validators import (validate_mac, validate_phone,
-                                  validate_github_account)
-from image_cropping import ImageCropWidget, ImageCropField
+
+from loki.base_app.models import BaseUser
+from loki.base_app.helper import get_or_none, validate_password
+from loki.education.models import Student, Teacher
+from loki.education.validators import validate_phone, validate_github_account
 
 INPUTS = {
     'text': forms.TextInput,
     'pass': forms.PasswordInput,
     'hidden': forms.HiddenInput
 }
+
 
 # w = widget
 def w(input_type, value=None):
@@ -28,6 +27,7 @@ def w(input_type, value=None):
 
     attrs = {'placeholder': value}
     return element(attrs=attrs)
+
 
 class RegisterForm(forms.Form):
     first_name = forms.CharField(label=_('Име'), widget=w('text', 'Име'))
@@ -67,6 +67,7 @@ class LoginForm(forms.Form):
         widget=forms.TextInput(attrs={'placeholder': 'Email address', 'autofocus': ''}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
+
 class BaseEditForm(ModelForm):
     class Meta:
         model = BaseUser
@@ -78,6 +79,7 @@ class BaseEditForm(ModelForm):
         validate_github_account(github_account)
         return github_account
 
+
 class StudentEditForm(ModelForm):
     class Meta:
         model = Student
@@ -87,6 +89,7 @@ class StudentEditForm(ModelForm):
         phone = self.cleaned_data.get("phone").strip()
         validate_phone(phone)
         return phone
+
 
 class TeacherEditForm(ModelForm):
     class Meta:

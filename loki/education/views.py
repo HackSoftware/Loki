@@ -14,20 +14,18 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from base_app.models import City, Company
+
+from loki.base_app.models import City, Company
 
 from .premissions import IsStudent, IsTeacher, IsTeacherForCA
-
 from .models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
                      Task, Solution, Certificate)
-
 from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
                           SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
                           CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer,
                           SolutionStatusSerializer)
-
-from education.helper import (check_macs_for_student, mac_is_used_by_another_student)
+from .helper import (check_macs_for_student, mac_is_used_by_another_student)
 from .tasks import submit_solution
 
 

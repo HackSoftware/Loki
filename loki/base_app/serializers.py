@@ -1,9 +1,10 @@
 from rest_framework import serializers
-from education.serializers import (StudentSerializer, TeacherSerializer,
-                                   CitySerializer)
 
-from base_app.models import BaseUser, City
-from hack_fmi.serializers import CompetitorSerializer
+from .models import BaseUser, City
+
+from loki.education.serializers import (StudentSerializer, TeacherSerializer,
+                                        CitySerializer)
+from loki.hack_fmi.serializers import CompetitorSerializer
 
 
 class BaseUserSerializer(serializers.ModelSerializer):

@@ -3,7 +3,7 @@ import unittest
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
-from education.models import CheckIn, Student
+from loki.education.models import CheckIn, Student
 
 
 """

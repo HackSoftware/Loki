@@ -8,10 +8,10 @@ install:
 - pip install -r requirements/base.txt
 - pip install -r requirements/test.txt 
 before_script:
+- psql -c 'CREATE DATABASE loki;' -U postgres
 - psql -c 'CREATE DATABASE testdb;' -U postgres
 script:
-- python loki/manage.py migrate
-- cd loki
+- python manage.py migrate
 - coverage run --source='.' manage.py test
 after_success:
 - coveralls --rcfile=.coverage.rc

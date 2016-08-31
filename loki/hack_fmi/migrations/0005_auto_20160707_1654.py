@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from hack_fmi.models import TeamMentorship, Team
+from loki.hack_fmi.models import TeamMentorship, Team
 
 
 def move_m2m_data_to_team_mentorship_model(apps, schema_editor):

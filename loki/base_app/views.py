@@ -8,11 +8,9 @@ from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from base_app.serializers import BaseUserMeSerializer, UpdateBaseUserSerializer
-from base_app.models import RegisterOrigin
-
+from .serializers import BaseUserMeSerializer, UpdateBaseUserSerializer
 from .helper import crop_image, validate_password
-from .models import BaseUserRegisterToken, BaseUserPasswordResetToken
+from .models import BaseUserRegisterToken, BaseUserPasswordResetToken, RegisterOrigin
 from .services import fuzzy_search_education_place
 
 

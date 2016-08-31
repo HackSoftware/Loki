@@ -2,8 +2,9 @@ import uuid
 
 from django.db import models
 from ckeditor.fields import RichTextField
-from base_app.models import BaseUser, City, Company
 from jsonfield import JSONField
+
+from loki.base_app.models import BaseUser, City, Company
 
 from django.utils import timezone
 from .validators import validate_mac

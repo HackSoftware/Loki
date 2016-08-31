@@ -1,5 +1,6 @@
 from django.conf.urls import url
-from education import views
+
+from . import views
 
 urlpatterns = [
     url(r'^api/set-check-in/$', views.set_check_in, name='set_check_in'),

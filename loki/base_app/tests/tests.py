@@ -8,11 +8,11 @@ from post_office import mail
 from post_office.models import EmailTemplate
 
 from faker import Factory
-from seed import factories
 
-from base_app.models import BaseUser, RegisterOrigin
-from base_app.helper import get_activation_url
-from website.forms import RegisterForm
+from loki.seed import factories
+from loki.base_app.models import BaseUser, RegisterOrigin
+from loki.base_app.helper import get_activation_url
+from loki.website.forms import RegisterForm
 
 faker = Factory.create()
 

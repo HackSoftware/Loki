@@ -6,7 +6,8 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
-from base_app.models import RegisterOrigin
+
+from .models import RegisterOrigin
 
 
 def crop_image(x1, y1, x2, y2, path):

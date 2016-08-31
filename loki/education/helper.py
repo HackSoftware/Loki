@@ -8,7 +8,8 @@ import requests
 from PIL import Image
 from django.conf import settings
 from django.shortcuts import get_object_or_404
-from education.models import CheckIn, Student, GraderRequest
+
+from .models import CheckIn, Student, GraderRequest
 
 
 def crop_image(x1, y1, x2, y2, path):

@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from base_app.models import BaseUser
-from .models import (Company, Partner, City, GeneralPartner,
+from .models import (BaseUser, Company, Partner, City, GeneralPartner,
                      EducationPlace, University, Faculty,
                      Subject, School, Academy, EducationInfo,
                      HostingPartner, RegisterOrigin)

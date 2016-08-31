@@ -5,7 +5,7 @@ from django.db import models, migrations
 import uuid
 import ckeditor.fields
 from django.conf import settings
-import education.validators
+import loki.education.validators
 
 
 class Migration(migrations.Migration):
@@ -121,7 +121,7 @@ class Migration(migrations.Migration):
             name='Student',
             fields=[
                 ('baseuser_ptr', models.OneToOneField(primary_key=True, to=settings.AUTH_USER_MODEL, parent_link=True, serialize=False, auto_created=True)),
-                ('mac', models.CharField(blank=True, max_length=17, validators=[education.validators.validate_mac], null=True)),
+                ('mac', models.CharField(blank=True, max_length=17, validators=[loki.education.validators.validate_mac], null=True)),
                 ('phone', models.CharField(blank=True, max_length=20, null=True)),
                 ('skype', models.CharField(blank=True, max_length=20, null=True)),
                 ('courses', models.ManyToManyField(through='education.CourseAssignment', to='education.Course')),
@@ -159,7 +159,7 @@ class Migration(migrations.Migration):
             name='Teacher',
             fields=[
                 ('baseuser_ptr', models.OneToOneField(primary_key=True, to=settings.AUTH_USER_MODEL, parent_link=True, serialize=False, auto_created=True)),
-                ('mac', models.CharField(blank=True, max_length=17, validators=[education.validators.validate_mac], null=True)),
+                ('mac', models.CharField(blank=True, max_length=17, validators=[loki.education.validators.validate_mac], null=True)),
                 ('phone', models.CharField(blank=True, max_length=20, null=True)),
                 ('signature', models.ImageField(blank=True, null=True, upload_to='teachers_signatures')),
                 ('teached_courses', models.ManyToManyField(to='education.Course')),
