@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+
+from loki.website.models import CourseDescription, Snippet
+from loki.education.models import Course
+
 from .forms import ApplyForm
 from .models import (Application, ApplicationInfo,
                      ApplicationProblem, ApplicationProblemSolution)
-from website.models import CourseDescription, Snippet
-from education.models import Course
 
 
 @login_required(login_url='website:login')

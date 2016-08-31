@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from base_app.models import Company, City
+
+from loki.base_app.models import Company, City
+
 from .models import (Lecture, CheckIn, Course, Student, Solution,
                      CourseAssignment, StudentNote, Teacher, WorkingAt, Task, Certificate)
 from .validators import (validate_github_solution_url,

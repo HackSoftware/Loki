@@ -4,7 +4,7 @@ from django.core.urlresolvers import reverse
 
 # from ..models import Skill
 
-from seed import factories
+from loki.seed import factories
 
 from faker import Factory
 

@@ -1,5 +1,7 @@
 from django import forms
-from website.forms import w
+
+from loki.website.forms import w
+
 from django.utils.translation import ugettext_lazy as _
 
 

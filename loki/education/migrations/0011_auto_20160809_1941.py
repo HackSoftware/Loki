@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import education.validators
+import loki.education.validators
 
 
 class Migration(migrations.Migration):
@@ -16,6 +16,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='student',
             name='mac',
-            field=models.CharField(max_length=17, null=True, validators=[education.validators.validate_mac]),
+            field=models.CharField(max_length=17, null=True, validators=[loki.education.validators.validate_mac]),
         ),
     ]

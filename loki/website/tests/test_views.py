@@ -2,15 +2,12 @@ from django.test import Client
 from django.core.urlresolvers import reverse
 
 from test_plus.test import TestCase
-
 from post_office.models import EmailTemplate
-
 from faker import Factory
 
-from seed import factories
-
-from base_app.models import GeneralPartner
-from base_app.models import BaseUser
+from loki.seed import factories
+from loki.base_app.models import GeneralPartner
+from loki.base_app.models import BaseUser
 
 faker = Factory.create()
 

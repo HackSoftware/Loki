@@ -1,7 +1,7 @@
 from django.db import models
 
-from education.models import Course
-from base_app.models import BaseUser
+from loki.education.models import Course
+from loki.base_app.models import BaseUser
 
 
 class ApplicationInfo(models.Model):

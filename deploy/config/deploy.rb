@@ -23,7 +23,7 @@ set :deploy_to, '/hack/loki/'
 # set :pty, true
 
 # Default value for :linked_files is []
-set :linked_files, fetch(:linked_files, []).push('loki/loki/local_settings.py')
+# set :linked_files, fetch(:linked_files, []).push()
 
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('media', 'static')
@@ -43,26 +43,25 @@ namespace :deploy do
 
   task :run_migrations do
     on roles(:all) do |h|
-      execute "/hack/loki/shared/virtualenv/bin/python3 /hack/loki/current/loki/manage.py migrate --noinput"
+      execute "/hack/loki/shared/virtualenv/bin/python3 /hack/loki/current/manage.py migrate --noinput"
     end
   end
 
   task :bower_install do
     on roles(:all) do |h|
-      execute "cd /hack/loki/current/loki/website/static/ && bower install"
+      execute "cd /hack/loki/current/loki/static/ && bower install"
     end
   end
 
   task :run_collect_static do
     on roles(:all) do |h|
-      execute "/hack/loki/shared/virtualenv/bin/python3 /hack/loki/current/loki/manage.py collectstatic --noinput"
+      execute "/hack/loki/shared/virtualenv/bin/python3 /hack/loki/current/manage.py collectstatic --noinput"
     end
   end
 
   task :restart do
     on roles(:all) do |h|
-      execute "sudo restart loki"
-      execute "sudo restart celery"
+      execute "sudo restart loki || sudo start loki"
     end
   end
 

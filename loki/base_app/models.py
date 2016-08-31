@@ -4,7 +4,8 @@ from django.contrib.auth.models import (AbstractBaseUser,
                                         BaseUserManager, PermissionsMixin)
 from ckeditor.fields import RichTextField
 
-from loki.settings import MEDIA_ROOT
+from django.conf import settings
+
 from image_cropping.fields import ImageRatioField, ImageCropField
 
 
@@ -16,7 +17,7 @@ class Company(models.Model):
 
     def get_logo(self):
         if self.logo:
-            return MEDIA_ROOT + 'logos/' + str(self.pk) + '.JPG'
+            return settings.MEDIA_ROOT + 'logos/' + str(self.pk) + '.JPG'
 
     def __str__(self):
         return self.name

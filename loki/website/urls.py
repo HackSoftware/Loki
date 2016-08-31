@@ -3,7 +3,8 @@ from django.conf.urls import url
 from .views import (index, about, courses, partners, course_details, register,
                     log_in, profile, profile_edit, profile_edit_teacher,
                     profile_edit_student, forgotten_password, logout_view)
-from applications.views import apply_overview, apply_course, edit_applications
+
+from loki.applications.views import apply_overview, apply_course, edit_applications
 
 urlpatterns = [
     url(r'^$', index, name='index'),

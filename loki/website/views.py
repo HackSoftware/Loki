@@ -1,18 +1,17 @@
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+
 from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
-
-from education.models import WorkingAt, Student, Teacher
-from base_app.models import Partner, GeneralPartner, BaseUser
-from base_app.services import send_activation_mail, send_forgotten_password_email
-from base_app.helper import get_or_none
-
 from .forms import (RegisterForm, LoginForm, BaseEditForm, StudentEditForm,
                     TeacherEditForm)
 from .decorators import anonymous_required
+
+from loki.education.models import WorkingAt, Student, Teacher
+from loki.base_app.models import Partner, GeneralPartner, BaseUser
+from loki.base_app.services import send_activation_mail, send_forgotten_password_email
+from loki.base_app.helper import get_or_none
 
 
 def index(request):

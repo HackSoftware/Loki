@@ -1,6 +1,8 @@
 from datetime import datetime
+
 from django.core.management.base import BaseCommand
-from education.models import CheckIn
+
+from loki.education.models import CheckIn
 
 
 class Command(BaseCommand):

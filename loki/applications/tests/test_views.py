@@ -1,17 +1,10 @@
-from datetime import timedelta
-
-from django.utils import timezone
-
 from test_plus.test import TestCase
 
-from seed.factories import CourseFactory
-from ..models import ApplicationInfo
-from seed.factories import (faker,
-                            CourseFactory, BaseUserFactory, CourseDescriptionFactory,
-                            ApplicationInfoFactory, ApplicationProblemFactory,
-                            ApplicationProblemSolutionFactory, ApplicationFactory)
-from ..models import Application, ApplicationProblem, ApplicationProblemSolution
-from ..views import apply_course
+from loki.seed.factories import (faker, BaseUserFactory, CourseDescriptionFactory, ApplicationProblemFactory,
+                                 ApplicationInfoFactory, ApplicationFactory, CourseFactory)
+
+from ..models import Application, ApplicationProblemSolution
+
 
 class TestApplicationViews(TestCase):
     def setUp(self):

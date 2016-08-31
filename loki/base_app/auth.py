@@ -1,7 +1,7 @@
 from djoser import views
 from post_office import mail
 
-from base_app.serializers import BaseUserSerializer
+from .serializers import BaseUserSerializer
 
 
 class RegistrationView(views.RegistrationView):

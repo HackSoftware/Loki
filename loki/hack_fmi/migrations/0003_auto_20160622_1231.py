@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 import ckeditor.fields
-import hack_fmi.models
+import loki.hack_fmi.models
 from django.conf import settings
 
 
@@ -115,7 +115,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='team',
             name='season',
-            field=models.ForeignKey(to='hack_fmi.Season', default=hack_fmi.models.active_season),
+            field=models.ForeignKey(to='hack_fmi.Season', default=loki.hack_fmi.models.active_season),
         ),
         migrations.AddField(
             model_name='team',

@@ -1,7 +1,9 @@
-from datetime import datetime
-from django.core.management import BaseCommand
 from math import ceil
-from education.models import Course, CheckIn, Lecture
+from datetime import datetime
+
+from django.core.management import BaseCommand
+
+from loki.education.models import Course, CheckIn, Lecture
 
 
 class Command(BaseCommand):

@@ -1,12 +1,11 @@
 import factory
 from faker import Factory
 
-from base_app import models as base_app_models
-from hack_fmi import models as hack_fmi_models
-from education import models as education_models
-from website import models as website_models
-from applications import models as application_models
-
+from loki.base_app import models as base_app_models
+from loki.hack_fmi import models as hack_fmi_models
+from loki.education import models as education_models
+from loki.website import models as website_models
+from loki.applications import models as application_models
 
 faker = Factory.create()
 

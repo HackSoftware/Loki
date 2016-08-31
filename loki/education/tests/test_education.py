@@ -7,13 +7,14 @@ from django.core.urlresolvers import reverse
 
 from rest_framework.test import APIClient
 
-from base_app.models import BaseUser, Company, City
-from education.models import (Student, CheckIn, Lecture,
-                              CourseAssignment, StudentNote, WorkingAt,
-                              Solution, SourceCodeTest)
-from hack_fmi.helper import date_increase, date_decrease
-from loki.settings import CHECKIN_TOKEN
-from seed import factories
+from loki.base_app.models import BaseUser, Company, City
+from loki.education.models import (Student, CheckIn, Lecture,
+                                   CourseAssignment, StudentNote, WorkingAt,
+                                   Solution, SourceCodeTest)
+from loki.hack_fmi.helper import date_increase, date_decrease
+from loki.seed import factories
+
+from django.conf import settings
 from faker import Factory
 
 faker = Factory.create()
@@ -41,7 +42,7 @@ class CheckInTest(TestCase):
     def test_check_in_with_mac_and_user(self):
         data = {
             'mac': self.student.mac,
-            'token': CHECKIN_TOKEN,
+            'token': settings.CHECKIN_TOKEN,
         }
         url = reverse('education:set_check_in')
         self.client.post(url, data, format='json')
@@ -51,7 +52,7 @@ class CheckInTest(TestCase):
     def test_check_in_with_mac_and_no_user(self):
         data = {
             'mac': faker.mac_address(),
-            'token': CHECKIN_TOKEN,
+            'token': settings.CHECKIN_TOKEN,
         }
         url = reverse('education:set_check_in')
         response = self.client.post(url, data, format='json')
@@ -61,7 +62,7 @@ class CheckInTest(TestCase):
     def test_check_macs_command(self):
         data = {
             'mac': faker.mac_address(),
-            'token': CHECKIN_TOKEN,
+            'token': settings.CHECKIN_TOKEN,
         }
         url = reverse('education:set_check_in')
         self.client.post(url, data, format='json')
