@@ -11,7 +11,7 @@ before_script:
 - psql -c 'CREATE DATABASE loki;' -U postgres
 - psql -c 'CREATE DATABASE testdb;' -U postgres
 script:
-- python loki/manage.py migrate
+- python manage.py migrate
 - cd loki
 - coverage run --source='.' manage.py test
 after_success:
