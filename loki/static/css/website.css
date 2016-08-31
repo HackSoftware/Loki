@@ -515,4 +515,10 @@ body {
   .row-profile #profile-socials {
     font-size: 2em; }
 
+#edit-app {
+  margin-top: 10px; }
+
+#update-app {
+  width: 100%; }
+
 /*# sourceMappingURL=website.css.map */

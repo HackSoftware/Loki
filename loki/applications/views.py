@@ -31,20 +31,7 @@ def apply_course(request, course_url):
         apply_form = ApplyForm(request.POST, tasks=app_problems.count())
 
         if apply_form.is_valid():
-            application = Application.objects.create(
-                user=request.user,
-                application_info=app_info,
-                phone=apply_form.cleaned_data.get('phone'),
-                skype=apply_form.cleaned_data.get('skype'),
-                works_at=apply_form.cleaned_data.get('works_at'),
-                studies_at=apply_form.cleaned_data.get('studies_at'))
-
-            for index, app_problem in enumerate(app_problems):
-                ApplicationProblemSolution.objects.create(
-                    application=application,
-                    problem=app_problem,
-                    solution_url=apply_form.cleaned_data.get('task_{0}'.format(index+1))
-                )
+            apply_form.save(app_info, app_problems, request.user)
             return render(request, 'already_applied.html', locals())
     return render(request, 'apply.html', locals())
 
@@ -57,20 +44,28 @@ def apply_overview(request):
 @login_required(login_url='website:login')
 def edit_applications(request):
     user_applications = Application.objects.filter(user=request.user).all()
-    print(user_applications)
-    forms = []
+    app_form = {}
 
     for application in user_applications:
-        tasks = application.application_info.applicationproblem_set.count()
         print(application)
-        print(application.phone)
-        form = ApplyForm(tasks=tasks,
-                         initial={'phone': application.phone,
-                                  'skype': application.skype,
-                                  'works_at': application.works_at,
-                                  'studies_at': application.studies_at})
+        tasks = application.application_info.applicationproblem_set.all()
+        initial_data = {'phone': application.phone,
+                        'skype': application.skype,
+                        'works_at': application.works_at,
+                        'studies_at': application.studies_at}
+        for index, task in enumerate(tasks):
+            solution = task.applicationproblemsolution.solution_url
+            initial_data['task_{0}'.format(index+1)] = solution
 
-        forms.append(form)
-
+        form = ApplyForm(tasks=tasks.count(),
+                         initial=initial_data)
+        print(initial_data)
+        app_form[application.application_info.course] = form
+        if request.method == 'POST':
+            form = ApplyForm(request.POST, tasks=tasks.count(),
+                             initial=initial_data)
+            if form.is_valid():
+                form.update(application.application_info, tasks, request.user)
+                app_form[application.application_info.course] = form
 
     return render(request, 'edit_applications.html', locals())

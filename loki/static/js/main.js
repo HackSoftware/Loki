@@ -6,7 +6,7 @@ $(document).ready(function(){
     var regQuestion = document.getElementsByClassName("reg-img-container")[0];
     var regError =  document.getElementById('error_1_id_password');
 
-    if (typeof(regError) != 'undefined' && regError != null){s
+    if (typeof(regError) != 'undefined' && regError != null){
        $(regQuestion).css({"margin-top" : "-26px"});
     }
 
