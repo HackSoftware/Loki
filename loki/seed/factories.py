@@ -1,4 +1,6 @@
 import factory
+from django.utils import timezone
+from datetime import timedelta
 from faker import Factory
 
 from loki.base_app import models as base_app_models
@@ -487,13 +489,14 @@ class ApplicationInfoFactory(factory.DjangoModelFactory):
         model = application_models.ApplicationInfo
 
     course = factory.SubFactory(CourseFactory)
-    start_date = faker.date_time()
-    end_date = faker.date_time()
+    start_date = timezone.now()
+    end_date = timezone.now() + timedelta(days=1)
 
 
 class ApplicationProblemFactory(factory.DjangoModelFactory):
     class Meta:
         model = application_models.ApplicationProblem
+
 
     name = faker.text(max_nb_chars=30)
     description_url = faker.url()
