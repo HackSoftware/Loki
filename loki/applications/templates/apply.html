@@ -1,4 +1,6 @@
 {% extends 'website/base.html' %}
+{% load field_type %}
+{% load index %}
 {% load crispy_forms_tags %}
 
 {% block 'page-content' %}
@@ -8,7 +10,7 @@
     </div>
     <div class="col-md-4 col-md-offset-5">
       <form method="POST" enctype='multipart/form-data' action="" class="register-form" >
-        {{ apply_form|crispy }}
+        {{ apply_form|crispy}}
         {% csrf_token %}
         <button type="submit" class="btn btn-warning btn-login">Кандидаствай!</button>
       </form>
