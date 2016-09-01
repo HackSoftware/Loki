@@ -60,7 +60,6 @@ class CourseDescription(models.Model):
     teacher_preview = RichTextField(blank=True, null=True)
     realization = RichTextField(blank=True, null=True)
     price = RichTextField(blank=True, null=True)
-    # is_active = models.BooleanField(default=False)
     address = models.CharField(
         blank=True,
         max_length=255,
@@ -68,14 +67,6 @@ class CourseDescription(models.Model):
         ' link to HackBulgaria location')
     SEO_description = models.CharField(blank=False, max_length=255)
     SEO_title = models.CharField(blank=False, max_length=255)
-    # title = Course.name
-    # video_url = Course.video
-    # start_time = Course.start_time
-    # end_time = Course.end_time
-    # application_deadline = Course.application_until
-    # github = Course.git_repository
-    # teachers = Course.teachers_set
-    # partners = Course.partner_set
 
     def __str__(self):
         return self.course.name

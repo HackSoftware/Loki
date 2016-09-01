@@ -181,11 +181,8 @@ class CourseFactory(factory.DjangoModelFactory):
 
     application_until = faker.date_time()
     applications_url = faker.url()
-    ask_for_favorite_partner = faker.boolean(chance_of_getting_true=0)
-    ask_for_feedback = faker.boolean(chance_of_getting_true=0)
     end_time = faker.date_time()
     fb_group = faker.url()
-    next_season_mail_list = faker.url()
     SEO_description = faker.word()
     SEO_title = faker.word()
     start_time = faker.date_time()
