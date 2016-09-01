@@ -1,7 +1,6 @@
 import uuid
 
 from django.db import models
-from ckeditor.fields import RichTextField
 from jsonfield import JSONField
 
 from loki.base_app.models import BaseUser, City, Company
@@ -55,31 +54,21 @@ class CourseAssignment(models.Model):
 
 
 class Course(models.Model):
-    # TODO:
-    # Moved to website.models.CourseDescription
-    # Delete (comment) the fields after you migrade the info too!
-    description = RichTextField(blank=False)
+    name = models.CharField(blank=False, max_length=64, unique=True)
+
     git_repository = models.CharField(blank=True, max_length=256)
-    image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
-    name = models.CharField(blank=False, max_length=64)
-    partner = models.ManyToManyField('base_app.Partner', blank=True)
-    short_description = models.CharField(blank=True, max_length=300)
-    show_on_index = models.BooleanField(default=False)
+    fb_group = models.URLField(blank=True, null=True)
+
     is_free = models.BooleanField(default=True)
+
+    start_time = models.DateField(blank=True, null=True)
+    end_time = models.DateField(blank=True, null=True)
+    generate_certificates_until = models.DateField()
+
+    partner = models.ManyToManyField('base_app.Partner', blank=True)
 
     application_until = models.DateField()
     applications_url = models.URLField(null=True, blank=True)
-    ask_for_favorite_partner = models.BooleanField(default=False)
-    ask_for_feedback = models.BooleanField(default=False)
-    end_time = models.DateField(blank=True, null=True)
-    fb_group = models.URLField(blank=True, null=True)
-    next_season_mail_list = models.URLField(null=True, blank=True)
-    SEO_description = models.CharField(blank=False, max_length=255)
-    SEO_title = models.CharField(blank=False, max_length=255)
-    start_time = models.DateField(blank=True, null=True)
-    url = models.SlugField(max_length=80, unique=True)
-    video = models.URLField(blank=True)
-    generate_certificates_until = models.DateField()
 
     def application_opened(self):
         return self.application_until >= timezone.now().date()
@@ -137,10 +126,7 @@ class Task(models.Model):
         return self.name
 
     def has_tests(self):
-        if hasattr(self, 'test'):
-            if self.test is not None:
-                return True
-        return False
+        return getattr(self, 'test', None) is not None
 
     class Meta:
         unique_together = (('name', 'description'),)

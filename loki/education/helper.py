@@ -54,6 +54,7 @@ def get_and_update_req_nonce(req_and_resource):
         GraderRequest.objects.create(nonce=nonce, request_info=req_and_resource)
         return str(nonce)
 
+
 def generate_grader_headers(body, req_and_resource):
     nonce = get_and_update_req_nonce(req_and_resource)
     date = time.strftime("%c")

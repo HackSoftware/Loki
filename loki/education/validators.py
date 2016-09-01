@@ -10,8 +10,7 @@ def validate_phone(phone_number):
     if len(phone_number) == 0:
         return
 
-    if (len(phone_number) < 6) or \
-                               not re.search(phone_pattern, phone_number):
+    if (len(phone_number) < 6) or not re.search(phone_pattern, phone_number):
         raise ValidationError("Невалиден телефонен номер")
 
 
@@ -21,8 +20,7 @@ def validate_mac(mac):
     if re.match(regex, mac):
         return
 
-    raise ValidationError(_('{} is not a valid mac address'.format(mac)),
-                            'invalid_mac_address')
+    raise ValidationError(_('{} is not a valid mac address'.format(mac)), 'invalid_mac_address')
 
 
 def validate_github_account(github_account):

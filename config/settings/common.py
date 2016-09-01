@@ -55,7 +55,6 @@ INSTALLED_APPS = (
 
     'loki.hack_fmi.apps.HackFMIConfig',
     'loki.base_app.apps.BaseAppConfig',
-    'loki.hack_conf',
     'loki.education',
     'loki.status',
     'loki.website',

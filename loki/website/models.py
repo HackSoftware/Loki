@@ -8,7 +8,6 @@ from loki.education.models import Course
 class SuccessStoryPerson(models.Model):
     name = models.CharField(max_length=100)
     picture = models.ImageField(blank=True)
-    # Out marketing/pr team decides which success picture to be shown
     show_picture_on_site = models.BooleanField(default=True)
     title = models.CharField(max_length=100, blank=True)
     order = models.PositiveIntegerField(default=0, blank=False, null=False)
@@ -47,9 +46,12 @@ class CourseDescription(models.Model):
         blank=True,
         help_text='Add a custom course logo with 308x308 size.')
     url = models.SlugField(max_length=80, unique=True)
+
     video_image = models.ImageField(
         blank=True,
         help_text='Add a 16/9 video cover image.')
+    video = models.URLField(blank=True)
+
     blog_article = models.CharField(
         blank=True,
         max_length=255)
@@ -60,7 +62,6 @@ class CourseDescription(models.Model):
     teacher_preview = RichTextField(blank=True, null=True)
     realization = RichTextField(blank=True, null=True)
     price = RichTextField(blank=True, null=True)
-    # is_active = models.BooleanField(default=False)
     address = models.CharField(
         blank=True,
         max_length=255,
@@ -68,14 +69,6 @@ class CourseDescription(models.Model):
         ' link to HackBulgaria location')
     SEO_description = models.CharField(blank=False, max_length=255)
     SEO_title = models.CharField(blank=False, max_length=255)
-    # title = Course.name
-    # video_url = Course.video
-    # start_time = Course.start_time
-    # end_time = Course.end_time
-    # application_deadline = Course.application_until
-    # github = Course.git_repository
-    # teachers = Course.teachers_set
-    # partners = Course.partner_set
 
     def __str__(self):
         return self.course.name
