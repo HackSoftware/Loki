@@ -47,9 +47,12 @@ class CourseDescription(models.Model):
         blank=True,
         help_text='Add a custom course logo with 308x308 size.')
     url = models.SlugField(max_length=80, unique=True)
+
     video_image = models.ImageField(
         blank=True,
         help_text='Add a 16/9 video cover image.')
+    video = models.URLField(blank=True)
+
     blog_article = models.CharField(
         blank=True,
         max_length=255)
