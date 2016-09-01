@@ -113,11 +113,10 @@ class TestApplicationViews(TestCase):
 
         solution_problem1.problem = app_problem1
         solution_problem2.problem = app_problem2
-        import ipdb; ipdb.set_trace()
 
 
         self.assertEqual(1, Application.objects.filter(user=self.user).count())
-        self.assertEqual(2, ApplicationProblemSolution.objects.filter(application=application))
+        self.assertEqual(2, ApplicationProblemSolution.objects.filter(application=application).count())
 
         with self.login(username=self.user.email, password=BaseUserFactory.password):
             data = {"phone": faker.random_number(),
