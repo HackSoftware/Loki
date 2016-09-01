@@ -69,8 +69,6 @@ class Course(models.Model):
     application_until = models.DateField()
     applications_url = models.URLField(null=True, blank=True)
 
-    video = models.URLField(blank=True)
-
     def application_opened(self):
         return self.application_until >= timezone.now().date()
 

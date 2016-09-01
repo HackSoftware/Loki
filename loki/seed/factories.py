@@ -125,7 +125,7 @@ class EducationInfoFactory(factory.DjangoModelFactory):
     user = factory.SubFactory(BaseUserFactory)
     place = factory.SubFactory(EducationPlaceFactory)
 
-    start_date = factory.LazyAttribute(lambda _: faker.url())
+    start_date = factory.LazyAttribute(lambda _: faker.date_time())
     end_date = factory.LazyAttribute(lambda _: faker.date_time())
     created_at = factory.LazyAttribute(lambda _: faker.date_time())
     updated_at = factory.LazyAttribute(lambda _: faker.date_time())
