@@ -1,7 +1,8 @@
 from test_plus.test import TestCase
 
 from loki.seed.factories import (faker, BaseUserFactory, CourseDescriptionFactory, ApplicationProblemFactory,
-                                 ApplicationInfoFactory, ApplicationFactory, CourseFactory)
+                                 ApplicationInfoFactory, ApplicationFactory, CourseFactory,
+                                 ApplicationProblemSolutionFactory)
 
 from ..models import Application, ApplicationProblemSolution
 
@@ -98,3 +99,38 @@ class TestApplicationViews(TestCase):
                       data=data)
             self.assertFalse('apply_form' in response.context)
             self.response_200()
+
+    def test_editing_apply_form(self):
+        self.assertEqual(0, Application.objects.count())
+        app_problem1 = ApplicationProblemFactory()
+        app_problem2 = ApplicationProblemFactory()
+        self.application_info.applicationproblem_set.add(app_problem1)
+        self.application_info.applicationproblem_set.add(app_problem2)
+
+        application = ApplicationFactory(application_info=self.application_info, user=self.user)
+        solution_problem1 = ApplicationProblemSolutionFactory(application=application)
+        solution_problem2 = ApplicationProblemSolutionFactory(application=application)
+
+        solution_problem1.problem = app_problem1
+        solution_problem2.problem = app_problem2
+        import ipdb; ipdb.set_trace()
+
+
+        self.assertEqual(1, Application.objects.filter(user=self.user).count())
+        self.assertEqual(2, ApplicationProblemSolution.objects.filter(application=application))
+
+        with self.login(username=self.user.email, password=BaseUserFactory.password):
+            data = {"phone": faker.random_number(),
+                    "skype": faker.word(),
+                    "studies_at": faker.word(),
+                    "works_at": faker.word(),
+                    "task_field_count": 2,
+                    "task_1": faker.url(),
+                    "task_2": faker.url()}
+            response = self.post('website:edit_applications',
+                      course_url=self.course_description.url,
+                      data=data)
+            self.response_200()
+
+        self.assertEqual(1, Application.objects.filter(user=self.user).count())
+        # self.assertEqual(2, ApplicationProblemSolution.objects.filter(application=application))

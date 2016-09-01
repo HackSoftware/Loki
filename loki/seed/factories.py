@@ -105,7 +105,7 @@ class BaseUserFactory(factory.DjangoModelFactory):
     password = 'ivoepanda'
     first_name = faker.first_name()
     last_name = faker.last_name()
-    email = faker.email()
+    email = factory.Sequence(lambda n: '{}{}'.format(n, faker.email()))
     birth_place = factory.SubFactory(CityFactory)
 
     github_account = faker.url()
