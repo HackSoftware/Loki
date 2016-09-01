@@ -126,10 +126,7 @@ class Task(models.Model):
         return self.name
 
     def has_tests(self):
-        if hasattr(self, 'test'):
-            if self.test is not None:
-                return True
-        return False
+        return getattr(self, 'test', None) is not None
 
     class Meta:
         unique_together = (('name', 'description'),)
