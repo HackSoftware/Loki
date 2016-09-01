@@ -16,15 +16,20 @@ class ApplyForm(forms.Form):
     task_field_count = forms.CharField(widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
+        app_problems = kwargs.pop('app_problems', 0)
         task_fields = kwargs.pop('tasks', 0)
         super(ApplyForm, self).__init__(*args, **kwargs)
         self.fields['task_field_count'].initial = task_fields
+        """
+        TODO: Consider rendering this in the HTML in the bright future
+        """
         for index in range(int(task_fields)):
-            task_label = 'Задача {0}'.format(index+1)
-            # generate task fields
-            self.fields['task_{index}'.format(index=index+1)] = \
-                forms.URLField(label=task_label,
-                               widget=w('text', 'Решение на задача'))
+            task_label = '<a href={1} target="_blank">{2}</a> - задача {0}'.format(index+1,
+                                                                            app_problems[index].description_url,
+                                                                            app_problems[index].name)
+            field = forms.URLField(label=task_label,
+                                   widget=w('text', 'Решение на задача'))
+            self.fields['task_{index}'.format(index=index + 1)] = field
 
     def save(self, app_info, app_problems, user):
         application = Application.objects.create(

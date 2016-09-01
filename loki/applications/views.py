@@ -28,14 +28,17 @@ def apply_course(request, course_url):
     if Application.objects.filter(user=request.user, application_info=app_info).exists():
         return render(request, 'already_applied.html', locals())
 
-    apply_form = ApplyForm(tasks=app_problems.count())
+    apply_form = ApplyForm(tasks=app_problems.count(), app_problems=app_problems)
+    problems = list(range(len(apply_form.fields) - len(app_problems))) + list(app_problems)
 
     if request.method == 'POST':
-        apply_form = ApplyForm(request.POST, tasks=app_problems.count())
+        apply_form = ApplyForm(request.POST, tasks=app_problems.count(),
+                                             app_problems=app_problems)
 
         if apply_form.is_valid():
             apply_form.save(app_info, app_problems, request.user)
             return render(request, 'already_applied.html', locals())
+
     return render(request, 'apply.html', locals())
 
 def apply_overview(request):
@@ -65,12 +68,12 @@ def edit_applications(request):
             solution = task.applicationproblemsolution.solution_url
             initial_data['task_{0}'.format(index+1)] = solution
 
-        form = ApplyForm(tasks=tasks.count(),
+        form = ApplyForm(tasks=tasks.count(), app_problems=tasks,
                          initial=initial_data)
 
         app_form[application.application_info.course] = form
         if request.method == 'POST':
-            form = ApplyForm(request.POST, tasks=tasks.count(),
+            form = ApplyForm(request.POST, tasks=tasks.count(), app_problems=tasks,
                              initial=initial_data)
             if form.is_valid():
                 form.update(application.application_info, tasks, request.user)
