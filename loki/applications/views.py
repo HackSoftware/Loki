@@ -14,16 +14,18 @@ from .models import (Application, ApplicationInfo,
 @login_required(login_url='website:login')
 def apply_course(request, course_url):
     cd = get_object_or_404(CourseDescription, url=course_url)
+    course = cd.course
+    app_info = cd.applicationinfo
+    app_problems = ApplicationProblem.objects.filter(application_info=app_info)
 
-    try:
-        course = cd.course
-        if course:
-            app_info = ApplicationInfo.objects.get(course=course)
-            if not app_info.apply_is_active():
-                return redirect(reverse('website:apply_overview'))
-            app_problems = ApplicationProblem.objects.filter(application_info=app_info)
-    except (ApplicationInfo.DoesNotExist, ApplicationProblem.DoesNotExist) as err:
-        return redirect(reverse('website:profile'))
+    # try:
+    #     course = cd.course
+    #     if course:
+    #         app_info = ApplicationInfo.objects.get(course=course)
+    #         if not app_info.apply_is_active():
+    #             return redirect(reverse('website:apply_overview'))
+    # except (ApplicationInfo.DoesNotExist, ApplicationProblem.DoesNotExist) as err:
+    #     return redirect(reverse('website:profile'))
 
     if Application.objects.filter(user=request.user, application_info=app_info).exists():
         return redirect(reverse('website:edit_applications'))
@@ -32,8 +34,9 @@ def apply_course(request, course_url):
     problems = list(range(len(apply_form.fields) - len(app_problems))) + list(app_problems)
 
     if request.method == 'POST':
-        apply_form = ApplyForm(request.POST, tasks=app_problems.count(),
-                                             app_problems=app_problems)
+        apply_form = ApplyForm(request.POST,
+                               tasks=app_problems.count(),
+                               app_problems=app_problems)
 
         if apply_form.is_valid():
             apply_form.save(app_info, app_problems, request.user)
@@ -41,17 +44,18 @@ def apply_course(request, course_url):
 
     return render(request, 'apply.html', locals())
 
+
 def apply_overview(request):
-    courses = [x for x in Course.objects.all() \
-                    if getattr(x, 'applicationinfo', None) is not None and \
-                       getattr(x, 'coursedescription', None) is not None]
-    apply_courses = [x for x in courses if x.applicationinfo.apply_is_active()]
-    if not apply_courses:
-        raise Http404("Page not found")
+    apply_courses = [info.course for info in ApplicationInfo.objects.get_open_for_apply()]
+
+    """
+    TODO: Handle in html if there are no current courses to apply
+    """
 
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
     return render(request, 'apply_overview.html', locals())
+
 
 @login_required(login_url='website:login')
 def edit_applications(request):
