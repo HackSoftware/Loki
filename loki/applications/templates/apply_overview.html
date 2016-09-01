@@ -25,8 +25,7 @@
 
     <section class="row">
       <div class="active-courses-container container-fluid">
-        {% for course in courses %}
-        <!-- {% if course.is_active %} -->
+        {% for course in apply_courses %}
           <div class="course-logo-container col-md-3">
               <a href="{{ course.url }}">
                 {% if course.custom_logo != "" %}
@@ -37,13 +36,10 @@
               </a>
               <h3 id="course-name">{{ course.name }}</h3>
               <a href="{{ course.url }}">
-              {% if course.is_active %}
                 <button class="btn btn-primary">Кандидатствай</button>
-              {% endif %}
                 <!-- <button class="btn btn-danger">Курсът приключи</button> -->
               </a>
           </div>
-          <!-- {% endif %} -->
         {% endfor %}
       </div>
     </section>

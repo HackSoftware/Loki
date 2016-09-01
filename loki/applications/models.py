@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from loki.education.models import Course
 from loki.base_app.models import BaseUser
@@ -14,6 +15,8 @@ class ApplicationInfo(models.Model):
                                                         self.end_date,
                                                         self.course)
 
+    def apply_is_active(self):
+        return self.end_date >= timezone.now()
 
 class ApplicationProblem(models.Model):
     application_info = models.ManyToManyField(ApplicationInfo)
