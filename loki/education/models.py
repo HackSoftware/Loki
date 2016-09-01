@@ -1,7 +1,6 @@
 import uuid
 
 from django.db import models
-from ckeditor.fields import RichTextField
 from jsonfield import JSONField
 
 from loki.base_app.models import BaseUser, City, Company
@@ -12,10 +11,12 @@ from .exceptions import HasToBeRetested
 
 
 class StudentAndTeacherCommonModel(models.Model):
-   mac = mac = models.CharField(validators=[validate_mac], max_length=17, null=True)
-   phone = models.CharField(null=True, blank=True, max_length=20)
-   class Meta:
-       abstract = True
+    mac = mac = models.CharField(validators=[validate_mac], max_length=17, null=True)
+    phone = models.CharField(null=True, blank=True, max_length=20)
+
+    class Meta:
+        abstract = True
+
 
 class Student(BaseUser, StudentAndTeacherCommonModel):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
