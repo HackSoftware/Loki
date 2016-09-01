@@ -56,13 +56,10 @@ class Course(models.Model):
     # TODO:
     # Moved to website.models.CourseDescription
     # Delete (comment) the fields after you migrade the info too!
-    description = RichTextField(blank=False)
     git_repository = models.CharField(blank=True, max_length=256)
     image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
     name = models.CharField(blank=False, max_length=64)
     partner = models.ManyToManyField('base_app.Partner', blank=True)
-    short_description = models.CharField(blank=True, max_length=300)
-    show_on_index = models.BooleanField(default=False)
     is_free = models.BooleanField(default=True)
 
     application_until = models.DateField()
@@ -70,10 +67,7 @@ class Course(models.Model):
     end_time = models.DateField(blank=True, null=True)
     fb_group = models.URLField(blank=True, null=True)
 
-    SEO_description = models.CharField(blank=False, max_length=255)
-    SEO_title = models.CharField(blank=False, max_length=255)
     start_time = models.DateField(blank=True, null=True)
-    url = models.SlugField(max_length=80, unique=True)
     video = models.URLField(blank=True)
     generate_certificates_until = models.DateField()
 

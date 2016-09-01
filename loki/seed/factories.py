@@ -175,8 +175,6 @@ class CourseFactory(factory.DjangoModelFactory):
     image = factory.django.ImageField()
     name = factory.Sequence(lambda n: '{}{}'.format(faker.name(), n))
     partner = factory.RelatedFactory(PartnerFactory)
-    short_description = factory.LazyAttribute(lambda _: faker.word())
-    show_on_index = factory.LazyAttribute(lambda _: faker.boolean(chance_of_getting_true=0))
     is_free = factory.LazyAttribute(lambda _: faker.boolean(chance_of_getting_true=100))
 
     application_until = faker.date_time()
@@ -188,6 +186,7 @@ class CourseFactory(factory.DjangoModelFactory):
     start_time = faker.date_time()
     url = factory.Sequence(lambda n: 'url {}'.format(n))
     video = faker.url()
+
     generate_certificates_until = faker.date()
 
 
