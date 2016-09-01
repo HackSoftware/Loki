@@ -143,7 +143,6 @@ class CourseSerializer(serializers.ModelSerializer):
             'end_time',
             'teacher_set',
             'fb_group',
-            'url',
         )
 
 

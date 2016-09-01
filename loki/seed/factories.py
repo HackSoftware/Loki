@@ -170,9 +170,7 @@ class CourseFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.Course
 
-    description = factory.LazyAttribute(lambda _: faker.text())
     git_repository = factory.LazyAttribute(lambda _: faker.word())
-    image = factory.django.ImageField()
     name = factory.Sequence(lambda n: '{}{}'.format(faker.name(), n))
     partner = factory.RelatedFactory(PartnerFactory)
     is_free = factory.LazyAttribute(lambda _: faker.boolean(chance_of_getting_true=100))
@@ -181,10 +179,7 @@ class CourseFactory(factory.DjangoModelFactory):
     applications_url = faker.url()
     end_time = faker.date_time()
     fb_group = faker.url()
-    SEO_description = faker.word()
-    SEO_title = faker.word()
     start_time = faker.date_time()
-    url = factory.Sequence(lambda n: 'url {}'.format(n))
     video = faker.url()
 
     generate_certificates_until = faker.date()

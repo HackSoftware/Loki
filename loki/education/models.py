@@ -57,7 +57,6 @@ class Course(models.Model):
     # Moved to website.models.CourseDescription
     # Delete (comment) the fields after you migrade the info too!
     git_repository = models.CharField(blank=True, max_length=256)
-    image = models.ImageField(upload_to="courses_logoes", null=True, blank=True)
     name = models.CharField(blank=False, max_length=64)
     partner = models.ManyToManyField('base_app.Partner', blank=True)
     is_free = models.BooleanField(default=True)
