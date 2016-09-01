@@ -180,7 +180,6 @@ class CourseFactory(factory.DjangoModelFactory):
     end_time = faker.date_time()
     fb_group = faker.url()
     start_time = faker.date_time()
-    video = faker.url()
 
     generate_certificates_until = faker.date()
 
