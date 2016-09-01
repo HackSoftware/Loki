@@ -26,7 +26,7 @@ def apply_course(request, course_url):
         return redirect(reverse('website:profile'))
 
     if Application.objects.filter(user=request.user, application_info=app_info).exists():
-        return render(request, 'already_applied.html', locals())
+        return redirect(reverse('website:edit_applications'))
 
     apply_form = ApplyForm(tasks=app_problems.count(), app_problems=app_problems)
     problems = list(range(len(apply_form.fields) - len(app_problems))) + list(app_problems)
