@@ -1,14 +1,18 @@
 from django.db import models
 from django.utils import timezone
 
-from loki.education.models import Course
+from loki.website.models import CourseDescription
 from loki.base_app.models import BaseUser
+
+from .managers import ApplicationInfoManager
 
 
 class ApplicationInfo(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    course = models.OneToOneField(Course)
+    course = models.OneToOneField(CourseDescription)
+
+    objects = ApplicationInfoManager()
 
     def __str__(self):
         return "From {0} to {1} applying to {2}".format(self.start_date,
@@ -17,6 +21,7 @@ class ApplicationInfo(models.Model):
 
     def apply_is_active(self):
         return self.end_date >= timezone.now()
+
 
 class ApplicationProblem(models.Model):
     application_info = models.ManyToManyField(ApplicationInfo)

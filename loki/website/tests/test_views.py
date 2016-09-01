@@ -193,7 +193,7 @@ class TestWebsite(TestCase):
 
     def test_course_detail_with_course_description(self):
         course = factories.CourseFactory()
-        cd = factories.CourseDescriptionFactory(course_id=course.id)
+        cd = factories.CourseDescriptionFactory(course=course)
 
         url = reverse('website:course_details',
                       kwargs={"course_url": cd.url})
