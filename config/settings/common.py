@@ -59,6 +59,7 @@ INSTALLED_APPS = (
     'loki.education',
     'loki.status',
     'loki.website',
+    'loki.emails.apps.EmailsConfig',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -199,13 +200,12 @@ CKEDITOR_CONFIGS = {
 
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
-                    default='anymail.backends.mailgun.MailgunBackend')
+EMAIL_BACKEND = 'anymail.backends.mailgun.SendGridBackend'
 
-DJANGO_DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL', default="admin@hackbulgaria.com")
+DJANGO_DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL', default="team@hackbulgaria.com")
 
 ANYMAIL = {
-    "MAILGUN_API_KEY": env('MAILGUN_API_KEY', default=""),
+    "SENDGRID_API_KEY": env('SENDGRID_API_KEY', default=""),
 }
 
 TEMPLATE_CONTEXT_PROCESSORS = TCP + ['django.core.context_processors.request']
@@ -214,7 +214,6 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + ['django.core.context_processors.request']
 CHECKIN_TOKEN = env('CHECKIN_TOKEN', default="")
 
 GITHUB_OATH_TOKEN = env('GITHUB_OATH_TOKEN', default="")
-
 
 DJOSER = {
     'DOMAIN': env('DJOSER_DOMAIN', default='frontend.com'),
