@@ -53,22 +53,23 @@ class CourseAssignment(models.Model):
 
 
 class Course(models.Model):
-    # TODO:
-    # Moved to website.models.CourseDescription
-    # Delete (comment) the fields after you migrade the info too!
+    name = models.CharField(blank=False, max_length=64, unique=True)
+
     git_repository = models.CharField(blank=True, max_length=256)
-    name = models.CharField(blank=False, max_length=64)
-    partner = models.ManyToManyField('base_app.Partner', blank=True)
+    fb_group = models.URLField(blank=True, null=True)
+
     is_free = models.BooleanField(default=True)
+
+    start_time = models.DateField(blank=True, null=True)
+    end_time = models.DateField(blank=True, null=True)
+    generate_certificates_until = models.DateField()
+
+    partner = models.ManyToManyField('base_app.Partner', blank=True)
 
     application_until = models.DateField()
     applications_url = models.URLField(null=True, blank=True)
-    end_time = models.DateField(blank=True, null=True)
-    fb_group = models.URLField(blank=True, null=True)
 
-    start_time = models.DateField(blank=True, null=True)
     video = models.URLField(blank=True)
-    generate_certificates_until = models.DateField()
 
     def application_opened(self):
         return self.application_until >= timezone.now().date()
