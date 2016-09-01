@@ -1,3 +1,4 @@
+from django.views.generic import TemplateView
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -13,23 +14,33 @@ from loki.base_app.services import send_activation_mail, send_forgotten_password
 from loki.base_app.helper import get_or_none
 
 
-def index(request):
-    successors = SuccessStoryPerson.objects.filter(show_picture_on_site=True).order_by('?')[:6]
-    partners = Partner.objects.all().order_by('?')
-    videos = SuccessVideo.objects.all()[:4]
+class IndexView(TemplateView):
+    template_name = 'website/index.html'
 
-    success = WorkingAt.objects.filter(came_working=False)
-    success_students = map(lambda x: x.student, success)
-    success_students_count = len(set(success_students))
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
+        context['successors'] = SuccessStoryPerson.objects.filter(show_picture_on_site=True).order_by('?')[:6]
+        context['partners'] = Partner.objects.all().order_by('?')
+        context['videos'] = SuccessVideo.objects.all()[:4]
 
-    return render(request, "website/index.html", locals())
+        context['success'] = WorkingAt.objects.filter(came_working=False)
+        context['success_students'] = map(lambda x: x.student, context['success'])
+        context['success_students_count'] = len(set(context['success_students']))
+
+        context['snippets'] = {snippet.label: snippet for snippet in Snippet.objects.all()}
+
+        return context
 
 
-def about(request):
-    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
-    return render(request, "website/about.html", locals())
+class AboutView(TemplateView):
+    template_name = 'website/about.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['snippets'] = {snippet.label: snippet for snippet in Snippet.objects.all()}
+
+        return context
 
 
 def courses(request):
