@@ -8,7 +8,6 @@ from loki.education.models import Course
 class SuccessStoryPerson(models.Model):
     name = models.CharField(max_length=100)
     picture = models.ImageField(blank=True)
-    # Out marketing/pr team decides which success picture to be shown
     show_picture_on_site = models.BooleanField(default=True)
     title = models.CharField(max_length=100, blank=True)
     order = models.PositiveIntegerField(default=0, blank=False, null=False)
