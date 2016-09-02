@@ -487,7 +487,7 @@ class ApplicationProblemFactory(factory.DjangoModelFactory):
         model = application_models.ApplicationProblem
 
 
-    name = faker.text(max_nb_chars=30)
+    name = factory.LazyAttribute(lambda _: faker.text())
     description_url = faker.url()
 
     # @factory.post_generation

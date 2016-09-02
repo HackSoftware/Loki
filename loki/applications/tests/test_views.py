@@ -14,15 +14,15 @@ class TestApplicationViews(TestCase):
         self.user.is_active = True
         self.user.save()
         self.course_description = CourseDescriptionFactory(course=self.course)
-        self.application_info = ApplicationInfoFactory(course=self.course)
+        self.application_info = ApplicationInfoFactory(course=self.course_description)
 
     def test_non_registered_user_cannot_see_apply_overview(self):
-        self.get('website:apply_overview')
+        self.get('applications:apply_overview')
         self.response_200()
 
     def test_registered_user_can_see_apply_overview(self):
         with self.login(username=self.user.email, password=BaseUserFactory.password):
-            self.get('website:apply_overview')
+            self.get('applications:apply_overview')
             self.response_200()
 
     def test_applying_for_non_existing_course_should_raise_404(self):
@@ -30,7 +30,7 @@ class TestApplicationViews(TestCase):
 
         with self.login(username=self.user.email, password=BaseUserFactory.password):
             data = {}
-            self.post('website:apply_course',
+            self.post('applications:apply_course',
                       course_url=self.course_description.url + faker.word(),
                       data=data)
             self.response_404()
@@ -39,7 +39,7 @@ class TestApplicationViews(TestCase):
 
     def test_register_user_can_see_course_apply_form(self):
         with self.login(username=self.user.email, password=BaseUserFactory.password):
-            self.get('website:apply_course', course_url=self.course_description.url)
+            self.get('applications:apply_course', course_url=self.course_description.url)
             self.response_200()
 
     def test_applying_for_course_with_inconsistent_data(self):
@@ -48,7 +48,7 @@ class TestApplicationViews(TestCase):
         with self.login(username=self.user.email, password=BaseUserFactory.password):
             data = {"phone": faker.random_number(),
                     "skype": faker.word()}
-            response = self.post('website:apply_course',
+            response = self.post('applications:apply_course',
                       course_url=self.course_description.url,
                       data=data)
             form = self.get_context('form')
@@ -76,7 +76,7 @@ class TestApplicationViews(TestCase):
                     "task_field_count": 2,
                     "task_1": faker.url(),
                     "task_2": faker.url()}
-            response = self.post('website:apply_course',
+            response = self.post('applications:apply_course',
                       course_url=self.course_description.url,
                       data=data)
 
