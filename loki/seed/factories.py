@@ -487,7 +487,7 @@ class ApplicationProblemFactory(factory.DjangoModelFactory):
         model = application_models.ApplicationProblem
 
 
-    name = factory.LazyAttribute(lambda _: faker.text())
+    name = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=255))
     description_url = faker.url()
 
     # @factory.post_generation
@@ -509,10 +509,10 @@ class ApplicationFactory(factory.DjangoModelFactory):
     application_info =  factory.SubFactory(ApplicationInfoFactory)
     user =  factory.SubFactory(BaseUserFactory)
 
-    phone = faker.text(max_nb_chars=20)
-    skype = faker.text(max_nb_chars=30)
-    works_at = faker.text(max_nb_chars=110)
-    studies_at = faker.text(max_nb_chars=110)
+    phone = faker.text(max_nb_chars=255)
+    skype = faker.text(max_nb_chars=255)
+    works_at = faker.text(max_nb_chars=255)
+    studies_at = faker.text(max_nb_chars=255)
 
 
 class ApplicationProblemSolutionFactory(factory.DjangoModelFactory):

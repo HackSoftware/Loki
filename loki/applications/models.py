@@ -25,7 +25,7 @@ class ApplicationInfo(models.Model):
 
 class ApplicationProblem(models.Model):
     application_info = models.ManyToManyField(ApplicationInfo)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=255)
     description_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
@@ -39,10 +39,10 @@ class Application(models.Model):
     application_info = models.ForeignKey(ApplicationInfo)
     user = models.ForeignKey(BaseUser)
 
-    phone = models.CharField(null=True, blank=True, max_length=20)
-    skype = models.CharField(null=True, blank=True, max_length=30)
-    works_at = models.CharField(null=True, blank=True, max_length=110)
-    studies_at = models.CharField(blank=True, null=True, max_length=110)
+    phone = models.CharField(null=True, blank=True, max_length=255)
+    skype = models.CharField(null=True, blank=True, max_length=255)
+    works_at = models.CharField(null=True, blank=True, max_length=255)
+    studies_at = models.CharField(blank=True, null=True, max_length=255)
 
     def __str__(self):
         return "{0} to {1}".format(self.user, self.application_info)
