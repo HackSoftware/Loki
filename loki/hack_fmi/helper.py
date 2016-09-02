@@ -13,7 +13,7 @@ def send_team_delete_email(team):
 
         send_template_email(
             member.email,
-            settings.SENDGRID_TEMPLATES['hackfmi_team_deleted'],
+            settings.EMAIL_TEMPLATES['hackfmi_team_deleted'],
             context
         )
 
