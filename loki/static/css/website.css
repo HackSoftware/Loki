@@ -386,6 +386,10 @@ body {
 .name-course {
   font-size: 30px; }
 
+.active-courses {
+  font-size: 30px;
+  text-align: left; }
+
 @media screen and (max-width: 600px) {
   .text-card, .card {
     float: right !important; } }

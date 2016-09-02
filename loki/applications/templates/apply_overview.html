@@ -11,12 +11,6 @@
 
     <section class="row">
       <div class="col-lg-12">
-        <p class="lead">Активни курсове</p>
-      </div>
-    </section>
-
-    <section class="row">
-      <div class="col-lg-12">
         {{ snippets.courses_second_header.text }}
       </div>
     </section>
@@ -25,23 +19,28 @@
 
     <section class="row">
       <div class="active-courses-container container-fluid">
-        {% for course in apply_courses %}
-          <div class="course-logo-container col-md-3">
-            <h3 id="course-name">{{ course.course.name }}</h3>
-              <a href="{{ course.url }}">
-                {% if course.custom_logo != "" %}
-                  <img class="video-thumb" src="{{ MEDIA_URL }}{{ course.custom_logo }}">
-                {% else %}
-                  <i id="course-avatar-active" class="course-logo {{ course.logo }}"></i>
-                {% endif %}
-              </a>
-              <h3 id="course-name">{{ course.name }}</h3>
-              <a href="{{ course.url }}">
-                <button class="btn btn-primary">Кандидатствай</button>
-                <!-- <button class="btn btn-danger">Курсът приключи</button> -->
-              </a>
-          </div>
-        {% endfor %}
+        {% if apply_courses %}
+        <div class="active-courses"> Активни курсове за кандидастване!</div>
+          {% for course in apply_courses %}
+            <div class="course-logo-container col-md-3">
+              <h3 id="course-name">{{ course.course.name }}</h3>
+                <a href="{{ course.url }}">
+                  {% if course.custom_logo != "" %}
+                    <img class="video-thumb" src="{{ MEDIA_URL }}{{ course.custom_logo }}">
+                  {% else %}
+                    <i id="course-avatar-active" class="course-logo {{ course.logo }}"></i>
+                  {% endif %}
+                </a>
+                <h3 id="course-name">{{ course.name }}</h3>
+                <a href="{{ course.url }}">
+                  <button class="btn btn-primary">Кандидатствай</button>
+                  <!-- <button class="btn btn-danger">Курсът приключи</button> -->
+                </a>
+            </div>
+          {% endfor %}
+          {% else %}
+          <h1> В момента няма курсове за кандидастване! :) </h1>
+          {% endif %}
       </div>
     </section>
 

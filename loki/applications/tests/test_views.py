@@ -42,6 +42,11 @@ class TestApplicationViews(TestCase):
             self.get('applications:apply_course', course_url=self.course_description.url)
             self.response_200()
 
+    def test_apply_for_invalid_course_url(self):
+        with self.login(username=self.user.email, password=BaseUserFactory.password):
+            self.post('applications:edit_application', course_url=faker.word)
+            self.response_404()
+
     def test_applying_for_course_with_inconsistent_data(self):
         self.assertEqual(0, Application.objects.count())
 
@@ -93,14 +98,15 @@ class TestApplicationViews(TestCase):
         application = ApplicationFactory(user=self.user, application_info=self.application_info)
 
         with self.login(username=self.user.email, password=BaseUserFactory.password):
-            data = {}
-            response = self.post('website:apply_course',
-                      course_url=self.course_description.url,
-                      data=data)
-            self.assertFalse('apply_form' in response.context)
-            self.response_200()
+            response = self.post('applications:apply_course',
+                      course_url=self.course_description.url)
+            self.response_302()
 
-    def test_editing_apply_form(self):
+    def test_non_registered_can_not_see_apply_edit(self):
+        self.post('applications:edit_application', course_url=self.course_description.url)
+        self.response_302()
+
+    def test_registered_user_editing_apply_form(self):
         self.assertEqual(0, Application.objects.count())
         app_problem1 = ApplicationProblemFactory()
         app_problem2 = ApplicationProblemFactory()
@@ -112,8 +118,9 @@ class TestApplicationViews(TestCase):
         solution_problem2 = ApplicationProblemSolutionFactory(application=application)
 
         solution_problem1.problem = app_problem1
+        solution_problem1.save()
         solution_problem2.problem = app_problem2
-
+        solution_problem2.save()
 
         self.assertEqual(1, Application.objects.filter(user=self.user).count())
         self.assertEqual(2, ApplicationProblemSolution.objects.filter(application=application).count())
@@ -126,10 +133,13 @@ class TestApplicationViews(TestCase):
                     "task_field_count": 2,
                     "task_1": faker.url(),
                     "task_2": faker.url()}
-            response = self.post('website:edit_applications',
+            response = self.post('applications:edit_application',
                       course_url=self.course_description.url,
                       data=data)
+
             self.response_200()
 
+        app_problem_solutions = ApplicationProblemSolution.objects.filter(application=application).all()
         self.assertEqual(1, Application.objects.filter(user=self.user).count())
-        # self.assertEqual(2, ApplicationProblemSolution.objects.filter(application=application))
+        self.assertEqual(2, app_problem_solutions.count())
+        self.assertTrue([solution_problem1, solution_problem2] != app_problem_solutions)
