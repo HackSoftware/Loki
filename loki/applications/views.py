@@ -28,7 +28,7 @@ def apply_course(request, course_url):
     #     return redirect(reverse('website:profile'))
 
     if Application.objects.filter(user=request.user, application_info=app_info).exists():
-        return redirect(reverse('website:edit_applications'))
+        return redirect(reverse('applications:edit_applications'))
 
     apply_form = ApplyForm(tasks=app_problems.count(), app_problems=app_problems)
     problems = list(range(len(apply_form.fields) - len(app_problems))) + list(app_problems)
@@ -59,28 +59,35 @@ def apply_overview(request):
 
 @login_required(login_url='website:login')
 def edit_applications(request):
-    user_applications = Application.objects.filter(user=request.user).all()
-    app_form = {}
-
-    for application in user_applications:
-        tasks = application.application_info.applicationproblem_set.all()
-        initial_data = {'phone': application.phone,
-                        'skype': application.skype,
-                        'works_at': application.works_at,
-                        'studies_at': application.studies_at}
-        for index, task in enumerate(tasks):
-            solution = task.applicationproblemsolution.solution_url
-            initial_data['task_{0}'.format(index+1)] = solution
-
-        form = ApplyForm(tasks=tasks.count(), app_problems=tasks,
-                         initial=initial_data)
-
-        app_form[application.application_info.course] = form
-        if request.method == 'POST':
-            form = ApplyForm(request.POST, tasks=tasks.count(), app_problems=tasks,
-                             initial=initial_data)
-            if form.is_valid():
-                form.update(application.application_info, tasks, request.user)
-                app_form[application.application_info.course] = form
+    course_descriptions = [application.application_info.course for application in Application.objects.filter(user=request.user)]
+    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
     return render(request, 'edit_applications.html', locals())
+
+@login_required(login_url='website:login')
+def edit_application(request, course_url):
+    cd = get_object_or_404(CourseDescription, url=course_url)
+    app_info = ApplicationInfo.objects.get(course=cd)
+    user_application = Application.objects.get(user=request.user, application_info=app_info)
+
+    initial_data = {'phone': user_application.phone,
+                    'skype': user_application.skype,
+                    'works_at': user_application.works_at,
+                    'studies_at': user_application.studies_at}
+
+    app_problems = user_application.application_info.applicationproblem_set.all()
+
+    for index, task in enumerate(app_problems):
+        solution = task.applicationproblemsolution.solution_url
+        initial_data['task_{0}'.format(index+1)] = solution
+
+    apply_form = ApplyForm(tasks=app_problems.count(), app_problems=app_problems,
+                     initial=initial_data)
+
+    if request.method == 'POST':
+        apply_form = ApplyForm(request.POST, tasks=app_problems.count(), app_problems=app_problems,
+                         initial=initial_data)
+        if apply_form.is_valid():
+            apply_form.update(user_application.application_info, app_problems, request.user)
+
+    return render(request, 'edit_application.html', locals())

@@ -4,7 +4,8 @@ from .views import (IndexView, AboutView, courses, partners, course_details, reg
                     log_in, profile, profile_edit, profile_edit_teacher,
                     profile_edit_student, forgotten_password, logout_view)
 
-from loki.applications.views import apply_overview, apply_course, edit_applications
+from loki.applications.views import (apply_overview, apply_course, edit_application,
+                                    edit_applications)
 
 urlpatterns = [
     url(r'^$', IndexView.as_view(), name='index'),
@@ -22,8 +23,5 @@ urlpatterns = [
         name="profile_edit_student"),
     url(r'^profile/edit/teacher$', profile_edit_teacher,
         name="profile_edit_teacher"),
-    url(r'^profile/edit/applications$', edit_applications, name="edit_applications"),
     url(r'^forgotten-password/$', forgotten_password, name="forgotten_password"),
-    url(r'^apply/$', apply_overview, name="apply_overview"),
-    url(r'^apply/(?P<course_url>[-\w]+)/$', apply_course, name="apply_course")
 ]

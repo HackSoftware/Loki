@@ -27,6 +27,7 @@
       <div class="active-courses-container container-fluid">
         {% for course in apply_courses %}
           <div class="course-logo-container col-md-3">
+            <h3 id="course-name">{{ course.course.name }}</h3>
               <a href="{{ course.url }}">
                 {% if course.custom_logo != "" %}
                   <img class="video-thumb" src="{{ MEDIA_URL }}{{ course.custom_logo }}">

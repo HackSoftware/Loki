@@ -94,7 +94,7 @@
                     {% endif %}
 
                     {% if user.application_set.exists %}
-                    <li><a href="{% url 'website:edit_applications' %}">Редакция на кандидатури</a></li>
+                    <li><a href="{% url 'applications:edit_applications' %}">Редакция на кандидатури</a></li>
                     {% endif %}
 
                     <li><a href="{% url 'website:logout' %}">Изход</a></li>
