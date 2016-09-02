@@ -31,11 +31,11 @@ ADMIN_URL = r'^admin/'
 # Application definition
 
 INSTALLED_APPS = (
-    'post_office',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
@@ -74,6 +74,10 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+
+MIGRATION_MODULES = {
+    'sites': 'loki.contrib.sites.migrations'
+}
 
 DEBUG = env.bool('DJANGO_DEBUG', False)
 
@@ -144,8 +148,6 @@ REST_FRAMEWORK = {
 
 # if you are not using the django database broker (e.g. rabbitmq, redis, memcached), you can remove the next line.
 BROKER_URL = env('BROKER_URL', default='amqp://guest:guest@localhost//')
-
-
 # Configure celery to use the django-celery backend
 CELERY_RESULT_BACKEND = 'djcelery.backends.database:DatabaseBackend'
 
@@ -154,6 +156,14 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 
+"""
+   Celery time limits
+   Default soft limit is 1 minute
+   Default hard limit is 2 minutes
+"""
+CELERYD_TASK_SOFT_TIME_LIMIT = env('CELERYD_TASK_SOFT_TIME_LIMIT', default=60)
+CELERYD_TASK_TIME_LIMIT = env('CELERYD_TASK_TIME_LIMIT', default=60 + 60)
+CELERY_TASK_MAX_RETRIES = env('CELERY_TASK_MAX_RERIES', default=101)
 
 # grader api
 GRADER_GRADE_PATH = "/grade"
@@ -183,6 +193,9 @@ DATABASES = {
     'default': env.db('DATABASE_URL', default='postgres:///loki'),
 }
 
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#site-id
+SITE_ID = 1
+
 MEDIA_ROOT = str(ROOT_DIR('media'))
 
 MEDIA_URL = '/media/'
@@ -200,13 +213,7 @@ CKEDITOR_CONFIGS = {
 
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
-EMAIL_BACKEND = 'anymail.backends.mailgun.SendGridBackend'
-
-DJANGO_DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL', default="team@hackbulgaria.com")
-
-ANYMAIL = {
-    "SENDGRID_API_KEY": env('SENDGRID_API_KEY', default=""),
-}
+EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 TEMPLATE_CONTEXT_PROCESSORS = TCP + ['django.core.context_processors.request']
 
@@ -214,13 +221,3 @@ TEMPLATE_CONTEXT_PROCESSORS = TCP + ['django.core.context_processors.request']
 CHECKIN_TOKEN = env('CHECKIN_TOKEN', default="")
 
 GITHUB_OATH_TOKEN = env('GITHUB_OATH_TOKEN', default="")
-
-DJOSER = {
-    'DOMAIN': env('DJOSER_DOMAIN', default='frontend.com'),
-    'SITE_NAME': env('DJOSER_SITE_NAME', default='Frontend'),
-    'PASSWORD_RESET_CONFIRM_URL': env('DJOSER_PASSWORD_RESET_CONFIRM_URL', default='#/password_reset/{uid}/{token}'),
-    'ACTIVATION_URL': env('DJOSER_ACTIVATION_URL', default='#/activate/{uid}/{token}'),
-    'LOGIN_AFTER_ACTIVATION': env('DJOSER_LOGIN_AFTER_ACTIVATION', default=True),
-    'SEND_ACTIVATION_EMAIL': env('DJOSER_SEND_ACTIVATION_EMAIL', default=True),
-    'PASSWORD_RESET_CONFIRM_RETYPE': env('DJOSER_PASSWORD_RESET_CONFIRM_RETYPE', default=True),
-}

@@ -1,11 +1,9 @@
-from test_plus.test import TestCase
 from django.core.urlresolvers import reverse
+from django.core import mail
 
+from test_plus.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
-
-from post_office import mail
-from post_office.models import EmailTemplate
 
 from faker import Factory
 
@@ -35,11 +33,6 @@ class BaseUserRegistrationTests(TestCase):
 
         self.academy = factories.AcademyFactory()
 
-        self.user_register = EmailTemplate.objects.create(
-            name='user_register',
-            subject='Регистриран потребител',
-            content='Lorem ipsum dolor sit amet, consectetur adipisicing'
-        )
         self.user_data = {
             'email': faker.email(),
             'first_name': faker.text(max_nb_chars=20),
@@ -63,33 +56,6 @@ class BaseUserRegistrationTests(TestCase):
             'educationplace': self.academy.id
         }
         self.reg_form_with_academy.update(self.user_reg_form)
-
-    def test_register_base_user(self):
-        url = reverse('base_app:register')
-        count = BaseUser.objects.count()
-        self.client.post(url, self.user_data, format='json')
-        self.assertEqual(count + 1, BaseUser.objects.all().count())
-
-    def test_register_user_no_password(self):
-        self.user_data_without_pass = {
-            k: v for k, v in self.user_data.items() if k != 'password'}
-
-        url = reverse('base_app:register')
-        response = self.client.post(url,
-                                    self.user_data_without_pass, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_email_sent(self):
-        url = reverse('base_app:register')
-        response = self.client.post(url, self.user_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(len(mail.get_queued()), 1)
-
-    def test_email_sent_new_template(self):
-        url = reverse('base_app:register')
-        response = self.client.post(url, self.user_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertIn(self.user_register.content, mail.get_queued()[0].message)
 
     def test_register_base_user_via_form(self):
         reg_form = RegisterForm(data=self.user_reg_form)
