@@ -11,6 +11,7 @@ before_script:
 - psql -c 'CREATE DATABASE loki;' -U postgres
 - psql -c 'CREATE DATABASE testdb;' -U postgres
 script:
+- export DJANGO_SETTINGS_MODULE=config.settings.test
 - python manage.py migrate
 - coverage run --source='.' manage.py test
 after_success:

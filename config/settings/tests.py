@@ -49,4 +49,10 @@ PASSWORD_HASHERS = (
     'django.contrib.auth.hashers.MD5PasswordHasher',
 )
 
+# CELERY
+# ------------------------------------------------------------------------------
+# Use in-memory and non-async celery
+
+BROKER_BACKEND = 'memory'
 CELERY_ALWAYS_EAGER = True
+CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
