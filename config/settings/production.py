@@ -28,19 +28,11 @@ GRADER_API_KEY = env('GRADER_API_KEY')
 GRADER_API_SECRETCHECKIN_TOKEN = env('GRADER_API_SECRET')
 
 # Email settings
-EMAIL_BACKEND = 'anymail.backends.mailgun.MailgunBackend'
-
-DJANGO_DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL', default="HackBulgaria <team@hackbulgaria.com>")
+EMAIL_BACKEND = 'anymail.backends.sendgrid.SendGridBackend'
 
 ANYMAIL = {
     "SENDGRID_MERGE_FIELD_FORMAT": "-{}-",
     "SENDGRID_API_KEY": env('SENDGRID_API_KEY'),
-}
-
-SENDGRID_TEMPLATES = {
-    "user_registered": env('USER_REGISTER_TEMPLATE_ID'),
-    "password_reset": env('PASSWORD_RESET_TEMPLATE_ID'),
-    "hackfmi_team_deleted": env('HACKFMI_TEAM_DELETED_TEMPLATE_ID'),
 }
 
 # Token that raspberry pi sends us for mac address checkins.
@@ -49,3 +41,9 @@ GITHUB_OATH_TOKEN = env('GITHUB_OATH_TOKEN')
 
 DJOSER['DOMAIN'] = env('DJOSER_DOMAIN')
 DJOSER['SITE_NAME'] = env('DJOSER_SITE_NAME')
+
+# Get all email templates from the env without default values
+EMAIL_TEMPLATES = {
+    key: f()
+    for key, f in templates.items()
+}

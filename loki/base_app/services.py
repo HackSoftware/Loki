@@ -102,9 +102,9 @@ def send_activation_mail(request, user):
         'url': get_activation_url(user_token.token, request.GET.get('origin', None)),
         'full_name': user.full_name
     }
-    template_uuid = settings.SENDGRID_TEMPLATES['user_registered']
+    template_id = settings.EMAIL_TEMPLATES['user_registered']
 
-    send_template_email(to_email, template_uuid, context)
+    send_template_email(to_email, template_id, context)
 
 
 def send_forgotten_password_email(request, user):
@@ -124,6 +124,6 @@ def send_forgotten_password_email(request, user):
         'full_name': user.full_name
     }
 
-    template_uuid = settings.SENDGRID_TEMPLATES['password_reset']
+    template_id = settings.EMAIL_TEMPLATES['password_reset']
 
-    send_template_email(to_email, template_uuid, context)
+    send_template_email(to_email, template_id, context)

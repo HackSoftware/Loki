@@ -215,9 +215,23 @@ CKEDITOR_CONFIGS = {
 # ------------------------------------------------------------------------------
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
+DJANGO_DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL', default="HackBulgaria <team@hackbulgaria.com>")
+
 TEMPLATE_CONTEXT_PROCESSORS = TCP + ['django.core.context_processors.request']
 
 # Token that raspberry pi sends us for mac address checkins.
 CHECKIN_TOKEN = env('CHECKIN_TOKEN', default="")
 
 GITHUB_OATH_TOKEN = env('GITHUB_OATH_TOKEN', default="")
+
+templates = {
+    "user_registered": lambda **env_kwargs: env('USER_REGISTER_TEMPLATE_ID', **env_kwargs),
+    "password_reset": lambda **env_kwargs: env('PASSWORD_RESET_TEMPLATE_ID', **env_kwargs),
+    "hackfmi_team_deleted": lambda **env_kwargs: env('HACKFMI_TEAM_DELETED_TEMPLATE_ID', **env_kwargs),
+}
+
+# Get all email templates from the env with default value ""
+EMAIL_TEMPLATES = {
+    key: f(default="")
+    for key, f in templates.items()
+}
