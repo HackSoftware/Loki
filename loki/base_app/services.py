@@ -1,12 +1,14 @@
 import uuid
 
 from django.conf import settings
-from django.contrib.sites.requests import RequestSite
 from django.core.urlresolvers import reverse
+from django.contrib.sites.models import Site
 from operator import itemgetter
 from fuzzywuzzy import fuzz
+
+from loki.emails.services import send_template_email
+
 from .helper import get_activation_url
-from post_office import mail
 from .models import (Subject, School, Academy,
                      BaseUserRegisterToken, BaseUserPasswordResetToken)
 
@@ -94,16 +96,15 @@ def send_activation_mail(request, user):
         user=user,
         token=uuid.uuid4())
 
-    # TODO: fix deprecation error (RequestSite)
-    mail.send(
-        to_email,
-        sender=settings.DJANGO_DEFAULT_FROM_EMAIL,
-        template='user_register',
-        context={'protocol': request.is_secure() and 'https' or 'http',
-                 'domain': RequestSite(request).domain,
-                 'url': get_activation_url(user_token.token, request.GET.get('origin', None))
-                 }
-    )
+    context = {
+        'protocol': request.is_secure() and 'https' or 'http',
+        'domain': Site.objects.get_current().domain,
+        'url': get_activation_url(user_token.token, request.GET.get('origin', None)),
+        'full_name': user.full_name
+    }
+    template_id = settings.EMAIL_TEMPLATES['user_registered']
+
+    send_template_email(to_email, template_id, context)
 
 
 def send_forgotten_password_email(request, user):
@@ -116,12 +117,13 @@ def send_forgotten_password_email(request, user):
         user=user,
         token=uuid.uuid4())
 
-    # TODO: fix deprecation error (RequestSite)
-    mail.send(
-        to_email,
-        sender=settings.DJANGO_DEFAULT_FROM_EMAIL,
-        template='password_reset',
-        context={'protocol': request.is_secure() and 'https' or 'http',
-                 'domain': RequestSite(request).domain,
-                 'url': reverse("base_app:user_password_reset", kwargs={"token": user_token.token})}
-    )
+    context = {
+        'protocol': request.is_secure() and 'https' or 'http',
+        'domain': Site.objects.get_current().domain,
+        'url': reverse("base_app:user_password_reset", kwargs={"token": user_token.token}),
+        'full_name': user.full_name
+    }
+
+    template_id = settings.EMAIL_TEMPLATES['password_reset']
+
+    send_template_email(to_email, template_id, context)
