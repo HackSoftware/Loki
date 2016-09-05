@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 
@@ -28,7 +29,8 @@ def apply_course(request, course_url):
 
         if apply_form.is_valid():
             apply_form.save(app_info, app_problems, request.user)
-            return render(request, 'already_applied.html', locals())
+            messages.success(request, 'Кандидатурата ти е успешно приета. Можеш да я редактираш от профила си')
+            return redirect(reverse('applications:edit_applications'))
 
     return render(request, 'apply.html', locals())
 
