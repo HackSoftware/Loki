@@ -34,7 +34,8 @@ class ApplyCourseView(LoginRequiredMixin, View):
         app_problems = ApplicationProblem.objects.filter(application_info=app_info)
 
         if Application.objects.filter(user=request.user, application_info=app_info).exists():
-            return redirect(reverse('applications:edit_applications'))
+            messages.warning(request, 'Вече си кандидатствал/а за този курс. Може да редактираш своята кандидатура')
+            return redirect(reverse('applications:edit_application', args=(cd.url, )))
 
         apply_form = ApplyForm(tasks=app_problems.count(), app_problems=app_problems)
         problems = list(range(len(apply_form.fields) - len(app_problems))) + list(app_problems)
