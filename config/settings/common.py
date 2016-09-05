@@ -225,7 +225,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
 DJANGO_DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL', default="HackBulgaria <team@hackbulgaria.com>")
 
-TEMPLATE_CONTEXT_PROCESSORS = TCP + ['django.core.context_processors.request']
+TEMPLATE_CONTEXT_PROCESSORS = TCP + [
+    'django.core.context_processors.request',
+    'loki.applications.processors.apply_active_courses',
+]
 
 # Token that raspberry pi sends us for mac address checkins.
 CHECKIN_TOKEN = env('CHECKIN_TOKEN', default="")

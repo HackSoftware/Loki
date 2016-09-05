@@ -31,57 +31,19 @@ body {
             list-style: none;
             #logo {
                 float: left;
-                padding-top: 25px;
-                width: 100%;
+                padding: 12px 20px 0 20px;
+                width: 260px;
             }
             #login-form {
                 padding-top: 30px;
             }
-            #main-navigation {
-                margin-top: 20px;
-                list-style: none;
-                li {
-                    ul {
-                        li {
-                            float: none;
-                            padding: 1px;
-                            a {
-                                color: black;
-                                &:hover, {
-                                    border: none;
-                                }
-                            }
-                        }
-                    }
-                    float: left;
-                    display: block;
-                    padding: 10px;
-                    a {
-                        font-size: 120%;
-                        color: white;
-                        text-decoration: none;
-                        &:hover, {
-                            border-bottom: 2px solid $orange;
-                        }
-                    }
-                    .dropdown-toggle {
-                        font-size: 120%;
-                        color: white;
-                        text-decoration: none;
-                        &:hover, {
-                            cursor:pointer;
-                            // border-bottom: 2px solid $orange;
-                        }
-                    }
-                    .active {
-                        border-bottom: 2px solid $orange;
-                    }
-                }
+           
 
-                #user-profile-menu {
-                    width: 30px;
-                    height: 30px;
-                }
+            #user-profile-menu {
+                width: 30px;
+                height: 30px;
+                margin-top: -10px;
+                margin-bottom: -10px;
             }
         }
 

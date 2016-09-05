@@ -26,41 +26,15 @@ body {
       list-style: none; }
       body #page-wrap #header #logo {
         float: left;
-        padding-top: 25px;
-        width: 100%; }
+        padding: 12px 20px 0 20px;
+        width: 260px; }
       body #page-wrap #header #login-form {
         padding-top: 30px; }
-      body #page-wrap #header #main-navigation {
-        margin-top: 20px;
-        list-style: none; }
-        body #page-wrap #header #main-navigation li {
-          float: left;
-          display: block;
-          padding: 10px; }
-          body #page-wrap #header #main-navigation li ul li {
-            float: none;
-            padding: 1px; }
-            body #page-wrap #header #main-navigation li ul li a {
-              color: black; }
-              body #page-wrap #header #main-navigation li ul li a:hover {
-                border: none; }
-          body #page-wrap #header #main-navigation li a {
-            font-size: 120%;
-            color: white;
-            text-decoration: none; }
-            body #page-wrap #header #main-navigation li a:hover {
-              border-bottom: 2px solid #F7931E; }
-          body #page-wrap #header #main-navigation li .dropdown-toggle {
-            font-size: 120%;
-            color: white;
-            text-decoration: none; }
-            body #page-wrap #header #main-navigation li .dropdown-toggle:hover {
-              cursor: pointer; }
-          body #page-wrap #header #main-navigation li .active {
-            border-bottom: 2px solid #F7931E; }
-        body #page-wrap #header #main-navigation #user-profile-menu {
-          width: 30px;
-          height: 30px; }
+      body #page-wrap #header #user-profile-menu {
+        width: 30px;
+        height: 30px;
+        margin-top: -10px;
+        margin-bottom: -10px; }
     body #page-wrap #faces {
       margin: 0; }
       body #page-wrap #faces #moto {
@@ -385,10 +359,6 @@ body {
 
 .name-course {
   font-size: 30px; }
-
-.active-courses {
-  font-size: 30px;
-  text-align: left; }
 
 @media screen and (max-width: 600px) {
   .text-card, .card {
