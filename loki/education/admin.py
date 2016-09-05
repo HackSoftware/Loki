@@ -3,9 +3,11 @@ from import_export.admin import ImportExportActionModelAdmin
 from django.contrib import admin, messages
 
 from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtResource
-from .models import (Student, Course, CourseAssignment, Teacher, Lecture, CheckIn, StudentNote,
-                     WorkingAt, Task, Solution, Certificate, ProgrammingLanguage,
-                     GraderRequest, RetestSolution, SourceCodeTest, BinaryFileTest)
+from .models import (Student, Course, CourseAssignment, Teacher, Lecture,
+                     CheckIn, StudentNote, WorkingAt, Task, Solution,
+                     Certificate, ProgrammingLanguage, GraderRequest,
+                     RetestSolution, SourceCodeTest, BinaryFileTest)
+
 from .forms import FixJsonFieldDisplayInInheritedClassAdminForm
 
 

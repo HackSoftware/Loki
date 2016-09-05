@@ -1,11 +1,13 @@
 import factory
+from django.utils import timezone
+from datetime import timedelta
 from faker import Factory
 
 from loki.base_app import models as base_app_models
 from loki.hack_fmi import models as hack_fmi_models
 from loki.education import models as education_models
 from loki.website import models as website_models
-
+from loki.applications import models as application_models
 
 faker = Factory.create()
 
@@ -14,10 +16,10 @@ class CompanyFactory(factory.DjangoModelFactory):
     class Meta:
         model = base_app_models.Company
 
-    name = factory.Sequence(lambda n: 'company {}'.format(n))
-    logo_url = faker.url()
+    name = factory.Sequence(lambda n: '{}-{}'.format(faker.word(), n))
+    logo_url = factory.LazyAttribute(lambda _: faker.url())
     logo = factory.django.ImageField(color='blue')
-    jobs_link = faker.url()
+    jobs_link = factory.LazyAttribute(lambda _: faker.url())
 
 
 class PartnerFactory(factory.DjangoModelFactory):
@@ -25,14 +27,14 @@ class PartnerFactory(factory.DjangoModelFactory):
         model = base_app_models.Partner
 
     company = factory.SubFactory(CompanyFactory)
-    description = faker.text()
-    facebook = faker.url()
-    is_active = faker.boolean()
-    money_spent = faker.random_int()
-    ordering = faker.random_int()
-    twitter = faker.url()
-    website = faker.url()
-    video_presentation = faker.url()
+    description = factory.LazyAttribute(lambda _: faker.text())
+    facebook = factory.LazyAttribute(lambda _: faker.url())
+    is_active = factory.LazyAttribute(lambda _: faker.boolean())
+    money_spent = factory.LazyAttribute(lambda _: faker.random_int())
+    ordering = factory.LazyAttribute(lambda _: faker.random_int())
+    twitter = factory.LazyAttribute(lambda _: faker.url())
+    website = factory.LazyAttribute(lambda _: faker.url())
+    video_presentation = factory.LazyAttribute(lambda _: faker.url())
 
 
 class GeneralPartnerFactory(factory.DjangoModelFactory):
@@ -60,7 +62,7 @@ class EducationPlaceFactory(factory.DjangoModelFactory):
     class Meta:
         model = base_app_models.EducationPlace
 
-    name = faker.name()
+    name = factory.Sequence(lambda n: '{}{}'.format(faker.name(), n))
     city = factory.SubFactory(CityFactory)
 
 
@@ -84,8 +86,8 @@ class FacultyFactory(factory.DjangoModelFactory):
         model = base_app_models.Faculty
 
     university = factory.SubFactory(UniversityFactory)
-    name = faker.name()
-    abbreviation = faker.random_letter()
+    name = factory.Sequence(lambda n: '{}{}'.format(faker.name(), n))
+    abbreviation = factory.Sequence(lambda n: '{}{}'.format(faker.random_letter(), n))
 
 
 class SubjectFactory(factory.DjangoModelFactory):
@@ -93,7 +95,7 @@ class SubjectFactory(factory.DjangoModelFactory):
         model = base_app_models.Subject
 
     faculty = factory.SubFactory(FacultyFactory)
-    name = faker.name()
+    name = factory.Sequence(lambda n: '{}{}'.format(faker.name(), n))
 
 
 class BaseUserFactory(factory.DjangoModelFactory):
@@ -101,18 +103,18 @@ class BaseUserFactory(factory.DjangoModelFactory):
         model = base_app_models.BaseUser
 
     password = 'ivoepanda'
-    first_name = faker.first_name()
-    last_name = faker.last_name()
-    email = faker.email()
+    first_name = factory.LazyAttribute(lambda _: faker.first_name())
+    last_name = factory.LazyAttribute(lambda _: faker.last_name())
+    email = factory.Sequence(lambda n: '{}{}'.format(n, faker.email()))
     birth_place = factory.SubFactory(CityFactory)
 
-    github_account = faker.url()
-    linkedin_account = faker.url()
-    twitter_account = faker.url()
-    description = faker.text()
+    github_account = factory.LazyAttribute(lambda _: faker.url())
+    linkedin_account = factory.LazyAttribute(lambda _: faker.url())
+    twitter_account = factory.LazyAttribute(lambda _: faker.url())
+    description = factory.LazyAttribute(lambda _: faker.text())
 
-    studies_at = faker.text(max_nb_chars=100)
-    works_at = faker.text(max_nb_chars=100)
+    studies_at = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=100))
+    works_at = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=100))
 
     avatar = factory.django.ImageField(color='blue')
     full_image = factory.django.ImageField(color='blue')
@@ -125,10 +127,10 @@ class EducationInfoFactory(factory.DjangoModelFactory):
     user = factory.SubFactory(BaseUserFactory)
     place = factory.SubFactory(EducationPlaceFactory)
 
-    start_date = faker.date_time()
-    end_date = faker.date_time()
-    created_at = faker.date_time()
-    updated_at = faker.date_time()
+    start_date = factory.LazyAttribute(lambda _: faker.date_time())
+    end_date = factory.LazyAttribute(lambda _: faker.date_time())
+    created_at = factory.LazyAttribute(lambda _: faker.date_time())
+    updated_at = factory.LazyAttribute(lambda _: faker.date_time())
 
     faculty = factory.SubFactory(FacultyFactory)
     subject = factory.SubFactory(SubjectFactory)
@@ -139,7 +141,7 @@ class BaseUserRegisterTokenFactory(factory.DjangoModelFactory):
         model = base_app_models.BaseUserRegisterToken
 
     user = factory.SubFactory(BaseUserFactory)
-    token = faker.word()
+    token = factory.Sequence(lambda n: '{}{}'.format(faker.word(), n))
 
 
 class BaseUserPasswordResetTokenFactory(factory.DjangoModelFactory):
@@ -147,50 +149,39 @@ class BaseUserPasswordResetTokenFactory(factory.DjangoModelFactory):
         model = base_app_models.BaseUserPasswordResetToken
 
     user = factory.SubFactory(BaseUserFactory)
-    token = faker.word()
+    token = factory.Sequence(lambda n: '{}{}'.format(faker.word(), n))
 
 
 class SkillFactory(factory.DjangoModelFactory):
     class Meta:
         model = hack_fmi_models.Skill
 
-    name = faker.name()
+    name = factory.Sequence(lambda n: '{}{}'.format(faker.name(), n))
 
 
 class StudentFactory(BaseUserFactory):
     class Meta:
         model = education_models.Student
 
-    mac = faker.mac_address()
-    phone = faker.text(max_nb_chars=20)
-    skype = faker.text(max_nb_chars=20)
+    mac = factory.LazyAttribute(lambda _: faker.mac_address())
+    phone = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=20))
+    skype = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=20))
 
 
 class CourseFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.Course
 
-    description = faker.text()
-    git_repository = faker.word()
-    image = factory.django.ImageField()
-    name = faker.word()
+    git_repository = factory.LazyAttribute(lambda _: faker.word())
+    name = factory.Sequence(lambda n: '{}{}'.format(faker.name(), n))
     partner = factory.RelatedFactory(PartnerFactory)
-    short_description = faker.word()
-    show_on_index = faker.boolean(chance_of_getting_true=0)
-    is_free = faker.boolean(chance_of_getting_true=100)
+    is_free = factory.LazyAttribute(lambda _: faker.boolean(chance_of_getting_true=100))
 
     application_until = faker.date_time()
     applications_url = faker.url()
-    ask_for_favorite_partner = faker.boolean(chance_of_getting_true=0)
-    ask_for_feedback = faker.boolean(chance_of_getting_true=0)
     end_time = faker.date_time()
     fb_group = faker.url()
-    next_season_mail_list = faker.url()
-    SEO_description = faker.word()
-    SEO_title = faker.word()
     start_time = faker.date_time()
-    url = factory.Sequence(lambda n: 'url {}'.format(n))
-    video = faker.url()
     generate_certificates_until = faker.date()
 
 
@@ -455,7 +446,7 @@ class CourseDescriptionFactory(factory.DjangoModelFactory):
     class Meta:
         model = website_models.CourseDescription
 
-    course = factory.RelatedFactory(CourseFactory)
+    course = factory.SubFactory(CourseFactory)
     logo = faker.text(max_nb_chars=255)
     custom_logo = factory.django.ImageField()
     url = faker.slug()
@@ -480,3 +471,54 @@ class InvitationFactory(factory.DjangoModelFactory):
 
     team = factory.SubFactory(TeamFactory)
     competitor = factory.SubFactory(CompetitorFactory)
+
+
+class ApplicationInfoFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = application_models.ApplicationInfo
+
+    course = factory.SubFactory(CourseFactory)
+    start_date = timezone.now()
+    end_date = timezone.now() + timedelta(days=1)
+
+
+class ApplicationProblemFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = application_models.ApplicationProblem
+
+
+    name = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=255))
+    description_url = faker.url()
+
+    # @factory.post_generation
+    # def application_info(self, create, extracted, **kwargs):
+    #     if not create:
+    #         # Simple build, do nothing.
+    #         return
+    #
+    #     if extracted:
+    #         # A list of groups were passed in, use them
+    #         for app_info in extracted:
+    #             self.application_info.add(app_info)
+
+
+class ApplicationFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = application_models.Application
+
+    application_info =  factory.SubFactory(ApplicationInfoFactory)
+    user =  factory.SubFactory(BaseUserFactory)
+
+    phone = faker.text(max_nb_chars=255)
+    skype = faker.text(max_nb_chars=255)
+    works_at = faker.text(max_nb_chars=255)
+    studies_at = faker.text(max_nb_chars=255)
+
+
+class ApplicationProblemSolutionFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = application_models.ApplicationProblemSolution
+
+    application = factory.SubFactory(ApplicationFactory)
+    problem = factory.SubFactory(ApplicationProblemFactory)
+    solution_url = faker.url()

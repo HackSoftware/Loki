@@ -1,0 +1,55 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+  <div class="container">
+    <section class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        {{ snippets.courses_first_header.text }}
+      </div>
+    </section>
+
+    <section class="row">
+      <div class="col-lg-12">
+        <p class="lead">Активни курсове</p>
+      </div>
+    </section>
+
+    <section class="row">
+      <div class="col-lg-12">
+        {{ snippets.courses_second_header.text }}
+      </div>
+    </section>
+
+    <hr />
+
+    <section class="row">
+      <div class="active-courses-container container-fluid">
+        {% for cd in course_descriptions %}
+          <div class="course-logo-container col-md-3">
+            <h3 id="course-name">{{ cd.course.name }}</h3>
+              <a href="{{ info.course.url }}">
+                {% if cd.custom_logo != "" %}
+                  <img class="video-thumb" src="{{ MEDIA_URL }}{{ cd.custom_logo }}">
+                {% else %}
+                  <i id="course-avatar-active" class="course-logo {{ cd.logo }}"></i>
+                {% endif %}
+              </a>
+              <h3 id="course-name">{{ cd.name }}</h3>
+              <a href="{% url 'applications:edit_application' course_url=cd.url %}">
+                <button class="btn btn-primary">Редактирай!</button>
+                <!-- <button class="btn btn-danger">Курсът приключи</button> -->
+              </a>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="row">
+      <div class="col-lg-12">
+        {{ snippets.courses_for_more_info.text }}
+      </div>
+    </section>
+  </div>
+{% endautoescape %}
+{% endblock %}

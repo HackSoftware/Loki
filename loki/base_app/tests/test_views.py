@@ -68,52 +68,6 @@ class BaseUserRegistrationTests(TestCase):
         self.\
             assertTrue(user.check_password(self.user_data['password']))
 
-    def test_register_base_user_via_form_with_ed_place_and_faculty(self):
-        reg_form = RegisterForm(self.reg_form_with_faculty_ed_place)
-
-        self.assertTrue(reg_form.is_valid())
-        user = reg_form.save()
-
-        self.assertEqual(user.first_name,
-                         self.reg_form_with_faculty_ed_place['first_name'])
-        self.assertEqual(user.last_name,
-                         self.reg_form_with_faculty_ed_place['last_name'])
-        self.assertEqual(user.email,
-                         self.reg_form_with_faculty_ed_place['email'])
-        self.assertTrue(user.check_password,
-                        self.reg_form_with_faculty_ed_place['password'])
-
-        self.assertEqual(self.user.education_info.count(), 1)
-        self.assertEqual(self.user.education_info.first().name,
-                         self.university.name)
-        self.assertEqual(self.user.education_info.first().city.name,
-                         self.city1.name)
-        self.assertEqual(self.faculty.related_fac_to_user.first().user,
-                         self.user)
-        self.assertEqual(self.subject.related_subj_to_user.first().user,
-                         self.user)
-
-    def test_register_base_user_via_form_with_academy(self):
-        reg_form = RegisterForm(self.reg_form_with_academy)
-
-        self.assertTrue(reg_form.is_valid())
-        user = reg_form.save()
-
-        self.assertEqual(user.first_name,
-                         self.reg_form_with_faculty_ed_place['first_name'])
-        self.assertEqual(user.last_name,
-                         self.reg_form_with_faculty_ed_place['last_name'])
-        self.assertEqual(user.email,
-                         self.reg_form_with_faculty_ed_place['email'])
-        self.assertTrue(user.check_password,
-                        self.reg_form_with_faculty_ed_place['password'])
-
-        self.assertEqual(self.user.education_info.count(), 1)
-        self.assertEqual(self.user.education_info.first().name,
-                         self.academy.name)
-        self.assertEqual(self.user.education_info.first().city.name,
-                         self.city1.name)
-
     def test_get_activation_url(self):
         RegisterOrigin.objects.create(
             name='hackfmi',

@@ -540,6 +540,10 @@ $TabBorder: #C5C4C4;
     font-size: 24px;
 }
 
+.name-course {
+  font-size: 30px;
+}
+
 @media screen and (max-width: 600px) {
     .text-card, .card {
         float: right !important;
@@ -735,4 +739,11 @@ $TabBorder: #C5C4C4;
     font-size: 2em;
   }
 
+}
+
+#edit-app {
+  margin-top: 10px;
+}
+#update-app {
+  width: 100%;
 }

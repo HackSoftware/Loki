@@ -383,6 +383,13 @@ body {
 .apply-button {
   font-size: 24px; }
 
+.name-course {
+  font-size: 30px; }
+
+.active-courses {
+  font-size: 30px;
+  text-align: left; }
+
 @media screen and (max-width: 600px) {
   .text-card, .card {
     float: right !important; } }
@@ -514,5 +521,11 @@ body {
     font-size: 20px; }
   .row-profile #profile-socials {
     font-size: 2em; }
+
+#edit-app {
+  margin-top: 10px; }
+
+#update-app {
+  width: 100%; }
 
 /*# sourceMappingURL=website.css.map */

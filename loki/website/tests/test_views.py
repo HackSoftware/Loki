@@ -63,7 +63,6 @@ class TestWebsite(TestCase):
 
         course = factories.CourseFactory()
         courses = factories.CourseDescriptionFactory(
-            course_id=course.id,
             course=course)
 
         response = self.client.get(url)
@@ -192,25 +191,13 @@ class TestWebsite(TestCase):
         self.response_200(response)
         self.assertTemplateUsed(response, 'website/profile_edit.html')
 
-    def test_course_detail_no_course_description(self):
-        course = factories.CourseFactory(url=faker.slug())
-
-        url = reverse('website:course_details',
-                      kwargs={"course_url": course.url})
-
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
-
     def test_course_detail_with_course_description(self):
-        course = factories.CourseFactory(url=faker.slug())
-        url = reverse('website:course_details',
-                      kwargs={"course_url": course.url})
+        course = factories.CourseFactory()
+        cd = factories.CourseDescriptionFactory(course=course)
 
-        factories.CourseDescriptionFactory(
-            course_id=course.id,
-            course=course,
-            url=course.url,
-        )
+        url = reverse('website:course_details',
+                      kwargs={"course_url": cd.url})
+
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'website/course_details.html')

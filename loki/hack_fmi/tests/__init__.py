@@ -1,1 +1,1 @@
-__author__ = 'stenly'
+__author__ = 'HackBulgaria'

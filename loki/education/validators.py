@@ -10,9 +10,9 @@ def validate_phone(phone_number):
     if len(phone_number) == 0:
         return
 
-    if (len(phone_number) < 6) or \
-        not re.search(phone_pattern, phone_number):
+    if (len(phone_number) < 6) or not re.search(phone_pattern, phone_number):
         raise ValidationError("Невалиден телефонен номер")
+
 
 def validate_mac(mac):
     # RegexValidator uses re.search, which has no use for us
@@ -20,14 +20,15 @@ def validate_mac(mac):
     if re.match(regex, mac):
         return
 
-    raise ValidationError(_('{} is not a valid mac address'.format(mac)),
-                                'invalid_mac_address')
+    raise ValidationError(_('{} is not a valid mac address'.format(mac)), 'invalid_mac_address')
+
 
 def validate_github_account(github_account):
     github_pattern = "^http(|s):\/\/github.com\/[^\/]+$"
     if len(github_account) != 0:
         if not re.search(github_pattern, github_account):
             raise ValidationError("Невалиден Github акаунт")
+
 
 def validate_url(url):
     # Check if url is valid
