@@ -26,7 +26,8 @@ class ApplyForm(forms.Form):
             task_label = '<a href={1} target="_blank">{2}</a> - задача {0}'.format(index+1,
                                                                                    app_problems[index].description_url,
                                                                                    app_problems[index].name)
-            field = forms.URLField(label=task_label,
+            field = forms.URLField(required=False,
+                                   label=task_label,
                                    widget=w('text', _('URL към gist със решение на задачата')))
             self.fields['task_{index}'.format(index=index + 1)] = field
 

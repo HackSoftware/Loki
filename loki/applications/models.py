@@ -56,7 +56,7 @@ class Application(models.Model):
 
 class ApplicationProblemSolution(models.Model):
     application = models.ForeignKey(Application)
-    problem = models.OneToOneField(ApplicationProblem)
+    problem = models.ForeignKey(ApplicationProblem)
     solution_url = models.URLField(null=True, blank=True)
 
     def __str__(self):

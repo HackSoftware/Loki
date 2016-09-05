@@ -9,7 +9,7 @@ from django.core.urlresolvers import reverse
 from loki.website.models import CourseDescription, Snippet
 
 from .forms import ApplyForm
-from .models import Application, ApplicationInfo, ApplicationProblem
+from .models import Application, ApplicationInfo, ApplicationProblem, ApplicationProblemSolution
 
 
 class ApplyCourseView(LoginRequiredMixin, View):
@@ -102,9 +102,13 @@ def edit_application(request, course_url):
 
     app_problems = user_application.application_info.applicationproblem_set.all()
 
-    for index, task in enumerate(app_problems):
-        solution = task.applicationproblemsolution.solution_url
-        initial_data['task_{0}'.format(index+1)] = solution
+    for index, problem in enumerate(app_problems):
+        solution = ApplicationProblemSolution.objects.filter(application=user_application, problem=problem)
+
+        if not solution.exists():
+            continue
+
+        initial_data['task_{0}'.format(index+1)] = solution.first().solution_url
 
     apply_form = ApplyForm(tasks=app_problems.count(),
                            app_problems=app_problems,
@@ -117,5 +121,6 @@ def edit_application(request, course_url):
                                initial=initial_data)
         if apply_form.is_valid():
             apply_form.update(user_application.application_info, app_problems, request.user)
+            messages.success(request, 'Усешно обнови кандидатурата си.')
 
     return render(request, 'edit_application.html', locals())

@@ -83,7 +83,7 @@ class TestWebsite(TestCase):
         response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('website:index'))
+        self.assertRedirects(response, reverse('website:profile'))
 
     def test_login_with_unvalid_data(self):
         url = reverse('website:login')
