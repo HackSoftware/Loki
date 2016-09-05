@@ -83,7 +83,8 @@ class TestApplicationViews(TestCase):
 
             self.post('applications:apply_course',
                       course_url=self.course_description.url,
-                      data=data)
+                      data=data,
+                      follow=True)
 
             """
             TODO: Finish test
