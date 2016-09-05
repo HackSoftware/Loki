@@ -486,28 +486,16 @@ class ApplicationProblemFactory(factory.DjangoModelFactory):
     class Meta:
         model = application_models.ApplicationProblem
 
-
     name = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=255))
     description_url = faker.url()
-
-    # @factory.post_generation
-    # def application_info(self, create, extracted, **kwargs):
-    #     if not create:
-    #         # Simple build, do nothing.
-    #         return
-    #
-    #     if extracted:
-    #         # A list of groups were passed in, use them
-    #         for app_info in extracted:
-    #             self.application_info.add(app_info)
 
 
 class ApplicationFactory(factory.DjangoModelFactory):
     class Meta:
         model = application_models.Application
 
-    application_info =  factory.SubFactory(ApplicationInfoFactory)
-    user =  factory.SubFactory(BaseUserFactory)
+    application_info = factory.SubFactory(ApplicationInfoFactory)
+    user = factory.SubFactory(BaseUserFactory)
 
     phone = faker.text(max_nb_chars=255)
     skype = faker.text(max_nb_chars=255)

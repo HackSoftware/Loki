@@ -53,7 +53,7 @@ class TestApplicationViews(TestCase):
         with self.login(username=self.user.email, password=BaseUserFactory.password):
             data = {"phone": faker.random_number(),
                     "skype": faker.word()}
-            response = self.post('applications:apply_course',
+            self.post('applications:apply_course',
                       course_url=self.course_description.url,
                       data=data)
             form = self.get_context('form')
@@ -64,7 +64,6 @@ class TestApplicationViews(TestCase):
             self.response_200()
 
         self.assertEqual(0, Application.objects.count())
-
 
     def test_applying_for_course(self):
         self.assertEqual(0, Application.objects.count())
@@ -81,11 +80,15 @@ class TestApplicationViews(TestCase):
                     "task_field_count": 2,
                     "task_1": faker.url(),
                     "task_2": faker.url()}
-            response = self.post('applications:apply_course',
+
+            self.post('applications:apply_course',
                       course_url=self.course_description.url,
                       data=data)
 
-            form = self.get_context('apply_form')
+            """
+            TODO: Finish test
+            """
+            # form = self.get_context('apply_form')
             self.response_200()
 
         application = Application.objects.filter(user=self.user)
@@ -95,10 +98,10 @@ class TestApplicationViews(TestCase):
 
     def test_applying_for_the_same_course(self):
         self.assertEqual(0, Application.objects.count())
-        application = ApplicationFactory(user=self.user, application_info=self.application_info)
+        ApplicationFactory(user=self.user, application_info=self.application_info)
 
         with self.login(username=self.user.email, password=BaseUserFactory.password):
-            response = self.post('applications:apply_course',
+            self.post('applications:apply_course',
                       course_url=self.course_description.url)
             self.response_302()
 
@@ -133,7 +136,8 @@ class TestApplicationViews(TestCase):
                     "task_field_count": 2,
                     "task_1": faker.url(),
                     "task_2": faker.url()}
-            response = self.post('applications:edit_application',
+
+            self.post('applications:edit_application',
                       course_url=self.course_description.url,
                       data=data)
 

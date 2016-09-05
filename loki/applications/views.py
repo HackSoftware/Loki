@@ -1,14 +1,11 @@
-from django.shortcuts import render, get_object_or_404, redirect, get_list_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
-from django.http import Http404
 
 from loki.website.models import CourseDescription, Snippet
-from loki.education.models import Course
 
 from .forms import ApplyForm
-from .models import (Application, ApplicationInfo,
-                     ApplicationProblem, ApplicationProblemSolution)
+from .models import Application, ApplicationInfo, ApplicationProblem
 
 
 @login_required(login_url='website:login')
@@ -17,15 +14,6 @@ def apply_course(request, course_url):
     course = cd.course
     app_info = cd.applicationinfo
     app_problems = ApplicationProblem.objects.filter(application_info=app_info)
-
-    # try:
-    #     course = cd.course
-    #     if course:
-    #         app_info = ApplicationInfo.objects.get(course=course)
-    #         if not app_info.apply_is_active():
-    #             return redirect(reverse('website:apply_overview'))
-    # except (ApplicationInfo.DoesNotExist, ApplicationProblem.DoesNotExist) as err:
-    #     return redirect(reverse('website:profile'))
 
     if Application.objects.filter(user=request.user, application_info=app_info).exists():
         return redirect(reverse('applications:edit_applications'))
@@ -59,10 +47,13 @@ def apply_overview(request):
 
 @login_required(login_url='website:login')
 def edit_applications(request):
-    course_descriptions = [application.application_info.course for application in Application.objects.filter(user=request.user)]
+    course_descriptions = [application.application_info.course
+                           for application
+                           in Application.objects.filter(user=request.user)]
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
 
     return render(request, 'edit_applications.html', locals())
+
 
 @login_required(login_url='website:login')
 def edit_application(request, course_url):
@@ -81,12 +72,15 @@ def edit_application(request, course_url):
         solution = task.applicationproblemsolution.solution_url
         initial_data['task_{0}'.format(index+1)] = solution
 
-    apply_form = ApplyForm(tasks=app_problems.count(), app_problems=app_problems,
-                     initial=initial_data)
+    apply_form = ApplyForm(tasks=app_problems.count(),
+                           app_problems=app_problems,
+                           initial=initial_data)
 
     if request.method == 'POST':
-        apply_form = ApplyForm(request.POST, tasks=app_problems.count(), app_problems=app_problems,
-                         initial=initial_data)
+        apply_form = ApplyForm(request.POST,
+                               tasks=app_problems.count(),
+                               app_problems=app_problems,
+                               initial=initial_data)
         if apply_form.is_valid():
             apply_form.update(user_application.application_info, app_problems, request.user)
 

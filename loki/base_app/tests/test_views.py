@@ -1,9 +1,7 @@
 from django.core.urlresolvers import reverse
-from django.core import mail
 
 from test_plus.test import TestCase
 from rest_framework.test import APIClient
-from rest_framework import status
 
 from faker import Factory
 

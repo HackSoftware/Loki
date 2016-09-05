@@ -1,8 +1,7 @@
 from django import forms
 from loki.website.forms import w
 
-from .models import (Application,
-                     ApplicationProblem, ApplicationProblemSolution)
+from .models import Application, ApplicationProblemSolution
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -25,8 +24,8 @@ class ApplyForm(forms.Form):
         """
         for index in range(int(task_fields)):
             task_label = '<a href={1} target="_blank">{2}</a> - задача {0}'.format(index+1,
-                                                                            app_problems[index].description_url,
-                                                                            app_problems[index].name)
+                                                                                   app_problems[index].description_url,
+                                                                                   app_problems[index].name)
             field = forms.URLField(label=task_label,
                                    widget=w('text', 'Решение на задача'))
             self.fields['task_{index}'.format(index=index + 1)] = field
@@ -49,14 +48,14 @@ class ApplyForm(forms.Form):
 
     def update(self, app_info, app_problems, user):
         application = Application.objects.get(user=user, application_info=app_info)
-        application.phone=self.cleaned_data.get('phone')
-        application.skype=self.cleaned_data.get('skype')
-        application.works_at=self.cleaned_data.get('works_at')
-        application.studies_at=self.cleaned_data.get('studies_at')
+        application.phone = self.cleaned_data.get('phone')
+        application.skype = self.cleaned_data.get('skype')
+        application.works_at = self.cleaned_data.get('works_at')
+        application.studies_at = self.cleaned_data.get('studies_at')
         application.save()
 
         for index, app_problem in enumerate(app_problems):
             solution = ApplicationProblemSolution.objects.get(application=application,
-                       problem=app_problem)
+                                                              problem=app_problem)
             solution.solution_url = self.cleaned_data.get('task_{0}'.format(index+1))
             solution.save()

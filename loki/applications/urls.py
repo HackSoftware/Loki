@@ -1,7 +1,6 @@
 from django.conf.urls import url
 
-from .views import (apply_overview, apply_course, edit_application,
-                                    edit_applications)
+from .views import apply_overview, apply_course, edit_application, edit_applications
 
 urlpatterns = [
     url(r'^edit/$', edit_applications, name="edit_applications"),
