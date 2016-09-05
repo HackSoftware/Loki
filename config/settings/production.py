@@ -39,9 +39,6 @@ ANYMAIL = {
 CHECKIN_TOKEN = env('CHECKIN_TOKEN')
 GITHUB_OATH_TOKEN = env('GITHUB_OATH_TOKEN')
 
-DJOSER['DOMAIN'] = env('DJOSER_DOMAIN')
-DJOSER['SITE_NAME'] = env('DJOSER_SITE_NAME')
-
 # Get all email templates from the env without default values
 EMAIL_TEMPLATES = {
     key: f()
