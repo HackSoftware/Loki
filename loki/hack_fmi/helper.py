@@ -1,18 +1,21 @@
 from datetime import datetime, timedelta
 from django.conf import settings
 
-from post_office import mail
+from loki.emails.services import send_template_email
 
 
 def send_team_delete_email(team):
-    members = list(team.members.all())
-    user_emails = [member.email for member in members]
-    sender = settings.DEFAULT_FROM_EMAIL
-    mail.send(
-        user_emails,
-        sender,
-        template='delete_team',
-    )
+    for member in team.members.all():
+        context = {
+            'full_name': member.full_name,
+            'team_name': team.name
+        }
+
+        send_template_email(
+            member.email,
+            settings.EMAIL_TEMPLATES['hackfmi_team_deleted'],
+            context
+        )
 
 
 def date_increase(days):

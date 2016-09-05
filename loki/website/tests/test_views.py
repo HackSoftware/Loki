@@ -1,8 +1,8 @@
 from django.test import Client
 from django.core.urlresolvers import reverse
+from django.core import mail
 
 from test_plus.test import TestCase
-from post_office.models import EmailTemplate
 from faker import Factory
 
 from loki.seed import factories
@@ -213,11 +213,6 @@ class TestWebsite(TestCase):
         self.assertIsNotNone(get_resp.context['form'])
 
     def test_register_if_not_registered(self):
-        self.user_register = EmailTemplate.objects.create(
-            name='user_register',
-            subject='Регистриран потребител',
-            content=faker.paragraph()
-        )
         data = {
             'first_name': faker.first_name(),
             'last_name': faker.last_name(),
@@ -239,6 +234,7 @@ class TestWebsite(TestCase):
         self.assertEqual(made_user.last_name, data['last_name'])
         self.assertTrue(made_user.check_password(data['password']))
         self.assertTemplateUsed(post_resp, 'website/auth/thanks.html')
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_register_anonymous_required(self):
         self.baseuser.is_active = True
@@ -252,13 +248,10 @@ class TestWebsite(TestCase):
 
         self.response_302(post_resp)
 
-    def test_forgotten_password_from_existing_user(self):
-        self.pass_reset = EmailTemplate.objects.create(
-            name='password_reset',
-            subject='Смяна на парола',
-            content=faker.paragraph()
-        )
+    from django.test import override_settings
 
+    @override_settings(CELERY_ALWAYS_EAGER=True)
+    def test_forgotten_password_from_existing_user(self):
         url = reverse('website:forgotten_password')
 
         data = {
@@ -271,14 +264,9 @@ class TestWebsite(TestCase):
 
         self.assertEqual(response.context['message'],
                          'Email за промяна на паролата беше изпратен на посочения адрес')
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_forgotten_password_from_non_existing_user(self):
-        self.pass_reset = EmailTemplate.objects.create(
-            name='password_reset',
-            subject='Смяна на парола',
-            content=faker.paragraph()
-        )
-
         url = reverse('website:forgotten_password')
 
         data = {
@@ -291,3 +279,4 @@ class TestWebsite(TestCase):
 
         self.assertEqual(response.context['message'],
                          'Потребител с посочения email не е открит')
+        self.assertEqual(len(mail.outbox), 0)

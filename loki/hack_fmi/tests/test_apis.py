@@ -9,7 +9,6 @@ from django.core.mail import EmailMultiAlternatives
 from rest_framework import status
 from rest_framework.test import APIClient
 from test_plus.test import TestCase
-from post_office.models import EmailTemplate
 
 from ..helper import date_increase, date_decrease
 from ..models import (TeamMembership,
@@ -502,11 +501,6 @@ class TeamMembershipAPITest(TestCase):
 
         self.competitor = factories.CompetitorFactory(
             email=faker.email())
-        self.delete_team = EmailTemplate.objects.create(
-            name='delete_team',
-            subject='Delete team',
-            content=faker.paragraph()
-        )
 
     def test_user_cant_leave_team_if_he_has_not_been_a_member_in_that_team(self):
         other_competitor = factories.CompetitorFactory(

@@ -1,8 +1,5 @@
 from .common import *  # noqa
 
-EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND',
-                    default='anymail.backends.mailgun.MailgunBackend')
-
 """
 Secret configuration
 
@@ -30,17 +27,23 @@ GRADER_ADDRESS = env('GRADER_ADDRESS')
 GRADER_API_KEY = env('GRADER_API_KEY')
 GRADER_API_SECRETCHECKIN_TOKEN = env('GRADER_API_SECRET')
 
-DJANGO_DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL')
-
+# Email settings
+EMAIL_BACKEND = 'anymail.backends.sendgrid.SendGridBackend'
 
 ANYMAIL = {
-    "MAILGUN_API_KEY": env('MAILGUN_API_KEY'),
+    "SENDGRID_MERGE_FIELD_FORMAT": "-{}-",
+    "SENDGRID_API_KEY": env('SENDGRID_API_KEY'),
 }
 
 # Token that raspberry pi sends us for mac address checkins.
 CHECKIN_TOKEN = env('CHECKIN_TOKEN')
-
 GITHUB_OATH_TOKEN = env('GITHUB_OATH_TOKEN')
 
 DJOSER['DOMAIN'] = env('DJOSER_DOMAIN')
 DJOSER['SITE_NAME'] = env('DJOSER_SITE_NAME')
+
+# Get all email templates from the env without default values
+EMAIL_TEMPLATES = {
+    key: f()
+    for key, f in templates.items()
+}

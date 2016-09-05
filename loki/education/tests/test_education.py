@@ -4,6 +4,7 @@ from django.core.management import call_command
 from django.core.exceptions import ValidationError
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from rest_framework.test import APIClient
 
@@ -14,7 +15,6 @@ from loki.education.models import (Student, CheckIn, Lecture,
 from loki.hack_fmi.helper import date_increase, date_decrease
 from loki.seed import factories
 
-from django.conf import settings
 from faker import Factory
 
 faker = Factory.create()
