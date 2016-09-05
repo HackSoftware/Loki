@@ -3,10 +3,11 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from loki.education.models import Course
-from loki.website.models import CourseDescription
 
 def migrate_video(apps, schema_editor):
+    Course = apps.get_model('education', 'Course')
+    CourseDescription = apps.get_model('website', 'CourseDescription')
+
     for course in Course.objects.all():
         cd = CourseDescription.objects.filter(course=course)
 
