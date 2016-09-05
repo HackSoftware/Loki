@@ -98,7 +98,7 @@ def log_in(request):
                     login(request, user)
                     if request.GET.get("next"):
                         return redirect(request.GET["next"])
-                    return redirect(reverse('website:index'))
+                    return redirect(reverse('website:profile'))
                 else:
                     error = "Моля активирай акаунта си"
             else:
