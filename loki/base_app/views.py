@@ -1,8 +1,10 @@
 import json
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
+from django.contrib import messages
+
 from rest_framework import status
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
@@ -81,15 +83,13 @@ def user_activation(request, token):
     user.save()
     token.delete()
 
+    messages.success(request, 'Регистрацията ти е активирана успешно!')
+
     origin_name = request.GET.get('origin', None)
     origin = RegisterOrigin.objects.filter(name=origin_name).first()
+    redirect_url = origin.redirect_url if origin else reverse('website:login')
 
-    if origin:
-        redirect_url = origin.redirect_url
-    else:
-        redirect_url = reverse('website:login')
-
-    return render(request, 'website/auth/account_activated.html', locals())
+    return redirect(redirect_url)
 
 
 def user_password_reset(request, token):
