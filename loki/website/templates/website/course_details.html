@@ -41,23 +41,13 @@
             <p><b>Програма на курса: </b> <a href="{{ cd.course.git_repository }}" target="_blank">{{ cd.course.git_repository }}</a> </p>
             <p><b>Адрес: </b><a href="{{ cd.address }}" target="_blank">Залата се намира тук</a></p> 
             <div id="details-apply-button">
-            {% if cd.course.is_free == True %}
-              <a href="{{ cd.course.applications_url }}" target="_blank">
-              {% if cd.course.application_opened %}
-                <button  class="btn btn-lg btn-warning">Кандидатствай</button>
-              {% else %}
-                <button  class="btn btn-lg btn-warning" disabled>Кандидатстването е затворетно</button>
-              {% endif %}
-              </a>
-            {% else %}
-              <a href="{{ cd.course.applications_url }}" target="_blank">
-              {% if cd.course.application_opened %}
-                <button  class="btn btn-lg btn-warning">Запиши се</button>
-              {% else %}
-                <button  class="btn btn-lg btn-warning" disabled="">Записването е затворено</button>
-              {% endif %}
-              </a>
-            {% endif %}
+              {% with course=cd.course application_info=cd.applicationinfo %}
+                {% if application_info.external_application_form %}
+                  <a href="{{application_info.external_application_form}}" class="btn btn-lg btn-warning">Кандидатствай</a> 
+                {% else %}
+                  <a href="{% url 'applications:apply_course' cd.url%}" class="btn btn-lg btn-warning">Кандидатствай</a> 
+                {% endif %}
+              {% endwith %}
             </div>
           </div>
         </div>
@@ -153,21 +143,13 @@
     </div>
 
     <div class="aplly-button-container">
-      <a href="{{ cd.course.applications_url }}" target="_blank">
-      {% if cd.course.is_free == True %}
-        {% if cd.course.application_opened %}
-          <button class="apply-button btn btn-lg btn-warning">Кандидатствай</button>
+      {% with course=cd.course application_info=cd.applicationinfo %}
+        {% if application_info.external_application_form %}
+          <a href="{{application_info.external_application_form}}" class="apply-button btn btn-lg btn-warning">Кандидатствай</a> 
         {% else %}
-          <button class="apply-button btn btn-lg btn-warning" disabled>Кандидатстването е затворетно</button>
+          <a href="{% url 'applications:apply_course' cd.url%}" class="apply-button btn btn-lg btn-warning">Кандидатствай</a> 
         {% endif %}
-      {% else %}
-        {% if cd.course.application_opened %}
-          <button class="apply-button btn btn-lg btn-warning">Запиши се</button>
-        {% else %}
-          <button class="apply-button btn btn-lg btn-warning" disabled>Записването е затворено</button>
-        {% endif %}
-      {% endif %}
-      </a>
+      {% endwith %}
     </div>
 
   </div>

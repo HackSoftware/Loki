@@ -20,27 +20,27 @@
     <section class="row">
       <div class="active-courses-container container-fluid">
         {% if apply_courses %}
-        <div class="active-courses"> Активни курсове за кандидастване!</div>
-          {% for course in apply_courses %}
-            <div class="course-logo-container col-md-3">
-              <h3 id="course-name">{{ course.course.name }}</h3>
-                <a href="{{ course.url }}">
-                  {% if course.custom_logo != "" %}
-                    <img class="video-thumb" src="{{ MEDIA_URL }}{{ course.custom_logo }}">
+          <div class="active-courses"> Активни курсове за кандидастване!</div>
+          {% for course_description in apply_courses %}
+            {% with course=course_description.course application_info=course_description.applicationinfo %}
+              <div class="course-logo-container col-md-3">
+              <h3 id="course-name">{{ course.name }}</h3>
+                <a href="{% url 'website:course_details' course_description.url %}">
+                  {% if course_description.custom_logo != "" %}
+                    <img class="video-thumb" src="{{ MEDIA_URL }}{{ course_description.custom_logo }}">
                   {% else %}
-                    <i id="course-avatar-active" class="course-logo {{ course.logo }}"></i>
+                    <i id="course-avatar-active" class="course-logo {{ course_description.logo }}"></i>
                   {% endif %}
                 </a>
-                <h3 id="course-name">{{ course.name }}</h3>
-                <a href="{{ course.url }}">
+                <a href="{% firstof application_info.external_application_form course_description.url %}">
                   <button class="btn btn-primary">Кандидатствай</button>
-                  <!-- <button class="btn btn-danger">Курсът приключи</button> -->
                 </a>
-            </div>
+              </div>
+            {% endwith %}
           {% endfor %}
-          {% else %}
-          <h1> В момента няма курсове за кандидастване! :) </h1>
-          {% endif %}
+        {% else %}
+          <h1>В момента няма курсове за кандидастване! :)</h1>
+        {% endif %}
       </div>
     </section>
 
