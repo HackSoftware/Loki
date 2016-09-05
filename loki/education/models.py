@@ -6,6 +6,8 @@ from jsonfield import JSONField
 from loki.base_app.models import BaseUser, City, Company
 
 from django.utils import timezone
+
+from .managers import StudentManager
 from .validators import validate_mac
 from .exceptions import HasToBeRetested
 
@@ -21,6 +23,8 @@ class StudentAndTeacherCommonModel(models.Model):
 class Student(BaseUser, StudentAndTeacherCommonModel):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
     skype = models.CharField(null=True, blank=True, max_length=20)
+
+    objects = StudentManager()
 
     def __str__(self):
         return self.full_name

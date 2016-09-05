@@ -219,13 +219,6 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         except:
             return False
 
-    # def make_competitor(self):
-    #     competitor = Competitor(baseuser_ptr_id=self.id)
-    #     competitor.save()
-    #     competitor.__dict__.update(self.__dict__)
-
-    #     return competitor.save()
-
 
 class EducationInfo(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.CASCADE)
