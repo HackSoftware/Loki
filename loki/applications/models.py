@@ -12,6 +12,9 @@ class ApplicationInfo(models.Model):
     end_date = models.DateTimeField()
     course = models.OneToOneField(CourseDescription)
 
+    external_application_form = models.URLField(blank=True, null=True,
+                                                help_text='Only add if course requires external application form')
+
     objects = ApplicationInfoManager()
 
     def __str__(self):
