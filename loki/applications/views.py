@@ -1,3 +1,6 @@
+from django.views.generic import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -9,30 +12,58 @@ from .forms import ApplyForm
 from .models import Application, ApplicationInfo, ApplicationProblem
 
 
-@login_required(login_url='website:login')
-def apply_course(request, course_url):
-    cd = get_object_or_404(CourseDescription, url=course_url)
-    course = cd.course
-    app_info = cd.applicationinfo
-    app_problems = ApplicationProblem.objects.filter(application_info=app_info)
+class ApplyCourseView(LoginRequiredMixin, View):
+    """
+    Right now we are using View because we want to flash message using
+    django messages. This is very hard for function-based views & decorators.
 
-    if Application.objects.filter(user=request.user, application_info=app_info).exists():
-        return redirect(reverse('applications:edit_applications'))
+    TODO: Make it a FormView & DRY it a bit.
+    """
+    def get_login_url(self):
+        return reverse('website:login')
 
-    apply_form = ApplyForm(tasks=app_problems.count(), app_problems=app_problems)
-    problems = list(range(len(apply_form.fields) - len(app_problems))) + list(app_problems)
+    def handle_no_permission(self):
+        messages.warning(self.request, 'За да кандидатстваш, трябва да имаш регистрацията в системата.')
 
-    if request.method == 'POST':
-        apply_form = ApplyForm(request.POST,
-                               tasks=app_problems.count(),
-                               app_problems=app_problems)
+        return super().handle_no_permission()
 
-        if apply_form.is_valid():
-            apply_form.save(app_info, app_problems, request.user)
-            messages.success(request, 'Кандидатурата ти е успешно приета. Можеш да я редактираш от профила си')
+    def get(self, request, course_url):
+        cd = get_object_or_404(CourseDescription, url=course_url)
+        course = cd.course
+        app_info = cd.applicationinfo
+        app_problems = ApplicationProblem.objects.filter(application_info=app_info)
+
+        if Application.objects.filter(user=request.user, application_info=app_info).exists():
             return redirect(reverse('applications:edit_applications'))
 
-    return render(request, 'apply.html', locals())
+        apply_form = ApplyForm(tasks=app_problems.count(), app_problems=app_problems)
+        problems = list(range(len(apply_form.fields) - len(app_problems))) + list(app_problems)
+
+        return render(request, 'apply.html', locals())
+
+    def post(self, request, course_url):
+        cd = get_object_or_404(CourseDescription, url=course_url)
+        course = cd.course
+        app_info = cd.applicationinfo
+        app_problems = ApplicationProblem.objects.filter(application_info=app_info)
+
+        if Application.objects.filter(user=request.user, application_info=app_info).exists():
+            return redirect(reverse('applications:edit_applications'))
+
+        apply_form = ApplyForm(tasks=app_problems.count(), app_problems=app_problems)
+        problems = list(range(len(apply_form.fields) - len(app_problems))) + list(app_problems)
+
+        if request.method == 'POST':
+            apply_form = ApplyForm(request.POST,
+                                   tasks=app_problems.count(),
+                                   app_problems=app_problems)
+
+            if apply_form.is_valid():
+                apply_form.save(app_info, app_problems, request.user)
+                messages.success(request, 'Кандидатурата ти е успешно приета. Можеш да я редактираш от профила си')
+                return redirect(reverse('applications:edit_applications'))
+
+        return render(request, 'apply.html', locals())
 
 
 def apply_overview(request):
