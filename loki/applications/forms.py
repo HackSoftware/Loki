@@ -27,7 +27,7 @@ class ApplyForm(forms.Form):
                                                                                    app_problems[index].description_url,
                                                                                    app_problems[index].name)
             field = forms.URLField(label=task_label,
-                                   widget=w('text', 'Решение на задача'))
+                                   widget=w('text', _('URL към gist със решение на задачата')))
             self.fields['task_{index}'.format(index=index + 1)] = field
 
     def save(self, app_info, app_problems, user):
