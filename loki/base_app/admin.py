@@ -4,10 +4,11 @@ from .models import (BaseUser, Company, Partner, City, GeneralPartner,
                      EducationPlace, University, Faculty,
                      Subject, School, Academy, EducationInfo,
                      HostingPartner, RegisterOrigin)
+from image_cropping import ImageCroppingMixin
 
 
 @admin.register(BaseUser)
-class BaseUserAdmin(admin.ModelAdmin):
+class BaseUserAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ('email', 'first_name', 'last_name', 'studies_at', 'works_at')
 
     list_filter = ('is_active',)

@@ -1,5 +1,6 @@
 # flake8: noqa
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
+from easy_thumbnails.conf import Settings as thumbnail_settings
 
 from datetime import timedelta
 
@@ -210,6 +211,13 @@ CKEDITOR_CONFIGS = {
         'toolbar': 'full',
     },
 }
+
+# THUMBNAILS CONFIGURATION
+# ------------------------------------------------------------------------------
+
+THUMBNAIL_PROCESSORS = (
+    'image_cropping.thumbnail_processors.crop_corners',
+) + thumbnail_settings.THUMBNAIL_PROCESSORS
 
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
