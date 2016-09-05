@@ -33,7 +33,6 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('start_date', models.DateTimeField()),
                 ('end_date', models.DateTimeField()),
-                ('external_application_form', models.URLField(blank=True, help_text='Only add if course requires external application form', null=True)),
                 ('course', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='website.CourseDescription')),
             ],
         ),
