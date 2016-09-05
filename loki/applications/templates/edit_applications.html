@@ -11,24 +11,16 @@
 
     <section class="row">
       <div class="col-lg-12">
-        <p class="lead">Активни курсове</p>
+        <p class="lead">Курсове, за които си кандидатствал/a</p>
       </div>
     </section>
-
-    <section class="row">
-      <div class="col-lg-12">
-        {{ snippets.courses_second_header.text }}
-      </div>
-    </section>
-
-    <hr />
 
     <section class="row">
       <div class="active-courses-container container-fluid">
         {% for cd in course_descriptions %}
           <div class="course-logo-container col-md-3">
             <h3 id="course-name">{{ cd.course.name }}</h3>
-              <a href="{{ info.course.url }}">
+              <a href="{% url 'website:course_details' cd.url %}">
                 {% if cd.custom_logo != "" %}
                   <img class="video-thumb" src="{{ MEDIA_URL }}{{ cd.custom_logo }}">
                 {% else %}
@@ -38,7 +30,6 @@
               <h3 id="course-name">{{ cd.name }}</h3>
               <a href="{% url 'applications:edit_application' course_url=cd.url %}">
                 <button class="btn btn-primary">Редактирай!</button>
-                <!-- <button class="btn btn-danger">Курсът приключи</button> -->
               </a>
           </div>
         {% endfor %}
