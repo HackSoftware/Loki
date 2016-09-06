@@ -60,14 +60,11 @@ class TestWebsite(TestCase):
     def test_courses(self):
         url = reverse('website:courses')
         snippet1 = factories.SnippetFactory()
-
         course = factories.CourseFactory()
-        courses = factories.CourseDescriptionFactory(
-            course=course)
+        factories.CourseDescriptionFactory(course=course)
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertIsNotNone(courses.logo)
         self.assertIn(snippet1.label, response.context['snippets'])
 
     def test_login_from_active_user(self):
