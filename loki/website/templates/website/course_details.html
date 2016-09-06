@@ -3,12 +3,6 @@
 {% block 'page-content' %}
 {% autoescape off %}
   <div class="container" id="course">
-
-    <ol id="course-details-breadcrumb" class="breadcrumb">
-      <li><a href="{% url 'website:courses' %}">Курсове</a></li>
-      <li class="active">{{ cd.course.name }}</li>
-    </ol>
-
     <h1>{{ cd.course.name }}</h1>
 
     <div class="row">
