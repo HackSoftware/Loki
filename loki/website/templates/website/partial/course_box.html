@@ -29,13 +29,22 @@
       <div class="col-sm-4">Начало на курса: {{ course.start_time }}</div>
       <div class="col-sm-4">Продължителност: {{ course.duration_in_weeks }} седмици</div>
     {% else %}
-      {% if course.video_channel %}
-      <div class="col-sm-6"> 
-        <a href="{{ cd.course.git_repository }}" target="_blank">{{ course.git_repository }}</a>
-      </div>
-      <div class="col-sm-6">Видео канал: {{ course.video_channel }}</div>
-      {% else %}
-        <div class="col-sm-12">Материали и задачи: {{ course.git_repository }}</div>
+      {% if course.video_channel or course.git_repository %}
+        {% if course.video_channel %}
+        <div class="col-sm-6"> 
+          Материали и задачи:
+          <a href="{{ course.git_repository }}" target="_blank">GitHub</a>
+        </div>
+        <div class="col-sm-6">
+          Видео канал: {{ course.video_channel }}
+          <a href="{{ course.video_channel }}" target="_blank">YouTube</a>
+
+        </div>
+        {% else %}
+        <div class="col-sm-12">Материали и задачи:
+          <a href="{{ course.git_repository }}" target="_blank">GitHub</a>
+        </div>
+        {% endif %}
       {% endif %}
     {% endif %}
   </div>
