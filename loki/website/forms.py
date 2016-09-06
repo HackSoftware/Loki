@@ -73,6 +73,12 @@ class BaseEditForm(ModelForm):
         model = BaseUser
         fields = ('first_name', 'last_name', 'github_account', 'full_image',
                   'cropping')
+        labels = {
+            'first_name': 'Име',
+            'last_name': 'Фамилия',
+            'github_account': 'GitHub',
+            'cropping': 'Изрежи снимката си'
+        }
 
     def clean_github_account(self):
         github_account = self.cleaned_data.get("github_account").strip()

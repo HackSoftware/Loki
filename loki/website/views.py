@@ -140,6 +140,8 @@ def profile_edit(request):
         else:
             errors = base_form.errors
 
+        return redirect(reverse('website:profile_edit'))
+
     return render(request, "website/profile_edit.html", locals())
 
 
