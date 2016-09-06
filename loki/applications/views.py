@@ -1,3 +1,4 @@
+from django.http import HttpResponseForbidden
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -31,6 +32,11 @@ class ApplyCourseView(LoginRequiredMixin, View):
         cd = get_object_or_404(CourseDescription, url=course_url)
         course = cd.course
         app_info = cd.applicationinfo
+
+        if not app_info.apply_is_active():
+            messages.warning(request, 'Срокът за кандидатстване за {} е изтекъл.'.format(course.name))
+            return redirect(reverse('applications:apply_overview'))
+
         app_problems = ApplicationProblem.objects.filter(application_info=app_info)
 
         if Application.objects.filter(user=request.user, application_info=app_info).exists():
@@ -46,6 +52,10 @@ class ApplyCourseView(LoginRequiredMixin, View):
         cd = get_object_or_404(CourseDescription, url=course_url)
         course = cd.course
         app_info = cd.applicationinfo
+
+        if not app_info.apply_is_active():
+            return HttpResponseForbidden('Не можеш да кандидатстваш за изтекъл курс')
+
         app_problems = ApplicationProblem.objects.filter(application_info=app_info)
 
         if Application.objects.filter(user=request.user, application_info=app_info).exists():

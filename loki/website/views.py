@@ -9,7 +9,7 @@ from .forms import (RegisterForm, LoginForm, BaseEditForm, StudentEditForm,
                     TeacherEditForm)
 from .decorators import anonymous_required
 
-from loki.education.models import WorkingAt, Student, Teacher, Course
+from loki.education.models import WorkingAt, Student, Teacher
 from loki.applications.models import ApplicationInfo
 from loki.base_app.models import Partner, GeneralPartner, BaseUser
 from loki.base_app.services import send_activation_mail, send_forgotten_password_email
