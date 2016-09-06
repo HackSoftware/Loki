@@ -9,10 +9,10 @@
     </p>
     
     {% if apply_button %}
-      {% if course.coursedescription.application_info.external_application_form %}
-        <a href="{{ course.application_info.external_application_form}}" target="_blank">
+      {% if course.coursedescription.applicationinfo.external_application_form %}
+        <a href="{{ course.coursedescription.applicationinfo.external_application_form}}" target="_blank">
       {% else %}
-        <a href="{% url 'applications:apply_course' course.coursedescription.url%}">
+        <a href="{% url 'applications:apply_course' course.coursedescription.url %}">
       {% endif %}
           <button class="btn btn-hack">Кандидатствай</button>
         </a> 
