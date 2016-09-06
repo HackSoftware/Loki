@@ -230,6 +230,13 @@ body {
             a {
                 color: #FFF;
             }
+            ul {
+                padding: 5px;
+
+                li {
+                    list-style-type: none;
+                }
+            }
         }
         .email-input {
             width: 80%;
@@ -245,7 +252,7 @@ body {
         }
         #socials {
             text-align:center;
-            padding: 10px 0 10px 0;
+            padding: 10px 0 25px 0;
             a {
                 padding: 5px;
                 text-decoration: none;
