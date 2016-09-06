@@ -1,0 +1,38 @@
+<div class="col-sm-12 course-box">
+  <div class="col-sm-3">
+    <img src="{{ MEDIA_URL }}{{ course.coursedescription.custom_logo }}" class="course-logo" >
+  </div>
+  <div class="col-sm-9 course-text">
+    <h3 id="course-name">{{ course.name }}</h3>
+    <p>
+      {{ course.coursedescription.list_courses_text }} 
+    </p>
+    
+    {% if apply_button %}
+      <a href="{% url 'applications:apply_course' course.coursedescription.url %}">
+        <button class="btn btn-hack">Кандидатствай</button>
+      </a>
+    {% else %}
+      <a href="{% url 'website:course_details' course.coursedescription.url %}">
+        <button class="btn btn-hack">Научете повече</button>
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="col-sm-12 course-box-footer">
+    {% if course.coursedescription.applicationinfo.apply_is_active %}
+      <div class="col-sm-4">Кандидатстване до: {{ course.coursedescription.applicationinfo.end_date|date:"d F Y" }}</div>
+      <div class="col-sm-4">Начало на курса: {{ course.start_time }}</div>
+      <div class="col-sm-4">Продължителност: {{ course.duration_in_weeks }} седмици</div>
+    {% else %}
+      {% if course.video_channel %}
+      <div class="col-sm-6"> 
+        <a href="{{ cd.course.git_repository }}" target="_blank">{{ course.git_repository }}</a>
+      </div>
+      <div class="col-sm-6">Видео канал: {{ course.video_channel }}</div>
+      {% else %}
+        <div class="col-sm-12">Материали и задачи: {{ course.git_repository }}</div>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>

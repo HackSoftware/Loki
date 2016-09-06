@@ -25,35 +25,15 @@
 
     <section class="row">
       <div class="active-courses-container container-fluid">
-        {% for course in courses %}
-          <div class="course-logo-container col-md-3">
-            {% if course.course.is_active %}
-              <a href="{{ course.url }}">
-                {% if course.custom_logo != "" %}
-                  <img class="video-thumb" src="{{ MEDIA_URL }}{{ course.custom_logo }}">
-                {% else %}
-                  <i id="course-avatar-active" class="course-logo {{ course.logo }}"></i>
-                {% endif %}
-              </a>
-              {% else %}
-              <a href="{{ course.url }}">
-                {% if course.custom_logo != "" %}
-                  <img class="video-thumb" src="{{ MEDIA_URL }}{{ course.custom_logo }}">
-                {% else %}
-                  <i id="course-avatar-inactive" class="course-logo {{ course.logo }}"></i>
-                {% endif %}
-              </a>
-            {% endif %}
-            <h3 id="course-name">{{ course.course.name }}</h3>
-            <a href="{{ course.url }}">
-            {% if course.course.is_active %}
-              <button class="btn btn-primary">Научете повече</button>
-            {% endif %}
-              <!-- <button class="btn btn-danger">Курсът приключи</button> -->
-
-            </a>
-          </div>
+        {% for ca in opened_course_applications %}
+          {% include "website/partial/course_box.html" with course=ca.course.course apply_button=True %}
         {% endfor %}
+
+        <h3>Архив на изминали курсове:</h3>
+        {% for ca in closed_course_applications %}
+          {% include "website/partial/course_box.html" with course=ca.course.course %}
+        {% endfor %}
+
       </div>
     </section>
 

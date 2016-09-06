@@ -10,7 +10,7 @@ from .managers import ApplicationInfoManager
 class ApplicationInfo(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    course = models.OneToOneField(CourseDescription)
+    course = models .OneToOneField(CourseDescription)
 
     external_application_form = models.URLField(blank=True, null=True,
                                                 help_text='Only add if course requires external application form')

@@ -518,4 +518,32 @@ body {
 .dribbble {
   font-size: 80%; }
 
+.btn-hack {
+  background: #F7931E;
+  color: #FFF;
+  margin-bottom: 10px; }
+  .btn-hack:hover {
+    color: #FFF; }
+
+.course-box {
+  padding: 0;
+  margin-bottom: 40px;
+  background: white;
+  background: #fff;
+  display: inline-block;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+  .course-box:hover {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 5px 5px rgba(0, 0, 0, 0.22); }
+  .course-box .course-text {
+    text-align: left; }
+  .course-box .course-logo {
+    width: 100%;
+    padding: 15px; }
+
+.course-box-footer {
+  background: #f6e0be;
+  padding: 5px; }
+
 /*# sourceMappingURL=website.css.map */

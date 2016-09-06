@@ -38,10 +38,7 @@ class Snippet(models.Model):
 
 class CourseDescription(models.Model):
     course = models.OneToOneField(Course)
-    logo = models.CharField(
-        blank=True,
-        max_length=255,
-        help_text='Copy class from <a href="http://devicon.fr/" target="_blank">www.devicon.fr</a>')
+
     custom_logo = models.ImageField(
         blank=True,
         help_text='Add a custom course logo with 308x308 size.')
@@ -62,6 +59,11 @@ class CourseDescription(models.Model):
     teacher_preview = RichTextField(blank=True, null=True)
     realization = RichTextField(blank=True, null=True)
     price = RichTextField(blank=True, null=True)
+    list_courses_text = RichTextField(
+        blank=True,
+        null=True,
+        help_text='Това е малък текст за /courses страницата'
+    )
     address = models.CharField(
         blank=True,
         max_length=255,

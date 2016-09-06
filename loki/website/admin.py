@@ -24,7 +24,6 @@ class CourseDescriptionAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'course',
-        'logo',
         'course_intensity',
         'course_days',
     ]

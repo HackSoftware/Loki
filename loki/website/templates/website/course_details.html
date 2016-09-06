@@ -43,9 +43,9 @@
             <div id="details-apply-button">
               {% with course=cd.course application_info=cd.applicationinfo %}
                 {% if application_info.external_application_form %}
-                  <a href="{{application_info.external_application_form}}" class="btn btn-lg btn-warning">Кандидатствай</a> 
+                  <a href="{{application_info.external_application_form}}" class="btn btn-lg btn-hack">Кандидатствай</a> 
                 {% else %}
-                  <a href="{% url 'applications:apply_course' cd.url%}" class="btn btn-lg btn-warning">Кандидатствай</a> 
+                  <a href="{% url 'applications:apply_course' cd.url%}" class="btn btn-lg btn-hack">Кандидатствай</a> 
                 {% endif %}
               {% endwith %}
             </div>

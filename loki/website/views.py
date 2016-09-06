@@ -9,7 +9,8 @@ from .forms import (RegisterForm, LoginForm, BaseEditForm, StudentEditForm,
                     TeacherEditForm)
 from .decorators import anonymous_required
 
-from loki.education.models import WorkingAt, Student, Teacher
+from loki.education.models import WorkingAt, Student, Teacher, Course
+from loki.applications.models import ApplicationInfo
 from loki.base_app.models import Partner, GeneralPartner, BaseUser
 from loki.base_app.services import send_activation_mail, send_forgotten_password_email
 from loki.base_app.helper import get_or_none
@@ -46,7 +47,8 @@ class AboutView(TemplateView):
 
 def courses(request):
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
-    courses = CourseDescription.objects.all().order_by('-course__start_time')
+    opened_course_applications = ApplicationInfo.objects.get_open_for_apply()
+    closed_course_applications = ApplicationInfo.objects.get_closed_for_apply()
     return render(request, "website/courses.html", locals())
 
 

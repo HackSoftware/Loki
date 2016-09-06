@@ -1,11 +1,12 @@
 import uuid
 
+from dateutil import rrule
+
 from django.db import models
 from jsonfield import JSONField
 
 from loki.base_app.models import BaseUser, City, Company
 
-from django.utils import timezone
 from .validators import validate_mac
 from .exceptions import HasToBeRetested
 
@@ -58,8 +59,7 @@ class Course(models.Model):
 
     git_repository = models.CharField(blank=True, max_length=256)
     fb_group = models.URLField(blank=True, null=True)
-
-    is_free = models.BooleanField(default=True)
+    video_channel = models.URLField(blank=True, null=True)
 
     start_time = models.DateField(blank=True, null=True)
     end_time = models.DateField(blank=True, null=True)
@@ -67,14 +67,14 @@ class Course(models.Model):
 
     partner = models.ManyToManyField('base_app.Partner', blank=True)
 
-    application_until = models.DateField()
-    applications_url = models.URLField(null=True, blank=True)
-
-    def application_opened(self):
-        return self.application_until >= timezone.now().date()
-
-    def is_active(self):
-        return self.end_time >= timezone.now().date()
+    @property
+    def duration_in_weeks(self):
+        weeks = rrule.rrule(
+            rrule.WEEKLY,
+            dtstart=self.start_time,
+            until=self.end_time
+        )
+        return weeks.count()
 
     def __str__(self):
         return self.name
