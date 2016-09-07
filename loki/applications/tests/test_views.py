@@ -142,7 +142,7 @@ class TestApplicationViews(TestCase):
                       course_url=self.course_description.url,
                       data=data)
 
-            self.response_200()
+            self.response_302()
 
         app_problem_solutions = ApplicationProblemSolution.objects.filter(application=application).all()
         self.assertEqual(1, Application.objects.filter(user=self.user).count())
