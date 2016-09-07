@@ -142,6 +142,6 @@ def edit_application(request, course_url):
                                initial=initial_data)
         if apply_form.is_valid():
             apply_form.update(user_application.application_info, app_problems, request.user)
-            messages.success(request, 'Усешно обнови кандидатурата си.')
+            messages.success(request, 'Успешно обнови кандидатурата си.')
 
     return render(request, 'edit_application.html', locals())
