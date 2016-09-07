@@ -27,20 +27,19 @@
           <div class="course-details-container">
             <h3>Бързи детайли за курса</h3>
             <br>
+            <p><b>Кандидатстване до: </b> {{ cd.aplicationinfo.end_date }} </p>
             <p><b>Започва: </b> {{ cd.course.start_time }}</p>
             <p><b>Приключва: </b> {{ cd.course.end_time }} </p>
             <p><b>Интензивност: </b> {{ cd.course_intensity }} дни седмично</p>
             <p><b>Дни в седмицата: </b> {{ course_days }}</p>
-            <p><b>Кандидатстване до: </b> {{ cd.course.application_until }} </p>
             <p><b>Програма на курса: </b> <a href="{{ cd.course.git_repository }}" target="_blank">{{ cd.course.git_repository }}</a> </p>
-            <p><b>Адрес: </b><a href="{{ cd.address }}" target="_blank">Залата се намира тук</a></p> 
+            {% if cd.price %}
+            <p><b>Цена: </b>{{ cd.price }} с ДДС</p>
+            {% endif %} 
+            <p><b>Адрес: </b><a href="{{ cd.address }}" target="_blank">Залата се намира тук</a></p>
             <div id="details-apply-button">
               {% with course=cd.course application_info=cd.applicationinfo %}
-                {% if application_info.external_application_form %}
-                  <a href="{{application_info.external_application_form}}" class="btn btn-lg btn-hack">Кандидатствай</a> 
-                {% else %}
-                  <a href="{% url 'applications:apply_course' cd.url%}" class="btn btn-lg btn-hack">Кандидатствай</a> 
-                {% endif %}
+                {% include "website/partial/apply_button.html" with course=course big_button=True %}
               {% endwith %}
             </div>
           </div>
@@ -130,7 +129,7 @@
       <div class="container-fluid">
         <div class="col-md-12">
           <h2>Цена на курса</h2>
-          <p>{{ cd.price }}</p>
+          <p>{{ cd.price_text }}</p>
         </div>
 
       </div>
@@ -138,11 +137,7 @@
 
     <div class="aplly-button-container">
       {% with course=cd.course application_info=cd.applicationinfo %}
-        {% if application_info.external_application_form %}
-          <a href="{{application_info.external_application_form}}" class="apply-button btn btn-lg btn-warning">Кандидатствай</a> 
-        {% else %}
-          <a href="{% url 'applications:apply_course' cd.url%}" class="apply-button btn btn-lg btn-warning">Кандидатствай</a> 
-        {% endif %}
+         {% include "website/partial/apply_button.html" with course=course big_button=True  %}
       {% endwith %}
     </div>
 

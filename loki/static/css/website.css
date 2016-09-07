@@ -529,6 +529,13 @@ body {
   .btn-hack:hover {
     color: #FFF; }
 
+.btn-hack-info {
+  background: #f6e0be;
+  color: black;
+  margin-bottom: 10px; }
+  .btn-hack-info:hover {
+    color: black; }
+
 .course-box {
   padding: 0;
   margin-bottom: 40px;

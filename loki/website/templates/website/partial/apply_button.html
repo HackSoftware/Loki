@@ -1,0 +1,13 @@
+{% if course.coursedescription.applicationinfo.external_application_form %}
+<a href="{{ course.coursedescription.applicationinfo.external_application_form}}" target="_blank">
+{% else %}
+<a href="{% url 'applications:apply_course' course.coursedescription.url %}">
+{% endif %}
+    <button class="btn btn-hack {% if big_button %}btn-lg{% endif %}">
+        {% if course.coursedescription.paid_course %}
+            Запиши се
+        {% else %}
+            Кандидатствай
+        {% endif %}
+    </button>
+</a> 

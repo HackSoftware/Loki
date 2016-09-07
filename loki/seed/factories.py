@@ -455,7 +455,7 @@ class CourseDescriptionFactory(factory.DjangoModelFactory):
     course_summary = faker.text()
     teacher_preview = faker.text()
     realization = faker.text()
-    price = faker.text()
+    price_text = faker.text()
     address = faker.text(max_nb_chars=255)
     SEO_description = faker.text(max_nb_chars=255)
     SEO_title = faker.text(max_nb_chars=255)

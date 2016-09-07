@@ -55,10 +55,12 @@ class CourseDescription(models.Model):
     course_intensity = models.PositiveIntegerField(default=0, blank=False, null=False)
     course_days = models.CharField(blank=True, max_length=255)
     paid_course = models.BooleanField(default=False)
+    price = models.IntegerField(blank=True, null=True)
+
     course_summary = RichTextField(blank=True, null=True)
     teacher_preview = RichTextField(blank=True, null=True)
     realization = RichTextField(blank=True, null=True)
-    price = RichTextField(blank=True, null=True)
+    price_text = RichTextField(blank=True, null=True)
     list_courses_text = RichTextField(
         blank=True,
         null=True,

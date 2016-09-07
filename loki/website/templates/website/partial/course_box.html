@@ -8,18 +8,11 @@
       {{ course.coursedescription.list_courses_text }} 
     </p>
     
+    <a href="{% url 'website:course_details' course.coursedescription.url %}">
+      <button class="btn btn-hack-info">Научете повече</button>
+    </a>
     {% if apply_button %}
-      {% if course.coursedescription.applicationinfo.external_application_form %}
-        <a href="{{ course.coursedescription.applicationinfo.external_application_form}}" target="_blank">
-      {% else %}
-        <a href="{% url 'applications:apply_course' course.coursedescription.url %}">
-      {% endif %}
-          <button class="btn btn-hack">Кандидатствай</button>
-        </a> 
-    {% else %}
-      <a href="{% url 'website:course_details' course.coursedescription.url %}">
-        <button class="btn btn-hack">Научете повече</button>
-      </a>
+      {% include "website/partial/apply_button.html" with course=course %}
     {% endif %}
   </div>
 
