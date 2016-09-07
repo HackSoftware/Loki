@@ -5,12 +5,12 @@
 <div class="container apply-form">
   <div class="row">
     <h1>Редактиране на кандидатура за курс: {{ course.name }}</h1>
-    <div class="col-md-4">
+    <div class="col-md-6">
       {% autoescape off %}
         {{ course.coursedescription.applicationinfo.description }}
       {% endautoescape %}
     </div>
-    <div class="col-md-8">
+    <div class="col-md-6">
       <form method="POST" enctype='multipart/form-data' action="" class="register-form" >
         {{ apply_form|crispy}}
         {% csrf_token %}
