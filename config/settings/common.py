@@ -238,7 +238,7 @@ GITHUB_OATH_TOKEN = env('GITHUB_OATH_TOKEN', default="")
 templates = {
     "user_registered": lambda **env_kwargs: env('USER_REGISTER_TEMPLATE_ID', **env_kwargs),
     "password_reset": lambda **env_kwargs: env('PASSWORD_RESET_TEMPLATE_ID', **env_kwargs),
-    "application_compleated_default": lambda **env_kwargs: env('APPLICATION_COMPLETED_DEFAULT', **env_kwargs),
+    "application_completed_default": lambda **env_kwargs: env('APPLICATION_COMPLETED_DEFAULT', **env_kwargs),
     "hackfmi_team_deleted": lambda **env_kwargs: env('HACKFMI_TEAM_DELETED_TEMPLATE_ID', **env_kwargs),
 }
 

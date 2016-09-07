@@ -79,7 +79,9 @@ class ApplyCourseView(LoginRequiredMixin, View):
                     'course_name': course.name
                 }
 
-                send_template_email(request.user.email, settings.APPLICATION_COMPLETED_DEFAULT, context)
+                # TODO: Add ability to set custom template from the model
+                email_template = settings.EMAIL_TEMPLATES['application_completed_default']
+                send_template_email(request.user.email, context)
                 return redirect(reverse('applications:edit_applications'))
 
         return render(request, 'apply.html', locals())
