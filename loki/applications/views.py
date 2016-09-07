@@ -1,13 +1,14 @@
 from django.http import HttpResponseForbidden
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.conf import settings
 
 from loki.website.models import CourseDescription, Snippet
+from loki.emails.services import send_template_email
 
 from .forms import ApplyForm
 from .models import Application, ApplicationInfo, ApplicationProblem, ApplicationProblemSolution
@@ -72,6 +73,13 @@ class ApplyCourseView(LoginRequiredMixin, View):
             if apply_form.is_valid():
                 apply_form.save(app_info, app_problems, request.user)
                 messages.success(request, 'Кандидатурата ти е успешно приета. Можеш да я редактираш от профила си')
+
+                context = {
+                    'full_name': request.user.full_name,
+                    'course_name': course.name
+                }
+
+                send_template_email(request.user.email, settings.APPLICATION_COMPLETED_DEFAULT, context)
                 return redirect(reverse('applications:edit_applications'))
 
         return render(request, 'apply.html', locals())
