@@ -102,6 +102,7 @@ def edit_applications(request):
 @login_required(login_url='website:login')
 def edit_application(request, course_url):
     cd = get_object_or_404(CourseDescription, url=course_url)
+    course = cd.course
     app_info = ApplicationInfo.objects.get(course=cd)
     user_application = Application.objects.get(user=request.user, application_info=app_info)
 

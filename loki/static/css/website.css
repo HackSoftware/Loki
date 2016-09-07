@@ -557,4 +557,12 @@ body {
   background: #f6e0be;
   padding: 5px; }
 
+.apply-form h1 {
+  padding-bottom: 30px; }
+
+.application-list {
+  text-align: center; }
+  .application-list .logo {
+    width: 100%; }
+
 /*# sourceMappingURL=website.css.map */

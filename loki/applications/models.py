@@ -4,6 +4,8 @@ from django.utils import timezone
 from loki.website.models import CourseDescription
 from loki.base_app.models import BaseUser
 
+from ckeditor.fields import RichTextField
+
 from .managers import ApplicationInfoManager
 
 
@@ -11,6 +13,12 @@ class ApplicationInfo(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     course = models .OneToOneField(CourseDescription)
+
+    description = RichTextField(
+        blank=True,
+        null=True,
+        help_text='Това описва процедурата по кандидатстване. Излиза тук /apply/edit/<course-url>'
+    )
 
     external_application_form = models.URLField(blank=True, null=True,
                                                 help_text='Only add if course requires external application form')

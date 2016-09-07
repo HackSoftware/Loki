@@ -2,13 +2,15 @@
 {% load crispy_forms_tags %}
 
 {% block 'page-content' %}
-<div class="container">
-  <div class="row-profile edit-profile">
+<div class="container apply-form">
+  <div class="row">
+    <h1>Редактиране на кандидатура за курс: {{ course.name }}</h1>
     <div class="col-md-4">
-      <div class="name-course">{{ cd.course.name }}</div>
-      <p> Можеш да редактираш своята кандидатура до {{ app_info.end_date }} :) </p>
+      {% autoescape off %}
+        {{ course.coursedescription.applicationinfo.description }}
+      {% endautoescape %}
     </div>
-    <div class="col-md-4 col-md-offset-1">
+    <div class="col-md-8">
       <form method="POST" enctype='multipart/form-data' action="" class="register-form" >
         {{ apply_form|crispy}}
         {% csrf_token %}
