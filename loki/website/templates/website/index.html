@@ -9,13 +9,13 @@
       {{ snippets.index_secondary_description.text }}
     </p>
   </div>
-    
+
   <div id="faces" class="row">
     <h2 id="moto"><strong>{{success_students_count}}</strong> {{ snippets.index_call_to_action.text }}</h2>
     {% for successor in successors %}
       <div class="person">
         <img src="/media/{{ successor.picture }}" class="person-image">
-        <p class="person-description " > 
+        <p class="person-description " >
           <span class="name">{{ successor.name }}</span> <br>
           <span class="position">{{ successor.title }}</span>
         </p>
@@ -27,7 +27,7 @@
     <div class="row" id="action-buttons">
 
       <div class="col-xs-6">
-        <a href="{% url 'website:courses' %}">
+        <a href="{% url 'applications:apply_overview' %}">
           <button id="left-action">{{ snippets.index_left_button.text }}</button>
         </a>
       </div>
@@ -53,7 +53,7 @@
         {% endfor %}
     </div>
   </div>
-    
+
   <div class="container-fluid" id="videos">
     <div class="row">
       <h2 class="container text-center">{{ snippets.index_success_stories_description.text }}</h2>
@@ -76,9 +76,7 @@
     <script src="/static/bower_components/swipebox/src/js/jquery.swipebox.js"></script>
     <script type="text/javascript">
     ;( function( $ ) {
-
       $( '.swipebox-video' ).swipebox();
-
     } )( jQuery );
     </script>
 {% endblock 'page-content' %}
