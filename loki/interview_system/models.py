@@ -6,8 +6,7 @@ from loki.applications.models import ApplicationInfo, Application
 
 class Interviewer(BaseUser):
 
-    courses_to_interview = models.ManyToManyField(ApplicationInfo,
-                                                  null=True, blank=True)
+    courses_to_interview = models.ManyToManyField(ApplicationInfo)
     interviews = models.ManyToManyField(Application, through='Interview')
 
 
@@ -26,6 +25,7 @@ class Interview(models.Model):
 
     interviewer = models.ForeignKey(Interviewer)
     application = models.ForeignKey(Application)
+    date = models.DateField(blank=False, null=True)
     start_time = models.TimeField(blank=False, null=True)
     end_time = models.TimeField(blank=False, null=True)
     has_confirmed = models.BooleanField(default=False)
