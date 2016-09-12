@@ -6,18 +6,11 @@ from .models import Interviewer, InterviewerFreeTime, Interview
 @admin.register(Interviewer)
 class InterviewerAdmin(admin.ModelAdmin):
 
-    list_display = [
-        'interviewer',
-    ]
+    list_display = ['interviewer',]
+
 
 @admin.register(InterviewerFreeTime)
 class InterviewerFreeTimeAdmin(admin.ModelAdmin):
-
-    def has_change_permission(self, request, obj=None):
-        return True
-
-    def has_module_permission(self, request):
-        return True
 
     list_display = [
         'interviewer',
@@ -28,19 +21,15 @@ class InterviewerFreeTimeAdmin(admin.ModelAdmin):
 
     list_filter = ['date',]
 
-@admin.register(Interview)
-class InterviewAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
-        # print(request.user) TODO: check correctly if user has interviews
-        # qs = super(InterviewAdmin, self).get_queryset(request)
-        # if qs.filter(interviewer=request.user):
-        # interviews = super(InterviewAdmin, self).get_queryset(request)
-        # print(interviews)
-        # if interviews.filter(interviewer=self):
         return True
-        # return False
+
     def has_module_permission(self, request):
         return True
+
+
+@admin.register(Interview)
+class InterviewAdmin(admin.ModelAdmin):
 
     list_display = [
         'date',
@@ -50,3 +39,9 @@ class InterviewAdmin(admin.ModelAdmin):
     ]
 
     list_filter = ['date',]
+
+    def has_change_permission(self, request, obj=None):
+        return True
+
+    def has_module_permission(self, request):
+        return True
