@@ -61,7 +61,7 @@ INSTALLED_APPS = (
     'loki.website',
     'loki.applications',
     'loki.emails.apps.EmailsConfig',
-    'loki.interview_system',
+    'loki.interview_system.apps.InterviewSystemConfig',
 )
 
 MIDDLEWARE_CLASSES = (

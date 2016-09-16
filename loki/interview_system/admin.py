@@ -1,6 +1,7 @@
 from django.contrib import admin
-
+from django.conf.urls import patterns, url
 from .models import Interviewer, InterviewerFreeTime, Interview
+from .helpers.interviews import GenerateInterviewSlots, GenerateInterviews
 
 
 @admin.register(Interviewer)
@@ -30,22 +31,11 @@ class InterviewerFreeTimeAdmin(admin.ModelAdmin):
 
 @admin.register(Interview)
 class InterviewAdmin(admin.ModelAdmin):
-    def has_change_permission(self, request, obj=None):
-        # print(request.user) TODO: check correctly if user has interviews
-        # qs = super(InterviewAdmin, self).get_queryset(request)
-        # if qs.filter(interviewer=request.user):
-        # interviews = super(InterviewAdmin, self).get_queryset(request)
-        # print(interviews)
-        # if interviews.filter(interviewer=self):
-        return True
-        # return False
-    def has_module_permission(self, request):
-        return True
 
     list_display = [
         'date',
         'start_time',
-        'end_time',
+        'interviewer_time_slot',
         'application',
     ]
 

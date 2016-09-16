@@ -54,6 +54,7 @@ class Application(models.Model):
     skype = models.CharField(null=True, blank=True, max_length=255)
     works_at = models.CharField(null=True, blank=True, max_length=255)
     studies_at = models.CharField(blank=True, null=True, max_length=255)
+    has_interview_date = models.BooleanField(default=False)
 
     def __str__(self):
         return "{0} to {1}".format(self.user, self.application_info)
