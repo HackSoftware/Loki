@@ -7,18 +7,11 @@ from .helpers.interviews import GenerateInterviewSlots, GenerateInterviews
 @admin.register(Interviewer)
 class InterviewerAdmin(admin.ModelAdmin):
 
-    list_display = [
-        'interviewer',
-    ]
+    list_display = ['interviewer',]
+
 
 @admin.register(InterviewerFreeTime)
 class InterviewerFreeTimeAdmin(admin.ModelAdmin):
-
-    def has_change_permission(self, request, obj=None):
-        return True
-
-    def has_module_permission(self, request):
-        return True
 
     list_display = [
         'interviewer',
@@ -28,6 +21,7 @@ class InterviewerFreeTimeAdmin(admin.ModelAdmin):
     ]
 
     list_filter = ['date',]
+
 
 @admin.register(Interview)
 class InterviewAdmin(admin.ModelAdmin):
@@ -40,3 +34,9 @@ class InterviewAdmin(admin.ModelAdmin):
     ]
 
     list_filter = ['date',]
+
+    def has_change_permission(self, request, obj=None):
+        return True
+
+    def has_module_permission(self, request):
+        return True

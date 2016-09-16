@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+<div class="container">
+  <div class="row">
+    <div class="container-fluid">
+
+      <div class="choose-interview-container col-md-8 col-md-offset-2">
+        <h3>Изберете нов час за вашето интервю</h3><br>
+        <div class="table-responsive">
+          <table id="interview-slots-table" class="table table-hover">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Начален час</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endautoescape %}
+
+{% endblock %}
