@@ -65,32 +65,35 @@ class GenerateInterviewSlots:
 class GenerateInterviews:
 
     def __init__(self):
-        self.__applications_without_interviews = 0
         self.__generated_interviews = 0
 
     def __inc_generated_interviews(self):
         self.__generated_interviews += 1
 
     def generate_interviews(self):
-        applications = list(Application.objects.all())
-        slots = Interview.objects.all()
+        applications = iter(Application.objects.without_interviews())
+        free_interview_slots = Interview.objects.get_free_slots()
         today = datetime.now()
-        for slot in slots:
-            if slot.application or slot.buffer_time or slot.interviewer_time_slot.date <= datetime.date(today):
+
+        for slot in free_interview_slots:
+            if slot.interviewer_time_slot.date < datetime.date(today):
                 continue
-            while len(applications) != 0:
-                application = applications.pop(0)
-                print(application)
-                if not application.has_interview_date:
-                    self.__inc_generated_interviews()
-                    slot.application = application
-                    application.has_interview_date = True
-                    slot.save()
-                    application.save()
-                    break
+
+            try:
+                application = next(applications)
+            except StopIteration:
+                break
+
+            slot.application = application
+            slot.save()
+
+            application.has_interview_date = True
+            application.save()
+
+            self.__inc_generated_interviews()
 
     def get_applications_without_interviews(self):
-        return Applications.objects.all().filter(interviewslot__isnull=True).count()
+        return Application.objects.without_interviews().count()
 
     def get_generated_interviews_count(self):
         return self.__generated_interviews

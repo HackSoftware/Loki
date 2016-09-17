@@ -12,13 +12,4 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='applicationproblem',
-            name='description',
-        ),
-        migrations.AddField(
-            model_name='applicationproblem',
-            name='description_url',
-            field=models.URLField(blank=True, null=True),
-        ),
     ]

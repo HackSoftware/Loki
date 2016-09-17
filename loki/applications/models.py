@@ -7,6 +7,7 @@ from loki.base_app.models import BaseUser
 from ckeditor.fields import RichTextField
 
 from .managers import ApplicationInfoManager
+from .query import ApplicationQuerySet
 
 
 class ApplicationInfo(models.Model):
@@ -55,6 +56,8 @@ class Application(models.Model):
     works_at = models.CharField(null=True, blank=True, max_length=255)
     studies_at = models.CharField(blank=True, null=True, max_length=255)
     has_interview_date = models.BooleanField(default=False)
+
+    objects = ApplicationQuerySet.as_manager()
 
     def __str__(self):
         return "{0} to {1}".format(self.user, self.application_info)

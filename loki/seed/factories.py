@@ -8,6 +8,8 @@ from loki.hack_fmi import models as hack_fmi_models
 from loki.education import models as education_models
 from loki.website import models as website_models
 from loki.applications import models as application_models
+from loki.interview_system.models import Interviewer
+
 
 faker = Factory.create()
 
@@ -166,6 +168,11 @@ class StudentFactory(BaseUserFactory):
     mac = factory.LazyAttribute(lambda _: faker.mac_address())
     phone = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=20))
     skype = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=20))
+
+
+class InterviewerFactory(BaseUserFactory):
+    class Meta:
+        model = Interviewer
 
 
 class CourseFactory(factory.DjangoModelFactory):
@@ -473,7 +480,7 @@ class ApplicationInfoFactory(factory.DjangoModelFactory):
     class Meta:
         model = application_models.ApplicationInfo
 
-    course = factory.SubFactory(CourseFactory)
+    course = factory.SubFactory(CourseDescriptionFactory)
     start_date = timezone.now()
     end_date = timezone.now() + timedelta(days=1)
 
@@ -483,7 +490,7 @@ class ApplicationProblemFactory(factory.DjangoModelFactory):
         model = application_models.ApplicationProblem
 
     name = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=255))
-    description_url = faker.url()
+    description_url = factory.LazyAttribute(lambda _: faker.url())
 
 
 class ApplicationFactory(factory.DjangoModelFactory):

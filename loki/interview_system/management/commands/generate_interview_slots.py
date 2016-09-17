@@ -19,9 +19,10 @@ class Command(BaseCommand):
 
 
         interview_generator = GenerateInterviews()
-        import ipdb; ipdb.set_trace()
         interview_generator.generate_interviews()
 
         generated_interviews = interview_generator.get_generated_interviews_count()
+        application_without_interviews = interview_generator.get_applications_without_interviews()
 
         print(str(generated_interviews) + " interviews were generated")
+        print("Applications without interviews " + str(application_without_interviews))

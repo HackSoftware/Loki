@@ -29,7 +29,7 @@ class InterviewAdmin(admin.ModelAdmin):
     list_display = [
         'date',
         'start_time',
-        'interviewer_time_slot',
+        'interviewer',
         'application',
     ]
 
