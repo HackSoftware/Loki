@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from loki.applications.models import Application
 
 from ..models import InterviewerFreeTime, Interview
-
+from .groups_generator import cycle_groups
 
 class GenerateInterviewSlots:
 
@@ -22,7 +22,8 @@ class GenerateInterviewSlots:
         return (end_delta - start_delta).seconds / 60
 
     def generate_interview_slots(self):
-        teacher_time_slots = InterviewerFreeTime.objects.all().order_by('date')
+        teacher_time_slots = cycle_groups(InterviewerFreeTime.objects.all().order_by('date'))
+        print(teacher_time_slots)
 
         for slot in teacher_time_slots:
             # Check if slots are already generated for that time_slot
