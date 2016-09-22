@@ -22,8 +22,7 @@ class GenerateInterviewSlots:
         return (end_delta - start_delta).seconds / 60
 
     def generate_interview_slots(self):
-        teacher_time_slots = cycle_groups(InterviewerFreeTime.objects.all().order_by('date'))
-        print(teacher_time_slots)
+        teacher_time_slots = InterviewerFreeTime.objects.all().order_by('date')
 
         for slot in teacher_time_slots:
             # Check if slots are already generated for that time_slot
@@ -73,7 +72,7 @@ class GenerateInterviews:
 
     def generate_interviews(self):
         applications = iter(Application.objects.without_interviews())
-        free_interview_slots = Interview.objects.get_free_slots()
+        free_interview_slots = cycle_groups(Interview.objects.get_free_slots())
         today = datetime.now()
 
         for slot in free_interview_slots:

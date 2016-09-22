@@ -4,7 +4,7 @@ from itertools import groupby, chain
 def cycle_groups_generator(ns):
    groups = []
 
-   for _, group in groupby(ns):
+   for _, group in groupby(ns, lambda x: x.interviewer):
        groups.append(list(group))
 
    while sum(len(g) for g in groups) != 0:

@@ -56,3 +56,35 @@ class InterviewGenerationTests(TestCase):
         call_command('generate_interview_slots')
         self.assertEquals(4, Interview.objects.get_free_slots().count())
         self.assertEquals(0, Application.objects.without_interviews().count())
+
+    def test_generate_interviews_for_more_interviewers(self):
+        app_info = ApplicationInfoFactory()
+        application1 = ApplicationFactory(application_info=app_info)
+        application2 = ApplicationFactory(application_info=app_info)
+        application3 = ApplicationFactory(application_info=app_info)
+        interviewer1 = InterviewerFactory()
+        interviewer2 = InterviewerFactory()
+
+        interviewer1.courses_to_interview.add(app_info)
+        interviewer2.courses_to_interview.add(app_info)
+
+        free_time1 = InterviewerFreeTime.objects.create(interviewer=interviewer1,
+                                                       date=datetime.datetime.now().date(),
+                                                       start_time='11:00',
+                                                       end_time='14:00')
+
+        free_time2 = InterviewerFreeTime.objects.create(interviewer=interviewer2,
+                                                       date=datetime.datetime.now().date(),
+                                                       start_time='12:00',
+                                                       end_time='15:00')
+
+        self.assertEquals(3, Application.objects.without_interviews().count())
+
+        call_command('generate_interview_slots')
+        self.assertEquals(9, Interview.objects.get_free_slots().count())
+        interviewer_for_app1 = Interview.objects.get(application=application1).interviewer
+        interviewer_for_app2 = Interview.objects.get(application=application2).interviewer
+        interviewer_for_app3 = Interview.objects.get(application=application3).interviewer
+        self.assertNotEqual(interviewer_for_app1, interviewer_for_app2)
+        self.assertEqual(interviewer_for_app1, interviewer_for_app3)
+        self.assertEquals(0, Application.objects.without_interviews().count())
