@@ -17,7 +17,7 @@ class Command(BaseCommand):
             interview_length, break_between_interviews)
 
         interview_slots_generator.generate_interview_slots()
-        generated_slots = interview_slots_generator.get_generated_slots()
+        interview_slots_generator.get_generated_slots()
 
         courses_to_interview = ApplicationInfo.objects.get_open_for_interview()
 

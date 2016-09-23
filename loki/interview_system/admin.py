@@ -1,14 +1,11 @@
 from django.contrib import admin
-from django.conf.urls import patterns, url
-from loki.applications.models import Application
 from .models import Interviewer, InterviewerFreeTime, Interview
-from .helpers.interviews import GenerateInterviewSlots, GenerateInterviews
 
 
 @admin.register(Interviewer)
 class InterviewerAdmin(admin.ModelAdmin):
 
-    list_display = ['interviewer',]
+    list_display = ['interviewer', ]
 
 
 @admin.register(InterviewerFreeTime)
@@ -21,7 +18,7 @@ class InterviewerFreeTimeAdmin(admin.ModelAdmin):
         'end_time',
     ]
 
-    list_filter = ['date',]
+    list_filter = ['date', ]
 
     def has_add_permission(self, request):
         return True
@@ -34,6 +31,7 @@ class InterviewerFreeTimeAdmin(admin.ModelAdmin):
 
     def has_module_permission(self, request):
         return True
+
 
 @admin.register(Interview)
 class InterviewAdmin(admin.ModelAdmin):

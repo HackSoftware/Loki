@@ -452,7 +452,7 @@ class CourseDescriptionFactory(factory.DjangoModelFactory):
 
     course = factory.SubFactory(CourseFactory)
     custom_logo = factory.django.ImageField()
-    url = factory.LazyAttribute(lambda _: faker.url())
+    url = factory.LazyAttribute(lambda _: faker.slug())
     video_image = factory.django.ImageField()
     blog_article = faker.text(max_nb_chars=255)
 

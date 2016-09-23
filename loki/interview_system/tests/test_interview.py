@@ -19,10 +19,10 @@ class InterviewGenerationTests(TestCase):
 
         interviewer.courses_to_interview.add(app_info)
 
-        free_time = InterviewerFreeTime.objects.create(interviewer=interviewer,
-                                                       date=datetime.datetime.now().date(),
-                                                       start_time='11:00',
-                                                       end_time='14:00')
+        InterviewerFreeTime.objects.create(interviewer=interviewer,
+                                           date=datetime.datetime.now().date(),
+                                           start_time='11:00',
+                                           end_time='14:00')
 
         self.assertEqual(0, Interview.objects.count())
         self.assertFalse(application.has_interview_date)
@@ -33,7 +33,6 @@ class InterviewGenerationTests(TestCase):
         self.assertEqual(1, Interview.objects.filter(application__isnull=False).count())
         self.assertEquals(0, Application.objects.without_interviews().count())
 
-
     def test_02_interviews_are_generated_correctly_if_new_application_is_added_after_generation(self):
         app_info = ApplicationInfoFactory()
         ApplicationFactory(application_info=app_info)
@@ -41,18 +40,17 @@ class InterviewGenerationTests(TestCase):
 
         interviewer.courses_to_interview.add(app_info)
 
-        free_time = InterviewerFreeTime.objects.create(interviewer=interviewer,
-                                                       date=datetime.datetime.now().date(),
-                                                       start_time='11:00',
-                                                       end_time='14:00')
+        InterviewerFreeTime.objects.create(interviewer=interviewer,
+                                           date=datetime.datetime.now().date(),
+                                           start_time='11:00',
+                                           end_time='14:00')
 
         self.assertEquals(1, Application.objects.without_interviews().count())
         call_command('generate_interview_slots')
         self.assertEquals(5, Interview.objects.get_free_slots().count())
         self.assertEquals(0, Application.objects.without_interviews().count())
 
-
-        application = ApplicationFactory(application_info=app_info)
+        ApplicationFactory(application_info=app_info)
         self.assertEquals(1, Application.objects.without_interviews().count())
 
         call_command('generate_interview_slots')
@@ -70,15 +68,15 @@ class InterviewGenerationTests(TestCase):
         interviewer1.courses_to_interview.add(app_info)
         interviewer2.courses_to_interview.add(app_info)
 
-        free_time1 = InterviewerFreeTime.objects.create(interviewer=interviewer1,
-                                                       date=datetime.datetime.now().date(),
-                                                       start_time='11:00',
-                                                       end_time='14:00')
+        InterviewerFreeTime.objects.create(interviewer=interviewer1,
+                                           date=datetime.datetime.now().date(),
+                                           start_time='11:00',
+                                           end_time='14:00')
 
-        free_time2 = InterviewerFreeTime.objects.create(interviewer=interviewer2,
-                                                       date=datetime.datetime.now().date(),
-                                                       start_time='12:00',
-                                                       end_time='15:00')
+        InterviewerFreeTime.objects.create(interviewer=interviewer2,
+                                           date=datetime.datetime.now().date(),
+                                           start_time='12:00',
+                                           end_time='15:00')
 
         self.assertEquals(3, Application.objects.without_interviews().count())
 
@@ -112,19 +110,18 @@ class InterviewGenerationTests(TestCase):
         interviewer2.courses_to_interview.add(app_info2)
         interviewer3.courses_to_interview.add(app_info1)
 
-        free_time1 = InterviewerFreeTime.objects.create(interviewer=interviewer1,
-                                                       date=datetime.datetime.now().date(),
-                                                       start_time='11:00',
-                                                       end_time='14:00')
-
-        free_time2 = InterviewerFreeTime.objects.create(interviewer=interviewer2,
-                                                       date=datetime.datetime.now().date(),
-                                                       start_time='12:00',
-                                                       end_time='15:00')
-        free_time2 = InterviewerFreeTime.objects.create(interviewer=interviewer3,
-                                                       date=datetime.datetime.now().date(),
-                                                       start_time='13:00',
-                                                       end_time='15:00')
+        InterviewerFreeTime.objects.create(interviewer=interviewer1,
+                                           date=datetime.datetime.now().date(),
+                                           start_time='11:00',
+                                           end_time='14:00')
+        InterviewerFreeTime.objects.create(interviewer=interviewer2,
+                                           date=datetime.datetime.now().date(),
+                                           start_time='12:00',
+                                           end_time='15:00')
+        InterviewerFreeTime.objects.create(interviewer=interviewer3,
+                                           date=datetime.datetime.now().date(),
+                                           start_time='13:00',
+                                           end_time='15:00')
 
         self.assertEquals(5, Application.objects.without_interviews().count())
 

@@ -5,6 +5,7 @@ from loki.applications.models import ApplicationInfo, Application
 
 from .query import InterviewQuerySet
 
+
 class Interviewer(BaseUser):
     courses_to_interview = models.ManyToManyField(ApplicationInfo)
     interviews = models.ManyToManyField(Application, through='Interview')
@@ -22,6 +23,7 @@ class InterviewerFreeTime(models.Model):
 
     def has_generated_slots(self):
         return self.interview_set.exists()
+
 
 class Interview(models.Model):
     interviewer = models.ForeignKey(Interviewer)

@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
-from loki.applications.models import Application, ApplicationInfo
-
-from ..models import InterviewerFreeTime, Interview, Interviewer
+from loki.applications.models import Application
+from ..models import InterviewerFreeTime, Interview
 from .groups_generator import cycle_groups
+
 
 class GenerateInterviewSlots:
 
