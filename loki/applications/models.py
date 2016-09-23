@@ -40,6 +40,7 @@ class ApplicationInfo(models.Model):
         return self.start_interview_date <= timezone.now() and \
                self.end_interview_date >= timezone.now()
 
+
 class ApplicationProblem(models.Model):
     application_info = models.ManyToManyField(ApplicationInfo)
     name = models.CharField(max_length=255)
