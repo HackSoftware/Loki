@@ -13,7 +13,7 @@ from .query import ApplicationQuerySet
 class ApplicationInfo(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    course = models .OneToOneField(CourseDescription)
+    course = models.OneToOneField(CourseDescription)
 
     description = RichTextField(
         blank=True,
