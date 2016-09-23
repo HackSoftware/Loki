@@ -13,7 +13,7 @@ from .query import ApplicationQuerySet
 class ApplicationInfo(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    course = models .OneToOneField(CourseDescription)
+    course = models.OneToOneField(CourseDescription)
     start_interview_date = models.DateTimeField(blank=False, null=True)
     end_interview_date = models.DateTimeField(blank=False, null=True)
 

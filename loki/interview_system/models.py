@@ -32,6 +32,25 @@ class Interview(models.Model):
     interviewer_time_slot = models.ForeignKey(InterviewerFreeTime, default=False)
     buffer_time = models.BooleanField(default=False)
 
+    interviewer_comment = models.TextField(null=True, blank=True,
+        help_text='Коментар от интервюиращия')
+    possible_ratings = [(i, i) for i in range(11)]
+    code_skills_rating = models.IntegerField(
+        default=0,
+        choices=possible_ratings,
+        help_text='Оценка върху уменията на кандидата да пише'
+        ' код и знанията му върху базови алгоритми')
+    code_design_rating = models.IntegerField(
+        default=0,
+        choices=possible_ratings,
+        help_text='Оценка върху уменията на кандидата да "съставя'
+        ' програми" и да разбива нещата по парчета + базово OOP')
+    fit_attitude_rating = models.IntegerField(
+        default=0,
+        choices=possible_ratings,
+        help_text='Оценка на интервюиращия в зависимост от'
+        ' усета му за човека (става ли за курса)')
+
     has_confirmed = models.BooleanField(default=False)
     has_received_email = models.BooleanField(default=False)
 
