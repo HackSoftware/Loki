@@ -13,7 +13,9 @@ from .query import ApplicationQuerySet
 class ApplicationInfo(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    course = models.OneToOneField(CourseDescription)
+    course = models .OneToOneField(CourseDescription)
+    start_interview_date = models.DateTimeField(blank=False, null=True)
+    end_interview_date = models.DateTimeField(blank=False, null=True)
 
     description = RichTextField(
         blank=True,
@@ -33,6 +35,10 @@ class ApplicationInfo(models.Model):
 
     def apply_is_active(self):
         return self.end_date >= timezone.now()
+
+    def interview_is_active(self):
+        return self.start_interview_date <= timezone.now() and \
+               self.end_interview_date >= timezone.now()
 
 
 class ApplicationProblem(models.Model):

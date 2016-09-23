@@ -11,3 +11,6 @@ class ApplicationInfoManager(models.Manager):
 
     def get_closed_for_apply(self):
         return [info for info in self.all() if not info.apply_is_active()]
+
+    def get_open_for_interview(self):
+        return [info for info in self.all() if info.interview_is_active()]
