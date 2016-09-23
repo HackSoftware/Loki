@@ -40,12 +40,14 @@ class GenerateInterviewSlots:
                     Interview.objects.create(
                         interviewer=slot.interviewer,
                         interviewer_time_slot=slot,
+                        date=slot.date,
                         start_time=interview_start_time,
                         buffer_time=True)
                 else:
                     Interview.objects.create(
                         interviewer=slot.interviewer,
                         interviewer_time_slot=slot,
+                        date=slot.date,
                         start_time=interview_start_time,
                         buffer_time=False)
 
@@ -83,6 +85,9 @@ class GenerateInterviews:
                 application = next(applications)
             except StopIteration:
                 break
+
+            interviewer_courses = slot.interviewer.courses_to_interview
+            course = application.course
 
             slot.application = application
             slot.save()

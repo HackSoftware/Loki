@@ -3,7 +3,9 @@ import datetime
 from django.core.management import call_command
 
 from test_plus.test import TestCase
-from loki.seed.factories import InterviewerFactory, ApplicationInfoFactory, ApplicationFactory
+from loki.seed.factories import (InterviewerFactory, ApplicationInfoFactory,
+                                 ApplicationFactory, CourseFactory,
+                                 CourseDescriptionFactory)
 from loki.applications.models import Application
 
 from ..models import InterviewerFreeTime, Interview
@@ -88,3 +90,43 @@ class InterviewGenerationTests(TestCase):
         self.assertNotEqual(interviewer_for_app1, interviewer_for_app2)
         self.assertEqual(interviewer_for_app1, interviewer_for_app3)
         self.assertEquals(0, Application.objects.without_interviews().count())
+
+    def test_generate_interviews_for_different_courses_with_different_interviewers(self):
+        course1 = CourseFactory()
+        course2 = CourseFactory()
+        cd1 = CourseDescriptionFactory(course=course1)
+        cd2 = CourseDescriptionFactory(course=course2)
+        app_info1 = ApplicationInfoFactory(course=cd1)
+        app_info2 = ApplicationInfoFactory(course=cd2)
+
+        application1 = ApplicationFactory(application_info=app_info1)
+        application2 = ApplicationFactory(application_info=app_info2)
+        application3 = ApplicationFactory(application_info=app_info1)
+        application4 = ApplicationFactory(application_info=app_info2)
+        application5 = ApplicationFactory(application_info=app_info1)
+        interviewer1 = InterviewerFactory()
+        interviewer2 = InterviewerFactory()
+        interviewer3 = InterviewerFactory()
+
+        interviewer1.courses_to_interview.add(app_info1)
+        interviewer2.courses_to_interview.add(app_info2)
+        interviewer3.courses_to_interview.add(app_info1)
+
+        free_time1 = InterviewerFreeTime.objects.create(interviewer=interviewer1,
+                                                       date=datetime.datetime.now().date(),
+                                                       start_time='11:00',
+                                                       end_time='14:00')
+
+        free_time2 = InterviewerFreeTime.objects.create(interviewer=interviewer2,
+                                                       date=datetime.datetime.now().date(),
+                                                       start_time='12:00',
+                                                       end_time='15:00')
+        free_time2 = InterviewerFreeTime.objects.create(interviewer=interviewer3,
+                                                       date=datetime.datetime.now().date(),
+                                                       start_time='13:00',
+                                                       end_time='15:00')
+
+        self.assertEquals(5, Application.objects.without_interviews().count())
+
+        call_command('generate_interview_slots')
+        self.assertEquals(9, Interview.objects.get_free_slots().count())
