@@ -96,8 +96,7 @@ class InterviewGenerationTests(TestCase):
         course2 = CourseFactory()
         cd1 = CourseDescriptionFactory(course=course1)
         cd2 = CourseDescriptionFactory(course=course2)
-        app_info1 = ApplicationInfoFactory(course=cd1,
-                                           start_interview_date=datetime.datetime.now())
+        app_info1 = ApplicationInfoFactory(course=cd1)
         app_info2 = ApplicationInfoFactory(course=cd2)
 
         application1 = ApplicationFactory(application_info=app_info1)
@@ -140,9 +139,12 @@ class InterviewGenerationTests(TestCase):
 
         self.assertEqual(interviewer1, interviewer_for_app1)
         self.assertEqual(interviewer1, interviewer_for_app5)
-        self.assertTrue(app_info1 in interviewer_for_app1.courses_to_interview.all())
-
         self.assertEqual(interviewer2, interviewer_for_app2)
         self.assertEqual(interviewer2, interviewer_for_app4)
-
         self.assertEqual(interviewer3, interviewer_for_app3)
+
+        self.assertTrue(application1 in interviewer1.interviews.all())
+        self.assertTrue(application5 in interviewer1.interviews.all())
+        self.assertTrue(application2 in interviewer2.interviews.all())
+        self.assertTrue(application4 in interviewer2.interviews.all())
+        self.assertTrue(application3 in interviewer3.interviews.all())
