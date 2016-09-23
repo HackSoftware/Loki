@@ -12,7 +12,7 @@ from ..models import InterviewerFreeTime, Interview
 
 
 class InterviewGenerationTests(TestCase):
-    def test_interviews_are_generated_correctly(self):
+    def test_01_interviews_are_generated_correctly(self):
         app_info = ApplicationInfoFactory()
         application = ApplicationFactory(application_info=app_info)
         interviewer = InterviewerFactory()
@@ -34,7 +34,7 @@ class InterviewGenerationTests(TestCase):
         self.assertEquals(0, Application.objects.without_interviews().count())
 
 
-    def test_interviews_are_generated_correctly_if_new_application_is_added_after_generation(self):
+    def test_02_interviews_are_generated_correctly_if_new_application_is_added_after_generation(self):
         app_info = ApplicationInfoFactory()
         ApplicationFactory(application_info=app_info)
         interviewer = InterviewerFactory()
@@ -59,7 +59,7 @@ class InterviewGenerationTests(TestCase):
         self.assertEquals(4, Interview.objects.get_free_slots().count())
         self.assertEquals(0, Application.objects.without_interviews().count())
 
-    def test_generate_interviews_for_more_interviewers(self):
+    def test_03_generate_interviews_for_more_interviewers(self):
         app_info = ApplicationInfoFactory()
         application1 = ApplicationFactory(application_info=app_info)
         application2 = ApplicationFactory(application_info=app_info)
@@ -91,12 +91,13 @@ class InterviewGenerationTests(TestCase):
         self.assertEqual(interviewer_for_app1, interviewer_for_app3)
         self.assertEquals(0, Application.objects.without_interviews().count())
 
-    def test_generate_interviews_for_different_courses_with_different_interviewers(self):
+    def test_04_generate_interviews_for_different_courses_with_different_interviewers(self):
         course1 = CourseFactory()
         course2 = CourseFactory()
         cd1 = CourseDescriptionFactory(course=course1)
         cd2 = CourseDescriptionFactory(course=course2)
-        app_info1 = ApplicationInfoFactory(course=cd1)
+        app_info1 = ApplicationInfoFactory(course=cd1,
+                                           start_interview_date=datetime.datetime.now())
         app_info2 = ApplicationInfoFactory(course=cd2)
 
         application1 = ApplicationFactory(application_info=app_info1)
@@ -129,4 +130,19 @@ class InterviewGenerationTests(TestCase):
         self.assertEquals(5, Application.objects.without_interviews().count())
 
         call_command('generate_interview_slots')
-        self.assertEquals(9, Interview.objects.get_free_slots().count())
+        self.assertEquals(11, Interview.objects.get_free_slots().count())
+
+        interviewer_for_app1 = Interview.objects.get(application=application1).interviewer
+        interviewer_for_app2 = Interview.objects.get(application=application2).interviewer
+        interviewer_for_app3 = Interview.objects.get(application=application3).interviewer
+        interviewer_for_app4 = Interview.objects.get(application=application4).interviewer
+        interviewer_for_app5 = Interview.objects.get(application=application5).interviewer
+
+        self.assertEqual(interviewer1, interviewer_for_app1)
+        self.assertEqual(interviewer1, interviewer_for_app5)
+        self.assertTrue(app_info1 in interviewer_for_app1.courses_to_interview.all())
+
+        self.assertEqual(interviewer2, interviewer_for_app2)
+        self.assertEqual(interviewer2, interviewer_for_app4)
+
+        self.assertEqual(interviewer3, interviewer_for_app3)

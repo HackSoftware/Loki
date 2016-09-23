@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
-from loki.applications.models import Application
+from loki.applications.models import Application, ApplicationInfo
 
-from ..models import InterviewerFreeTime, Interview
+from ..models import InterviewerFreeTime, Interview, Interviewer
 from .groups_generator import cycle_groups
 
 class GenerateInterviewSlots:
@@ -66,15 +66,20 @@ class GenerateInterviewSlots:
 
 class GenerateInterviews:
 
-    def __init__(self):
+    def __init__(self, application_info):
         self.__generated_interviews = 0
+        self.application_info = application_info
 
     def __inc_generated_interviews(self):
         self.__generated_interviews += 1
 
     def generate_interviews(self):
-        applications = iter(Application.objects.without_interviews())
-        free_interview_slots = cycle_groups(Interview.objects.get_free_slots())
+        applications = iter(Application.objects.without_interviews().filter(
+                                                application_info=self.application_info))
+
+        free_interview_slots = cycle_groups(Interview.objects.get_free_slots().filter(
+                               interviewer__courses_to_interview__in=[self.application_info]))
+
         today = datetime.now()
 
         for slot in free_interview_slots:
@@ -85,9 +90,6 @@ class GenerateInterviews:
                 application = next(applications)
             except StopIteration:
                 break
-
-            interviewer_courses = slot.interviewer.courses_to_interview
-            course = application.course
 
             slot.application = application
             slot.save()

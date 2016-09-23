@@ -452,7 +452,7 @@ class CourseDescriptionFactory(factory.DjangoModelFactory):
 
     course = factory.SubFactory(CourseFactory)
     custom_logo = factory.django.ImageField()
-    url = faker.slug()
+    url = factory.LazyAttribute(lambda _: faker.url())
     video_image = factory.django.ImageField()
     blog_article = faker.text(max_nb_chars=255)
 
@@ -483,6 +483,8 @@ class ApplicationInfoFactory(factory.DjangoModelFactory):
     course = factory.SubFactory(CourseDescriptionFactory)
     start_date = timezone.now()
     end_date = timezone.now() + timedelta(days=1)
+    start_interview_date = timezone.now()
+    end_interview_date = timezone.now() + timedelta(days=3)
 
 
 class ApplicationProblemFactory(factory.DjangoModelFactory):
