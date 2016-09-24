@@ -41,19 +41,20 @@ class Interview(models.Model):
         default=0,
         choices=possible_ratings,
         help_text='Оценка върху уменията на кандидата да пише'
-        ' код и знанията му върху базови алгоритми')
+        ' код и върху знанията му за базови алгоритми')
     code_design_rating = models.IntegerField(
         default=0,
         choices=possible_ratings,
         help_text='Оценка върху уменията на кандидата да "съставя'
-        ' програми" и да разбива нещата по парчета + базово OOP')
+        ' програми", да разбива нещата на парчета + базово OOP')
     fit_attitude_rating = models.IntegerField(
         default=0,
         choices=possible_ratings,
         help_text='Оценка на интервюиращия в зависимост от'
-        ' усета му за човека (става ли за курса)')
+        ' усета му за човека (подходящ ли е за курса)')
 
     has_confirmed = models.BooleanField(default=False)
     has_received_email = models.BooleanField(default=False)
+    is_accepted = models.BooleanField(default=False)
 
     objects = InterviewQuerySet.as_manager()
