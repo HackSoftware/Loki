@@ -7,8 +7,15 @@
     <div class="container-fluid">
 
       <div class="choose-interview-container col-md-8 col-md-offset-2">
-        <h3> Кандидатура на {{ user }}, интервю на {{ interview.date }} от {{ interview.start_time }}  </h3><br>
-          <button type="submit" value="Submit">Submit</button>
+        {% if interview.has_confirmed %}
+          <h3> Вече си потвърдил интервю на {{ interview.date }} от {{ interview.start_time }} ! :) </h3><br>
+        {% else %}
+          <h3> Потвърди своето интервю на {{ interview.date }} от {{ interview.start_time }}: </h3><br>
+            <form action="" method="post">
+              {% csrf_token %}
+              <button id="action-buttons" type="submit">Потвърди интервю !</button>
+            </form>
+        {% endif %}
       </div>
     </div>
 
