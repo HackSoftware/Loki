@@ -7,6 +7,5 @@ from loki.applications.models import Application
 
 @receiver(post_delete, sender=Interview)
 def delete_has_interview_date_in_application(sender, instance, **kwargs):
-    print(instance.application)
     instance.application.has_interview_date = False
     instance.application.save()
