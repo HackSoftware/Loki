@@ -248,3 +248,5 @@ EMAIL_TEMPLATES = {
     key: f(default="")
     for key, f in templates.items()
 }
+
+LOGIN_URL = 'website:login'
