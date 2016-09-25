@@ -6,14 +6,15 @@
   <div class="row">
     <div class="container-fluid">
 
-      <div class="choose-interview-container col-md-8 col-md-offset-2">
+      <div class="confirm-interview-container col-md-8 col-md-offset-2">
+        <h2 id="user-name">Здравей, {{ user.first_name }}</h2>
         {% if interview.has_confirmed %}
-          <h3> Вече си потвърдил интервю на {{ interview.date }} от {{ interview.start_time }} ! :) </h3><br>
+          <h3> Вече си потвърдил интервю на <b>{{ interview.date }}</b> от <b>{{ interview.start_time }}</b>! :) </h3><br>
         {% else %}
-          <h3> Потвърди своето интервю на {{ interview.date }} от {{ interview.start_time }}: </h3><br>
+          <h3> Потвърди своето интервю на <b>{{ interview.date }}</b> от <b>{{ interview.start_time }}</b> </h3><br>
             <form action="" method="post">
               {% csrf_token %}
-              <button id="action-buttons" type="submit">Потвърди интервю !</button>
+              <button id="confirm_interview-btn" class="btn btn-warning" type="submit">Потвърди интервю!</button>
             </form>
         {% endif %}
       </div>
