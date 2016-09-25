@@ -8,3 +8,6 @@ class IndexView(TemplateView):
 
 class ChooseInterviewView(TemplateView):
     template_name = 'choose_interview.html'
+
+class ConfirmInterviewView(TemplateView):
+    template_name = 'confirm_interview.html'
