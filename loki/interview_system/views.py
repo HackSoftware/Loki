@@ -20,12 +20,23 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
 class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'confirm_interview.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        self.application = Application.objects.filter(user=self.request.user).filter(
+                                                 has_interview_date=True).first()
+        self.interview = Interview.objects.get(application=self.application)
+
+        return super().dispatch(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        user = self.request.user
-        print(user)
-        context['application'] = Application.objects.filter(user=user).filter(has_interview_date=True).first()
-        context['interview'] = Interview.objects.get(application=context['application'])
+        context['application'] = self.application
+        context['interview'] = self.interview
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        self.interview.has_confirmed = True
+        self.interview.save()
+
+        return super().get(request, *args, **kwargs)
