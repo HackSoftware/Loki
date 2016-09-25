@@ -12,8 +12,8 @@ from loki.applications.models import Application
 from ..models import InterviewerFreeTime, Interview
 
 
-class InterviewGenerationTests(TestCase):
-    def test_01_interviews_are_generated_correctly(self):
+class SendEmailForInterviewsTests(TestCase):
+    def test_01_send_email_for_interview_correctly(self):
         app_info = ApplicationInfoFactory()
         application = ApplicationFactory(application_info=app_info)
         interviewer = InterviewerFactory()
@@ -32,7 +32,7 @@ class InterviewGenerationTests(TestCase):
         call_command('generate_interview_slots')
 
         application.refresh_from_db()
-        
+
         self.assertEquals(0, Application.objects.without_interviews().count())
         self.assertTrue(application.has_interview_date)
 
