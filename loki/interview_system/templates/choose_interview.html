@@ -7,9 +7,10 @@
     <div class="container-fluid">
 
       <div class="choose-interview-container col-md-8 col-md-offset-2">
-        <h3>Изберете нов час за вашето интервю</h3><br>
+        <h3>Здравей, {{ user.first_name }}</h3>
+        <h4>Моля, изберете нов час за вашето интервю.</h4><br>
         <div class="table-responsive">
-          <table id="interview-slots-table" class="table table-hover">
+          <table id="interview-slots-table" class="table table-hover table-striped " cellspacing="0">
             <thead>
               <tr>
                 <th>Дата</th>
@@ -18,7 +19,13 @@
               </tr>
             </thead>
             <tbody>
-
+              {% for interview in interviews %}
+              <tr class="interview-selected">
+                <td>{{ interview.date }}</td>
+                <td>{{ interview.start_time }}</td>
+                <td><button id="change-interview" type="submit" class="btn btn-warning" >Избери</button></td>
+              </tr>
+              {% endfor %}
             </tbody>
           </table>
         </div>
@@ -28,6 +35,8 @@
     </div>
   </div>
 </div>
+
+
 {% endautoescape %}
 
 {% endblock %}

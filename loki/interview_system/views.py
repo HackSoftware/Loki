@@ -9,6 +9,13 @@ from .models import Interview
 class ChooseInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'choose_interview.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['interviews'] = Interview.objects.filter(application__isnull=True)
+
+        return context
+
 
 class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'confirm_interview.html'
