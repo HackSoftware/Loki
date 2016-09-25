@@ -6,5 +6,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 class ChooseInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'choose_interview.html'
 
+
 class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'confirm_interview.html'
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+
+        return super().get(request, *args, **kwargs)
