@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.http import HttpResponseRedirect
 from loki.applications.models import Application
 from .models import Interview
 # Create your views here.
@@ -8,6 +8,21 @@ from .models import Interview
 
 class ChooseInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'choose_interview.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.application = Application.objects.filter(user=self.request.user)
+        self.interview = Interview.objects.filter(has_confirmed=True).filter(application=self.application)
+        if self.interview:
+            return HttpResponseRedirect('confirm')
+        else:
+            return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        context['interviews'] = Interview.objects.filter(application__isnull=True)
+
+        return context
 
 
 class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
