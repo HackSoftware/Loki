@@ -76,8 +76,9 @@ class GenerateInterviews:
         applications = iter(Application.objects.without_interviews().filter(
                                                 application_info=self.application_info))
 
-        free_interview_slots = cycle_groups(Interview.objects.get_free_slots().filter(
-                               interviewer__courses_to_interview__in=[self.application_info]))
+        interviews = Interview.objects.get_free_slots().filter(
+                               interviewer__courses_to_interview__in=[self.application_info])
+        free_interview_slots = cycle_groups(interviews, key=lambda x: x.interviewer)
 
         today = datetime.now()
 

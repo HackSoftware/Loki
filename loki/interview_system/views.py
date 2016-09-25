@@ -1,5 +1,8 @@
 from django.views.generic import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+from loki.applications.models import Application
+from .models import Interview
 # Create your views here.
 
 
@@ -10,7 +13,12 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
 class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'confirm_interview.html'
 
-    def post(self, request, *args, **kwargs):
-        user = request.user
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-        return super().get(request, *args, **kwargs)
+        user = self.request.user
+        print(user)
+        context['application'] = Application.objects.filter(user=user).filter(has_interview_date=True).first()
+        context['interview'] = Interview.objects.get(application=context['application'])
+
+        return context

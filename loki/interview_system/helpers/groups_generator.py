@@ -1,11 +1,11 @@
 from itertools import groupby, chain
 
 
-def cycle_groups_generator(ns):
+def cycle_groups_generator(ns, key=None):
 
     groups = []
 
-    for _, group in groupby(ns, lambda x: x.interviewer):
+    for _, group in groupby(ns, key=key):
         groups.append(list(group))
 
     while sum(len(g) for g in groups) != 0:
@@ -19,5 +19,5 @@ def cycle_groups_generator(ns):
         yield current_result
 
 
-def cycle_groups(ns):
-    return list(chain.from_iterable(cycle_groups_generator(ns)))
+def cycle_groups(ns, key=None):
+    return list(chain.from_iterable(cycle_groups_generator(ns, key=key)))

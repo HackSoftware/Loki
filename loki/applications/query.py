@@ -11,6 +11,3 @@ class ApplicationInfoQuerySet(models.QuerySet):
     def with_interview_dates(self):
         return self.filter(start_interview_date__isnull=False).filter(
                            end_interview_date__isnull=False)
-
-    def with_end_interview_date(self):
-        return self.filter(end_interview_date__isnull=False)
