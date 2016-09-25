@@ -577,4 +577,13 @@ body {
 #interview-slots-table tr:hover {
   background-color: #ddd; }
 
+.confirm-interview-container {
+  margin-top: 50px; }
+  .confirm-interview-container #user-name {
+    margin-left: 30%; }
+  .confirm-interview-container #confirm_interview-btn {
+    margin-left: 30%;
+    padding: 15px;
+    font-size: 16px; }
+
 /*# sourceMappingURL=website.css.map */

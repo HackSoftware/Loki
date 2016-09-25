@@ -807,7 +807,7 @@ $TabBorder: #C5C4C4;
     }
 }
 
-#interview-slots-table{
+#interview-slots-table {
   th, td {
     padding: 8px;
     text-align: left;
@@ -818,5 +818,18 @@ $TabBorder: #C5C4C4;
   }
   tr:hover {
     background-color: #ddd;
+  }
+}
+
+.confirm-interview-container {
+  margin-top:50px;
+
+  #user-name {
+    margin-left: 30%;
+  }
+  #confirm_interview-btn {
+    margin-left: 30%;
+    padding: 15px;
+    font-size: 16px;
   }
 }
