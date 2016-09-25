@@ -10,7 +10,8 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'choose_interview.html'
 
     def dispatch(self, request, *args, **kwargs):
-        self.interview = Interview.objects.get(has_confirmed=True)
+        self.application = Application.objects.filter(user=self.request.user)
+        self.interview = Interview.objects.filter(has_confirmed=True).filter(application=self.application)
         if self.interview:
             return HttpResponseRedirect('confirm')
         else:
