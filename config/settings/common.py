@@ -179,7 +179,7 @@ POLLING_SLEEP_TIME = env.int('POLLING_SLEEP_TIME', default='1')  # seconds
 
 CELERYBEAT_SCHEDULE = {
     'retest-solutions-on-test-change': {
-        'task': 'hack_training.dashboard.tasks.check_for_retests',
+        'task': 'loki.education.tasks.check_for_retests',
         'schedule': timedelta(seconds=60),
     }
 }
@@ -241,6 +241,7 @@ templates = {
     "password_reset": lambda **env_kwargs: env('PASSWORD_RESET_TEMPLATE_ID', **env_kwargs),
     "application_completed_default": lambda **env_kwargs: env('APPLICATION_COMPLETED_DEFAULT', **env_kwargs),
     "hackfmi_team_deleted": lambda **env_kwargs: env('HACKFMI_TEAM_DELETED_TEMPLATE_ID', **env_kwargs),
+    "interview_confirmation": lambda **env_kwargs: None
 }
 
 # Get all email templates from the env with default value ""

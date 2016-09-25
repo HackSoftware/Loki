@@ -9,7 +9,6 @@ from celery import shared_task
 
 @shared_task(bind=True, max_retries=settings.CELERY_TASK_MAX_RETRIES)
 def send_mail(self, recipient, template_id, context, **kwargs):
-
     # Subject and body can't be empty. Empty string or space return index out of range error
     message = EmailMultiAlternatives(
         subject="-",
