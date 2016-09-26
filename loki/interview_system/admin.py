@@ -41,6 +41,8 @@ class InterviewAdmin(admin.ModelAdmin):
         'interviewer',
         'start_time',
         'application',
+        'uuid',
+        'has_confirmed'
     ]
 
     list_filter = ['date']

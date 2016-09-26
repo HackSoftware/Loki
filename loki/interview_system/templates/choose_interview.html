@@ -23,7 +23,11 @@
               <tr class="interview-selected">
                 <td>{{ interview.date }}</td>
                 <td>{{ interview.start_time }}</td>
-                <td><button id="change-interview" type="submit" class="btn btn-warning" >Избери</button></td>
+                <td>
+                  <form class="change-interview-form" action="{% url 'interview_system:choose_interview' application interview.uuid %}" method="POST">
+                    {% csrf_token %}
+                    <button id="change-interview" type="submit" class="btn btn-warning" >Избери</button></td>
+                  </form>
               </tr>
               {% endfor %}
             </tbody>

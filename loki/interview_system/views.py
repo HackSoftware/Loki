@@ -10,35 +10,50 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'choose_interview.html'
 
     def dispatch(self, request, *args, **kwargs):
-        self.application = Application.objects.filter(user=self.request.user)
-        self.interview = Interview.objects.filter(has_confirmed=True).filter(application=self.application)
-        if self.interview:
-            return HttpResponseRedirect('confirm')
-        else:
-            return super().dispatch(request, *args, **kwargs)
+
+        application_id = kwargs.get('application')
+        self.application = Application.objects.filter(id=application_id).first()
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        uuid = kwargs.get('interview_token')
+        self.interview = Interview.objects.filter(uuid=uuid).first()
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        context['interviews'] = Interview.objects.filter(application__isnull=True)
+        context['interviews'] = Interview.objects.filter(
+                                application__isnull=True).order_by('date', 'start_time')
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        uuid = kwargs.get('interview_token')
+        new_interview = Interview.objects.filter(uuid=uuid).first()
+        old_interview = Interview.objects.filter(application=self.application).first()
+        old_interview.application = None
+        old_interview.save()
+        new_interview.application = self.application
+        new_interview.save()
+
+
+        return super().get(request, *args, **kwargs)
 
 
 class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'confirm_interview.html'
 
+
     def dispatch(self, request, *args, **kwargs):
-        self.application = Application.objects.filter(user=self.request.user).filter(
-                                                 has_interview_date=True).first()
-        self.interview = Interview.objects.get(application=self.application)
+
+        uuid = kwargs.get('interview_token')
+        self.interview = Interview.objects.filter(uuid=uuid).first()
 
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        context['application'] = self.application
         context['interview'] = self.interview
 
         return context

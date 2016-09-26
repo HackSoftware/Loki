@@ -7,6 +7,8 @@ from .views import ChooseInterviewView, ConfirmInterviewView
 
 
 urlpatterns = [
-    url(r'^choose_interview$', ChooseInterviewView.as_view(), name='choose_interview'),
-    url(r'^confirm$', ConfirmInterviewView.as_view(), name='confirm_interview')
+    url(r'^choose/(?P<application>[0-9]+)/(?P<interview_token>[-\w]+)/$',
+                 ChooseInterviewView.as_view(), name='choose_interview'),
+    url(r'^confirm/(?P<application>[0-9]+)/(?P<interview_token>[-\w]+)/$',
+                ConfirmInterviewView.as_view(), name='confirm_interview')
 ]

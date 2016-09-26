@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 
 from loki.base_app.models import BaseUser
@@ -33,6 +34,7 @@ class Interview(models.Model):
     end_time = models.TimeField(blank=False, null=True)
     interviewer_time_slot = models.ForeignKey(InterviewerFreeTime, default=False)
     buffer_time = models.BooleanField(default=False)
+    uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
     interviewer_comment = models.TextField(null=True, blank=True,
         help_text='Коментар от интервюиращия')

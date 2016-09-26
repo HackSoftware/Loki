@@ -14,6 +14,17 @@ $(document).ready(function(){
       $("#div_id_full_image input[type='file']").click()
     })
 
+    $(".change-interview-form").on("submit", function(event) {
+      if(!$(this).data('submitted')) {
+        event.preventDefault();
+        if(confirm('Ще смениш лиииии?')) {
+          $(this).data('submitted', true);
+          $(this).submit();
+        }
+      }
+
+    })
+
     $("#div_id_full_image input[type='file']").change(function(){
       var form = $(this).closest("form");
       form.find("[type='submit']").removeClass("btn-warning").addClass("btn-success").html("Saving...");
