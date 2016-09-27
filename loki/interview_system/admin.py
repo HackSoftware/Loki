@@ -38,14 +38,14 @@ class InterviewAdmin(admin.ModelAdmin):
 
     list_display = [
         'date',
-        'interviewer',
-        'start_time',
-        'application',
         'uuid',
+        'start_time',
+        'interviewer',
+        'application',
         'has_confirmed'
     ]
 
-    list_filter = ['date']
+    list_filter = ['date', 'start_time']
 
     def has_change_permission(self, request, obj=None):
         return True

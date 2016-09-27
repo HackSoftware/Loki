@@ -1,4 +1,5 @@
 from django.views.generic import TemplateView
+from django.http import Http404
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from loki.applications.models import Application
@@ -48,7 +49,15 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
     def dispatch(self, request, *args, **kwargs):
 
         uuid = kwargs.get('interview_token')
+        app_id = kwargs.get('application')
         self.interview = Interview.objects.filter(uuid=uuid).first()
+        print(self.interview.application.id != app_id)
+        print(type(self.interview.application.id))
+        print(type(app_id))
+        print(self.interview.application.user != request.user)
+        if self.interview.application.user != request.user or \
+                self.interview.application.id != int(app_id):
+            raise Http404
 
         return super().dispatch(request, *args, **kwargs)
 
