@@ -14,9 +14,35 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
 
+        # user_interviews = Interview.objects.filter(application__isnull=False,
+        #                                 application__user=request.user)
+        # if user_interviews.count() == 0:
+        #     Http404
+
         application_id = kwargs.get('application')
         uuid = kwargs.get('interview_token')
         self.application = Application.objects.filter(id=application_id).first()
+
+        if self.application.user != request.user or \
+            self.application.id != int(application_id):
+            raise Http404
+            
+        # current_interview = Interview.objects.filter(uuid=uuid).first()
+        # import ipdb; ipdb.set_trace()
+        # if not Interview.objects.filter(uuid=uuid, application__isnull=False,
+        #                             application__user=request.user).first():
+        #     raise Http404
+        # if not (Interview.objects.filter(uuid=uuid, application__isnull=True) and \
+        #     Interview.objects.filter(application__isnull=False,
+        #                             application__user=request.user,
+        #                             has_confirmed=False)):
+            # raise Http404
+        # if current_interview.application is None and \
+        #     request.user Interview.objects.filter != int(application_id):
+        #     raise Http404
+        # if current_interview.application.user != request.user or \
+        #     current_interview.application.id != int(application_id):
+        #     raise Http404
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -24,7 +50,6 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
         uuid = kwargs.get('interview_token')
         application_id = kwargs.get('application')
         self.interview = Interview.objects.filter(uuid=uuid).first()
-        
         if self.interview.application is None or \
             self.interview.application.user != request.user or \
             self.interview.application.id != int(application_id):
@@ -48,6 +73,10 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
         uuid = kwargs.get('interview_token')
         application_id = kwargs.get('application')
         new_interview = Interview.objects.filter(uuid=uuid).first()
+
+        if new_interview.application is not None:
+            raise Http404
+
         old_interview = Interview.objects.filter(application=self.application).first()
         old_interview.application = None
         old_interview.save()

@@ -1,4 +1,5 @@
 import factory
+import uuid
 from django.utils import timezone
 from datetime import timedelta
 from faker import Factory
@@ -8,7 +9,7 @@ from loki.hack_fmi import models as hack_fmi_models
 from loki.education import models as education_models
 from loki.website import models as website_models
 from loki.applications import models as application_models
-from loki.interview_system.models import Interviewer
+from loki.interview_system import models as interview_models
 
 
 faker = Factory.create()
@@ -168,11 +169,6 @@ class StudentFactory(BaseUserFactory):
     mac = factory.LazyAttribute(lambda _: faker.mac_address())
     phone = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=20))
     skype = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=20))
-
-
-class InterviewerFactory(BaseUserFactory):
-    class Meta:
-        model = Interviewer
 
 
 class CourseFactory(factory.DjangoModelFactory):
@@ -515,3 +511,46 @@ class ApplicationProblemSolutionFactory(factory.DjangoModelFactory):
     application = factory.SubFactory(ApplicationFactory)
     problem = factory.SubFactory(ApplicationProblemFactory)
     solution_url = faker.url()
+
+
+class InterviewerFactory(BaseUserFactory):
+    class Meta:
+        model = interview_models.Interviewer
+
+    courses_to_interview = factory.RelatedFactory(ApplicationInfoFactory)
+    interviews = factory.RelatedFactory(ApplicationFactory)
+
+
+class InterviewerFreeTimeFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = interview_models.InterviewerFreeTime
+
+    interviewer = factory.SubFactory(InterviewerFactory)
+    date = faker.date_time()
+    start_time = timezone.now()
+    end_time = timezone.now() + timedelta(minutes=270)
+    buffer_time = faker.boolean()
+
+
+class InterviewFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = interview_models.Interview
+
+    interviewer = factory.SubFactory(InterviewerFactory)
+    application = factory.SubFactory(ApplicationFactory)
+    date = faker.date_time()
+    start_time = timezone.now()
+    end_time = timezone.now() + timedelta(minutes=30)
+    interviewer_time_slot = factory.SubFactory(InterviewerFreeTimeFactory)
+    buffer_time = faker.boolean()
+    # uuid = factory.LazyAttribute(lambda _: uuid.uuid4)
+
+    interviewer_comment = faker.text()
+
+    code_skills_rating = faker.random_number(digits=1)
+    code_design_rating = faker.random_number(digits=1)
+    fit_attitude_rating = faker.random_number(digits=1)
+
+    has_confirmed = False
+    has_received_email = False
+    is_accepted = False
