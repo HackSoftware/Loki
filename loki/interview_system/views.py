@@ -16,9 +16,9 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
 
         application_id = kwargs.get('application')
         current_interview = kwargs.get('interview_token')
-        import ipdb; ipdb.set_trace()
         if Interview.objects.get(uuid=current_interview).has_confirmed:
             raise Http404
+
         self.application = Application.objects.filter(id=application_id).first()
         return super().dispatch(request, *args, **kwargs)
 
@@ -53,10 +53,10 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
 
 
     def dispatch(self, request, *args, **kwargs):
-
         uuid = kwargs.get('interview_token')
         app_id = kwargs.get('application')
         self.interview = Interview.objects.filter(uuid=uuid).first()
+
         if self.interview.application.user != request.user or \
                 self.interview.application.id != int(app_id):
             raise Http404
