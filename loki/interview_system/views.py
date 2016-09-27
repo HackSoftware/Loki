@@ -16,18 +16,24 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
 
         application_id = kwargs.get('application')
         uuid = kwargs.get('interview_token')
-        current_interview = Interview.objects.get(uuid=uuid)
-        # import ipdb; ipdb.set_trace()
-        if current_interview.has_confirmed or \
-            current_interview.application is None or \
-            current_interview.application.user != request.user:
-            raise Http404
         self.application = Application.objects.filter(id=application_id).first()
+
         return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         uuid = kwargs.get('interview_token')
+        application_id = kwargs.get('application')
         self.interview = Interview.objects.filter(uuid=uuid).first()
+        
+        if self.interview.application is None or \
+            self.interview.application.user != request.user or \
+            self.interview.application.id != int(application_id):
+            raise Http404
+
+        if self.interview.has_confirmed:
+            return redirect(reverse('interview_system:confirm_interview',
+                            kwargs={'application': application_id,
+                                    'interview_token': self.interview.uuid}))
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -40,6 +46,7 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         uuid = kwargs.get('interview_token')
+        application_id = kwargs.get('application')
         new_interview = Interview.objects.filter(uuid=uuid).first()
         old_interview = Interview.objects.filter(application=self.application).first()
         old_interview.application = None
@@ -48,7 +55,9 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
         new_interview.has_confirmed = True
         new_interview.save()
 
-        return redirect(reverse('website:profile'))
+        return redirect(reverse('interview_system:confirm_interview',
+                        kwargs={'application': application_id,
+                                'interview_token': new_interview.uuid}))
 
 
 class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
@@ -56,10 +65,10 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
 
 
     def dispatch(self, request, *args, **kwargs):
-
         uuid = kwargs.get('interview_token')
         app_id = kwargs.get('application')
         self.interview = Interview.objects.filter(uuid=uuid).first()
+
         if self.interview.application.user != request.user or \
                 self.interview.application.id != int(app_id):
             raise Http404
