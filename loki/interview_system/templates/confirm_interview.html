@@ -7,7 +7,7 @@
     <div class="container-fluid">
 
       <div class="confirm-interview-container col-md-8 col-md-offset-2">
-        <h2 id="user-name">Здравей, {{ application.user.first_name }}</h2>
+        <h2 id="user-name">Здравей, {{ user.first_name }}</h2>
         {% if interview.has_confirmed %}
           <h3> Вече си потвърдил интервю на <b>{{ interview.date }}</b> от <b>{{ interview.start_time }}</b>! :) </h3><br>
         {% else %}
