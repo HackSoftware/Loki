@@ -8,6 +8,9 @@
 
       <div class="choose-interview-container col-md-8 col-md-offset-2">
         <h3>Здравей, {{ user.first_name }}</h3>
+        <h4>Ти кандидаства за <b>{{app.application_info.course}}</b>, затова ние ти насрочихме интервю 
+            на {{ current_interview.date }} в {{ current_interview.start_time}}
+            </h4>
         <h4>Моля, изберете нов час за вашето интервю.</h4><br>
         <div class="table-responsive">
           <table id="interview-slots-table" class="table table-hover table-striped " cellspacing="0">

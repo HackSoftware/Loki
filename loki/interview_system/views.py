@@ -21,12 +21,13 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
 
         application_id = kwargs.get('application')
         uuid = kwargs.get('interview_token')
+
         self.application = Application.objects.filter(id=application_id).first()
 
         if self.application.user != request.user or \
             self.application.id != int(application_id):
             raise Http404
-            
+
         # current_interview = Interview.objects.filter(uuid=uuid).first()
         # import ipdb; ipdb.set_trace()
         # if not Interview.objects.filter(uuid=uuid, application__isnull=False,
@@ -64,8 +65,14 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
+        uuid = kwargs.get('interview_token')
+        application = kwargs.get('application')
+        context['current_interview'] = Interview.objects.filter(
+                                       uuid=uuid).first()
         context['interviews'] = Interview.objects.filter(
                                 application__isnull=True).order_by('date', 'start_time')
+        
+        context['app'] = Application.objects.filter(id=application).first()
 
         return context
 
