@@ -71,7 +71,7 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
                                        uuid=uuid).first()
         context['interviews'] = Interview.objects.filter(
                                 application__isnull=True).order_by('date', 'start_time')
-        
+
         context['app'] = Application.objects.filter(id=application).first()
 
         return context

@@ -27,8 +27,6 @@ class ChooseInterviewTests(TestCase):
         confirmed_interviews = Interview.objects.filter(application__isnull=False,
                                                         has_confirmed=True)
         confirmed_interviews_count = confirmed_interviews.count()
-        # application = ApplicationFactory(user=self.user)
-        # interview = InterviewFactory(application=application)
 
         self.assertEqual(confirmed_interviews_count + 1, Interview.objects.count())
         self.assertEqual(self.interview.application.user, self.user)
@@ -83,3 +81,16 @@ class ChooseInterviewTests(TestCase):
 
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200)
+
+    def test_confirm_interview_from_confirm_page(self):
+        with self.login(username=self.user.email, password=BaseUserFactory.password):
+            print(self.interview.has_confirmed)
+            url = reverse('interview_system:confirm_interview',
+                          kwargs={"application": self.application.id,
+                                  "interview_token": self.interview.uuid})
+
+            response = self.client.post(url)
+            self.assertEqual(response.status_code, 200)
+            self.interview.refresh_from_db()
+
+            self.assertEqual(self.interview.has_confirmed,True)
