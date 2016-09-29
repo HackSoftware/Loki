@@ -9,7 +9,7 @@ from loki.seed.factories import (InterviewerFactory,
                                  BaseUserFactory)
 from loki.applications.models import Application
 
-from ..models import InterviewerFreeTime, Interview
+from ..models import Interview
 
 
 class ChooseInterviewTests(TestCase):
@@ -84,7 +84,6 @@ class ChooseInterviewTests(TestCase):
 
     def test_confirm_interview_from_confirm_page(self):
         with self.login(username=self.user.email, password=BaseUserFactory.password):
-            print(self.interview.has_confirmed)
             url = reverse('interview_system:confirm_interview',
                           kwargs={"application": self.application.id,
                                   "interview_token": self.interview.uuid})
@@ -94,3 +93,19 @@ class ChooseInterviewTests(TestCase):
             self.interview.refresh_from_db()
 
             self.assertEqual(self.interview.has_confirmed,True)
+
+    def test_unsigned_user_access_confirm_page(self):
+        url = reverse('interview_system:confirm_interview',
+                      kwargs={"application": self.application.id,
+                              "interview_token": self.interview.uuid})
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_unsigned_user_access_choose_page(self):
+        url = reverse('interview_system:choose_interview',
+                      kwargs={"application": self.application.id,
+                              "interview_token": self.interview.uuid})
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 404)
