@@ -1,4 +1,5 @@
 import datetime
+import uuid
 from django.test import Client
 from django.core.urlresolvers import reverse
 
@@ -127,3 +128,20 @@ class ChooseInterviewTests(TestCase):
                                   "interview_token": self.interview.uuid})
 
             self.assertRedirects(response, red_url)
+
+    def test_confirm_non_existing_interview(self):
+        uuid1 = uuid.uuid4()
+        self.assertEqual(self.interview.uuid != uuid1, True)
+        with self.login(username=self.user.email, password=BaseUserFactory.password):
+            response = self.get('interview_system:confirm_interview',
+                                    self.application.id, uuid1)
+            self.assertEqual(response.status_code, 404)
+
+    def test_confirm_non_existing_application(self):
+        uuid1 = uuid.uuid4()
+        app = ApplicationFactory(has_interview_date=False)
+        self.assertEqual(self.application.user != app.user, True)
+        with self.login(username=self.user.email, password=BaseUserFactory.password):
+            response = self.get('interview_system:confirm_interview',
+                                    app.id, self.interview.uuid)
+            self.assertEqual(response.status_code, 404)

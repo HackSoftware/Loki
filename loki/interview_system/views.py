@@ -28,15 +28,16 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
         uuid = kwargs.get('interview_token')
         application_id = kwargs.get('application')
         self.interview = Interview.objects.filter(uuid=uuid).first()
-        if self.interview.application is None or \
+        if self.interview is None or \
+            self.interview.application is None or \
             self.interview.application.user != request.user or \
             self.interview.application.id != int(application_id):
             raise Http404
 
         if self.interview.has_confirmed:
             return redirect(reverse('interview_system:confirm_interview',
-            kwargs={'application': application_id,
-            'interview_token': self.interview.uuid}))
+                            kwargs={'application': application_id,
+                            'interview_token': self.interview.uuid}))
 
         return super().get(request, *args, **kwargs)
 
@@ -83,8 +84,10 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
         app_id = kwargs.get('application')
         self.interview = Interview.objects.filter(uuid=uuid).first()
 
-        if self.interview.application.user != request.user or \
-                self.interview.application.id != int(app_id):
+        self.application = Application.objects.filter(id=app_id).first()
+
+        if self.application.user != request.user or \
+            self.application.id != int(app_id):
             raise Http404
 
         return super().dispatch(request, *args, **kwargs)
@@ -94,6 +97,18 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
         context['interview'] = self.interview
 
         return context
+
+    def get(self, request, *args, **kwargs):
+        uuid = kwargs.get('interview_token')
+        application_id = kwargs.get('application')
+        self.interview = Interview.objects.filter(uuid=uuid).first()
+        if self.interview is None or \
+            self.interview.application is None or \
+            self.interview.application.user != request.user or \
+            self.interview.application.id != int(application_id):
+            raise Http404
+
+        return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         self.interview.has_confirmed = True
