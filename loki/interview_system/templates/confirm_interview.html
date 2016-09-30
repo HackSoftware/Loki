@@ -9,23 +9,26 @@
       <div class="confirm-interview-container col-md-8 col-md-offset-2">
         <h2 id="user-name">Здравей, {{ user.first_name }}</h2><br>
           <div class="confirm-interview-box">
-          {% if interview.has_confirmed %}
-            <h4> Ти успешно потвърди своето интервю за курса <b>{{ app.application_info.course }}</b>.</h4>
+            {% if interview.has_confirmed %}
+            <h4>Ти успешно потвърди своето интервю за курса <b>{{ app.application_info.course }}</b>.</h4>
+            {% else %}
+            <h4>Потвърди своето интервю за курса <b>{{ app.application_info.course }}.</h4>
+            {% endif %}
             <h4>На <b>{{ interview.date }}</b> от <b>{{ interview.start_time }}</b> бъди на линия в Skype.</h4>
             <h4>Ние ще се свържем с теб допълнително, за да уточним детайлите.</h4>
             <h4>Skype името на твоят интервюиращ е: <b>{{ interviewer.skype }}</b> .</h4><br>
-          {% else %}
-            <h3> Потвърди своето интервю на <b>{{ interview.date }}</b> от <b>{{ interview.start_time }}</b> </h3><br>
-              <form action="" method="post">
-                {% csrf_token %}
-                <button id="confirm_interview-btn" class="btn btn-warning" type="submit">Потвърди интервю!</button>
-              </form>
+            {% if interview.has_confirmed %}
+            <div class="hb-logo">
+              <h4 id="hb-regards">Поздрави, Екипът на Hack Bulgaria
+                <img src="{{ STATIC_URL }}website_images/hackman_head.png" />
+              </h4>
+            </div>
+            {% else %}
+            <form action="" method="post">
+              {% csrf_token %}
+              <button id="confirm_interview-btn" class="btn btn-warning" type="submit">Потвърди интервю!</button>
+            </form>
           {% endif %}
-          <div class="hb-logo">
-            <h4 id="hb-regards">Поздрави, Екипът на Hack Bulgaria
-              <img src="{{ STATIC_URL }}website_images/hackman_head.png" />
-            </h4>
-          </div>
         </div>
       </div>
     </div>
