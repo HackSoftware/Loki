@@ -10,6 +10,7 @@ from .query import InterviewQuerySet
 class Interviewer(BaseUser):
     courses_to_interview = models.ManyToManyField(ApplicationInfo)
     interviews = models.ManyToManyField(Application, through='Interview')
+    skype = models.CharField(null=True, blank=True, max_length=30)
 
 
 class InterviewerFreeTime(models.Model):

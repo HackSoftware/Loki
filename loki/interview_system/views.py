@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from loki.applications.models import Application
-from .models import Interview
+from .models import Interview, Interviewer
 
 
 class ChooseInterviewView(LoginRequiredMixin, TemplateView):
@@ -83,9 +83,8 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
         uuid = kwargs.get('interview_token')
         app_id = kwargs.get('application')
         self.interview = Interview.objects.filter(uuid=uuid).first()
-
         self.application = Application.objects.filter(id=app_id).first()
-
+        self.interviewer = Interviewer.objects.filter(interview=self.interview).first()
         if self.application.user != request.user or \
             self.application.id != int(app_id):
             raise Http404
@@ -95,7 +94,8 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['interview'] = self.interview
-
+        context['app'] = self.application
+        context['interviewer'] = self.interviewer
         return context
 
     def get(self, request, *args, **kwargs):
