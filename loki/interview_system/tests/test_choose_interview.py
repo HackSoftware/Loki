@@ -109,3 +109,21 @@ class ChooseInterviewTests(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
+
+    def test_choose_new_interview_after_already_confirmed(self):
+        with self.login(username=self.user.email, password=BaseUserFactory.password):
+            self.post('interview_system:confirm_interview', self.application.id,
+                        self.interview.uuid)
+            self.interview.refresh_from_db()
+            self.assertEqual(Interview.objects.filter(
+                             has_confirmed=True).count(), 1)
+
+            response = self.get('interview_system:choose_interview',
+                                self.application.id,
+                                self.interview.uuid, follow=True)
+
+            red_url = reverse('interview_system:confirm_interview',
+                          kwargs={"application": self.application.id,
+                                  "interview_token": self.interview.uuid})
+
+            self.assertRedirects(response, red_url)

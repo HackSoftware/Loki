@@ -6,18 +6,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from loki.applications.models import Application
 from .models import Interview
-# Create your views here.
 
 
 class ChooseInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'choose_interview.html'
 
     def dispatch(self, request, *args, **kwargs):
-
-        # user_interviews = Interview.objects.filter(application__isnull=False,
-        #                                 application__user=request.user)
-        # if user_interviews.count() == 0:
-        #     Http404
 
         application_id = kwargs.get('application')
         uuid = kwargs.get('interview_token')
@@ -27,23 +21,6 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
         if self.application.user != request.user or \
             self.application.id != int(application_id):
             raise Http404
-
-        # current_interview = Interview.objects.filter(uuid=uuid).first()
-        # import ipdb; ipdb.set_trace()
-        # if not Interview.objects.filter(uuid=uuid, application__isnull=False,
-        #                             application__user=request.user).first():
-        #     raise Http404
-        # if not (Interview.objects.filter(uuid=uuid, application__isnull=True) and \
-        #     Interview.objects.filter(application__isnull=False,
-        #                             application__user=request.user,
-        #                             has_confirmed=False)):
-            # raise Http404
-        # if current_interview.application is None and \
-        #     request.user Interview.objects.filter != int(application_id):
-        #     raise Http404
-        # if current_interview.application.user != request.user or \
-        #     current_interview.application.id != int(application_id):
-        #     raise Http404
 
         return super().dispatch(request, *args, **kwargs)
 
@@ -58,8 +35,9 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
 
         if self.interview.has_confirmed:
             return redirect(reverse('interview_system:confirm_interview',
-                            kwargs={'application': application_id,
-                                    'interview_token': self.interview.uuid}))
+            kwargs={'application': application_id,
+            'interview_token': self.interview.uuid}))
+
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
