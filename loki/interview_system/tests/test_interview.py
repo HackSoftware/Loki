@@ -12,7 +12,7 @@ from ..models import InterviewerFreeTime, Interview
 
 
 class InterviewGenerationTests(TestCase):
-    def test_01_interviews_are_generated_correctly(self):
+    def test_interviews_are_generated_correctly(self):
         app_info = ApplicationInfoFactory()
         application = ApplicationFactory(application_info=app_info)
         interviewer = InterviewerFactory()
@@ -33,7 +33,7 @@ class InterviewGenerationTests(TestCase):
         self.assertEqual(1, Interview.objects.filter(application__isnull=False).count())
         self.assertEquals(0, Application.objects.without_interviews().count())
 
-    def test_02_interviews_are_generated_correctly_if_new_application_is_added_after_generation(self):
+    def test_interviews_are_generated_correctly_if_new_application_is_added_after_generation(self):
         app_info = ApplicationInfoFactory()
         ApplicationFactory(application_info=app_info)
         interviewer = InterviewerFactory()
@@ -57,7 +57,7 @@ class InterviewGenerationTests(TestCase):
         self.assertEquals(4, Interview.objects.get_free_slots().count())
         self.assertEquals(0, Application.objects.without_interviews().count())
 
-    def test_03_generate_interviews_for_more_interviewers(self):
+    def test_generate_interviews_for_more_interviewers(self):
         app_info = ApplicationInfoFactory()
         application1 = ApplicationFactory(application_info=app_info)
         application2 = ApplicationFactory(application_info=app_info)
@@ -89,7 +89,7 @@ class InterviewGenerationTests(TestCase):
         self.assertEqual(interviewer_for_app1, interviewer_for_app3)
         self.assertEquals(0, Application.objects.without_interviews().count())
 
-    def test_04_generate_interviews_for_different_courses_with_different_interviewers(self):
+    def test_generate_interviews_for_different_courses_with_different_interviewers(self):
         course1 = CourseFactory()
         course2 = CourseFactory()
         cd1 = CourseDescriptionFactory(course=course1)

@@ -13,7 +13,7 @@ from ..models import InterviewerFreeTime, Interview
 
 
 class SendEmailForInterviewsTests(TestCase):
-    def test_01_send_email_for_interview_correctly(self):
+    def test_send_email_for_interview_correctly(self):
         app_info = ApplicationInfoFactory()
         application = ApplicationFactory(application_info=app_info)
         interviewer = InterviewerFactory()
