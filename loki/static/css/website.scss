@@ -822,7 +822,7 @@ $TabBorder: #C5C4C4;
 }
 
 .confirm-interview-container {
-  margin-top:50px;
+  margin-top:30px;
 
   #user-name {
     margin-left: 30%;
@@ -831,5 +831,20 @@ $TabBorder: #C5C4C4;
     margin-left: 30%;
     padding: 15px;
     font-size: 16px;
+  }
+
+  .confirm-interview-box {
+    margin-left: 10%;
+    margin-right: 10%;
+
+
+    .hb-logo{
+      #hb-regards {
+        text-align: right;
+      }
+      img {
+        width: 5%;
+      }
+    }
   }
 }
