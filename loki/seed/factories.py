@@ -517,9 +517,6 @@ class InterviewerFactory(BaseUserFactory):
     class Meta:
         model = interview_models.Interviewer
 
-    courses_to_interview = factory.RelatedFactory(ApplicationInfoFactory)
-    interviews = factory.RelatedFactory(ApplicationFactory)
-
 
 class InterviewerFreeTimeFactory(factory.DjangoModelFactory):
     class Meta:

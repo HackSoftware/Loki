@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
     if($('[data-toggle="popover"]').length > 0) {
       $('[data-toggle="popover"]').popover({ trigger: "focus"});
     }
@@ -30,4 +31,5 @@ $(document).ready(function(){
       form.find("[type='submit']").removeClass("btn-warning").addClass("btn-success").html("Saving...");
       form.submit();
     })
+
 });
