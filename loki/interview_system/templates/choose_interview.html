@@ -7,11 +7,11 @@
     <div class="container-fluid">
 
       <div class="choose-interview-container col-md-8 col-md-offset-2">
-        <h3>Здравей, {{ user.first_name }}</h3>
-        <h4>Ти успешно кандидаства за <b>{{app.application_info.course}}</b>.
-            Твоето интервю е насрочено за {{ current_interview.date }} в {{ current_interview.start_time}}
-            </h4>
-        <h4>Моля, изберете нов час за вашето интервю.</h4><br>
+        <h4>Здравей, {{ user.first_name }}</h4>
+        <h5>Ти успешно кандидаства за <b>{{app.application_info.course}}</b>.</h5>
+        <h5>Твоето интервю е на <b>{{ current_interview.date }}</b> в <b>{{ current_interview.start_time}}</b>.</h5>
+        <h5>Ако желаеш да смениш датата и часа, които сме ти насрочили, можеш да избереш от таблицата отдолу.</h5>
+        <h5>Имаш право само веднъж да промениш своето интервю.</h5><br>
         <div class="table-responsive">
           <table id="interview-slots-table" class="table table-hover table-striped " cellspacing="0">
             <thead>

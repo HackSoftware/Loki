@@ -17,7 +17,7 @@ $(document).ready(function(){
     $(".change-interview-form").on("submit", function(event) {
       if(!$(this).data('submitted')) {
         event.preventDefault();
-        if(confirm('Ще смениш лиииии?')) {
+        if(confirm('Сигурен ли си, че желаеш да смениш интервюто си?')) {
           $(this).data('submitted', true);
           $(this).submit();
         }
