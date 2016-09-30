@@ -1,5 +1,5 @@
 import datetime
-
+import factory
 from django.core.management import call_command
 
 from test_plus.test import TestCase
@@ -62,8 +62,8 @@ class InterviewGenerationTests(TestCase):
         application1 = ApplicationFactory(application_info=app_info)
         application2 = ApplicationFactory(application_info=app_info)
         application3 = ApplicationFactory(application_info=app_info)
-        interviewer1 = InterviewerFactory()
-        interviewer2 = InterviewerFactory()
+        interviewer1, interviewer2 = factory.build_batch(size=2,
+                                     klass=InterviewerFactory)
 
         interviewer1.courses_to_interview.add(app_info)
         interviewer2.courses_to_interview.add(app_info)
@@ -90,8 +90,7 @@ class InterviewGenerationTests(TestCase):
         self.assertEquals(0, Application.objects.without_interviews().count())
 
     def test_generate_interviews_for_different_courses_with_different_interviewers(self):
-        course1 = CourseFactory()
-        course2 = CourseFactory()
+        course1, course2= factory.build_batch(size=2, klass=CourseFactory)
         cd1 = CourseDescriptionFactory(course=course1)
         cd2 = CourseDescriptionFactory(course=course2)
         app_info1 = ApplicationInfoFactory(course=cd1)
@@ -102,9 +101,8 @@ class InterviewGenerationTests(TestCase):
         application3 = ApplicationFactory(application_info=app_info1)
         application4 = ApplicationFactory(application_info=app_info2)
         application5 = ApplicationFactory(application_info=app_info1)
-        interviewer1 = InterviewerFactory()
-        interviewer2 = InterviewerFactory()
-        interviewer3 = InterviewerFactory()
+        interviewer1, interviewer2, interviewer3 = factory.build_batch(size=3,
+                                                    klass=InterviewerFactory)
 
         interviewer1.courses_to_interview.add(app_info1)
         interviewer2.courses_to_interview.add(app_info2)
