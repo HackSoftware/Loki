@@ -145,3 +145,13 @@ class ChooseInterviewTests(TestCase):
             response = self.get('interview_system:confirm_interview',
                                     app.id, self.interview.uuid)
             self.assertEqual(response.status_code, 404)
+
+    def test_access_confirm_from_user_without_application(self):
+        user_without_app = BaseUserFactory()
+        user_without_app.is_active = True
+        user_without_app.save()
+        with self.login(username=user_without_app.email,
+                        password=BaseUserFactory.password):
+            response = self.get('interview_system:confirm_interview',
+                                    self.application.id, self.interview.uuid)
+            self.assertEqual(response.status_code, 404)
