@@ -735,6 +735,15 @@ $TabBorder: #C5C4C4;
     font-size: 2em;
   }
 
+  .interviews {
+    max-width: 80%;
+    margin-left: 25px;
+
+    img {
+      width: 25px;
+    }
+  }
+
 }
 
 #edit-app {

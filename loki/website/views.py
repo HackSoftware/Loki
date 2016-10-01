@@ -12,6 +12,7 @@ from .decorators import anonymous_required
 from loki.education.models import WorkingAt, Student, Teacher
 from loki.applications.models import ApplicationInfo
 from loki.base_app.models import Partner, GeneralPartner, BaseUser
+from loki.interview_system.models import Interview
 from loki.base_app.services import send_activation_mail, send_forgotten_password_email
 from loki.base_app.helper import get_or_none
 
@@ -125,6 +126,9 @@ def profile(request):
         teacher = Teacher.objects.get(email=request.user.email)
     except Teacher.DoesNotExist:
         teacher = None
+    interviews = Interview.objects.filter(application__isnull=False,
+                                          application__user=user,
+                                          has_confirmed=True)
     return render(request, 'website/profile.html', locals())
 
 
