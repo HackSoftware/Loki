@@ -32,4 +32,15 @@ $(document).ready(function(){
       form.submit();
     })
 
+    setInterval(getFreeInterviews, 5000);
+
 });
+
+function getFreeInterviews() {
+  $.getJSON("/interview/api/get-free-interviews", function(data) {
+    $.each(data,function(key, value){
+      $("#interview_" + value.id + " .interview-date").html(value.date);
+      $("#interview_" + value.id + " .interview-time").html(value.start_time);
+    })
+  })
+}

@@ -7,8 +7,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
+
+from rest_framework import serializers, generics, status, mixins
+
 from loki.applications.models import Application
 from .models import Interview, Interviewer
+from .serializers import InterviewSerializer
+
 
 class ChooseInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'choose_interview.html'
@@ -118,12 +123,11 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
         return super().get(request, *args, **kwargs)
 
 
-class GenerateInterviews(LoginRequiredMixin, TemplateView):
+class GenerateInterviews(LoginRequiredMixin, TemplateView,):
     template_name = 'generate_interviews.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context['free_interviews'] = Interview.objects.get_free_slots()
         context['interviews'] = Interview.objects.all()
         context['apps'] = Application.objects.all()
         return context
@@ -136,3 +140,8 @@ class GenerateInterviews(LoginRequiredMixin, TemplateView):
 
         call_command('generate_interview_slots')
         return super().get(request, *args, **kwargs)
+
+
+class GetFreeInterviews(generics.ListAPIView):
+    serializer_class = InterviewSerializer
+    queryset = Interview.objects.get_free_slots()

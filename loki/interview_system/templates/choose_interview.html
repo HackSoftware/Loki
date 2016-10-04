@@ -23,9 +23,9 @@
             </thead>
             <tbody>
               {% for interview in interviews %}
-              <tr class="interview-selected">
-                <td>{{ interview.date }}</td>
-                <td>{{ interview.start_time }}</td>
+              <tr class="interview-selected" id="interview_{{interview.id}}">
+                <td class="interview-date">{{ interview.date }}</td>
+                <td class="interview-time">{{ interview.start_time }}</td>
                 <td>
                   <form class="change-interview-form" action="{% url 'interview_system:choose_interview' application interview.uuid %}" method="POST">
                     {% csrf_token %}
