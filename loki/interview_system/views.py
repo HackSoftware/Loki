@@ -48,8 +48,7 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
         application = kwargs.get('application')
         context['current_interview'] = Interview.objects.filter(
                                        uuid=uuid).first()
-        context['interviews'] = Interview.objects.filter(
-                                application__isnull=True).order_by('date', 'start_time')
+        context['interviews'] = Interview.objects.get_free_slots()
 
         context['app'] = Application.objects.filter(id=application).first()
 
