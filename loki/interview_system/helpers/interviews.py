@@ -103,5 +103,8 @@ class GenerateInterviews:
     def get_applications_without_interviews(self):
         return Application.objects.without_interviews().count()
 
+    def get_free_interview_slots(self):
+        return Interview.objects.get_free_slots().count()
+
     def get_generated_interviews_count(self):
         return self.__generated_interviews

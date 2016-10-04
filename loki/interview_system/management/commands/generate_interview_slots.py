@@ -10,6 +10,7 @@ class Command(BaseCommand):
 
     def handle(self, **options):
 
+        print("Start generating interviews...\n")
         interview_length = 20
         break_between_interviews = 10
 
@@ -21,12 +22,17 @@ class Command(BaseCommand):
 
         courses_to_interview = ApplicationInfo.objects.get_open_for_interview()
 
+        if len(courses_to_interview) == 0:
+            print('There are no open for interview courses!\n')
+            print('No interviews will be generated.')
         for info in courses_to_interview:
             interview_generator = GenerateInterviews(application_info=info)
             interview_generator.generate_interviews()
 
             generated_interviews = interview_generator.get_generated_interviews_count()
             application_without_interviews = interview_generator.get_applications_without_interviews()
-
-            print(str(generated_interviews) + " interviews were generated")
-            print("Applications without interviews " + str(application_without_interviews))
+            free_interview_slots = interview_generator.get_free_interview_slots()
+            print('Generated interviews: {0}'.format(generated_interviews))
+            print('Applications without interviews: {0} '.format(
+                   application_without_interviews))
+            print('Free interview slots: {0}'.format(free_interview_slots))

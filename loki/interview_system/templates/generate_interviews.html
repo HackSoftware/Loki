@@ -1,0 +1,26 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+<div class="container">
+  <div class="row">
+    <div class="container">
+        <h3>Информация за текущата кампания</h3><br>
+        <h4>Интервюта: {{ interviews.count }}</h4>
+        <h4>Свободни интервюта: {{ free_interviews.count }}</h4>
+        <h4>Потвърдени интервюта: {{ interviews.comfirmed.count }}</h4>
+        <h4>Кандидатури: {{ apps.count }}</h4>
+        <h4>Кандидатури без интервюта: {{ apps.without_interviews.count }}</h4>
+          <div class="confirm-interview-box">
+            <form action="" method="post">
+              {% csrf_token %}
+              <button id="confirm_interview-btn" class="btn btn-warning" type="submit">Създай интервюта!</button>
+            </form>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endautoescape %}
+
+{% endblock %}

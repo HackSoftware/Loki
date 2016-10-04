@@ -11,3 +11,6 @@ class InterviewQuerySet(models.QuerySet):
 
     def without_received_email(self):
         return self.filter(has_received_email=False)
+
+    def comfirmed(self):
+        return self.filter(has_confirmed=True, application__isnull=False)
