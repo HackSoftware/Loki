@@ -6,8 +6,8 @@
   <div class="row">
     <div class="container">
         <h3>Информация за текущата кампания</h3><br>
-        <h4>Интервюта: {{ interviews.count }}</h4>
-        <h4>Свободни интервюта: {{ free_interviews.count }}</h4>
+        <h4>Интервюта: {{ interviews.with_application.count }}</h4>
+        <h4>Свободни интервюта: {{ interviews.get_free_slots.count }}</h4>
         <h4>Потвърдени интервюта: {{ interviews.comfirmed.count }}</h4>
         <h4>Кандидатури: {{ apps.count }}</h4>
         <h4>Кандидатури без интервюта: {{ apps.without_interviews.count }}</h4>
