@@ -4,7 +4,7 @@ from django.db import models
 class InterviewQuerySet(models.QuerySet):
 
     def get_free_slots(self):
-        return self.filter(application__isnull=True)
+        return self.filter(application__isnull=True).order_by('date', 'start_time')
 
     def with_application(self):
         return self.filter(application__isnull=False)
