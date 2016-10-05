@@ -165,3 +165,16 @@ class ChooseInterviewTests(TestCase):
             response = self.get('interview_system:choose_interview',
                                     self.application.id, self.interview.uuid)
             self.assertEqual(response.status_code, 404)
+
+
+class GenerateInterviewsTests(TestCase):
+
+    def test_baseuser_not_access_generate_view(self):
+        user = BaseUserFactory()
+        user.is_active = True
+        user.save()
+        with self.login(username=user.email,
+                        password=BaseUserFactory.password):
+            response = self.get('interview_system:generate_interviews')
+            import ipdb; ipdb.set_trace()
+            self.assertEqual(response.status_code, 302)
