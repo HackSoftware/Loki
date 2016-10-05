@@ -24,7 +24,7 @@
             <tbody>
               {% for interview in interviews %}
               <tr class="interview-selected" id="interview_{{interview.id}}">
-                <td class="interview-date">{{ interview.date }}</td>
+                <td class="interview-date">{{ interview.date| date:'d-m-Y' }}</td>
                 <td class="interview-time">{{ interview.start_time }}</td>
                 <td>
                   <form class="change-interview-form" action="{% url 'interview_system:choose_interview' application interview.uuid %}" method="POST">

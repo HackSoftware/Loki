@@ -5,7 +5,7 @@ from .models import Interview
 
 class InterviewSerializer(serializers.ModelSerializer):
 
-    date = serializers.DateField(format="%d %B %Y")
+    date = serializers.DateField(format="%d-%m-%Y")
     start_time = serializers.TimeField(format="%H:%M")
 
     class Meta:
