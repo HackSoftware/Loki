@@ -5,12 +5,22 @@
 <div class="container">
   <div class="row">
     <div class="container">
+      {% for course in courses %}
+        {% if course.is_active %}
+        <div class="course-campaign-info">
+          <h3>{{ course.name }}</h3>
+          <img src="{{MEDIA_URL}}{{ course.coursedescription.custom_logo }}">
+        </div>
+        {% endif %}
+      {% endfor %}
+
         <h3>Информация за текущата кампания</h3><br>
         <h4>Интервюта: {{ interviews.with_application.count }}</h4>
         <h4>Свободни интервюта: {{ interviews.get_free_slots.count }}</h4>
         <h4>Потвърдени интервюта: {{ interviews.comfirmed.count }}</h4>
         <h4>Кандидатури: {{ apps.count }}</h4>
         <h4>Кандидатури без интервюта: {{ apps.without_interviews.count }}</h4>
+
           <div class="confirm-interview-box">
             <form action="" method="post">
               {% csrf_token %}
