@@ -7,7 +7,8 @@ from test_plus.test import TestCase
 from loki.seed.factories import (InterviewerFactory,
                                  ApplicationFactory,
                                  InterviewFactory,
-                                 BaseUserFactory)
+                                 BaseUserFactory,
+                                 AdminUserFactory)
 from loki.applications.models import Application
 
 from ..models import Interview
@@ -169,11 +170,25 @@ class ChooseInterviewTests(TestCase):
 
 class GenerateInterviewsTests(TestCase):
 
-    def test_baseuser_not_access_generate_view(self):
+    def test_not_access_generate_interview(self):
+        response = self.get('interview_system:generate_interviews')
+        self.assertEquals(response.status_code, 302)
+
+    def test_baseuser_not_access_generate_interview(self):
         user = BaseUserFactory()
         user.is_active = True
         user.save()
         with self.login(username=user.email,
                         password=BaseUserFactory.password):
             response = self.get('interview_system:generate_interviews')
-            self.assertEqual(response.status_code, 302)
+            self.assertEquals(response.status_code, 302)
+
+    def test_superuser_access_generate_interview(self):
+        user = BaseUserFactory()
+        user.is_active = True
+        user.is_superuser = True
+        user.save()
+        with self.login(username=user.email,
+                        password=BaseUserFactory.password):
+            response = self.get('interview_system:generate_interviews')
+            self.assertEquals(response.status_code, 200)

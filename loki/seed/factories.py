@@ -122,6 +122,9 @@ class BaseUserFactory(factory.DjangoModelFactory):
     avatar = factory.django.ImageField(color='blue')
     full_image = factory.django.ImageField(color='blue')
 
+class AdminUserFactory(BaseUserFactory):
+    is_active = True
+    is_superuser = True
 
 class EducationInfoFactory(factory.DjangoModelFactory):
     class Meta:
