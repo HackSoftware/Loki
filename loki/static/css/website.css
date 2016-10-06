@@ -230,6 +230,11 @@ body {
   height: 250px; }
 .container #usernames {
   font-size: 30px; }
+.container .course-campaign-container {
+  width: 45%;
+  display: inline-block; }
+  .container .course-campaign-container .course-campaign-info {
+    display: inline-block; }
 
 .dropdown-menu {
   margin-top: 20px; }

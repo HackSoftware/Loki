@@ -340,6 +340,16 @@ $TabBorder: #C5C4C4;
     #usernames{
         font-size: 30px;
     }
+
+    .course-campaign-container {
+      width: 45%;
+      display: inline-block;
+
+      .course-campaign-info {
+        display: inline-block;
+      }
+    }
+
 }
 
 .dropdown-menu {
