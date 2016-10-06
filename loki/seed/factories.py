@@ -122,6 +122,14 @@ class BaseUserFactory(factory.DjangoModelFactory):
     avatar = factory.django.ImageField(color='blue')
     full_image = factory.django.ImageField(color='blue')
 
+class AdminUserFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = base_app_models.BaseUser
+
+    password = 'ivoepanda'
+    email = factory.Sequence(lambda n: '{}{}'.format(n, faker.email()))
+    is_active = True
+    is_superuser = True
 
 class EducationInfoFactory(factory.DjangoModelFactory):
     class Meta:
