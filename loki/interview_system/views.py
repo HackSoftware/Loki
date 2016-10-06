@@ -10,7 +10,7 @@ from django.utils.decorators import method_decorator
 
 from rest_framework import serializers, generics, status, mixins
 
-from loki.applications.models import Application
+from loki.applications.models import Application, ApplicationInfo
 from loki.education.models import Course
 from .models import Interview, Interviewer
 from .serializers import InterviewSerializer
@@ -131,6 +131,8 @@ class GenerateInterviews(LoginRequiredMixin, TemplateView,):
         context = super().get_context_data(**kwargs)
         context['interviews'] = Interview.objects.all()
         context['courses'] = Course.objects.all()
+        context['app_infos'] = ApplicationInfo.objects.get_open_for_interview()
+        print(context['app_infos'])
         context['apps'] = Application.objects.all()
         return context
 

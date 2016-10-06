@@ -5,21 +5,19 @@
 <div class="container">
   <div class="row">
     <div class="container">
-      {% for course in courses %}
-        {% if course.is_active %}
+      {% for app_info in app_infos %}
         <div class="course-campaign-info">
-          <h3>{{ course.name }}</h3>
-          <img src="{{MEDIA_URL}}{{ course.coursedescription.custom_logo }}">
+          <h3>{{ app_info.course.course.name }}</h3>
+          <h4>Кандидаствали: {{ app_info.application_set.all.count }} </h4>
+          {% for problem in app_info.applicationproblem_set.all %}
+            <h5>Предадени задачи {{ problem.name }}: {{ problem.applicationproblemsolution_set.count }}</h5>
+          {% endfor %}
+          <!-- <h4>Потвърдени интервюта: {{ app_info.interview_set.all.confirmed}}</h4> -->
+          <img src="{{MEDIA_URL}}{{ app_info.course.custom_logo }}">
         </div>
-        {% endif %}
       {% endfor %}
-
         <h3>Информация за текущата кампания</h3><br>
-        <h4>Интервюта: {{ interviews.with_application.count }}</h4>
-        <h4>Свободни интервюта: {{ interviews.get_free_slots.count }}</h4>
-        <h4>Потвърдени интервюта: {{ interviews.comfirmed.count }}</h4>
-        <h4>Кандидатури: {{ apps.count }}</h4>
-        <h4>Кандидатури без интервюта: {{ apps.without_interviews.count }}</h4>
+        <h4>Всички генерирани интервюта: {{ interviews.count }}</h4>
 
           <div class="confirm-interview-box">
             <form action="" method="post">

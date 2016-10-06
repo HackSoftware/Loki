@@ -29,6 +29,11 @@ class GenerateInterviewSlots:
             if slot.has_generated_slots():
                 continue
 
+            today = datetime.now()
+
+            if slot.date < datetime.date(today):
+                continue
+
             # summarized free time of the interviewer
             free_time = self.__calculate_diff_in_time(slot.start_time, slot.end_time)
             # starting time of the first interview
@@ -93,6 +98,7 @@ class GenerateInterviews:
                 break
 
             slot.application = application
+            slot.app_info = self.application_info
             slot.save()
 
             application.has_interview_date = True
