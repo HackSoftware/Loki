@@ -6,8 +6,7 @@ from test_plus.test import TestCase
 
 from loki.seed.factories import (ApplicationFactory,
                                  InterviewFactory,
-                                 BaseUserFactory,
-                                 AdminUserFactory)
+                                 BaseUserFactory)
 
 from ..models import Interview
 

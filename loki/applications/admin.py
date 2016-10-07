@@ -14,7 +14,7 @@ class ApplicationAdmin(admin.ModelAdmin):
     search_fields = ['user__email', 'application_info__course__course__name',
                      'has_interview_date']
     list_filter = ['user__email', 'application_info__course__course__name',
-                     'has_interview_date']
+                   'has_interview_date']
 
     def has_change_permission(self, request, obj=None):
         return True
@@ -65,7 +65,6 @@ class ApplicationInfoAdmin(admin.ModelAdmin):
         'end_date',
         'course',
     ]
-
 
     def has_module_permission(self, request):
         return True
