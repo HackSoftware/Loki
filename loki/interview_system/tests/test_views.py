@@ -178,8 +178,11 @@ class GenerateInterviewsTests(TestCase):
             self.assertEquals(response.status_code, 302)
 
     def test_superuser_access_generate_interview(self):
-        superuser = AdminUserFactory()
+        superuser = BaseUserFactory()
+        superuser.is_active = True
+        superuser.is_superuser = True
+        superuser.save()
         with self.login(username=superuser.email,
-                        password=AdminUserFactory.password):
+                        password=BaseUserFactory.password):
             response = self.get('interview_system:generate_interviews')
             self.assertEquals(response.status_code, 200)
