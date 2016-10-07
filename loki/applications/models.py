@@ -29,9 +29,7 @@ class ApplicationInfo(models.Model):
     objects = ApplicationInfoManager()
 
     def __str__(self):
-        return "From {0} to {1} applying to {2}".format(self.start_date,
-                                                        self.end_date,
-                                                        self.course)
+        return "{0}".format(self.course)
 
     def apply_is_active(self):
         return self.end_date >= timezone.now()
@@ -66,7 +64,7 @@ class Application(models.Model):
     objects = ApplicationQuerySet.as_manager()
 
     def __str__(self):
-        return "{0} to {1}".format(self.user, self.application_info)
+        return "{0} applying to {1}".format(self.user, self.application_info)
 
     class Meta:
         unique_together = (("application_info", "user"),)

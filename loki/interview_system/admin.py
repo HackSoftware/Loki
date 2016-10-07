@@ -7,6 +7,9 @@ class InterviewerAdmin(admin.ModelAdmin):
 
     list_display = ['interviewer', ]
 
+    def has_module_permission(self, request):
+        return True
+
 
 @admin.register(InterviewerFreeTime)
 class InterviewerFreeTimeAdmin(admin.ModelAdmin):
@@ -17,7 +20,7 @@ class InterviewerFreeTimeAdmin(admin.ModelAdmin):
         'start_time',
         'end_time',
     ]
-
+    search_fields = ['interviewer__email', 'interviewer__first_name']
     list_filter = ['date', ]
 
     def has_add_permission(self, request):
@@ -41,11 +44,17 @@ class InterviewAdmin(admin.ModelAdmin):
         'uuid',
         'start_time',
         'interviewer',
-        'application',
+        'view_application',
         'has_confirmed'
     ]
-
+    search_fields = ['interviewer__email', 'interviewer__first_name', 'date']
     list_filter = ['date', 'start_time']
+
+    def view_application(self, obj):
+        return obj.application
+
+    view_application.empty_value_display = 'Free Slot'
+    view_application.short_description = "Applications"
 
     def has_change_permission(self, request, obj=None):
         return True
