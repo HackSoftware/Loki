@@ -1,5 +1,5 @@
-import datetime
 import factory
+from datetime import datetime, timedelta
 from django.core.management import call_command
 
 from test_plus.test import TestCase
@@ -20,7 +20,7 @@ class InterviewGenerationTests(TestCase):
         interviewer.courses_to_interview.add(app_info)
 
         InterviewerFreeTime.objects.create(interviewer=interviewer,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='11:00',
                                            end_time='14:00')
 
@@ -41,7 +41,7 @@ class InterviewGenerationTests(TestCase):
         interviewer.courses_to_interview.add(app_info)
 
         InterviewerFreeTime.objects.create(interviewer=interviewer,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='11:00',
                                            end_time='14:00')
 
@@ -69,12 +69,12 @@ class InterviewGenerationTests(TestCase):
         interviewer2.courses_to_interview.add(app_info)
 
         InterviewerFreeTime.objects.create(interviewer=interviewer1,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='11:00',
                                            end_time='14:00')
 
         InterviewerFreeTime.objects.create(interviewer=interviewer2,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='12:00',
                                            end_time='15:00')
 
@@ -109,15 +109,15 @@ class InterviewGenerationTests(TestCase):
         interviewer3.courses_to_interview.add(app_info1)
 
         InterviewerFreeTime.objects.create(interviewer=interviewer1,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='11:00',
                                            end_time='14:00')
         InterviewerFreeTime.objects.create(interviewer=interviewer2,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='12:00',
                                            end_time='15:00')
         InterviewerFreeTime.objects.create(interviewer=interviewer3,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='13:00',
                                            end_time='15:00')
 
@@ -143,3 +143,24 @@ class InterviewGenerationTests(TestCase):
         self.assertTrue(application2 in interviewer2.interviews.all())
         self.assertTrue(application4 in interviewer2.interviews.all())
         self.assertTrue(application3 in interviewer3.interviews.all())
+
+    def test_not_generate_interview_for_past_days(self):
+        app_info = ApplicationInfoFactory()
+        interviewer1, interviewer2 = factory.build_batch(size=2,
+                                                         klass=InterviewerFactory)
+
+        interviewer1.courses_to_interview.add(app_info)
+        interviewer2.courses_to_interview.add(app_info)
+
+        InterviewerFreeTime.objects.create(interviewer=interviewer1,
+                                           date=datetime.now().date() - timedelta(days=1),
+                                           start_time='11:00',
+                                           end_time='14:00')
+
+        InterviewerFreeTime.objects.create(interviewer=interviewer2,
+                                           date=datetime.now().date(),
+                                           start_time='11:00',
+                                           end_time='14:00')
+
+        call_command('generate_interview_slots')
+        self.assertEquals(6, Interview.objects.get_free_slots().count())

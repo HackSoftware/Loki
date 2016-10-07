@@ -26,13 +26,10 @@ class GenerateInterviewSlots:
 
         for slot in teacher_time_slots:
             # Check if slots are already generated for that time_slot
+            # check if date for interview is before today
             # (by a previous invocation of manage.py generate_slots)
-            if slot.has_generated_slots():
-                continue
-
             today = datetime.now()
-
-            if slot.date < datetime.date(today):
+            if slot.has_generated_slots() or slot.date < datetime.date(today):
                 continue
 
             # summarized free time of the interviewer
