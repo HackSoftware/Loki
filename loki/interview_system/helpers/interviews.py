@@ -91,7 +91,6 @@ class GenerateInterviews:
 
             try:
                 application = next(applications)
-                print(application)
             except StopIteration:
                 break
 
@@ -104,7 +103,8 @@ class GenerateInterviews:
             self.__inc_generated_interviews()
 
     def get_applications_without_interviews(self):
-        return Application.objects.without_interviews().count()
+        return Application.objects.without_interviews().filter(
+                                  application_info=self.application_info).count()
 
     def get_free_interview_slots(self):
         return Interview.objects.get_free_slots().count()
