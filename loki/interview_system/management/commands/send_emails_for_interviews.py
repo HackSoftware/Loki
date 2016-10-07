@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.core.urlresolvers import reverse
 
 from loki.interview_system.models import Interview
 from loki.emails.services import send_template_email
@@ -14,7 +15,8 @@ class Command(BaseCommand):
         for interview in interviews:
             application = interview.application
             user = application.user
-
+            confirm_url_kwargs = {"application": application.id,
+                                  "interview_token": interview.uuid}
             context = {
                 'protocol': 'http',
                 'full_name': user.full_name,
@@ -23,13 +25,11 @@ class Command(BaseCommand):
                 'date': str(interview.date),
                 'domain': Site.objects.get_current().domain,
                 'confirm_url': reverse("interview_system:confirm_interview",
-                        kwargs={"application": application.id,
-                                "interview_token": interview.uuid}),
+                                       kwargs=confirm_url_kwargs),
                 'choose_url': reverse("interview_system:choose_interview",
-                        kwargs={"application": application.id,
-                                "interview_token": interview.uuid})
+                                      kwargs={"application": application.id,
+                                              "interview_token": interview.uuid})
             }
-
 
             # TODO: Add ability to set custom template from the model
             email_template = settings.EMAIL_TEMPLATES['interview_confirmation']
