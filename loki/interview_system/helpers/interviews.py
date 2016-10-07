@@ -3,6 +3,7 @@ from loki.applications.models import Application
 from ..models import InterviewerFreeTime, Interview
 from .groups_generator import cycle_groups
 
+
 class GenerateInterviewSlots:
 
     def __init__(self, interview_time_length, break_time):

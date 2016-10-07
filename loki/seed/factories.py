@@ -1,5 +1,4 @@
 import factory
-import uuid
 from django.utils import timezone
 from datetime import timedelta
 from faker import Factory
@@ -122,9 +121,11 @@ class BaseUserFactory(factory.DjangoModelFactory):
     avatar = factory.django.ImageField(color='blue')
     full_image = factory.django.ImageField(color='blue')
 
+
 class AdminUserFactory(BaseUserFactory):
     is_active = True
     is_superuser = True
+
 
 class EducationInfoFactory(factory.DjangoModelFactory):
     class Meta:
