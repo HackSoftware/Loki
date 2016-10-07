@@ -6,6 +6,7 @@ class ApplicationQuerySet(models.QuerySet):
     def without_interviews(self):
         return self.filter(has_interview_date=False)
 
+
 class ApplicationInfoQuerySet(models.QuerySet):
 
     def with_interview_dates(self):

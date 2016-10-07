@@ -38,7 +38,7 @@ class Interview(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
     interviewer_comment = models.TextField(null=True, blank=True,
-        help_text='Коментар от интервюиращия')
+                                           help_text='Коментар от интервюиращия')
     possible_ratings = [(i, i) for i in range(11)]
     code_skills_rating = models.IntegerField(
         default=0,

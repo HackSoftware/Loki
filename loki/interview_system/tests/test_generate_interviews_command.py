@@ -1,5 +1,5 @@
-import datetime
 import factory
+from datetime import datetime, timedelta
 from django.core.management import call_command
 
 from test_plus.test import TestCase
@@ -20,7 +20,7 @@ class InterviewGenerationTests(TestCase):
         interviewer.courses_to_interview.add(app_info)
 
         InterviewerFreeTime.objects.create(interviewer=interviewer,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='11:00',
                                            end_time='14:00')
 
@@ -41,7 +41,7 @@ class InterviewGenerationTests(TestCase):
         interviewer.courses_to_interview.add(app_info)
 
         InterviewerFreeTime.objects.create(interviewer=interviewer,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='11:00',
                                            end_time='14:00')
 
@@ -63,18 +63,18 @@ class InterviewGenerationTests(TestCase):
         application2 = ApplicationFactory(application_info=app_info)
         application3 = ApplicationFactory(application_info=app_info)
         interviewer1, interviewer2 = factory.build_batch(size=2,
-                                     klass=InterviewerFactory)
+                                                         klass=InterviewerFactory)
 
         interviewer1.courses_to_interview.add(app_info)
         interviewer2.courses_to_interview.add(app_info)
 
         InterviewerFreeTime.objects.create(interviewer=interviewer1,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='11:00',
                                            end_time='14:00')
 
         InterviewerFreeTime.objects.create(interviewer=interviewer2,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='12:00',
                                            end_time='15:00')
 
@@ -90,7 +90,7 @@ class InterviewGenerationTests(TestCase):
         self.assertEquals(0, Application.objects.without_interviews().count())
 
     def test_generate_interviews_for_different_courses_with_different_interviewers(self):
-        course1, course2= factory.build_batch(size=2, klass=CourseFactory)
+        course1, course2 = factory.build_batch(size=2, klass=CourseFactory)
         cd1 = CourseDescriptionFactory(course=course1)
         cd2 = CourseDescriptionFactory(course=course2)
         app_info1 = ApplicationInfoFactory(course=cd1)
@@ -102,22 +102,22 @@ class InterviewGenerationTests(TestCase):
         application4 = ApplicationFactory(application_info=app_info2)
         application5 = ApplicationFactory(application_info=app_info1)
         interviewer1, interviewer2, interviewer3 = factory.build_batch(size=3,
-                                                    klass=InterviewerFactory)
+                                                                       klass=InterviewerFactory)
 
         interviewer1.courses_to_interview.add(app_info1)
         interviewer2.courses_to_interview.add(app_info2)
         interviewer3.courses_to_interview.add(app_info1)
 
         InterviewerFreeTime.objects.create(interviewer=interviewer1,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='11:00',
                                            end_time='14:00')
         InterviewerFreeTime.objects.create(interviewer=interviewer2,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='12:00',
                                            end_time='15:00')
         InterviewerFreeTime.objects.create(interviewer=interviewer3,
-                                           date=datetime.datetime.now().date(),
+                                           date=datetime.now().date(),
                                            start_time='13:00',
                                            end_time='15:00')
 
@@ -143,3 +143,24 @@ class InterviewGenerationTests(TestCase):
         self.assertTrue(application2 in interviewer2.interviews.all())
         self.assertTrue(application4 in interviewer2.interviews.all())
         self.assertTrue(application3 in interviewer3.interviews.all())
+
+    def test_not_generate_interview_for_past_days(self):
+        app_info = ApplicationInfoFactory()
+        interviewer1, interviewer2 = factory.build_batch(size=2,
+                                                         klass=InterviewerFactory)
+
+        interviewer1.courses_to_interview.add(app_info)
+        interviewer2.courses_to_interview.add(app_info)
+
+        InterviewerFreeTime.objects.create(interviewer=interviewer1,
+                                           date=datetime.now().date() - timedelta(days=1),
+                                           start_time='11:00',
+                                           end_time='14:00')
+
+        InterviewerFreeTime.objects.create(interviewer=interviewer2,
+                                           date=datetime.now().date(),
+                                           start_time='11:00',
+                                           end_time='14:00')
+
+        call_command('generate_interview_slots')
+        self.assertEquals(6, Interview.objects.get_free_slots().count())

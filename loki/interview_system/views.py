@@ -4,14 +4,12 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 from django.core.management import call_command
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.decorators import method_decorator
 
-from rest_framework import serializers, generics, status, mixins
+from rest_framework import generics
 
 from loki.applications.models import Application, ApplicationInfo
-from loki.education.models import Course
 from .models import Interview, Interviewer
 from .serializers import InterviewSerializer
 
@@ -20,14 +18,11 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'choose_interview.html'
 
     def dispatch(self, request, *args, **kwargs):
-
         application_id = kwargs.get('application')
-        uuid = kwargs.get('interview_token')
-
         self.application = Application.objects.filter(id=application_id).first()
 
         if self.application.user != request.user or \
-            self.application.id != int(application_id):
+           self.application.id != int(application_id):
             raise Http404
 
         return super().dispatch(request, *args, **kwargs)
@@ -37,21 +32,20 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
         application_id = kwargs.get('application')
         self.interview = Interview.objects.filter(uuid=uuid).first()
         if self.interview is None or \
-            self.interview.application is None or \
-            self.interview.application.user != request.user or \
-            self.interview.application.id != int(application_id):
+           self.interview.application is None or \
+           self.interview.application.user != request.user or \
+           self.interview.application.id != int(application_id):
             raise Http404
 
         if self.interview.has_confirmed:
             return redirect(reverse('interview_system:confirm_interview',
                             kwargs={'application': application_id,
-                            'interview_token': self.interview.uuid}))
+                                    'interview_token': self.interview.uuid}))
 
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = self.request.user
         uuid = kwargs.get('interview_token')
         application = kwargs.get('application')
         context['current_interview'] = Interview.objects.filter(
@@ -85,7 +79,6 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
 class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
     template_name = 'confirm_interview.html'
 
-
     def dispatch(self, request, *args, **kwargs):
         uuid = kwargs.get('interview_token')
         app_id = kwargs.get('application')
@@ -93,7 +86,7 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
         self.application = Application.objects.filter(id=app_id).first()
         self.interviewer = Interviewer.objects.filter(interview=self.interview).first()
         if self.application.user != request.user or \
-            self.application.id != int(app_id):
+           self.application.id != int(app_id):
             raise Http404
 
         return super().dispatch(request, *args, **kwargs)
@@ -110,9 +103,9 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
         application_id = kwargs.get('application')
         self.interview = Interview.objects.filter(uuid=uuid).first()
         if self.interview is None or \
-            self.interview.application is None or \
-            self.interview.application.user != request.user or \
-            self.interview.application.id != int(application_id):
+           self.interview.application is None or \
+           self.interview.application.user != request.user or \
+           self.interview.application.id != int(application_id):
             raise Http404
 
         return super().get(request, *args, **kwargs)
