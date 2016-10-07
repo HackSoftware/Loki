@@ -21,18 +21,18 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="table-body">
               {% for interview in interviews %}
-              <tr class="interview-selected" id="interview_{{interview.id}}">
-                <td class="interview-date">{{ interview.date| date:'d-m-Y' }}</td>
-                <td class="interview-time">{{ interview.start_time }}</td>
-                <td>
-                  <form class="change-interview-form" action="{% url 'interview_system:choose_interview' application interview.uuid %}" method="POST">
-                    {% csrf_token %}
-                    <button id="change-interview" type="submit" class="btn btn-warning" >Избери</button></td>
-                  </form>
-              </tr>
-              {% endfor %}
+                 <tr class="interview-selected" id="interview_{{interview.id}}">
+                   <td class="interview-date">{{ interview.date| date:'d-m-Y' }}</td>
+                   <td class="interview-time">{{ interview.start_time }}</td>
+                   <td>
+                     <form class="change-interview-form" action="{% url 'interview_system:choose_interview' application interview.uuid %}" method="POST">
+                       {% csrf_token %}
+                       <button id="change-interview" type="submit" class="btn btn-warning" >Избери</button></td>
+                     </form>
+                 </tr>
+             {% endfor %}
             </tbody>
           </table>
         </div>
@@ -49,16 +49,16 @@
 {% endblock %}
 {% block 'scripts' %}
 <script>
-
-setInterval(getFreeInterviews, 5000);
+var interviewSlotsCount = {{interviews|length}};
 
 function getFreeInterviews() {
   $.getJSON("/interview/api/get-free-interviews", function(data) {
-    $.each(data,function(key, value){
-      $("#interview_" + value.id + " .interview-date").html(value.date);
-      $("#interview_" + value.id + " .interview-time").html(value.start_time);
-    })
+    if(interviewSlotsCount != data.length) location.reload();
+    setTimeout(getFreeInterviews, 5000);
   })
 }
+getFreeInterviews();
+
 </script>
+
 {% endblock %}
