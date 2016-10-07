@@ -24,7 +24,6 @@ class Command(BaseCommand):
             # TODO: Add ability to set custom template from the model
             email_template = settings.EMAIL_TEMPLATES['interview_confirmation']
             send_template_email(user.email, email_template, context)
-            import ipdb; ipdb.set_trace()
 
             interview.has_received_email = True
             interview.save()

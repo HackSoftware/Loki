@@ -1,5 +1,5 @@
 {% extends 'website/base.html' %}
-
+{% load utils %}
 {% block 'page-content' %}
 {% autoescape off %}
 <div class="container">
@@ -23,7 +23,7 @@
           {% for problem in app_info.applicationproblem_set.all %}
             <h5>Предадени задачи {{ problem.name }}: {{ problem.applicationproblemsolution_set.count }}</h5>
           {% endfor %}
-          <!-- <h4>Потвърдени интервюта: {{ app_info.interview_set.all.confirmed}}</h4> -->
+          <h4>Потвърдени интервюта: {{ confirmed_interviews|dict_index:app_info }}</h4>
         </div>
       </div>
       {% endfor %}

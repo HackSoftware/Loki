@@ -129,11 +129,12 @@ class GenerateInterviews(LoginRequiredMixin, TemplateView,):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['interviews'] = Interview.objects.all()
-        context['courses'] = Course.objects.all()
         context['app_infos'] = ApplicationInfo.objects.get_open_for_interview()
-        print(context['app_infos'])
-        context['apps'] = Application.objects.all()
+
+        confirmed_interviews = {}
+        for info in context['app_infos']:
+            confirmed_interviews[info] = Interview.objects.confirmed_for(info).count()
+        context['confirmed_interviews'] = confirmed_interviews
         return context
 
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
