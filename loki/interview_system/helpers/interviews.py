@@ -99,7 +99,6 @@ class GenerateInterviews:
                 break
 
             slot.application = application
-            slot.app_info = self.application_info
             slot.save()
 
             application.has_interview_date = True
