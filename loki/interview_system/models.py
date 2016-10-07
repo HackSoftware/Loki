@@ -30,7 +30,6 @@ class InterviewerFreeTime(models.Model):
 class Interview(models.Model):
     interviewer = models.ForeignKey(Interviewer)
     application = models.ForeignKey(Application, null=True)
-    app_info = models.ForeignKey(ApplicationInfo, null=True)
     date = models.DateField(blank=False, null=True)
     start_time = models.TimeField(blank=False, null=True)
     end_time = models.TimeField(blank=False, null=True)
