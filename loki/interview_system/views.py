@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.views.generic import TemplateView
 from django.http import Http404
 from django.shortcuts import redirect
@@ -55,6 +56,7 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
 
         return context
 
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         uuid = kwargs.get('interview_token')
         application_id = kwargs.get('application')
@@ -64,8 +66,8 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
             raise Http404
 
         old_interview = Interview.objects.filter(application=self.application).first()
-        old_interview.application = None
-        old_interview.save()
+        old_interview.reset()
+
         new_interview.application = self.application
         new_interview.has_received_email = True
         new_interview.has_confirmed = True
@@ -85,8 +87,12 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
         self.interview = Interview.objects.filter(uuid=uuid).first()
         self.application = Application.objects.filter(id=app_id).first()
         self.interviewer = Interviewer.objects.filter(interview=self.interview).first()
+
         if self.application.user != request.user or \
            self.application.id != int(app_id):
+            raise Http404
+
+        if Interview.objects.filter(application=self.application, has_confirmed=True).exists():
             raise Http404
 
         return super().dispatch(request, *args, **kwargs)

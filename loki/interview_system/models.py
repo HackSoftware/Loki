@@ -64,3 +64,10 @@ class Interview(models.Model):
     is_accepted = models.BooleanField(default=False)
 
     objects = InterviewQuerySet.as_manager()
+
+    def reset(self):
+        self.application = None
+        self.has_received_email = False
+        self.has_confirmed = False
+
+        self.save()
