@@ -140,6 +140,16 @@ class GenerateInterviews(LoginRequiredMixin, TemplateView,):
         return super().get(request, *args, **kwargs)
 
 
-class GetFreeInterviews(generics.ListAPIView):
+class GetFreeInterviews(generics.ListAPIView, LoginRequiredMixin):
     serializer_class = InterviewSerializer
     queryset = Interview.objects.get_free_slots()
+
+    def dispatch(self, request, *args, **kwargs):
+        self.user = self.request.user
+        self.app_id = request.GET.get('applicationId')
+        return super().dispatch(request, *args, **kwargs)
+
+
+    def get_serializer_context(self):
+        return {'user': self.user,
+                'application': self.app_id}
