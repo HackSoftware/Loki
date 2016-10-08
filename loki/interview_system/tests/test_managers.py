@@ -92,13 +92,13 @@ class InterviewManagerTests(TestCase):
         interviewer2.courses_to_interview.add(app_info2)
 
         free_time1 = InterviewerFreeTime.objects.create(interviewer=interviewer1,
-                                                       date=datetime.datetime.now().date(),
-                                                       start_time='11:00',
-                                                       end_time='14:00')
+                                                        date=datetime.datetime.now().date(),
+                                                        start_time='11:00',
+                                                        end_time='14:00')
         free_time2 = InterviewerFreeTime.objects.create(interviewer=interviewer1,
-                                                       date=datetime.datetime.now().date(),
-                                                       start_time='10:00',
-                                                       end_time='14:00')
+                                                        date=datetime.datetime.now().date(),
+                                                        start_time='10:00',
+                                                        end_time='14:00')
 
         Interview.objects.create(interviewer=interviewer2,
                                  date=datetime.datetime.now().date(),

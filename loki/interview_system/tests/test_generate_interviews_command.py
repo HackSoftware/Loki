@@ -37,7 +37,6 @@ class InterviewGenerationTests(TestCase):
         app_info = ApplicationInfoFactory()
         ApplicationFactory(application_info=app_info)
         interviewer = InterviewerFactory()
-
         interviewer.courses_to_interview.add(app_info)
 
         InterviewerFreeTime.objects.create(interviewer=interviewer,
@@ -168,3 +167,57 @@ class InterviewGenerationTests(TestCase):
 
         call_command('generate_interview_slots')
         self.assertEquals(6, Interview.objects.get_free_slots().count())
+
+    def test_not_generate_interviews_when_have_not_enough_free_slots(self):
+        app_info = ApplicationInfoFactory()
+        interviewer = InterviewerFactory()
+        interviewer.courses_to_interview.add(app_info)
+
+        InterviewerFreeTime.objects.create(interviewer=interviewer,
+                                           date=datetime.now().date(),
+                                           start_time='11:00',
+                                           end_time='12:00')
+
+        ApplicationFactory(application_info=app_info)
+        ApplicationFactory(application_info=app_info)
+        ApplicationFactory(application_info=app_info)
+        self.assertEquals(3, Application.objects.without_interviews_for(app_info).count())
+
+        call_command('generate_interview_slots')
+        self.assertEquals(3, Application.objects.without_interviews_for(app_info).count())
+        self.assertEquals(2, Interview.objects.free_slots_for(app_info).count())
+
+    def test_not_generate_interviews_when_have_not_enough_free_slots_for_app_info(self):
+        course1, course2 = factory.build_batch(size=2, klass=CourseFactory)
+        cd1 = CourseDescriptionFactory(course=course1)
+        cd2 = CourseDescriptionFactory(course=course2)
+        app_info1 = ApplicationInfoFactory(course=cd1)
+        app_info2 = ApplicationInfoFactory(course=cd2)
+
+        ApplicationFactory(application_info=app_info1)
+        ApplicationFactory(application_info=app_info1)
+        ApplicationFactory(application_info=app_info1)
+        ApplicationFactory(application_info=app_info2)
+        ApplicationFactory(application_info=app_info2)
+        interviewer1, interviewer2 = factory.build_batch(size=2, klass=InterviewerFactory)
+
+        interviewer1.courses_to_interview.add(app_info1)
+        interviewer2.courses_to_interview.add(app_info2)
+
+        InterviewerFreeTime.objects.create(interviewer=interviewer1,
+                                           date=datetime.now().date(),
+                                           start_time='11:00',
+                                           end_time='12:00')
+        InterviewerFreeTime.objects.create(interviewer=interviewer2,
+                                           date=datetime.now().date(),
+                                           start_time='12:00',
+                                           end_time='15:00')
+
+        self.assertEquals(3, Application.objects.without_interviews_for(app_info1).count())
+        self.assertEquals(2, Application.objects.without_interviews_for(app_info2).count())
+
+        call_command('generate_interview_slots')
+        self.assertEquals(3, Application.objects.without_interviews_for(app_info1).count())
+        self.assertEquals(2, Interview.objects.free_slots_for(app_info1).count())
+        self.assertEquals(0, Application.objects.without_interviews_for(app_info2).count())
+        self.assertEquals(4, Interview.objects.free_slots_for(app_info2).count())

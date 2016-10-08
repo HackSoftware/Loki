@@ -26,7 +26,6 @@ class Command(BaseCommand):
             print('There are no open for interview courses!\n')
             print('No interviews will be generated.')
 
-
         for info in courses_to_interview:
             print("Generate interviews for {0}".format(info.course.course.name))
             interview_generator = GenerateInterviews(application_info=info)

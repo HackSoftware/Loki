@@ -10,6 +10,7 @@ class ApplicationQuerySet(models.QuerySet):
         return self.without_interviews().filter(
                application_info=application_info)
 
+
 class ApplicationInfoQuerySet(models.QuerySet):
 
     def with_interview_dates(self):
