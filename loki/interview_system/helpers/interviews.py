@@ -76,11 +76,10 @@ class GenerateInterviews:
         self.__generated_interviews += 1
 
     def generate_interviews(self):
-        applications = iter(Application.objects.without_interviews().filter(
-                                                application_info=self.application_info))
+        applications = iter(Application.objects.without_interviews_for(
+                            application_info=self.application_info))
 
-        interviews = Interview.objects.get_free_slots().filter(
-                               interviewer__courses_to_interview__in=[self.application_info])
+        interviews = Interview.objects.free_slots_for(self.application_info)
         free_interview_slots = cycle_groups(interviews, key=lambda x: x.interviewer)
 
         today = datetime.now()
@@ -103,11 +102,10 @@ class GenerateInterviews:
             self.__inc_generated_interviews()
 
     def get_applications_without_interviews(self):
-        return Application.objects.without_interviews().filter(
-                                  application_info=self.application_info).count()
+        return Application.objects.without_interviews_for(self.application_info).count()
 
     def get_free_interview_slots(self):
-        return Interview.objects.get_free_slots().count()
+        return Interview.objects.free_slots_for(self.application_info).count()
 
     def get_generated_interviews_count(self):
         return self.__generated_interviews

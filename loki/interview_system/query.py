@@ -6,6 +6,10 @@ class InterviewQuerySet(models.QuerySet):
     def get_free_slots(self):
         return self.filter(application__isnull=True).order_by('date', 'start_time')
 
+    def free_slots_for(self, application_info):
+        return self.get_free_slots().filter(
+               interviewer__courses_to_interview__in=[application_info])
+
     def with_application(self):
         return self.filter(application__isnull=False)
 

@@ -51,8 +51,7 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
         context['current_interview'] = Interview.objects.filter(
                                        uuid=uuid).first()
         context['app'] = Application.objects.filter(id=application).first()
-        context['interviews'] = Interview.objects.get_free_slots().filter(
-               interviewer__courses_to_interview__in=[context['app'].application_info])
+        context['interviews'] = Interview.objects.free_slots_for(context['app'].application_info)
 
         return context
 
