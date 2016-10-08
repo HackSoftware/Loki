@@ -148,7 +148,7 @@ class GenerateInterviews(LoginRequiredMixin, TemplateView,):
 
 class GetFreeInterviews(generics.ListAPIView, LoginRequiredMixin):
     serializer_class = InterviewSerializer
-    queryset = Interview.objects.get_free_slots()
+    queryset = Interview.objects.get_free_slots().order_by('date', 'start_time')
 
     def dispatch(self, request, *args, **kwargs):
         self.user = self.request.user
