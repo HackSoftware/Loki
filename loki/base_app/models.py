@@ -219,12 +219,11 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
         except:
             return False
 
-    # def make_competitor(self):
-    #     competitor = Competitor(baseuser_ptr_id=self.id)
-    #     competitor.save()
-    #     competitor.__dict__.update(self.__dict__)
-
-    #     return competitor.save()
+    def get_interviewer(self):
+        try:
+            return self.interviewer
+        except:
+            return False
 
 
 class EducationInfo(models.Model):

@@ -5,12 +5,15 @@ from loki.base_app.models import BaseUser
 from loki.applications.models import ApplicationInfo, Application
 
 from .query import InterviewQuerySet
+from .managers import InterviewerManager
 
 
 class Interviewer(BaseUser):
     courses_to_interview = models.ManyToManyField(ApplicationInfo)
     interviews = models.ManyToManyField(Application, through='Interview')
     skype = models.CharField(null=True, blank=True, max_length=30)
+
+    objects = InterviewerManager()
 
 
 class InterviewerFreeTime(models.Model):
