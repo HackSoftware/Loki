@@ -11,8 +11,9 @@ class InterviewSerializer(serializers.ModelSerializer):
 
     def get_choose_interview_url(self, obj):
         return reverse('interview_system:choose_interview',
-                        kwargs={'application': self.context['application'],
-                                'interview_token': obj.uuid})
+                       kwargs={'application': self.context['application'],
+                               'interview_token': obj.uuid})
+
     class Meta:
         model = Interview
         fields = ('id', 'date', 'start_time', 'choose_interview_url')

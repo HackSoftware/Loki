@@ -148,7 +148,6 @@ class GetFreeInterviews(generics.ListAPIView, LoginRequiredMixin):
         self.app_id = request.GET.get('applicationId')
         return super().dispatch(request, *args, **kwargs)
 
-
     def get_serializer_context(self):
         return {'user': self.user,
                 'application': self.app_id}
