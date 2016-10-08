@@ -31,7 +31,8 @@ class Command(BaseCommand):
                                               "interview_token": interview.uuid})
             }
 
-            # TODO: Add ability to set custom template from the model
+            print('Sending to {} for application {}'.format(user.email, application))
+
             email_template = settings.EMAIL_TEMPLATES['interview_confirmation']
             send_template_email(user.email, email_template, context)
 
