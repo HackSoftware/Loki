@@ -65,3 +65,4 @@ bower_components
 .sass-cache/
 *.map
 *.swp
+data.json

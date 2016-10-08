@@ -235,6 +235,9 @@ body {
   display: inline-block; }
   .container .course-campaign-container .course-campaign-info {
     display: inline-block; }
+.container .generate-interviews-box {
+  margin-top: 20px;
+  font-size: 14px; }
 
 .dropdown-menu {
   margin-top: 20px; }
