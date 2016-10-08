@@ -67,6 +67,7 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
         old_interview.application = None
         old_interview.save()
         new_interview.application = self.application
+        new_interview.has_received_email = True
         new_interview.has_confirmed = True
         new_interview.save()
 
