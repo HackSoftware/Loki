@@ -230,6 +230,14 @@ body {
   height: 250px; }
 .container #usernames {
   font-size: 30px; }
+.container .course-campaign-container {
+  width: 45%;
+  display: inline-block; }
+  .container .course-campaign-container .course-campaign-info {
+    display: inline-block; }
+.container .generate-interviews-box {
+  margin-top: 20px;
+  font-size: 14px; }
 
 .dropdown-menu {
   margin-top: 20px; }
@@ -515,6 +523,11 @@ body {
     font-size: 20px; }
   .row-profile #profile-socials {
     font-size: 2em; }
+  .row-profile .interviews {
+    max-width: 80%;
+    margin-left: 25px; }
+    .row-profile .interviews img {
+      width: 25px; }
 
 #edit-app {
   margin-top: 10px; }
@@ -567,5 +580,30 @@ body {
   text-align: center; }
   .application-list .logo {
     width: 100%; }
+
+#interview-slots-table th, #interview-slots-table td {
+  padding: 8px;
+  text-align: left; }
+#interview-slots-table th {
+  background-color: #ec971f;
+  color: white; }
+#interview-slots-table tr:hover {
+  background-color: #ddd; }
+
+.confirm-interview-container {
+  margin-top: 30px; }
+  .confirm-interview-container #user-name {
+    margin-left: 30%; }
+  .confirm-interview-container #confirm_interview-btn {
+    margin-left: 30%;
+    padding: 15px;
+    font-size: 16px; }
+  .confirm-interview-container .confirm-interview-box {
+    margin-left: 10%;
+    margin-right: 10%; }
+    .confirm-interview-container .confirm-interview-box .hb-logo #hb-regards {
+      text-align: right; }
+    .confirm-interview-container .confirm-interview-box .hb-logo img {
+      width: 30px; }
 
 /*# sourceMappingURL=website.css.map */

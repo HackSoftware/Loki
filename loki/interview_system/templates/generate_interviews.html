@@ -1,0 +1,41 @@
+{% extends 'website/base.html' %}
+{% load utils %}
+{% block 'page-content' %}
+{% autoescape off %}
+<div class="container">
+  <div class="row">
+    <div class="container">
+
+      <h3>Информация за текущата кампания</h3>
+      {% for app_info in app_infos %}
+        <div class="course-campaign-container">
+
+          <div class="course-campaign-info">
+          <h4><b>{{ app_info.course.course.name }}</b></h4>
+          <h5><b>Кандидаствали:</b> {{ app_info.application_set.all.count }} </54>
+          {% for problem in app_info.applicationproblem_set.all %}
+            <h5><b>Предадени задачи:</b> {{ problem.name }}: {{ problem.applicationproblemsolution_set.count }}</h5>
+          {% endfor %}
+          <h5><b>Потвърдени интервюта:</b> {{ confirmed_interviews|dict_index:app_info }}</h5>
+        </div>
+      </div>
+      {% endfor %}
+
+      <div class="generate-interviews-box">
+        <p>Създаването на всички възможни интервюта става чрез натискането на бутона отдолу!<br>
+           Ще бъдат генерирани интервюта на база на свободните часове на нашите интервюиращи!<br>
+        </p>
+        <form action="" method="post">
+          {% csrf_token %}
+          <button id="confirm_interview-btn" class="btn btn-warning" type="submit">Създай интервюта!</button>
+        </form>
+        <br>
+        <div class="interviewers-box">
+        </div>
+    </div>
+    </div>
+  </div>
+</div>
+{% endautoescape %}
+
+{% endblock %}

@@ -61,6 +61,7 @@ INSTALLED_APPS = (
     'loki.website',
     'loki.applications',
     'loki.emails.apps.EmailsConfig',
+    'loki.interview_system.apps.InterviewSystemConfig',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -106,8 +107,6 @@ USE_I18N = True
 
 USE_L10N = True
 
-TIME_ZONE = 'Europe/Istanbul'
-
 USE_I18N = True
 
 USE_L10N = True
@@ -116,6 +115,7 @@ USE_TZ = True
 
 LANGUAGES = (('bg', 'Bulgarian'),)
 
+TIME_ZONE = env('TIME_ZONE', default='Europe/Sofia')
 
 # STATIC FILE CONFIGURATION
 # ------------------------------------------------------------------------------
@@ -178,7 +178,7 @@ POLLING_SLEEP_TIME = env.int('POLLING_SLEEP_TIME', default='1')  # seconds
 
 CELERYBEAT_SCHEDULE = {
     'retest-solutions-on-test-change': {
-        'task': 'hack_training.dashboard.tasks.check_for_retests',
+        'task': 'loki.education.tasks.check_for_retests',
         'schedule': timedelta(seconds=60),
     }
 }
@@ -240,6 +240,7 @@ templates = {
     "password_reset": lambda **env_kwargs: env('PASSWORD_RESET_TEMPLATE_ID', **env_kwargs),
     "application_completed_default": lambda **env_kwargs: env('APPLICATION_COMPLETED_DEFAULT', **env_kwargs),
     "hackfmi_team_deleted": lambda **env_kwargs: env('HACKFMI_TEAM_DELETED_TEMPLATE_ID', **env_kwargs),
+    "interview_confirmation": lambda **env_kwargs: env('CONFIRM_INTERVIEW', **env_kwargs)
 }
 
 # Get all email templates from the env with default value ""
@@ -247,3 +248,5 @@ EMAIL_TEMPLATES = {
     key: f(default="")
     for key, f in templates.items()
 }
+
+LOGIN_URL = 'website:login'

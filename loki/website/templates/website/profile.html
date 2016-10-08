@@ -57,7 +57,39 @@
     </table>
     </div>
 
-
   </div>
 </div>
+
+{% if interviews %}
+<div class="container">
+  <div class="row-profile">
+    <div>
+      <table class="table interviews table-hover">
+        <thead>
+          <caption>
+            <b>Вашите интервюта</b>
+            <img src="{{ STATIC_URL }}website_images/hackman_head.png" />
+          </caption>
+          <tr>
+            <th>Дата</th>
+            <th>Начален час</th>
+            <th>Курс</th>
+            <th>Skype на интервюиращ</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for interview in interviews %}
+          <tr>
+            <td>{{ interview.date }}</td>
+            <td>{{ interview.start_time }}</td>
+            <td>{{ interview.application.application_info.course }}</td>
+            <td>{{ interview.interviewer.skype }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endif %}
 {% endblock %}

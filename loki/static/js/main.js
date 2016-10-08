@@ -1,4 +1,5 @@
 $(document).ready(function(){
+
     if($('[data-toggle="popover"]').length > 0) {
       $('[data-toggle="popover"]').popover({ trigger: "focus"});
     }
@@ -14,9 +15,21 @@ $(document).ready(function(){
       $("#div_id_full_image input[type='file']").click()
     })
 
+    $(".change-interview-form").on("submit", function(event) {
+      if(!$(this).data('submitted')) {
+        event.preventDefault();
+        if(confirm('Сигурен ли си, че желаеш да смениш интервюто си?')) {
+          $(this).data('submitted', true);
+          $(this).submit();
+        }
+      }
+
+    })
+
     $("#div_id_full_image input[type='file']").change(function(){
       var form = $(this).closest("form");
       form.find("[type='submit']").removeClass("btn-warning").addClass("btn-success").html("Saving...");
       form.submit();
     })
+
 });

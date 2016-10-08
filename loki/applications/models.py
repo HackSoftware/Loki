@@ -7,12 +7,15 @@ from loki.base_app.models import BaseUser
 from ckeditor.fields import RichTextField
 
 from .managers import ApplicationInfoManager
+from .query import ApplicationQuerySet
 
 
 class ApplicationInfo(models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
-    course = models .OneToOneField(CourseDescription)
+    course = models.OneToOneField(CourseDescription)
+    start_interview_date = models.DateTimeField(blank=False, null=True)
+    end_interview_date = models.DateTimeField(blank=False, null=True)
 
     description = RichTextField(
         blank=True,
@@ -26,12 +29,14 @@ class ApplicationInfo(models.Model):
     objects = ApplicationInfoManager()
 
     def __str__(self):
-        return "From {0} to {1} applying to {2}".format(self.start_date,
-                                                        self.end_date,
-                                                        self.course)
+        return "{0}".format(self.course)
 
     def apply_is_active(self):
         return self.end_date >= timezone.now()
+
+    def interview_is_active(self):
+        return self.start_interview_date <= timezone.now() and \
+               self.end_interview_date >= timezone.now()
 
 
 class ApplicationProblem(models.Model):
@@ -54,9 +59,12 @@ class Application(models.Model):
     skype = models.CharField(null=True, blank=True, max_length=255)
     works_at = models.CharField(null=True, blank=True, max_length=255)
     studies_at = models.CharField(blank=True, null=True, max_length=255)
+    has_interview_date = models.BooleanField(default=False)
+
+    objects = ApplicationQuerySet.as_manager()
 
     def __str__(self):
-        return "{0} to {1}".format(self.user, self.application_info)
+        return "{0} applying to {1}".format(self.user, self.application_info)
 
     class Meta:
         unique_together = (("application_info", "user"),)

@@ -8,6 +8,8 @@ from loki.hack_fmi import models as hack_fmi_models
 from loki.education import models as education_models
 from loki.website import models as website_models
 from loki.applications import models as application_models
+from loki.interview_system import models as interview_models
+
 
 faker = Factory.create()
 
@@ -445,7 +447,7 @@ class CourseDescriptionFactory(factory.DjangoModelFactory):
 
     course = factory.SubFactory(CourseFactory)
     custom_logo = factory.django.ImageField()
-    url = faker.slug()
+    url = factory.LazyAttribute(lambda _: faker.slug())
     video_image = factory.django.ImageField()
     blog_article = faker.text(max_nb_chars=255)
 
@@ -473,9 +475,11 @@ class ApplicationInfoFactory(factory.DjangoModelFactory):
     class Meta:
         model = application_models.ApplicationInfo
 
-    course = factory.SubFactory(CourseFactory)
+    course = factory.SubFactory(CourseDescriptionFactory)
     start_date = timezone.now()
     end_date = timezone.now() + timedelta(days=1)
+    start_interview_date = timezone.now()
+    end_interview_date = timezone.now() + timedelta(days=3)
 
 
 class ApplicationProblemFactory(factory.DjangoModelFactory):
@@ -483,7 +487,7 @@ class ApplicationProblemFactory(factory.DjangoModelFactory):
         model = application_models.ApplicationProblem
 
     name = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=255))
-    description_url = faker.url()
+    description_url = factory.LazyAttribute(lambda _: faker.url())
 
 
 class ApplicationFactory(factory.DjangoModelFactory):
@@ -506,3 +510,43 @@ class ApplicationProblemSolutionFactory(factory.DjangoModelFactory):
     application = factory.SubFactory(ApplicationFactory)
     problem = factory.SubFactory(ApplicationProblemFactory)
     solution_url = faker.url()
+
+
+class InterviewerFactory(BaseUserFactory):
+    class Meta:
+        model = interview_models.Interviewer
+
+
+class InterviewerFreeTimeFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = interview_models.InterviewerFreeTime
+
+    interviewer = factory.SubFactory(InterviewerFactory)
+    date = faker.date_time()
+    start_time = timezone.now()
+    end_time = timezone.now() + timedelta(minutes=270)
+    buffer_time = faker.boolean()
+
+
+class InterviewFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = interview_models.Interview
+
+    interviewer = factory.SubFactory(InterviewerFactory)
+    application = factory.SubFactory(ApplicationFactory)
+    date = faker.date_time()
+    start_time = timezone.now()
+    end_time = timezone.now() + timedelta(minutes=30)
+    interviewer_time_slot = factory.SubFactory(InterviewerFreeTimeFactory)
+    buffer_time = faker.boolean()
+    # uuid = factory.LazyAttribute(lambda _: uuid.uuid4)
+
+    interviewer_comment = faker.text()
+
+    code_skills_rating = faker.random_number(digits=1)
+    code_design_rating = faker.random_number(digits=1)
+    fit_attitude_rating = faker.random_number(digits=1)
+
+    has_confirmed = False
+    has_received_email = False
+    is_accepted = False

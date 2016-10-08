@@ -1,0 +1,97 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+<div class="container">
+  <div class="row">
+    <div class="container-fluid">
+      <div class="choose-interview-container col-md-8 col-md-offset-2">
+        <h4>Здравей, {{ user.first_name }}</h4>
+        <h5>Ти успешно кандидаства за <b>{{app.application_info.course}}</b>.</h5>
+        <h5>Твоето интервю е на <b>{{ current_interview.date }}</b> в <b>{{ current_interview.start_time}}</b>.</h5>
+        <h5>Ако желаеш да смениш датата и часа, които сме ти насрочили, можеш да избереш от таблицата отдолу.</h5>
+        <h5>Имаш право само веднъж да промениш своето интервю.</h5><br>
+        <div class="table-responsive">
+          <span id="application-id" style="display: none" data-application="{{ application }}"></span>
+          <div id="time">Последно обновяване на таблицата: <span></span></div>
+          <table id="interview-slots-table" class="table table-hover table-striped " cellspacing="0">
+            <thead>
+              <tr>
+                <th>Дата</th>
+                <th>Начален час</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              {% for interview in interviews %}
+                 <tr class="interview-selected" id="interview_{{interview.id}}">
+                   <td class="interview-date">{{ interview.date| date:'d-m-Y' }}</td>
+                   <td class="interview-time">{{ interview.start_time }}</td>
+                   <td>
+                     <form class="change-interview-form" action="{% url 'interview_system:choose_interview' application interview.uuid %}" method="POST">
+                       {% csrf_token %}
+                       <button id="change-interview" type="submit" class="btn btn-warning" >Избери</button>
+                     </form>
+                    </td>
+                 </tr>
+             {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+{% endautoescape %}
+
+{% endblock %}
+{% block 'scripts' %}
+<script>
+
+function poll() {
+  setTimeout(function(){
+    getFreeInterviews(poll)
+  }, 2000);
+};
+
+function getFreeInterviews(cb) {
+    var rows = "";
+    var csrftoken = Cookies.get('csrftoken');
+    var applicationId = $("#application-id").data("application");
+    $.getJSON("/interview/api/get-free-interviews?applicationId=" + applicationId, function (data) {
+        $.each(data, function (key, value) {
+          var row = '<tr class="interview-selected" id="interview_' + value.id + '">' +
+          ' <td class="interview-date">' + value.date + '</td>' +
+          ' <td class="interview-time">' + value.start_time + '</td>' +
+          ' <td>' +
+          '   <form class="change-interview-form" action="' + value.choose_interview_url + '" method="POST">' +
+          '<input type="hidden" name="csrfmiddlewaretoken" value="' + csrftoken + '">' +
+          '     <button id="change-interview" type="submit" class="btn btn-warning" >Избери</button>' +
+          '  </form></td></tr>';
+          rows += row;
+          if(key == data.length-1) {
+            $('tbody#table-body').html(rows);
+            updateTimeChecked();
+          }
+        })
+        cb();
+    });
+};
+
+function updateTimeChecked() {
+  var d = new Date();
+  var date = d.toLocaleDateString();
+  var hours = d.toLocaleTimeString();
+  $("#time span").html(date + " " + hours);
+}
+
+updateTimeChecked();
+
+poll();
+</script>
+
+{% endblock %}
