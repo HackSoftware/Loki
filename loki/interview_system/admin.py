@@ -45,7 +45,8 @@ class InterviewAdmin(admin.ModelAdmin):
         'start_time',
         'interviewer',
         'view_application',
-        'has_confirmed'
+        'has_confirmed',
+        'has_received_email'
     ]
     search_fields = ['interviewer__email', 'interviewer__first_name', 'date']
     list_filter = ['date', 'start_time']
