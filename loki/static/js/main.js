@@ -15,7 +15,7 @@ $(document).ready(function(){
       $("#div_id_full_image input[type='file']").click()
     })
 
-    $(".change-interview-form").on("submit", function(event) {
+    $(document).on("submit", ".change-interview-form", function(event) {
       if(!$(this).data('submitted')) {
         event.preventDefault();
         if(confirm('Сигурен ли си, че желаеш да смениш интервюто си?')) {
@@ -24,7 +24,7 @@ $(document).ready(function(){
         }
       }
 
-    })
+    });
 
     $("#div_id_full_image input[type='file']").change(function(){
       var form = $(this).closest("form");

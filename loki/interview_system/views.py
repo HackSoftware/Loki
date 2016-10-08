@@ -92,9 +92,6 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
            self.application.id != int(app_id):
             raise Http404
 
-        if Interview.objects.filter(application=self.application, has_confirmed=True).exists():
-            raise Http404
-
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
@@ -117,6 +114,9 @@ class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
         return super().get(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        if Interview.objects.filter(application=self.application, has_confirmed=True).exists():
+            raise Http404
+
         self.interview.has_confirmed = True
         self.interview.save()
 
