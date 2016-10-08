@@ -62,6 +62,7 @@ namespace :deploy do
   task :restart do
     on roles(:all) do |h|
       execute "sudo restart loki || sudo start loki"
+      execute "sudo restart celery || sudo start celery"
     end
   end
 
