@@ -89,21 +89,21 @@ class ChooseInterviewTests(TestCase):
 
             self.assertEqual(self.interview.has_confirmed, True)
 
-    def test_unsigned_user_access_confirm_page(self):
+    def test_unsigned_user_access_confirm_page_redirects_to_login(self):
         url = reverse('interview_system:confirm_interview',
                       kwargs={"application": self.application.id,
                               "interview_token": self.interview.uuid})
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 302)
 
-    def test_unsigned_user_access_choose_page(self):
+    def test_unsigned_user_access_choose_page_redirects_to_login(self):
         url = reverse('interview_system:choose_interview',
                       kwargs={"application": self.application.id,
                               "interview_token": self.interview.uuid})
 
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 302)
 
     def test_choose_new_interview_after_already_confirmed(self):
         with self.login(username=self.user.email, password=BaseUserFactory.password):

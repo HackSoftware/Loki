@@ -15,12 +15,18 @@ from .models import Interview, Interviewer
 from .serializers import InterviewSerializer
 
 
-class ChooseInterviewView(LoginRequiredMixin, TemplateView):
-    template_name = 'choose_interview.html'
-
+class CannotConfirmOthersInterviewMixin:
+    """
+    TODO:
+    1. Find a better place to live.
+    2. Refactor it.
+    """
     def dispatch(self, request, *args, **kwargs):
+        uuid = kwargs.get('interview_token')
         application_id = kwargs.get('application')
+        self.interview = Interview.objects.filter(uuid=uuid).first()
         self.application = Application.objects.filter(id=application_id).first()
+        self.interviewer = Interviewer.objects.filter(interview=self.interview).first()
 
         if self.application.user != request.user or \
            self.application.id != int(application_id):
@@ -28,10 +34,13 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
 
         return super().dispatch(request, *args, **kwargs)
 
+
+class ChooseInterviewView(LoginRequiredMixin, CannotConfirmOthersInterviewMixin, TemplateView):
+    template_name = 'choose_interview.html'
+
     def get(self, request, *args, **kwargs):
-        uuid = kwargs.get('interview_token')
         application_id = kwargs.get('application')
-        self.interview = Interview.objects.filter(uuid=uuid).first()
+
         if self.interview is None or \
            self.interview.application is None or \
            self.interview.application.user != request.user or \
@@ -78,21 +87,8 @@ class ChooseInterviewView(LoginRequiredMixin, TemplateView):
                                 'interview_token': new_interview.uuid}))
 
 
-class ConfirmInterviewView(LoginRequiredMixin, TemplateView):
+class ConfirmInterviewView(LoginRequiredMixin, CannotConfirmOthersInterviewMixin, TemplateView):
     template_name = 'confirm_interview.html'
-
-    def dispatch(self, request, *args, **kwargs):
-        uuid = kwargs.get('interview_token')
-        app_id = kwargs.get('application')
-        self.interview = Interview.objects.filter(uuid=uuid).first()
-        self.application = Application.objects.filter(id=app_id).first()
-        self.interviewer = Interviewer.objects.filter(interview=self.interview).first()
-
-        if self.application.user != request.user or \
-           self.application.id != int(app_id):
-            raise Http404
-
-        return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
