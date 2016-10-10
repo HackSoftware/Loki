@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from .models import Interviewer, InterviewerFreeTime, Interview
+from .utils import render_template_with_context
 
 
 @admin.register(Interviewer)
@@ -58,12 +59,27 @@ class InterviewAdmin(admin.ModelAdmin):
     search_fields = ['interviewer__email', 'interviewer__first_name', 'date']
     list_filter = ['date', 'start_time']
 
+    def get_interviewer(self, obj):
+        return obj.interviewer.full_name
+
+    get_interviewer.short_description = "Interviewer"
+
     def get_applying_student(self, obj):
+        """
+        Allows easier checking of the student's profile.
+        The returned output is clickable link - student's profile.
+        """
         if not obj.application:
             return
-        link_format = u"<a href='../../base_app/baseuser/{id}/'>{name}</a>"
-        return link_format.format(id=obj.application.user.id,
-                                  name=obj.application.user.full_name)
+
+        context = {
+            'base_user_id': obj.application.user.id,
+            'student_name': obj.application.user.full_name
+        }
+        student_html = 'interview_system/templates/partial/interview_student.html'
+
+        return render_template_with_context(target_html=student_html,
+                                            context=context)
 
     get_applying_student.empty_value_display = 'Free slot'
     get_applying_student.short_description = "Student"
@@ -77,11 +93,6 @@ class InterviewAdmin(admin.ModelAdmin):
 
     get_student_skype.empty_value_display = 'Free slot'
     get_student_skype.short_description = "Student skype"
-
-    def get_interviewer(self, obj):
-        return obj.interviewer.full_name
-
-    get_interviewer.short_description = "Interviewer"
 
     def get_student_application_course(self, obj):
         if not obj.application:
@@ -99,27 +110,32 @@ class InterviewAdmin(admin.ModelAdmin):
     get_interview_confirmation.boolean = True
 
     def get_tasks(self, obj):
+        """
+        Allows easier checking of student's course problem solutions.
+        The returned output is ordered list with clickable list items - solutions.
+        """
         if not obj.application:
             return
 
-        ordered_list_format = "<ol>{list_items}</ol>"
-        list_element_format = u"<li><a href='{url}'>{name}</a></li>"
-
-        result = []
+        context = {'tasks': []}
+        solution_html = 'interview_system/templates/partial/solution_element.html'
         problems = obj.application.application_info.applicationproblem_set.all()
 
-        for index in range(problems.count()):
-            problem = problems[index]
+        for problem in problems:
             solution = obj.application.applicationproblemsolution_set\
                           .filter(problem=problem).first()
 
             if not solution:
                 continue
 
-            result.append(list_element_format.format(url=solution.solution_url,
-                                                     name=problem.name))
+            task_data = {
+                'url': solution.solution_url,
+                'name': problem.name
+            }
+            context['tasks'].append(task_data)
 
-        return ordered_list_format.format(list_items=''.join(result))
+        return render_template_with_context(target_html=solution_html,
+                                            context=context)
 
     get_tasks.short_description = 'Solutions'
     get_tasks.allow_tags = True
