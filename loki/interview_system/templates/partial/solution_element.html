@@ -1,0 +1,8 @@
+<ol style='padding-left: 0em; margin-left:0em;'>
+{% for task in tasks %}
+  <li>
+    <a href='{{ task.url }}'>{{ task.name}}</a>
+  </li>
+{% endfor %}
+</ol>
+
