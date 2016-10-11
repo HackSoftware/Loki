@@ -14,7 +14,7 @@ script:
 - export DJANGO_SETTINGS_MODULE=config.settings.tests
 - python manage.py migrate
 - flake8
-- coverage run --source='.' manage.py test
+- coverage run --source='.' -m py.test
 after_success:
 - coveralls --rcfile=.coverage.rc
 notifications:
