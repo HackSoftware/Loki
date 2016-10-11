@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import Interviewer, InterviewerFreeTime, Interview
 from .utils import render_template_with_context
+from .decorators import func_args
 
 
 @admin.register(Interviewer)
@@ -61,11 +62,11 @@ class InterviewAdmin(admin.ModelAdmin):
     search_fields = ['interviewer__email', 'interviewer__first_name', 'date']
     list_filter = ['date', 'start_time']
 
+    @func_args(short_description='Interviewer')
     def get_interviewer(self, obj):
         return obj.interviewer.full_name
 
-    get_interviewer.short_description = "Interviewer"
-
+    @func_args(short_description='Student', empty_value_display='Free slot', allow_tags=True)
     def get_applying_student(self, obj):
         """
         Allows easier checking of the student's profile.
@@ -83,52 +84,39 @@ class InterviewAdmin(admin.ModelAdmin):
         return render_template_with_context(target_html=student_html,
                                             context=context)
 
-    get_applying_student.empty_value_display = 'Free slot'
-    get_applying_student.short_description = "Student"
-    get_applying_student.allow_tags = True
-
+    @func_args(short_description='Student email', empty_value_display='Free slot')
     def get_student_email(self, obj):
         if not obj.application:
             return
 
         return obj.application.user.email
 
-    get_student_email.empty_value_display = 'Free slot'
-    get_student_email.short_description = "Student email"
-
+    @func_args(short_description='Student skype', empty_value_display='Free slot')
     def get_student_skype(self, obj):
         if not obj.application:
             return
 
         return obj.application.skype
 
-    get_student_skype.empty_value_display = 'Free slot'
-    get_student_skype.short_description = "Student skype"
-
+    @func_args(short_description='Student phone', empty_value_display='Free slot')
     def get_student_phone(self, obj):
         if not obj.application:
             return
 
         return obj.application.phone
 
-    get_student_phone.empty_value_display = 'Free slot'
-    get_student_phone.short_description = "Student phone"
-
+    @func_args(short_description='Applying for', empty_value_display='Free slot')
     def get_student_application_course(self, obj):
         if not obj.application:
             return
 
         return obj.application.application_info
 
-    get_student_application_course.empty_value_display = 'Free slot'
-    get_student_application_course.short_description = "Applying for"
-
+    @func_args(short_description='Confirmed interview', boolean=True)
     def get_interview_confirmation(self, obj):
         return obj.has_confirmed
 
-    get_interview_confirmation.short_description = "Confirmed interview"
-    get_interview_confirmation.boolean = True
-
+    @func_args(short_description='Solutions', allow_tags=True)
     def get_tasks(self, obj):
         """
         Allows easier checking of student's course problem solutions.
@@ -157,23 +145,17 @@ class InterviewAdmin(admin.ModelAdmin):
         return render_template_with_context(target_html=solution_html,
                                             context=context)
 
-    get_tasks.short_description = 'Solutions'
-    get_tasks.allow_tags = True
-
+    @func_args(short_description='Code skills')
     def get_code_skills(self, obj):
         return obj.code_skills_rating
 
-    get_code_skills.short_description = "Code skills"
-
+    @func_args(short_description='Code design')
     def get_code_design(self, obj):
         return obj.code_design_rating
 
-    get_code_skills.short_description = "Code design"
-
+    @func_args(short_description='Fit attitude')
     def get_fit_attitude(self, obj):
         return obj.fit_attitude_rating
-
-    get_fit_attitude.short_description = "Fit attitude"
 
     def has_change_permission(self, request, obj=None):
         return True
