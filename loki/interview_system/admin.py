@@ -46,7 +46,9 @@ class InterviewAdmin(admin.ModelAdmin):
         'start_time',
         'get_interviewer',
         'get_applying_student',
+        'get_student_email',
         'get_student_skype',
+        'get_student_phone',
         'get_student_application_course',
         'has_received_email',
         'get_interview_confirmation',
@@ -85,6 +87,15 @@ class InterviewAdmin(admin.ModelAdmin):
     get_applying_student.short_description = "Student"
     get_applying_student.allow_tags = True
 
+    def get_student_email(self, obj):
+        if not obj.application:
+            return
+
+        return obj.application.user.email
+
+    get_student_email.empty_value_display = 'Free slot'
+    get_student_email.short_description = "Student email"
+
     def get_student_skype(self, obj):
         if not obj.application:
             return
@@ -93,6 +104,15 @@ class InterviewAdmin(admin.ModelAdmin):
 
     get_student_skype.empty_value_display = 'Free slot'
     get_student_skype.short_description = "Student skype"
+
+    def get_student_phone(self, obj):
+        if not obj.application:
+            return
+
+        return obj.application.phone
+
+    get_student_phone.empty_value_display = 'Free slot'
+    get_student_phone.short_description = "Student phone"
 
     def get_student_application_course(self, obj):
         if not obj.application:
