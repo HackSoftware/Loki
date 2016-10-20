@@ -4,9 +4,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
 from django.utils import timezone
+from django.http import HttpResponseForbidden
 
-from loki.education.models import Course
-from ..mixins import DashboardPermissionMixin
+from loki.education.models import Course, Task, CourseAssignment
+from ..mixins import DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin
+
 
 class CourseListView(DashboardPermissionMixin, ListView):
     model = Course
@@ -15,3 +17,10 @@ class CourseListView(DashboardPermissionMixin, ListView):
         now = timezone.now().date()
 
         return Course.objects.filter(end_time__gte=now)
+
+
+class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin, ListView):
+    model = Task
+
+    def get_queryset(self):
+        return Task.objects.filter(course=self.course)
