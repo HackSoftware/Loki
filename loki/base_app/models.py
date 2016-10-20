@@ -1,13 +1,12 @@
 from django.utils import timezone
 from django.db import models
-from django.contrib.auth.models import (AbstractBaseUser,
-                                        BaseUserManager, PermissionsMixin)
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from ckeditor.fields import RichTextField
 
 from django.conf import settings
 
 from image_cropping.fields import ImageRatioField, ImageCropField
-
+from .managers import UserManager
 
 class Company(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -129,37 +128,6 @@ class School(EducationPlace):
 class Academy(EducationPlace):
     class Meta:
         verbose_name_plural = 'Academies'
-
-
-class UserManager(BaseUserManager):
-
-    def __create_user(self, email, password, full_name,
-                      is_staff=False, is_active=False, is_superuser=False, **kwargs):
-        if not email:
-            raise ValueError('Users must have an email address')
-
-        email = self.normalize_email(email)
-        user = self.model(email=email,
-                          is_staff=is_staff,
-                          is_active=is_active,
-                          full_name=full_name,
-                          is_superuser=is_superuser,
-                          **kwargs)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_user(self, email, password, full_name='', **kwargs):
-        return self.__create_user(email, password, full_name, is_staff=False, is_active=False,
-                                  is_superuser=False, **kwargs)
-
-    def create_superuser(self, email, password, full_name=''):
-        return self.__create_user(email, password, full_name, is_staff=True,
-                                  is_active=True, is_superuser=True)
-
-    def create(self, **kwargs):
-        return self.create_user(**kwargs)
-
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20)
