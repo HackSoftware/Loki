@@ -16,8 +16,8 @@ class CourseListViewTests(TestCase):
 
     def test_baseuser_not_access_courselist(self):
         with self.login(username=self.baseuser.email, password=BaseUserFactory.password):
-            response = self.client.get('education:course_list')
-            self.assertEqual(response.status_code, 404)
+            response = self.get('education:course_list')
+            self.assertEqual(response.status_code, 403)
 
     def test_student_can_access_courselist(self):
         student = BaseUser.objects.promote_to_student(self.baseuser)

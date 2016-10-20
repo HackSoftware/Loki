@@ -3,7 +3,6 @@ from django.contrib.auth.views import redirect_to_login
 
 class DashboardPermissionMixin(UserPassesTestMixin):
     raise_exception = True
-    login_url = 'website:login'
     requires_login = False
 
     def test_func(self):
