@@ -1,0 +1,36 @@
+<div class="col-sm-12 course-box">
+  <div class="col-sm-3">
+    <img src="{{ MEDIA_URL }}{{ course.coursedescription.custom_logo }}" class="course-logo" >
+  </div>
+  <div class="col-sm-9 course-text">
+    <h3 id="course-name">{{ course.name }}</h3>
+    <p>
+      {{ course.coursedescription.list_courses_text }}
+    </p>
+
+    <a href="{% url 'education:course materials' course.coursedescription.url %}">
+      <button class="btn btn-hack-info">Материали з акурса</button>
+    </a>
+  </div>
+
+  <div class="col-sm-12 course-box-footer">
+    <div class="col-sm-4">Продължителност: {{ course.duration_in_weeks }} седмици</div>
+      {% if course.video_channel or course.git_repository %}
+        {% if course.video_channel %}
+        <div class="col-sm-6">
+          Материали и задачи:
+          <a href="{{ course.git_repository }}" target="_blank">GitHub</a>
+        </div>
+        <div class="col-sm-6">
+          Видео канал:
+          <a href="{{ course.video_channel }}" target="_blank">YouTube</a>
+
+        </div>
+        {% else %}
+        <div class="col-sm-12">Материали и задачи:
+          <a href="{{ course.git_repository }}" target="_blank">GitHub</a>
+        </div>
+        {% endif %}
+      {% endif %}
+  </div>
+</div>
