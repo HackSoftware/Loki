@@ -14,3 +14,7 @@ class InterviewerManager(models.Manager):
         interviewer.save()
 
         return interviewer
+
+class InterviewManager(models.Manager):
+    def active(self):
+        return [interview for interview in self.all() if interview.active_date()]

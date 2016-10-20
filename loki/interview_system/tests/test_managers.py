@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, timedelta
 import factory
 from test_plus.test import TestCase
 from ..models import InterviewerFreeTime, Interview
@@ -15,18 +15,18 @@ class InterviewManagerTests(TestCase):
         interviewer.courses_to_interview.add(app_info)
 
         free_time = InterviewerFreeTime.objects.create(interviewer=interviewer,
-                                                       date=datetime.datetime.now().date(),
+                                                       date=datetime.now().date(),
                                                        start_time='11:00',
                                                        end_time='14:00')
 
         interview = Interview.objects.create(interviewer=interviewer,
-                                             date=datetime.datetime.now().date(),
+                                             date=datetime.now().date(),
                                              start_time='11:00',
                                              end_time='11:30',
                                              interviewer_time_slot=free_time)
 
         Interview.objects.create(interviewer=interviewer,
-                                 date=datetime.datetime.now().date(),
+                                 date=datetime.now().date(),
                                  start_time='12:00',
                                  end_time='12:30',
                                  interviewer_time_slot=free_time)
@@ -49,14 +49,14 @@ class InterviewManagerTests(TestCase):
         interviewer.courses_to_interview.add(app_info)
 
         free_time = InterviewerFreeTime.objects.create(interviewer=interviewer,
-                                                       date=datetime.datetime.now().date(),
+                                                       date=datetime.now().date(),
                                                        start_time='11:00',
                                                        end_time='14:00')
 
         self.assertEquals(0, Interview.objects.confirmed_for(app_info).count())
         Interview.objects.create(interviewer=interviewer,
                                  application=application1,
-                                 date=datetime.datetime.now().date(),
+                                 date=datetime.now().date(),
                                  start_time='11:00',
                                  end_time='11:30',
                                  interviewer_time_slot=free_time,
@@ -64,7 +64,7 @@ class InterviewManagerTests(TestCase):
 
         Interview.objects.create(interviewer=interviewer,
                                  application=application2,
-                                 date=datetime.datetime.now().date(),
+                                 date=datetime.now().date(),
                                  start_time='12:00',
                                  end_time='12:30',
                                  interviewer_time_slot=free_time,
@@ -72,7 +72,7 @@ class InterviewManagerTests(TestCase):
 
         Interview.objects.create(interviewer=interviewer,
                                  application=application3,
-                                 date=datetime.datetime.now().date(),
+                                 date=datetime.now().date(),
                                  start_time='12:00',
                                  end_time='12:30',
                                  interviewer_time_slot=free_time)
@@ -92,34 +92,34 @@ class InterviewManagerTests(TestCase):
         interviewer2.courses_to_interview.add(app_info2)
 
         free_time1 = InterviewerFreeTime.objects.create(interviewer=interviewer1,
-                                                        date=datetime.datetime.now().date(),
+                                                        date=datetime.now().date(),
                                                         start_time='11:00',
                                                         end_time='14:00')
         free_time2 = InterviewerFreeTime.objects.create(interviewer=interviewer1,
-                                                        date=datetime.datetime.now().date(),
+                                                        date=datetime.now().date(),
                                                         start_time='10:00',
                                                         end_time='14:00')
 
         Interview.objects.create(interviewer=interviewer2,
-                                 date=datetime.datetime.now().date(),
+                                 date=datetime.now().date(),
                                  start_time='12:00',
                                  end_time='12:30',
                                  interviewer_time_slot=free_time2)
 
         Interview.objects.create(interviewer=interviewer2,
-                                 date=datetime.datetime.now().date(),
+                                 date=datetime.now().date(),
                                  start_time='12:00',
                                  end_time='12:30',
                                  interviewer_time_slot=free_time2)
 
         interview = Interview.objects.create(interviewer=interviewer1,
-                                             date=datetime.datetime.now().date(),
+                                             date=datetime.now().date(),
                                              start_time='11:00',
                                              end_time='11:30',
                                              interviewer_time_slot=free_time1)
 
         Interview.objects.create(interviewer=interviewer1,
-                                 date=datetime.datetime.now().date(),
+                                 date=datetime.now().date(),
                                  start_time='12:00',
                                  end_time='12:30',
                                  interviewer_time_slot=free_time1)
@@ -135,3 +135,43 @@ class InterviewManagerTests(TestCase):
         self.assertEquals(1, Interview.objects.free_slots_for(app_info1).count())
         self.assertEquals(2, Interview.objects.free_slots_for(app_info2).count())
         self.assertEquals(3, Interview.objects.get_free_slots().count())
+
+    def test_active_interviews(self):
+        course1 = CourseFactory()
+        cd1 = CourseDescriptionFactory(course=course1)
+        app_info1 = ApplicationInfoFactory(course=cd1)
+
+        interviewer = InterviewerFactory()
+        interviewer.courses_to_interview.add(app_info1)
+
+        free_time1 = InterviewerFreeTime.objects.create(interviewer=interviewer,
+                                                       date=datetime.now().date() - \
+                                                                timedelta(days=1),
+                                                       start_time='11:00',
+                                                       end_time='14:00')
+
+        free_time2 = InterviewerFreeTime.objects.create(interviewer=interviewer,
+                                                        date=datetime.now().date(),
+                                                        start_time='11:00',
+                                                        end_time='14:00')
+
+        Interview.objects.create(interviewer=interviewer,
+                                 date=datetime.now().date() - timedelta(days=1),
+                                 start_time='12:00',
+                                 end_time='12:30',
+                                 interviewer_time_slot=free_time1)
+
+        Interview.objects.create(interviewer=interviewer,
+                                 date=datetime.now().date(),
+                                 start_time='12:00',
+                                 end_time='12:30',
+                                 interviewer_time_slot=free_time2)
+
+        Interview.objects.create(interviewer=interviewer,
+                                 date=datetime.now().date() - timedelta(days=1),
+                                 start_time='12:30',
+                                 end_time='13:00',
+                                 interviewer_time_slot=free_time1)
+
+        self.assertEquals(3, Interview.objects.all().count())
+        self.assertEquals(1, len(Interview.objects.active()))

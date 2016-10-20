@@ -126,9 +126,11 @@ def profile(request):
         teacher = Teacher.objects.get(email=request.user.email)
     except Teacher.DoesNotExist:
         teacher = None
+
     interviews = Interview.objects.filter(application__isnull=False,
                                           application__user=user,
-                                          has_confirmed=True)
+                                          has_confirmed=True).active()
+
     return render(request, 'website/profile.html', locals())
 
 
