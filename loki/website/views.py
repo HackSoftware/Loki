@@ -127,9 +127,7 @@ def profile(request):
     except Teacher.DoesNotExist:
         teacher = None
 
-    interviews = Interview.objects.filter(application__isnull=False,
-                                          application__user=user,
-                                          has_confirmed=True).active()
+    interviews = Interview.objects.get_active(user)
 
     return render(request, 'website/profile.html', locals())
 
