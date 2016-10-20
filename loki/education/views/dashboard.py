@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
 
 from loki.education.models import Course
+from ..mixins import DashboardPermissionMixin
 
-class CourseListView(LoginRequiredMixin, ListView):
+class CourseListView(DashboardPermissionMixin, ListView):
     model = Course
