@@ -1,0 +1,11 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% csrf_token %}
+<h1> Задачи за {{ object_list.first.course }}: <h1>
+{% for task in object_list %}
+  <div> {{ task.name }}</div>
+{% endfor%}
+
+
+{% endblock %}
