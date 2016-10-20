@@ -20,5 +20,6 @@ class InterviewQuerySet(models.QuerySet):
     def confirmed_for(self, info):
         return self.filter(has_confirmed=True, application__application_info=info)
 
+    """TODO: tests"""
     def confirmed_interviews_on(self, user):
         return self.with_application().filter(application__user=user, has_confirmed=True)
