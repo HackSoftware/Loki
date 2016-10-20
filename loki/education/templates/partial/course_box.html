@@ -4,33 +4,36 @@
   </div>
   <div class="col-sm-9 course-text">
     <h3 id="course-name">{{ course.name }}</h3>
-    <p>
-      {{ course.coursedescription.list_courses_text }}
+    <p>Начало на курса: <b>{{ course.start_time }}</b> <br>
+       Край  на курса: <b>{{ course.end_time }}</b> <br>
+       Продължителност: <b>{{ course.duration_in_weeks }}</b> седмици <br>
+       <i id="course-socials" class="fa fa-github fa-3x"></i>
+       <a href="{{ course.git_repository }}" target="_blank">Github repo на курса</a> <br>
+       <i id="course-socials" class="fa fa-facebook-square fa-3x"></i>
+       <a href="{{ course.fb_group }}" target="_blank">Facebook група на курса</a> <br>
+       <div class="course-teachers col-md-2"><b>Преподаватели: </b> </div>
+       <div class="course-teachers col-md-8 col-offset-3">
+       {% for teacher in course.teacher_set.all %}
+         {{ teacher.first_name }} {{ teacher.last_name }}, {{ teacher.email }}<br>
+       {% endfor %}
+     </div>
     </p>
-
-    <a href="{% url 'education:course materials' course.coursedescription.url %}">
-      <button class="btn btn-hack-info">Материали з акурса</button>
-    </a>
   </div>
-
   <div class="col-sm-12 course-box-footer">
-    <div class="col-sm-4">Продължителност: {{ course.duration_in_weeks }} седмици</div>
+    <div class="col-sm-4">
+    </div>
+    <div class="col-sm-6">
+
+    </div>
       {% if course.video_channel or course.git_repository %}
         {% if course.video_channel %}
-        <div class="col-sm-6">
-          Материали и задачи:
-          <a href="{{ course.git_repository }}" target="_blank">GitHub</a>
-        </div>
         <div class="col-sm-6">
           Видео канал:
           <a href="{{ course.video_channel }}" target="_blank">YouTube</a>
 
         </div>
-        {% else %}
-        <div class="col-sm-12">Материали и задачи:
-          <a href="{{ course.git_repository }}" target="_blank">GitHub</a>
-        </div>
         {% endif %}
       {% endif %}
   </div>
+
 </div>

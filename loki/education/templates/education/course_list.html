@@ -26,17 +26,12 @@
     <section class="row">
       <div class="active-courses-container container-fluid">
         {% for course in object_list %}
-        <div> {{ course.name }} </div>
+        {% include "partial/course_box.html" with course=course %}
         {% endfor %}
 
       </div>
     </section>
 
-    <section class="row">
-      <div class="col-lg-12">
-        {{ snippets.courses_for_more_info.text }}
-      </div>
-    </section>
   </div>
 {% endautoescape %}
 {% endblock %}

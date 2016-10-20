@@ -806,6 +806,15 @@ $TabBorder: #C5C4C4;
 
     .course-text {
         text-align: left;
+
+        #course-socials {
+          font-size: 2em;
+        }
+
+        .course-teachers {
+          display: inline-block;
+          padding-left: 0;
+        }
     }
 
     .course-logo {
@@ -815,7 +824,8 @@ $TabBorder: #C5C4C4;
 }
 .course-box-footer {
     background: #f6e0be;
-    padding: 5px;
+    padding: 10px;
+    margin-top: 5px;
 }
 
 .apply-form {
