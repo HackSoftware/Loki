@@ -1,7 +1,14 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import redirect_to_login
+from loki.education.models import Course, CourseAssignment
 
-class DashboardPermissionMixin(UserPassesTestMixin):
+
+class BaseUserPassesTestMixin(UserPassesTestMixin):
+    def test_func(self):
+        return True
+
+
+class DashboardPermissionMixin(BaseUserPassesTestMixin):
     raise_exception = True
     requires_login = False
 
@@ -15,7 +22,7 @@ class DashboardPermissionMixin(UserPassesTestMixin):
                 self.request.user.is_superuser):
             return False
 
-        return True
+        return True and super().test_func()
 
     def handle_no_permission(self):
         if self.requires_login:
@@ -23,3 +30,16 @@ class DashboardPermissionMixin(UserPassesTestMixin):
                 self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name())
 
         return super().handle_no_permission()
+
+
+class CannotSeeOthersCoursesDashboardsMixin(BaseUserPassesTestMixin):
+    def test_func(self):
+        course_id = self.kwargs.get('course')
+        course = Course.objects.filter(id=course_id).first()
+        qs = CourseAssignment.objects.filter(user=self.request.user, course=course)
+
+        if not qs.exists():
+            return False
+
+        self.course = course
+        return True and super().test_func()
