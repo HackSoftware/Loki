@@ -25,8 +25,8 @@
 
     <section class="row">
       <div class="active-courses-container container-fluid">
-        {% for course in object_list.active_courses %}
-          {% include "website/partial/course_box.html" with course=course.course.course %}
+        {% for course in object_list %}
+        <div> {{ course.name }} </div>
         {% endfor %}
 
       </div>
