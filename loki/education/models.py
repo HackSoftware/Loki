@@ -12,7 +12,7 @@ from .exceptions import HasToBeRetested
 
 
 class StudentAndTeacherCommonModel(models.Model):
-    mac = mac = models.CharField(validators=[validate_mac], max_length=17, null=True)
+    mac = models.CharField(validators=[validate_mac], max_length=17, blank=True, null=True)
     phone = models.CharField(null=True, blank=True, max_length=20)
 
     class Meta:
