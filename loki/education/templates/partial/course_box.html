@@ -3,7 +3,13 @@
     <img src="{{ MEDIA_URL }}{{ course.coursedescription.custom_logo }}" class="course-logo" >
   </div>
   <div class="col-sm-9 course-text">
-    <h3 id="course-name">{{ course.name }}</h3>
+    <h3 class="course-name-tasks-link" id="course-name">{{ course.name }}</h3>
+
+    <a class="course-name-tasks-link" href="{% url 'education:course_dashboard' course.id %}">
+        <button class="btn btn-warning" id="btn-tasks-link">Предай задачи</button>
+    </a>
+
+
     <p>Начало на курса: <b>{{ course.start_time }}</b> <br>
        Край  на курса: <b>{{ course.end_time }}</b> <br>
        Продължителност: <b>{{ course.duration_in_weeks }}</b> седмици <br>

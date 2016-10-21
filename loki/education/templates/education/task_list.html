@@ -29,14 +29,11 @@
             </thead>
             <tbody id="tasks-body">
               {% for task in object_list %}
-                 <tr class="task-selected" id="task_{{task.id}}">
+                 <tr class="task-selected" task_id="{{task.id}}">
                    <td class="task-week">{{ task.week }}</td>
                    <td class="task-name">{{ task.name }}</td>
                    <td>
-                     <form class="submit-task" action="" method="POST">
-                       {% csrf_token %}
-                       <button id="submit-task-box" type="submit" class="btn btn-warning" >Предай</button>
-                     </form>
+                       <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}"data-toggle="modal" data-target="#task-modal-box">Предай</button>
                    </td>
                  </tr>
              {% endfor %}
@@ -45,8 +42,31 @@
       </div>
     </section>
 
-
-
   </div>
+
+
+<div class="modal fade" id="task-modal-box" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel">Задача</h4>
+      </div>
+      <div class="modal-body">
+          <label for="message-text" class="form-control-label">Решение на задача:</label>
+          <textarea class="form-control" id="message-text"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
+        <button type="button" class="btn btn-warning">Предай задача</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endautoescape %}
+{% endblock %}
+
+{% block 'scripts' %}
 {% endblock %}
