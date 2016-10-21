@@ -1,6 +1,8 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import redirect_to_login
-from loki.education.models import Course, CourseAssignment
+from django.shortcuts import get_object_or_404
+
+from loki.education.models import Course, CourseAssignment, Solution
 
 
 class BaseUserPassesTestMixin(UserPassesTestMixin):
@@ -35,11 +37,21 @@ class DashboardPermissionMixin(BaseUserPassesTestMixin):
 class CannotSeeOthersCoursesDashboardsMixin(BaseUserPassesTestMixin):
     def test_func(self):
         course_id = self.kwargs.get('course')
-        course = Course.objects.filter(id=course_id).first()
+        course = get_object_or_404(Course, pk=course_id)
         qs = CourseAssignment.objects.filter(user=self.request.user, course=course)
 
         if not qs.exists():
             return False
 
         self.course = course
+        return True and super().test_func()
+
+class CannotSeeOthersSolutionsMixin(BaseUserPassesTestMixin):
+    def test_func(self):
+        solution_id = self.kwargs.get('solution')
+        qs = Solution.objects.filter(id=solution_id, student=self.request.user)
+
+        if not qs.exists():
+            return False
+
         return True and super().test_func()

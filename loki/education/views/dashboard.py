@@ -7,7 +7,8 @@ from django.utils import timezone
 from django.http import HttpResponseForbidden
 
 from loki.education.models import Course, Task, CourseAssignment, Solution
-from ..mixins import DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin
+from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
+                      CannotSeeOthersSolutionsMixin)
 
 
 class CourseListView(DashboardPermissionMixin, ListView):
@@ -26,6 +27,7 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
         return Task.objects.filter(course=self.course).order_by('week')
 
 
-class SolutionView(DashboardPermissionMixin, DetailView):
+class SolutionView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin, \
+                   CannotSeeOthersSolutionsMixin, DetailView):
     model = Solution
     pk_url_kwarg = 'solution'
