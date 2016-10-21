@@ -32,4 +32,17 @@ $(document).ready(function(){
       form.submit();
     })
 
+    $(".submit-dialog-btn").click(function(){
+      var task = $(this).parent().parent();
+    });
+
+    $('#task-modal-box').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget);
+      var taskName = button.data('task-name') ;
+      var modal = $(this);
+      modal.find('.modal-title').text(taskName);
+
+    });
+
+
 });

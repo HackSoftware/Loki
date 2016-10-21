@@ -570,6 +570,13 @@ body {
     .course-box .course-text .course-teachers {
       display: inline-block;
       padding-left: 0; }
+    .course-box .course-text #btn-tasks-link {
+      font-size: 18px;
+      margin-bottom: 5px; }
+    .course-box .course-text #course-name {
+      margin-right: 25%; }
+    .course-box .course-text .course-name-tasks-link {
+      display: inline-block; }
   .course-box .course-logo {
     width: 100%;
     padding: 15px; }
@@ -612,8 +619,6 @@ body {
     .confirm-interview-container .confirm-interview-box .hb-logo img {
       width: 30px; }
 
-.active-tasks-container #submit-task-label {
-  text-align: center; }
 .active-tasks-container #submit-task-box {
   margin-left: 43%; }
 
