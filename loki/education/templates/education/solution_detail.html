@@ -6,22 +6,11 @@
     <section class="row">
       <div class="col-lg-12 col-md-12 col-sm-12">
         {{ snippets.courses_first_header.text }}
-        <h3> Решение на задача {{ solution.task.name }}: <h3>
+        <h3>Решение на задача: {{ solution.task.name }} </h3>
+        <h3>Test output : {{ solution.test_output }} </h3>
+        <h3>Резултат: {{ solution.get_status }} </h3>
+        <h3>Return code: {{ solution.return_code }}</h3>
 
-      </div>
-    </section>
-
-    <section class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12">
-        {{ snippets.courses_first_header.text }}
-        <h2> Резултат: {{ solution.get_status }} <h2>
-      </div>
-    </section>
-
-    <section class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12">
-        {{ snippets.courses_first_header.text }}
-        <h2> Test output : {{ solution.test_output }} <h2>
       </div>
     </section>
 

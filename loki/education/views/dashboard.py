@@ -24,6 +24,15 @@ class CourseListView(DashboardPermissionMixin, ListView):
 class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin, ListView):
     model = Task
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        solutions = Solution.objects.filter(student=self.request.user)
+        context['tasksolution'] = {}
+        for solution in solutions:
+            task_name = solution.task.name
+            context['tasksolution'].update({task_name:solution})
+        return context
+
     def get_queryset(self):
         return Task.objects.filter(course=self.course).order_by('week')
 

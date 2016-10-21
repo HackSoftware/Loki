@@ -10,12 +10,6 @@
       </div>
     </section>
 
-    <section class="row">
-      <div class="col-lg-12">
-        <p class="lead">{{ snippets.courses_first_paragraph.text }}</p>
-      </div>
-
-
     <hr />
     <section class="row">
       <div class="active-tasks-container container-fluid">
@@ -25,6 +19,7 @@
                 <th>Седмица</th>
                 <th>Задача</th>
                 <th id="submit-task-label">Предай</th>
+                <th id="solution-task-label">Решение<th>
               </tr>
             </thead>
             <tbody id="tasks-body">
@@ -34,6 +29,15 @@
                    <td class="task-name">{{ task.name }}</td>
                    <td>
                        <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}"data-toggle="modal" data-target="#task-modal-box">Предай</button>
+                   </td>
+                   <td>
+                     {% for key, solution in tasksolution.items %}
+                      {% if task.name == key %}
+                      <a class="task-solution-link" href="{% url 'education:solution_view' task.course.id solution.id %}">
+                        <button class="btn btn-warning" id="btn-tasks-link">Решение на задача</button>
+                      </a>
+                      {% endif %}
+                     {% endfor %}
                    </td>
                  </tr>
              {% endfor %}
