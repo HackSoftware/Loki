@@ -23,4 +23,4 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
     model = Task
 
     def get_queryset(self):
-        return Task.objects.filter(course=self.course)
+        return Task.objects.filter(course=self.course).order_by('week')
