@@ -24,7 +24,10 @@ urlpatterns = [
     url(r'^api/student-solutions/$', old_api_views.StudentSolutionsList.as_view(), name='student_solutions'),
     url(r'^certificate/(?P<pk>[0-9]+)/$', old_api_views.certificate_old, name='certificate_old'),
     url(r'^certificate/(?P<token>[\w|-]+)/$', old_api_views.certificate, name='certificate'),
-    url(r'^dashboard/$', dashboard.CourseListView.as_view(), name='course_list'),
-    url(r'^course/(?P<course>[0-9]+)/dashboard/$', dashboard.CourseDashboardView.as_view(), name='course_dashboard')
-
+    url(r'^dashboard/$',
+           dashboard.CourseListView.as_view(), name='course_list'),
+    url(r'^course/(?P<course>[0-9]+)/dashboard/$',
+           dashboard.CourseDashboardView.as_view(), name='course_dashboard'),
+    url(r'^course/(?P<course>[0-9]+)/solutions/(?P<solution>[0-9]+)/$',
+           dashboard.SolutionView.as_view(), name='solution')
 ]

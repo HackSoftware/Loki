@@ -1,12 +1,12 @@
 from django.views.generic.list import ListView
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
 from django.utils import timezone
 from django.http import HttpResponseForbidden
 
-from loki.education.models import Course, Task, CourseAssignment
+from loki.education.models import Course, Task, CourseAssignment, Solution
 from ..mixins import DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin
 
 
@@ -24,3 +24,8 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
 
     def get_queryset(self):
         return Task.objects.filter(course=self.course).order_by('week')
+
+
+class SolutionView(DashboardPermissionMixin, DetailView):
+    model = Solution
+    pk_url_kwarg = 'solution'
