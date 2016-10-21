@@ -17,7 +17,8 @@ class CourseListView(DashboardPermissionMixin, ListView):
     def get_queryset(self):
         now = timezone.now().date()
 
-        return Course.objects.filter(end_time__gte=now)
+        return Course.objects.filter(end_time__gte=now, \
+                                     courseassignment__user=self.request.user)
 
 
 class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin, ListView):
