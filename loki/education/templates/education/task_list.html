@@ -24,8 +24,7 @@
               <tr>
                 <th>Седмица</th>
                 <th>Задача</th>
-                <th>Линк</th>
-                <th>Предай</th>
+                <th id="submit-task-label">Предай</th>
               </tr>
             </thead>
             <tbody id="tasks-body">
@@ -33,13 +32,12 @@
                  <tr class="task-selected" id="task_{{task.id}}">
                    <td class="task-week">{{ task.week }}</td>
                    <td class="task-name">{{ task.name }}</td>
-                   <td class="task-link">Линк</td>
                    <td>
                      <form class="submit-task" action="" method="POST">
                        {% csrf_token %}
-                       <button id="change-interview" type="submit" class="btn btn-warning" >Предай</button>
+                       <button id="submit-task-box" type="submit" class="btn btn-warning" >Предай</button>
                      </form>
-                    </td>
+                   </td>
                  </tr>
              {% endfor %}
             </tbody>

@@ -612,4 +612,9 @@ body {
     .confirm-interview-container .confirm-interview-box .hb-logo img {
       width: 30px; }
 
+.active-tasks-container #submit-task-label {
+  text-align: center; }
+.active-tasks-container #submit-task-box {
+  margin-left: 43%; }
+
 /*# sourceMappingURL=website.css.map */
