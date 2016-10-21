@@ -1,11 +1,58 @@
 {% extends 'website/base.html' %}
 
 {% block 'page-content' %}
-{% csrf_token %}
-<h1> Задачи за {{ object_list.first.course }}: <h1>
-{% for task in object_list %}
-  <div> {{ task.name }}</div>
-{% endfor%}
+{% autoescape off %}
+  <div class="container">
+    <section class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12">
+        {{ snippets.courses_first_header.text }}
+        <h3> Задачи за {{ object_list.first.course }}: <h3>
+      </div>
+    </section>
+
+    <section class="row">
+      <div class="col-lg-12">
+        <p class="lead">{{ snippets.courses_first_paragraph.text }}</p>
+      </div>
+    </section>
+
+    <section class="row">
+      <div class="col-lg-12">
+        {{ snippets.courses_second_header.text }}
+      </div>
+    </section>
+
+    <hr />
+    <section class="row">
+      <div class="active-courses-container container-fluid">
+          <table id="course-tasks-table" class="table table-hover table-striped " cellspacing="0">
+            <thead>
+              <tr>
+                <th>Задача</th>
+                <th>Линк</th>
+                <th>Предай</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              {% for task in object_list %}
+                 <tr class="task-selected" id="task_{{task.id}}">
+                   <td class="task-name">{{ task.name }}</td>
+                   <td class="task-link">Линк</td>
+                   <td>
+                     <form class="submit-task" action="{% url 'education:task_list' course_id %}" method="POST">
+                       {% csrf_token %}
+                       <button id="change-interview" type="submit" class="btn btn-warning" >Предай</button>
+                     </form>
+                    </td>
+                 </tr>
+             {% endfor %}
+            </tbody>
+          </table>
+      </div>
+    </section>
 
 
+
+  </div>
+{% endautoescape %}
 {% endblock %}
