@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 import factory
 from test_plus.test import TestCase
 from ..models import InterviewerFreeTime, Interview

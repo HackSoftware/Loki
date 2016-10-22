@@ -2,14 +2,20 @@
 
 {% block 'page-content' %}
 {% autoescape off %}
+
+<div class="task-name-container"> Решение на задача: <b>{{ solution.task.name }} </b> </div>
   <div class="container">
     <section class="row">
       <div class="col-lg-12 col-md-12 col-sm-12">
+        <h4>Условие на задачата:
+          <a class="task-solution-link" href={{solution.task.github_account}} target="_blank">
+            {{solution.task.name}}
+          </a>
+        </h4>
+        <h4>Резултат: {{ solution.get_status }} </h4>
         {{ snippets.courses_first_header.text }}
-        <h3>Решение на задача: {{ solution.task.name }} </h3>
-        <h3>Test output : {{ solution.test_output }} </h3>
-        <h3>Резултат: {{ solution.get_status }} </h3>
-        <h3>Return code: {{ solution.return_code }}</h3>
+        <h3>Test output</h3>
+        <div class="task-test-output">{{task.test_output}}</div>
 
       </div>
     </section>

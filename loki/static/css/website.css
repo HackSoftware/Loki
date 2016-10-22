@@ -626,4 +626,19 @@ body {
 .active-tasks-container #solution-task-label {
   padding-left: 5%; }
 
+.task-name-container {
+  background-color: silver;
+  height: 5%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 15px;
+  padding-left: 6%;
+  padding-bottom: 15px;
+  font-size: 18px; }
+
+.task-test-output {
+  width: 90%;
+  background-color: #f7931e;
+  opacity: 0.8; }
+
 /*# sourceMappingURL=website.css.map */
