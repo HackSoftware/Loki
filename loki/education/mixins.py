@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import get_object_or_404
 
-from loki.education.models import Course, CourseAssignment, Solution
+from loki.education.models import Course, CourseAssignment
 
 
 class BaseUserPassesTestMixin(UserPassesTestMixin):
@@ -19,8 +19,8 @@ class DashboardPermissionMixin(BaseUserPassesTestMixin):
             self.requires_login = True
             return False
 
-        if not (self.request.user.get_student() or \
-                self.request.user.get_teacher() or \
+        if not (self.request.user.get_student() or
+                self.request.user.get_teacher() or
                 self.request.user.is_superuser):
             return False
 

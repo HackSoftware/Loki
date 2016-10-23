@@ -8,6 +8,7 @@ from django.conf import settings
 from image_cropping.fields import ImageRatioField, ImageCropField
 from .managers import UserManager
 
+
 class Company(models.Model):
     name = models.CharField(max_length=100, unique=True)
     logo_url = models.URLField(blank=True)
@@ -128,6 +129,7 @@ class School(EducationPlace):
 class Academy(EducationPlace):
     class Meta:
         verbose_name_plural = 'Academies'
+
 
 class BaseUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20)

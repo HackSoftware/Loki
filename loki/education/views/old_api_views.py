@@ -18,13 +18,13 @@ from rest_framework.response import Response
 from loki.base_app.models import City, Company
 
 from ..premissions import IsStudent, IsTeacher, IsTeacherForCA
-from ..models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
-                     Task, Solution, Certificate)
+from ..models import (CheckIn, Student, Lecture, Course, CourseAssignment,
+                      WorkingAt, Task, Solution, Certificate)
 from ..serializers import (UpdateStudentSerializer, StudentNameSerializer,
-                          LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
-                          SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
-                          CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer,
-                          SolutionStatusSerializer)
+                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
+                           SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
+                           CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer,
+                           SolutionStatusSerializer)
 from ..helper import (check_macs_for_student, mac_is_used_by_another_student)
 from ..tasks import submit_solution
 

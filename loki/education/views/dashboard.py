@@ -1,15 +1,11 @@
 from django.views.generic.list import ListView
-from django.views.generic import TemplateView, DetailView
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import user_passes_test
 from django.utils import timezone
-from django.http import HttpResponseForbidden
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse
 
-from loki.education.models import Course, Task, CourseAssignment, Solution, Student
-from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin)
+from loki.education.models import Course, Task, Solution, Student
+from ..mixins import DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin
+from ..serializers import ValidationError
 
 
 class CourseListView(DashboardPermissionMixin, ListView):
@@ -18,7 +14,7 @@ class CourseListView(DashboardPermissionMixin, ListView):
     def get_queryset(self):
         now = timezone.now().date()
 
-        return Course.objects.filter(end_time__gte=now, \
+        return Course.objects.filter(end_time__gte=now,
                                      courseassignment__user=self.request.user)
 
 
@@ -31,7 +27,7 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
         context['tasksolution'] = {}
         for solution in solutions:
             task_name = solution.task.name
-            context['tasksolution'].update({task_name:solution})
+            context['tasksolution'].update({task_name: solution})
         return context
 
     def get_queryset(self):
@@ -46,19 +42,18 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
             Solutions without code are not accepted
         '''
         if not code:
-            raise serializers.ValidationError('Either code, file or url should be given.')
+            raise ValidationError('Either code, file or url should be given.')
 
         task = Task.objects.get(id=task_id)
         student = Student.objects.get(email=request.user.email)
         Solution.objects.create(task=task, student=student, status=Solution.PENDING)
 
-        return redirect(reverse('education:course_dashboard', kwargs={'course':course_id}))
+        return redirect(reverse('education:course_dashboard', kwargs={'course': course_id}))
 
 
 class SolutionView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
                    ListView):
     model = Solution
-
 
     def get_queryset(self):
         task = Task.objects.get(id=self.kwargs.get("task"))
