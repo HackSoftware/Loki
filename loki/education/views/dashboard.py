@@ -5,10 +5,11 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import user_passes_test
 from django.utils import timezone
 from django.http import HttpResponseForbidden
+from django.shortcuts import redirect
+from django.core.urlresolvers import reverse
 
-from loki.education.models import Course, Task, CourseAssignment, Solution
-from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
-                      CannotSeeOthersSolutionsMixin)
+from loki.education.models import Course, Task, CourseAssignment, Solution, Student
+from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin)
 
 
 class CourseListView(DashboardPermissionMixin, ListView):
@@ -36,8 +37,29 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
     def get_queryset(self):
         return Task.objects.filter(course=self.course).order_by('week')
 
+    def post(self, request, *args, **kwargs):
+        code = request.POST.get('code', None)
+        task_id = request.POST.get('task_id', None)
+        course_id = kwargs.get('course')
 
-class SolutionView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin, \
-                   CannotSeeOthersSolutionsMixin, DetailView):
+        '''
+            Solutions without code are not accepted
+        '''
+        if not code:
+            raise serializers.ValidationError('Either code, file or url should be given.')
+
+        task = Task.objects.get(id=task_id)
+        student = Student.objects.get(email=request.user.email)
+        Solution.objects.create(task=task, student=student, status=Solution.PENDING)
+
+        return redirect(reverse('education:course_dashboard', kwargs={'course':course_id}))
+
+
+class SolutionView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
+                   ListView):
     model = Solution
-    pk_url_kwarg = 'solution'
+
+
+    def get_queryset(self):
+        task = Task.objects.get(id=self.kwargs.get("task"))
+        return Solution.objects.filter(student=self.request.user, task=task).order_by("- created_at")

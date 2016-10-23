@@ -3,7 +3,8 @@
 {% block 'page-content' %}
 {% autoescape off %}
 
-<div class="task-name-container"> Решение на задача: <b>{{ solution.task.name }} </b> </div>
+{% for solution in object_list %}
+  <div class="task-name-container"> Решение на задача: <b>{{ solution.task.name }} </b> </div>
   <div class="container">
     <section class="row">
       <div class="col-lg-12 col-md-12 col-sm-12">
@@ -21,5 +22,6 @@
     </section>
 
   </div>
+{% endfor %}
 {% endautoescape %}
 {% endblock %}

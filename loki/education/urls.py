@@ -28,6 +28,6 @@ urlpatterns = [
            dashboard.CourseListView.as_view(), name='course_list'),
     url(r'^course/(?P<course>[0-9]+)/dashboard/$',
            dashboard.CourseDashboardView.as_view(), name='course_dashboard'),
-    url(r'^course/(?P<course>[0-9]+)/solutions/(?P<solution>[0-9]+)/$',
+    url(r'^course/(?P<course>[0-9]+)/task/(?P<task>[0-9]+)/solutions/$',
            dashboard.SolutionView.as_view(), name='solution_view')
 ]

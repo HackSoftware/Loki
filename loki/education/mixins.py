@@ -45,13 +45,3 @@ class CannotSeeOthersCoursesDashboardsMixin(BaseUserPassesTestMixin):
 
         self.course = course
         return True and super().test_func()
-
-class CannotSeeOthersSolutionsMixin(BaseUserPassesTestMixin):
-    def test_func(self):
-        solution_id = self.kwargs.get('solution')
-        qs = Solution.objects.filter(id=solution_id, student=self.request.user)
-
-        if not qs.exists():
-            return False
-
-        return True and super().test_func()
