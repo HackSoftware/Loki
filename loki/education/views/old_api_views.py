@@ -17,7 +17,7 @@ from rest_framework.response import Response
 
 from loki.base_app.models import City, Company
 
-from ..premissions import IsStudent, IsTeacher, IsTeacherForCA
+from ..permissions import IsStudent, IsTeacher, IsTeacherForCA
 from ..models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
                      Task, Solution, Certificate)
 from ..serializers import (UpdateStudentSerializer, StudentNameSerializer,
@@ -27,7 +27,7 @@ from ..serializers import (UpdateStudentSerializer, StudentNameSerializer,
                           SolutionStatusSerializer)
 from ..helper import (check_macs_for_student, mac_is_used_by_another_student)
 from ..tasks import submit_solution
-
+from ..mixins import SolutionApiAuthenticationPermissionMixin
 
 @csrf_exempt
 @require_POST
@@ -235,13 +235,13 @@ class StudentSolutionsList(generics.ListAPIView):
 
 
 class SolutionsAPI(
+        SolutionApiAuthenticationPermissionMixin,
         mixins.ListModelMixin,
         mixins.CreateModelMixin,
         mixins.UpdateModelMixin,
         generics.GenericAPIView):
     model = Solution
     serializer_class = SolutionSerializer
-    permission_classes = (IsStudent,)
     filter_fields = ('task__course__id',)
 
     def get(self, request, *args, **kwargs):
