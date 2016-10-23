@@ -1,9 +1,10 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import get_object_or_404
+from rest_framework.authentication import SessionAuthentication
 
 from loki.education.models import Course, CourseAssignment, Solution
-
+from .permissions import IsStudent
 
 class BaseUserPassesTestMixin(UserPassesTestMixin):
     def test_func(self):
@@ -55,3 +56,7 @@ class CannotSeeOthersSolutionsMixin(BaseUserPassesTestMixin):
             return False
 
         return True and super().test_func()
+
+class SolutionApiAuthenticationPermissionMixin:
+    authentication_classes = (SessionAuthentication, )
+    permission_classes = (IsStudent, )
