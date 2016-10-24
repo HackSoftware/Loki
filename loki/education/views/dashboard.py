@@ -5,7 +5,7 @@ from django.core.urlresolvers import reverse
 
 from loki.education.models import Course, Task, Solution, Student
 from ..mixins import DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin
-from ..serializers import ValidationError
+from rest_framework import serializers
 
 
 class CourseListView(DashboardPermissionMixin, ListView):
@@ -42,7 +42,7 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
             Solutions without code are not accepted
         '''
         if not code:
-            raise ValidationError('Either code, file or url should be given.')
+            raise serializers.ValidationError('Either code, file or url should be given.')
 
         task = Task.objects.get(id=task_id)
         student = Student.objects.get(email=request.user.email)
