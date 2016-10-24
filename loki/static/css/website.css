@@ -638,7 +638,6 @@ body {
 
 .task-test-output {
   width: 90%;
-  background-color: #f7931e;
-  opacity: 0.8; }
+  word-wrap: break-word; }
 
 /*# sourceMappingURL=website.css.map */

@@ -57,4 +57,4 @@ class SolutionView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMix
 
     def get_queryset(self):
         task = Task.objects.get(id=self.kwargs.get("task"))
-        return Solution.objects.filter(student=self.request.user, task=task).order_by("- created_at")
+        return Solution.objects.filter(student=self.request.user, task=task).order_by("-created_at")
