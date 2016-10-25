@@ -10,8 +10,7 @@ from loki.celery import app
 
 from .models import Test, Solution, RetestSolution
 from .helper import (generate_grader_headers, get_solution_code,
-                     update_req_and_resource_nonce, read_binary_file,
-                     get_valid_nonce)
+                     read_binary_file, get_valid_nonce)
 
 
 @app.task
