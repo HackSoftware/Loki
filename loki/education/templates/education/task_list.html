@@ -64,36 +64,17 @@
         </button>
         <h4 class="modal-title" id="myModalLabel">Задача</h4>
       </div>
-      <form action="" method="POST">
-        <div class="modal-body">
-            <label for="message-text" class="form-control-label">Решение на задача:</label>
-            <input type="hidden" name="task_id" value="">
-            <textarea class="form-control" id="message-text" name="code"></textarea>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
-          {% csrf_token %}
-          <button type="submit" class="btn btn-warning">Предай задача</button>
-        </div>
-      </form>
+      <div class="modal-body">
+          <label for="message-text" class="form-control-label">Решение на задача:</label>
+          <textarea class="form-control" id="message-text" name="code"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-warning" id="submit-solution" value="">Предай задача</button>
+      </div>
     </div>
   </div>
 </div>
 {% endautoescape %}
-{% endblock %}
-
-{% block 'scripts' %}
-<script type="text/javascript">
-$("#submit_solution").submit( function ()){
-  function makeRequest(task, code) {
-    $.ajax({
-      url: 'education/api/solution/',
-      type: "POST",
-      data: {
-          task: task,
-          code: code,
-      }
-    });
-}
-</script>
 {% endblock %}

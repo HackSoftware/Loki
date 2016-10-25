@@ -41,8 +41,28 @@ $(document).ready(function(){
     var modal = $(this);
     modal.find('.modal-title').text(taskName);
 
-    // Add task_id to the form
     var task_id = button.data("task-id");
-    $(".modal form input[name='task_id']").val(task_id);
+    $("#submit-solution").val(task_id);
   });
+
+  $("#submit-solution").click(function(e){
+    e.preventDefault();
+    var code = $("#message-text").val();
+    var task_id = $("#submit-solution").attr("value");
+    var csrftoken = Cookies.get('csrftoken');
+    $.ajax({
+      url: '/education/api/solution/',
+      type: "POST",
+      dataType: "json",
+      data: {
+        task: task_id,
+        code: code
+      },
+      headers: {"X-CSRFToken": csrftoken},
+      success: function(data) {
+        $("#task-modal-box").modal('hide');
+      }
+    });
+  });
+
 });
