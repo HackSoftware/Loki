@@ -4,7 +4,9 @@
 {% autoescape off %}
 
 {% for solution in object_list %}
-  <div class="task-name-container"> Решение на задача: <b>{{ solution.task.name }} </b> </div>
+  <div class="task-name-container"> Решение на задача: <b>{{ solution.task.name }} </b>
+    <div id="solution-created-at">Предадена на: <b>{{ solution.created_at }}</b></div>
+  </div>
   <div class="container">
     <section class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 solution-container">
@@ -13,15 +15,14 @@
             {{solution.task.name}}
           </a>
         </h4>
-        <h4>Предадена задача</h4>
+        <h4>Предадена задача: </h4>
         <div>
           <pre><code>{{solution.code}}</code></pre>
         </div>
         <h4>Резултат: {{ solution.get_status }} </h4>
           {{ snippets.courses_first_header.text }}
         <h3>Test output</h3>
-        <!-- <div class="task-test-output"><code>{{task.test_output}}</code></div> -->
-        <div class="task-test-output">
+        <div>
           <pre><code>{{solution.test_output}}</code></pre>
         </div>
       </div>

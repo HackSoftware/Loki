@@ -924,6 +924,12 @@ $TabBorder: #C5C4C4;
   padding-bottom:15px;
   font-size: 18px;
 
+  #solution-created-at {
+    float: right;
+    padding-right: 10%;
+    display: inline-block;
+    font-size: 13px;
+  }
 }
 
 .solution-container  {

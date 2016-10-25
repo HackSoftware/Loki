@@ -49,7 +49,7 @@ class AboutView(TemplateView):
 def courses(request):
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
     opened_course_applications = ApplicationInfo.objects.get_open_for_apply()
-    closed_course_applications = ApplicationInfo.objects.get_closed_for_apply()
+    closed_course_applications = ApplicationInfo.objects.get_ordered_closed_application_infos()
     return render(request, "website/courses.html", locals())
 
 

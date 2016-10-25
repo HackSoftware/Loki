@@ -635,6 +635,11 @@ body {
   padding-left: 6%;
   padding-bottom: 15px;
   font-size: 18px; }
+  .task-name-container #solution-created-at {
+    float: right;
+    padding-right: 10%;
+    display: inline-block;
+    font-size: 13px; }
 
 .task-test-output {
   width: 90%;
