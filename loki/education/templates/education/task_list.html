@@ -83,4 +83,17 @@
 {% endblock %}
 
 {% block 'scripts' %}
+<script type="text/javascript">
+$("#submit_solution").submit( function ()){
+  function makeRequest(task, code) {
+    $.ajax({
+      url: 'education/api/solution/',
+      type: "POST",
+      data: {
+          task: task,
+          code: code,
+      }
+    });
+}
+</script>
 {% endblock %}
