@@ -65,4 +65,31 @@ $(document).ready(function(){
     });
   });
 
+  function pollForSolutionStatus(solution, completeCb) {
+    function poller(solution, completeCb) {
+      setTimeout(function () {
+        url = '/education/api/solution-status/' + solution.data('solution-id') + '/'
+        $.get(url, function(data) {
+          if (data.status !== "pending") {
+            completeCb(solution, data);
+          } else {
+            poller(solution, completeCb);
+          }
+        })
+      }, 1000);
+    };
+
+    poller(solution, completeCb);
+  };
+
+  var complete = function(solution, new_data) {
+    solution.text(new_data.status);
+  }
+
+  $('.solution-status').each(function() {
+    if ($(this).data('status') == 'pending') {
+      pollForSolutionStatus($(this), complete);
+    }
+  });
+
 });

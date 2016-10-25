@@ -174,7 +174,7 @@ GRADER_ADDRESS = env('GRADER_ADDRESS', default='https://grader.hackbulgaria.com'
 GRADER_API_KEY = env('GRADER_API_KEY', default='')
 GRADER_API_SECRETCHECKIN_TOKEN = env('GRADER_API_SECRET', default='')
 
-POLLING_SLEEP_TIME = env.int('POLLING_SLEEP_TIME', default='1')  # seconds
+POLLING_SLEEP_TIME = env.int('POLLING_SLEEP_TIME', default=1)  # seconds
 
 CELERYBEAT_SCHEDULE = {
     'retest-solutions-on-test-change': {

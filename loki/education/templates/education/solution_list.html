@@ -19,7 +19,12 @@
         <div>
           <pre><code>{{solution.code}}</code></pre>
         </div>
-        <h4>Резултат: {{ solution.get_status }} </h4>
+        <div>
+          Резултат:
+          <span class="solution-status" data-status="{{ solution.get_status }}" data-solution-id="{{ solution.id }}">
+            {{ solution.get_status }}
+          </span>
+        </div>
           {{ snippets.courses_first_header.text }}
         <h3>Test output</h3>
         <div>

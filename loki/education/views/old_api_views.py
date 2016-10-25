@@ -207,11 +207,11 @@ class TasksAPI(generics.ListAPIView):
 
 
 class SolutionStatusAPI(
+        SolutionApiAuthenticationPermissionMixin,
         mixins.RetrieveModelMixin,
         generics.GenericAPIView):
     model = Solution
     serializer_class = SolutionStatusSerializer
-    permission_classes = (IsStudent,)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
