@@ -65,4 +65,8 @@ $(document).ready(function(){
     });
   });
 
+  $("#check-in").click(function(){
+    $("#check-in-text").toggle();
+  });
+
 });

@@ -645,4 +645,7 @@ body {
   width: 90%;
   word-wrap: break-word; }
 
+#check-in {
+  cursor: pointer; }
+
 /*# sourceMappingURL=website.css.map */
