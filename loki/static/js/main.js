@@ -65,6 +65,7 @@ $(document).ready(function(){
     });
   });
 
+<<<<<<< HEAD
   function pollForSolutionStatus(solution, completeCb) {
     function poller(solution, completeCb) {
       setTimeout(function () {
@@ -90,6 +91,9 @@ $(document).ready(function(){
     if ($(this).data('status') == 'pending') {
       pollForSolutionStatus($(this), complete);
     }
+
+  $("#check-in").click(function(){
+    $("#check-in-text").toggle();
   });
 
 });
