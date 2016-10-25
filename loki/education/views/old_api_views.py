@@ -19,7 +19,7 @@ from loki.base_app.models import City, Company
 
 from ..permissions import IsStudent, IsTeacher, IsTeacherForCA
 from ..models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
-                     Task, Solution, Certificate)
+                      Task, Solution, Certificate)
 
 from ..serializers import (UpdateStudentSerializer, StudentNameSerializer,
                            LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
@@ -29,6 +29,7 @@ from ..serializers import (UpdateStudentSerializer, StudentNameSerializer,
 from ..helper import (check_macs_for_student, mac_is_used_by_another_student)
 from ..tasks import submit_solution
 from ..mixins import SolutionApiAuthenticationPermissionMixin
+
 
 @csrf_exempt
 @require_POST

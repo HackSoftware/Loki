@@ -59,6 +59,7 @@ class CannotSeeOthersSolutionsMixin(BaseUserPassesTestMixin):
 
         return True and super().test_func()
 
+
 class SolutionApiAuthenticationPermissionMixin:
     authentication_classes = (SessionAuthentication, )
     permission_classes = (IsStudent, )
