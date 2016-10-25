@@ -14,7 +14,7 @@
     <h2 id="moto"><strong>{{success_students_count}}</strong> {{ snippets.index_call_to_action.text }}</h2>
     {% for successor in successors %}
       <div class="person">
-        <img src="/media/{{ successor.picture }}" class="person-image">
+        <img src="{{MEDIA_URL}}{{ successor.picture }}" class="person-image">
         <p class="person-description " >
           <span class="name">{{ successor.name }}</span> <br>
           <span class="position">{{ successor.title }}</span>

@@ -3,12 +3,13 @@
 {% block 'page-content' %}
 {% autoescape off %}
 
-<div class="task-name-container"> Решение на задача: <b>{{ solution.task.name }} </b> </div>
+{% for solution in object_list %}
+  <div class="task-name-container"> Решение на задача: <b>{{ solution.task.name }} </b> </div>
   <div class="container">
     <section class="row">
       <div class="col-lg-12 col-md-12 col-sm-12">
         <h4>Условие на задачата:
-          <a class="task-solution-link" href={{solution.task.github_account}} target="_blank">
+          <a class="task-solution-link" href={{solution.task.description}} target="_blank">
             {{solution.task.name}}
           </a>
         </h4>
@@ -21,5 +22,6 @@
     </section>
 
   </div>
+{% endfor %}
 {% endautoescape %}
 {% endblock %}

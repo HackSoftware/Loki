@@ -6,6 +6,7 @@ from rest_framework.authentication import SessionAuthentication
 from loki.education.models import Course, CourseAssignment, Solution
 from .permissions import IsStudent
 
+
 class BaseUserPassesTestMixin(UserPassesTestMixin):
     def test_func(self):
         return True
@@ -20,8 +21,8 @@ class DashboardPermissionMixin(BaseUserPassesTestMixin):
             self.requires_login = True
             return False
 
-        if not (self.request.user.get_student() or \
-                self.request.user.get_teacher() or \
+        if not (self.request.user.get_student() or
+                self.request.user.get_teacher() or
                 self.request.user.is_superuser):
             return False
 
@@ -46,6 +47,7 @@ class CannotSeeOthersCoursesDashboardsMixin(BaseUserPassesTestMixin):
 
         self.course = course
         return True and super().test_func()
+
 
 class CannotSeeOthersSolutionsMixin(BaseUserPassesTestMixin):
     def test_func(self):

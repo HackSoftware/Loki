@@ -1,7 +1,8 @@
 from test_plus.test import TestCase
 
-from loki.seed.factories import BaseUserFactory, StudentFactory
+from loki.seed.factories import BaseUserFactory
 from loki.base_app.models import BaseUser
+
 
 class CourseListViewTests(TestCase):
 

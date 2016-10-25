@@ -1,5 +1,7 @@
 {% extends 'website/base.html' %}
 
+{% load key %}
+
 {% block 'page-content' %}
 {% autoescape off %}
   <div class="container">
@@ -27,22 +29,22 @@
                  <tr class="task-selected" task_id="{{task.id}}">
                    <td class="task-week">{{ task.week }}</td>
                    <td class="task-name">
-                     <a class="task-solution-link" href={{user.github_account}} target="_blank">
+                     <a class="task-solution-link" href={{task.description}} target="_blank">
                        {{ task.name }}
                      </a>
                    </td>
                    <td>
-                       <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}"data-toggle="modal" data-target="#task-modal-box">Предай</button>
+                      <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}"data-toggle="modal" data-task-id="{{task.id}}" data-target="#task-modal-box">Предай</button>
                    </td>
                    <td>
-                     {% for key, solution in tasksolution.items %}
-                      {% if task.name == key %}
-                      <a class="task-solution-link" href="{% url 'education:solution_view' task.course.id solution.id %}">
-                        <button class="btn btn-warning" id="btn-tasks-link">Решение на задача</button>
-                      </a>
+                      {% if tasksolution|key:task.name %}
+                        <a class="task-solution-link" href="{% url 'education:solution_view' task.course.id task.id %}">
+                          <button class="btn btn-warning" id="btn-tasks-link">Решение на задача</button>
+                        </a>
+                      {% else %}
+                        Няма предадено решение
                       {% endif %}
-                     {% endfor %}
-                   </td>
+                    </td>
                  </tr>
              {% endfor %}
             </tbody>
@@ -62,14 +64,18 @@
         </button>
         <h4 class="modal-title" id="myModalLabel">Задача</h4>
       </div>
-      <div class="modal-body">
-          <label for="message-text" class="form-control-label">Решение на задача:</label>
-          <textarea class="form-control" id="message-text"></textarea>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
-        <button type="button" class="btn btn-warning">Предай задача</button>
-      </div>
+      <form action="" method="POST">
+        <div class="modal-body">
+            <label for="message-text" class="form-control-label">Решение на задача:</label>
+            <input type="hidden" name="task_id" value="">
+            <textarea class="form-control" id="message-text" name="code"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
+          {% csrf_token %}
+          <button type="submit" class="btn btn-warning">Предай задача</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
