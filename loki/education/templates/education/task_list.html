@@ -21,7 +21,10 @@
                 <th>Седмица</th>
                 <th>Задача</th>
                 <th id="submit-task-label">Предай</th>
-                <th id="solution-task-label">Решение<th>
+                <th id="solution-task-label">Решения</th>
+                {% if user.student.solution_set.last.task in object_list %}
+                <th>Последно предадена задача</th>
+                {%endif%}
               </tr>
             </thead>
             <tbody id="tasks-body">
@@ -39,10 +42,15 @@
                    <td>
                       {% if tasksolution|key:task.name %}
                         <a class="task-solution-link" href="{% url 'education:solution_view' task.course.id task.id %}">
-                          <button class="btn btn-warning" id="btn-tasks-link">Решение на задача</button>
+                          <button class="btn btn-warning" id="btn-tasks-link">Решения</button>
                         </a>
                       {% else %}
                         Няма предадено решение
+                      {% endif %}
+                    </td>
+                    <td>
+                      {% if tasksolution|key:task.name %}
+                        <!-- Take latest submitted solution status -->
                       {% endif %}
                     </td>
                  </tr>

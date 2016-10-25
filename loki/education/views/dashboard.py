@@ -24,7 +24,10 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
         context['tasksolution'] = {}
         for solution in solutions:
             task_name = solution.task.name
-            context['tasksolution'].update({task_name: solution})
+            if task_name in context['tasksolution']:
+                context['tasksolution'][task_name].append(solution)
+            else:
+                context['tasksolution'].update({task_name: solution})
         return context
 
     def get_queryset(self):
