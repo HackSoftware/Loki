@@ -10,7 +10,7 @@ from loki.celery import app
 
 from .models import Test, Solution, RetestSolution
 from .helper import (generate_grader_headers, get_solution_code,
-                     update_req_and_resource_nonce, read_binary_file)
+                     read_binary_file, get_valid_nonce)
 
 
 @app.task
@@ -33,15 +33,21 @@ def submit_solution(solution_id):
     headers = generate_grader_headers(json.dumps(data), req_and_resource)
 
     r = requests.post(url, json=data, headers=headers)
-    if r.status_code == 202:
-        solution.status = Solution.PENDING
-        solution.build_id = r.json()['run_id']
-        solution.check_status_location = r.headers['Location']
-        solution.save()
 
-        poll_solution.delay(solution_id)
-    else:
-        raise Exception(r.text)
+    while True:
+        headers = generate_grader_headers(json.dumps(data), req_and_resource)
+        r = requests.post(url, json=data, headers=headers)
+        if r.status_code == 202:
+            solution.status = Solution.RUNNING
+            solution.build_id = r.json()['run_id']
+            solution.check_status_location = r.headers['Location']
+            solution.save()
+
+            poll_solution.delay(solution_id)
+            break
+
+        elif r.status_code == 403 and r.text == "Nonce check failed":
+            get_valid_nonce(req_and_resource)
 
 
 def get_binary_problem_data(solution):
@@ -81,16 +87,7 @@ def poll_solution(solution_id):
         headers = generate_grader_headers(path, req_and_resource)
         r = requests.get(url, headers=headers)
         if r.status_code == 403 and r.text == "Nonce check failed":
-            get_nonce_url = settings.GRADER_ADDRESS + settings.GRADER_GET_NONCE_PATH
-
-            headers = {
-                'Request-Info': req_and_resource,
-                'X-USER-Key': settings.GRADER_API_KEY
-            }
-
-            responce = requests.get(get_nonce_url, headers=headers)
-            nonce = responce.json()["nonce"]
-            update_req_and_resource_nonce(req_and_resource, nonce)
+            get_valid_nonce(req_and_resource)
 
         elif r.status_code == 200:
             data = r.json()

@@ -94,3 +94,15 @@ def read_binary_file(path):
         encoded = base64.b64encode(f.read())
 
     return encoded.decode('ascii')
+
+
+def get_valid_nonce(req_and_resource):
+    get_nonce_url = settings.GRADER_ADDRESS + settings.GRADER_GET_NONCE_PATH
+
+    headers = {
+        'Request-Info': req_and_resource,
+        'X-USER-Key': settings.GRADER_API_KEY
+    }
+    response = requests.get(get_nonce_url, headers=headers)
+    nonce = response.json()["nonce"]
+    update_req_and_resource_nonce(req_and_resource, nonce)
