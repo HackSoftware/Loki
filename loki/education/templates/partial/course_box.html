@@ -44,15 +44,19 @@
   </div>
   <div class="col-sm-9 check-in">
     <table id="check-in-text"  style="display: none">
-     <tr>
-       <th>Name</th>
-       <th colspan="2">Telephone</th>
-     </tr>
-     <tr>
-       <td>Bill Gates</td>
-       <td>55577854</td>
-       <td>55577855</td>
-     </tr>
+      {% for week in weeks %}
+
+        <tr>
+          <th> Week{{ week }}</th>
+          {% for week, dates  in dates_for_weeks.items %}
+            {% for date in dates %}
+             {% if date in student_dates %}
+              <th> {{ date }} </th>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </tr>
+        {% endfor %}
    </table>
   </div>
 
