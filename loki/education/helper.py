@@ -9,7 +9,8 @@ from PIL import Image
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 
-from .models import CheckIn, Student, GraderRequest
+from .models import CheckIn, Student, GraderRequest, Lecture
+from .serializers import CheckInSerializer
 
 
 def crop_image(x1, y1, x2, y2, path):
@@ -94,3 +95,22 @@ def read_binary_file(path):
         encoded = base64.b64encode(f.read())
 
     return encoded.decode('ascii')
+
+def get_weeks_for_course(course):
+    return [lecture.week.number for lecture in course.lecture_set.all() \
+                                if lecture.week]
+
+def get_dates_for_weeks(course):
+    weeks = get_weeks_for_course(course)
+    week_dates = {}
+
+    for week in weeks:
+        week_dates[week] = Lecture.objects.filter(week__number=week).values_list('date', flat=True).all()
+
+    return week_dates
+
+def get_student_dates(student, course):
+    return CheckIn.objects.filter(student=student,
+                           date__gte=course.start_time,
+                           date__lte=course.end_time).values_list(
+                           'date', flat=True).all()

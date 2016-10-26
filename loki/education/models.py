@@ -95,9 +95,16 @@ class CheckIn(models.Model):
         unique_together = (('student', 'date'), ('mac', 'date'))
 
 
+class Week(models.Model):
+    number = models.IntegerField()
+
+    def __str__(self):
+        return "Week{0}".format(self.number)
+
 class Lecture(models.Model):
     course = models.ForeignKey('Course')
     date = models.DateField()
+    week = models.ForeignKey(Week, null=True, blank=True)
 
 
 class StudentNote(models.Model):
