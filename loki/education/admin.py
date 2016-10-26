@@ -6,7 +6,7 @@ from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtR
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture,
                      CheckIn, StudentNote, WorkingAt, Task, Solution,
                      Certificate, ProgrammingLanguage, GraderRequest,
-                     RetestSolution, SourceCodeTest, BinaryFileTest)
+                     RetestSolution, SourceCodeTest, BinaryFileTest, Week)
 
 from .forms import FixJsonFieldDisplayInInheritedClassAdminForm
 
@@ -88,7 +88,8 @@ class CourseAdmin(admin.ModelAdmin):
 class LectureAdmin(admin.ModelAdmin):
     list_display = [
         'date',
-        'course'
+        'course',
+        'week'
     ]
 
 
@@ -286,3 +287,17 @@ class RetestSolutionAdmin(admin.ModelAdmin):
     ]
 
     search_fields = ['test_id']
+
+@admin.register(Week)
+class WeekAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'id',
+        'number'
+    ]
+
+    list_filter = [
+        'number'
+    ]
+
+    search_fields = ['number']
