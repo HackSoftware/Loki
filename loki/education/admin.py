@@ -288,6 +288,7 @@ class RetestSolutionAdmin(admin.ModelAdmin):
 
     search_fields = ['test_id']
 
+
 @admin.register(Week)
 class WeekAdmin(admin.ModelAdmin):
 

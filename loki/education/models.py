@@ -101,6 +101,7 @@ class Week(models.Model):
     def __str__(self):
         return "Week{0}".format(self.number)
 
+
 class Lecture(models.Model):
     course = models.ForeignKey('Course')
     date = models.DateField()

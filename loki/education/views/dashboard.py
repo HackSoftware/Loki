@@ -1,13 +1,10 @@
 from django.views.generic.list import ListView
 from django.utils import timezone
-from django.shortcuts import redirect
-from django.core.urlresolvers import reverse
 
-from loki.education.models import Course, Task, Solution, Student, CheckIn, Lecture
+from loki.education.models import Course, Task, Solution
 from ..mixins import DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin
-from rest_framework import serializers
-from ..serializers import CheckInSerializer
 from ..helper import get_weeks_for_course, get_dates_for_weeks, get_student_dates
+
 
 class CourseListView(DashboardPermissionMixin, ListView):
     model = Course
