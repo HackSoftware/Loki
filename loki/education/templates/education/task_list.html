@@ -24,7 +24,7 @@
                 <th id="solution-task-label">Решения</th>
                 {% if user.student.solution_set.last.task in object_list %}
                 <th>Последно предадена задача</th>
-                {%endif%}
+                {% endif %}
               </tr>
             </thead>
             <tbody id="tasks-body">

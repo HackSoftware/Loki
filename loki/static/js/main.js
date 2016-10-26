@@ -76,7 +76,7 @@ $(document).ready(function(){
             poller(solution, completeCb);
           }
         })
-      }, 1000);
+      }, 3000);
     };
 
     poller(solution, completeCb);
