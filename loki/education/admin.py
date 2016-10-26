@@ -6,7 +6,7 @@ from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtR
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture,
                      CheckIn, StudentNote, WorkingAt, Task, Solution,
                      Certificate, ProgrammingLanguage, GraderRequest,
-                     RetestSolution, SourceCodeTest, BinaryFileTest)
+                     RetestSolution, SourceCodeTest, BinaryFileTest, Week)
 
 from .forms import FixJsonFieldDisplayInInheritedClassAdminForm
 
