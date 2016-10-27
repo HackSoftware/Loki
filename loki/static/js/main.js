@@ -61,6 +61,9 @@ $(document).ready(function(){
       headers: {"X-CSRFToken": csrftoken},
       success: function(data) {
         $("#task-modal-box").modal('hide');
+        console.log(data);
+        var solution_id = data.id;
+        console.log(solution_id);
       }
     });
   });

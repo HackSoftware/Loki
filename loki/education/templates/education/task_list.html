@@ -21,10 +21,10 @@
                 <th>Седмица</th>
                 <th>Задача</th>
                 <th id="submit-task-label">Предай</th>
-                <th id="solution-task-label">Решения</th>
                 {% if user.student.solution_set.last.task in object_list %}
-                <th>Последно предадена задача</th>
+                <th>Статус на последното решение</th>
                 {% endif %}
+                <th id="solution-task-label">Предадени решения</th>
               </tr>
             </thead>
             <tbody id="tasks-body">
@@ -40,17 +40,19 @@
                       <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}"data-toggle="modal" data-task-id="{{task.id}}" data-target="#task-modal-box">Предай</button>
                    </td>
                    <td>
+                     {% if tasksolution|key:task.name %}
+                      <img class="panda-loading-gif" src="{{STATIC_URL}}website_images/panda-loading.gif" />
+                     {% else %}
+                       <img class="panda-sleeps" src="{{STATIC_URL}}website_images/panda-sleeps.png" />
+                     {% endif %}
+                   </td>
+                   <td>
                       {% if tasksolution|key:task.name %}
                         <a class="task-solution-link" href="{% url 'education:solution_view' task.course.id task.id %}">
                           <button class="btn btn-warning" id="btn-tasks-link">Решения</button>
                         </a>
                       {% else %}
                         Няма предадено решение
-                      {% endif %}
-                    </td>
-                    <td>
-                      {% if tasksolution|key:task.name %}
-                        <!-- Take latest submitted solution status -->
                       {% endif %}
                     </td>
                  </tr>
