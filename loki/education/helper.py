@@ -125,7 +125,7 @@ def task_solutions(solutions):
         task_name = solution.task.name
         if task_name not in task_solutions:
             task_solutions[task_name] = [solution]
-        elif task_name in tasksolution:
+        elif task_name in task_solutions:
             task_solutions[task_name].append(solution)
         else:
             task_solutions.update({task_name: solution})
