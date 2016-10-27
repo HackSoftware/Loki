@@ -838,6 +838,7 @@ $TabBorder: #C5C4C4;
 
     .hidden-toggle {
       display: none;
+      width: 80%
     }
 
     .course-box-footer {
@@ -852,7 +853,22 @@ $TabBorder: #C5C4C4;
 
       .check-in-table {
         background-color: white;
+        margin-top: 10px;
+        padding-left: 0px;
+        padding-right: 0px;
+
+        .not-check-in-date {
+          background-color: rgba(255, 0, 0, 0.38);
+        }
+
+        .check-in-date {
+          background-color: rgba(130, 203, 130, 0.75);
+        }
       }
+    }
+
+    .check-in-footer {
+      background-color: #E1E1E1;
     }
 }
 

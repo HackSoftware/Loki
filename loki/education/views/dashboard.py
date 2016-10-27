@@ -4,7 +4,8 @@ from django.utils import timezone
 from loki.education.models import Course, Task, Solution
 from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
                       CannotSeeCourseTaskListMixin)
-from ..helper import get_weeks_for_course, get_dates_for_weeks, get_student_dates
+from ..helper import (get_weeks_for_course, get_dates_for_weeks, get_student_dates,
+                      task_solutions)
 
 
 class CourseListView(DashboardPermissionMixin, ListView):
@@ -18,6 +19,7 @@ class CourseListView(DashboardPermissionMixin, ListView):
             context['weeks'] = list(set(get_weeks_for_course(course)))
             context['dates_for_weeks'] = get_dates_for_weeks(course)
             context['student_dates'] = get_student_dates(student, course)
+
         return context
 
     def get_queryset(self):
@@ -33,14 +35,10 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        solutions = Solution.objects.filter(student=self.request.user)
-        context['tasksolution'] = {}
-        for solution in solutions:
-            task_name = solution.task.name
-            if task_name in context['tasksolution']:
-                context['tasksolution'][task_name].append(solution)
-            else:
-                context['tasksolution'].update({task_name: solution})
+        course = self.kwargs.get('course')
+        solutions = Solution.objects.filter(student=self.request.user.student).filter(
+                                            task__course__in = [course])
+        context['tasksolution'] = task_solutions(solutions)
         return context
 
     def get_queryset(self):

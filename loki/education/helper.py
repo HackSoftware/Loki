@@ -106,7 +106,8 @@ def get_dates_for_weeks(course):
     week_dates = {}
 
     for week in weeks:
-        week_dates[week] = Lecture.objects.filter(week__number=week).values_list('date', flat=True).all()
+        week_dates[week] = Lecture.objects.filter(
+                week__number=week).values_list('date', flat=True).order_by('date').all()
 
     return week_dates
 
@@ -116,3 +117,17 @@ def get_student_dates(student, course):
                                   date__gte=course.start_time,
                                   date__lte=course.end_time).values_list(
                                       'date', flat=True).all()
+
+
+def task_solutions(solutions):
+    task_solutions = {}
+    for solution in solutions:
+        task_name = solution.task.name
+        if task_name not in task_solutions:
+            task_solutions[task_name] = [solution]
+        elif task_name in context['tasksolution']:
+            task_solutions[task_name].append(solution)
+        else:
+            task_solutions.update({task_name: solution})
+
+    return task_solutions
