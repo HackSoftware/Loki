@@ -106,7 +106,8 @@ def get_dates_for_weeks(course):
     week_dates = {}
 
     for week in weeks:
-        week_dates[week] = Lecture.objects.filter(week__number=week).values_list('date', flat=True).all()
+        week_dates[week] = Lecture.objects.filter(
+                week__number=week).values_list('date', flat=True).order_by('date').all()
 
     return week_dates
 

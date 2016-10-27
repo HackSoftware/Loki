@@ -17,6 +17,7 @@ class CourseListView(DashboardPermissionMixin, ListView):
             context['weeks'] = list(set(get_weeks_for_course(course)))
             context['dates_for_weeks'] = get_dates_for_weeks(course)
             context['student_dates'] = get_student_dates(student, course)
+
         return context
 
     def get_queryset(self):
