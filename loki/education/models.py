@@ -9,6 +9,7 @@ from loki.base_app.models import BaseUser, City, Company
 
 from .validators import validate_mac
 from .exceptions import HasToBeRetested
+from .managers import SolutionManager
 
 
 class StudentAndTeacherCommonModel(models.Model):
@@ -270,6 +271,9 @@ class Solution(models.Model):
 
     def get_assignment(self):
         return CourseAssignment.objects.get(user=self.student, course=self.task.course)
+
+    objects = SolutionManager()
+
 
 
 class GraderRequest(models.Model):

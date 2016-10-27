@@ -41,6 +41,7 @@ $(document).ready(function(){
     var modal = $(this);
     modal.find('.modal-title').text(taskName);
 
+    window.modalTriggerButton = button;
     var task_id = button.data("task-id");
     $("#submit-solution").val(task_id);
   });
@@ -62,7 +63,7 @@ $(document).ready(function(){
       success: function(data) {
         $("#task-modal-box").modal('hide');
         var solution = data;
-        $('#last-solution-status').html('<img class="panda-loading-gif" src="/static/website_images/panda-loading.gif" />');
+        window.modalTriggerButton.parent().parent().find('.last-solution-status').html('<img class="panda-loading-gif" src="/static/website_images/panda-loading.gif" />');
         if (solution.status) {
           pollForSolutionStatus(solution, updateSolutionStatus);
         }
@@ -92,7 +93,7 @@ $(document).ready(function(){
   };
 
   var updateSolutionStatus = function(solution, new_data) {
-    $('#last-solution-status').text(new_data.status);
+    window.modalTriggerButton.parent().parent().find('.last-solution-status').html('<b>' + new_data.status + '</b>');
   }
 
   var complete = function(solution, new_data) {
