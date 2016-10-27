@@ -39,9 +39,9 @@
                    <td>
                       <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}"data-toggle="modal" data-task-id="{{task.id}}" data-target="#task-modal-box">Предай</button>
                    </td>
-                   <td>
+                   <td id="last-solution-status">
                      {% if tasksolution|key:task.name %}
-                      <img class="panda-loading-gif" src="{{STATIC_URL}}website_images/panda-loading.gif" />
+                      <!-- {{ tasksolution|key:task.name}} -->
                      {% else %}
                        <img class="panda-sleeps" src="{{STATIC_URL}}website_images/panda-sleeps.png" />
                      {% endif %}
