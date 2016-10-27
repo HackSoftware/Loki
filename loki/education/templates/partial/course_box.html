@@ -26,38 +26,46 @@
     </p>
   </div>
   <div class="col-sm-12 course-box-footer">
-    <div class="col-sm-4" id="check-in">
+    <div class="col-sm-4 check-in">
            Присъствие
     </div>
-    <div class="col-sm-6">
+    {% if course.video_channel or course.git_repository %}
+      {% if course.video_channel %}
+      <div class="col-sm-6">
+        Видео канал:
+        <a href="{{ course.video_channel }}" target="_blank">YouTube</a>
 
-    </div>
-      {% if course.video_channel or course.git_repository %}
-        {% if course.video_channel %}
-        <div class="col-sm-6">
-          Видео канал:
-          <a href="{{ course.video_channel }}" target="_blank">YouTube</a>
-
-        </div>
-        {% endif %}
+      </div>
       {% endif %}
-  </div>
-  <div class="col-sm-9 check-in">
-    <table id="check-in-text"  style="display: none">
-      {% for week in weeks %}
-
-        <tr>
-          <th> Week{{ week }}</th>
-          {% for week, dates  in dates_for_weeks.items %}
-            {% for date in dates %}
-             {% if date in student_dates %}
-              <th> {{ date }} </th>
-              {% endif %}
-            {% endfor %}
+    {% endif %}
+    <div class="check-in-table hidden-toggle col-sm-12">
+      <table class="table table-hover table-striped " cellspacing="0">
+        <thead>
+          <tr>
+            <th>Седмици</th>
+            <th>Присъствия</th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for week in weeks %}
+            <tr>
+              <td>{{week}}</td>
+              {% for week, dates  in dates_for_weeks.items %}
+                {% for date in dates %}
+                  <td> {{ date }} </td>
+                  {% if date in student_dates %}
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+            </tr>
+          </tr>
           {% endfor %}
-        </tr>
-        {% endfor %}
-   </table>
+        </tbody>
+      </table>
+    </div>
   </div>
 
 </div>

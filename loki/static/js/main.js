@@ -92,8 +92,8 @@ $(document).ready(function(){
     }
   });
 
-  $("#check-in").click(function(){
-    $("#check-in-text").toggle();
+  $(".check-in").click(function(){
+    $(this).closest('.course-box').find('.check-in-table').toggle();
   });
 
 });

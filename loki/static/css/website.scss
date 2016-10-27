@@ -835,12 +835,27 @@ $TabBorder: #C5C4C4;
         width: 100%;
         padding: 15px;
     }
+
+    .hidden-toggle {
+      display: none;
+    }
+
+    .course-box-footer {
+      background: #f6e0be;
+      padding: 10px;
+      margin-top: 5px;
+      position: relative;
+
+      .check-in {
+        cursor: pointer;
+      }
+
+      .check-in-table {
+        background-color: white;
+      }
+    }
 }
-.course-box-footer {
-    background: #f6e0be;
-    padding: 10px;
-    margin-top: 5px;
-}
+
 
 .apply-form {
     h1 {
@@ -934,8 +949,4 @@ $TabBorder: #C5C4C4;
 .task-test-output {
   width: 90%;
   word-wrap: break-word;
-}
-
-#check-in {
-  cursor: pointer;
 }

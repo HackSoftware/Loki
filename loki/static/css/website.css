@@ -580,11 +580,17 @@ body {
   .course-box .course-logo {
     width: 100%;
     padding: 15px; }
-
-.course-box-footer {
-  background: #f6e0be;
-  padding: 10px;
-  margin-top: 5px; }
+  .course-box .hidden-toggle {
+    display: none; }
+  .course-box .course-box-footer {
+    background: #f6e0be;
+    padding: 10px;
+    margin-top: 5px;
+    position: relative; }
+    .course-box .course-box-footer .check-in {
+      cursor: pointer; }
+    .course-box .course-box-footer .check-in-table {
+      background-color: white; }
 
 .apply-form h1 {
   padding-bottom: 30px; }
@@ -642,8 +648,5 @@ body {
 .task-test-output {
   width: 90%;
   word-wrap: break-word; }
-
-#check-in {
-  cursor: pointer; }
 
 /*# sourceMappingURL=website.css.map */
