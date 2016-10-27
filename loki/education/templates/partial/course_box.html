@@ -1,3 +1,4 @@
+{% load key %}
 <div class="col-sm-12 course-box">
   <div class="col-sm-3">
     <img src="{{ MEDIA_URL }}{{ course.coursedescription.custom_logo }}" class="course-logo" >
@@ -25,9 +26,10 @@
      </div>
     </p>
   </div>
-  <div class="col-sm-12 course-box-footer">
-    <div class="col-sm-4 check-in">
-           Присъствие
+  <div class="col-sm-12 course-box-footer check-in-footer">
+    <div class="col-sm-3 check-in">
+        <b>Присъствие</b>
+        <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
     </div>
     {% if course.video_channel or course.git_repository %}
       {% if course.video_channel %}
@@ -42,24 +44,19 @@
       <table class="table table-hover table-striped " cellspacing="0">
         <thead>
           <tr>
-            <th>Седмици</th>
-            <th>Присъствия</th>
-            <th></th>
-            <th></th>
-            <th></th>
           </tr>
         </thead>
         <tbody>
           {% for week in weeks %}
             <tr>
-              <td>{{week}}</td>
-              {% for week, dates  in dates_for_weeks.items %}
-                {% for date in dates %}
-                  <td> {{ date }} </td>
+              <td>Week{{week}}</td>
+                {% for date in dates_for_weeks|key:week %}
                   {% if date in student_dates %}
+                  <td class="check-in-date"> {{ date }} </td>
+                  {% else %}
+                  <td class="not-check-in-date"> {{ date }} </td>
                   {% endif %}
                 {% endfor %}
-              {% endfor %}
             </tr>
           </tr>
           {% endfor %}

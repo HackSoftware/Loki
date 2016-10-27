@@ -581,7 +581,8 @@ body {
     width: 100%;
     padding: 15px; }
   .course-box .hidden-toggle {
-    display: none; }
+    display: none;
+    width: 80%; }
   .course-box .course-box-footer {
     background: #f6e0be;
     padding: 10px;
@@ -590,7 +591,16 @@ body {
     .course-box .course-box-footer .check-in {
       cursor: pointer; }
     .course-box .course-box-footer .check-in-table {
-      background-color: white; }
+      background-color: white;
+      margin-top: 10px;
+      padding-left: 0px;
+      padding-right: 0px; }
+      .course-box .course-box-footer .check-in-table .not-check-in-date {
+        background-color: rgba(255, 0, 0, 0.38); }
+      .course-box .course-box-footer .check-in-table .check-in-date {
+        background-color: rgba(130, 203, 130, 0.75); }
+  .course-box .check-in-footer {
+    background-color: #E1E1E1; }
 
 .apply-form h1 {
   padding-bottom: 30px; }
