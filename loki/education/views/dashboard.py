@@ -2,7 +2,8 @@ from django.views.generic.list import ListView
 from django.utils import timezone
 
 from loki.education.models import Course, Task, Solution
-from ..mixins import DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin
+from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
+                      CannotSeeCourseTaskListMixin)
 from ..helper import get_weeks_for_course, get_dates_for_weeks, get_student_dates
 
 
@@ -27,7 +28,8 @@ class CourseListView(DashboardPermissionMixin, ListView):
                                      courseassignment__user=self.request.user)
 
 
-class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin, ListView):
+class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
+                          CannotSeeCourseTaskListMixin, ListView):
     model = Task
 
     def get_context_data(self, **kwargs):

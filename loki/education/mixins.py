@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import redirect_to_login
 from django.shortcuts import get_object_or_404
+from django.http import Http404
 from rest_framework.authentication import SessionAuthentication
 
 from loki.education.models import Course, CourseAssignment, Solution
@@ -63,3 +64,11 @@ class CannotSeeOthersSolutionsMixin(BaseUserPassesTestMixin):
 class SolutionApiAuthenticationPermissionMixin:
     authentication_classes = (SessionAuthentication, )
     permission_classes = (IsStudent, )
+
+
+class CannotSeeCourseTaskListMixin(BaseUserPassesTestMixin):
+    def test_func(self):
+        if not self.course.task_set.exists():
+            raise Http404
+
+        return True and super().test_func()

@@ -5,10 +5,11 @@
   </div>
   <div class="col-sm-9 course-text">
     <h3 class="course-name-tasks-link" id="course-name">{{ course.name }}</h3>
-
-    <a class="course-name-tasks-link" href="{% url 'education:course_dashboard' course.id %}">
-        <button class="btn btn-warning" id="btn-tasks-link">Предай задачи</button>
-    </a>
+    {% if course.task_set.exists %}
+      <a class="course-name-tasks-link" href="{% url 'education:course_dashboard' course.id %}">
+          <button class="btn btn-warning" id="btn-tasks-link">Предай задачи</button>
+      </a>
+    {% endif %}
 
 
     <p>Начало на курса: <b>{{ course.start_time }}</b> <br>
