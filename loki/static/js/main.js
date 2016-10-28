@@ -41,6 +41,7 @@ $(document).ready(function(){
     var modal = $(this);
     modal.find('.modal-title').text(taskName);
 
+    window.modalTriggerButton = button;
     var task_id = button.data("task-id");
     $("#submit-solution").val(task_id);
   });
@@ -61,9 +62,11 @@ $(document).ready(function(){
       headers: {"X-CSRFToken": csrftoken},
       success: function(data) {
         $("#task-modal-box").modal('hide');
-        console.log(data);
-        var solution_id = data.id;
-        console.log(solution_id);
+        var solution = data;
+        window.modalTriggerButton.parent().parent().find('.last-solution-status').html('<img class="panda-loading-gif" src="/static/website_images/panda-loading.gif" />');
+        if (solution.status) {
+          pollForSolutionStatus(solution, updateSolutionStatus);
+        }
       }
     });
   });
@@ -71,19 +74,27 @@ $(document).ready(function(){
   function pollForSolutionStatus(solution, completeCb) {
     function poller(solution, completeCb) {
       setTimeout(function () {
-        url = '/education/api/solution-status/' + solution.data('solution-id') + '/'
+        if (solution.hasOwnProperty('data')) {
+          url = '/education/api/solution-status/' + solution.data('solution-id') + '/'
+        } else {
+          url = '/education/api/solution-status/' + solution.id + '/'
+        }
         $.get(url, function(data) {
-          if (data.status !== "pending") {
+          if (data.status !== "pending" && data.status !== "submitted") {
             completeCb(solution, data);
           } else {
             poller(solution, completeCb);
           }
         })
-      }, 3000);
+      }, 1000);
     };
 
     poller(solution, completeCb);
   };
+
+  var updateSolutionStatus = function(solution, new_data) {
+    window.modalTriggerButton.parent().parent().find('.last-solution-status').html('<b>' + new_data.status + '</b>');
+  }
 
   var complete = function(solution, new_data) {
     solution.text(new_data.status);

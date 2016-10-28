@@ -9,7 +9,7 @@ from PIL import Image
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 
-from .models import CheckIn, Student, GraderRequest, Lecture
+from .models import CheckIn, Student, GraderRequest, Lecture, Solution
 
 
 def crop_image(x1, y1, x2, y2, path):
@@ -131,3 +131,13 @@ def task_solutions(solutions):
             task_solutions.update({task_name: solution})
 
     return task_solutions
+
+
+def latest_solution_statuses(user, tasks):
+    latest_solutions = {}
+    for task in tasks:
+        task_name = task.name
+        solution = Solution.objects.get_latest_solution(user, task)
+        if solution:
+            latest_solutions[task_name] = solution.get_status_display()
+    return latest_solutions

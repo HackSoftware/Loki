@@ -640,11 +640,12 @@ body {
 .active-tasks-container #no-task-solution {
   padding-left: 10%; }
 .active-tasks-container .panda-loading-gif {
-  height: 60px;
-  margin-left: 20%; }
+  height: 50px;
+  /*margin-left: 20%;*/ }
 .active-tasks-container .panda-sleeps {
-  height: 40px;
-  margin-left: 20%; }
+  height: 40px; }
+.active-tasks-container .last-solution-status {
+  padding-left: 8%; }
 
 .task-name-container {
   background-color: silver;

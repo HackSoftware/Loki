@@ -5,7 +5,7 @@ from loki.education.models import Course, Task, Solution
 from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
                       CannotSeeCourseTaskListMixin)
 from ..helper import (get_weeks_for_course, get_dates_for_weeks, get_student_dates,
-                      task_solutions)
+                      task_solutions, latest_solution_statuses)
 
 
 class CourseListView(DashboardPermissionMixin, ListView):
@@ -42,6 +42,9 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
         solutions = Solution.objects.filter(student=self.request.user.student).filter(
                                             task__course__in = [course])
         context['tasksolution'] = task_solutions(solutions)
+        tasks = Task.objects.filter(course=self.course)
+        context['latest_solutions'] = latest_solution_statuses(self.request.user.student,
+                                                               tasks)
         return context
 
     def get_queryset(self):
