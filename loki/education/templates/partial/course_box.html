@@ -42,27 +42,11 @@
       {% endif %}
     {% endif %}
     <div class="check-in-table hidden-toggle col-sm-12">
-      <table class="table table-hover table-striped " cellspacing="0">
-        <thead>
-          <tr>
-          </tr>
-        </thead>
-        <tbody>
-          {% for week in weeks %}
-            <tr>
-              <td>Week{{week}}</td>
-                {% for date in dates_for_weeks|key:week %}
-                  {% if date in student_dates %}
-                  <td class="check-in-date"> {{ date }} </td>
-                  {% else %}
-                  <td class="not-check-in-date"> {{ date }} </td>
-                  {% endif %}
-                {% endfor %}
-            </tr>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      {% with course_data=course_presence|key:course %}
+        {% with dates_for_weeks=course_data|key:"dates_for_weeks" student_dates=course_data|key:"student_dates" weeks=course_data|key:"weeks"%}
+          {% include 'partial/table_presence.html' with dates_for_weeks=dates_for_weeks student_dates=student_dates weeks=weeks %}
+        {% endwith %}
+        {% endwith %}
     </div>
   </div>
 

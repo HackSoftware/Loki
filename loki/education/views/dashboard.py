@@ -14,12 +14,15 @@ class CourseListView(DashboardPermissionMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         student = self.request.user.student
+        course_presence = {}
 
         for course in self.get_queryset():
-            context['weeks'] = list(set(get_weeks_for_course(course)))
-            context['dates_for_weeks'] = get_dates_for_weeks(course)
-            context['student_dates'] = get_student_dates(student, course)
+            course_presence[course] = {}
+            course_presence[course]['weeks'] = list(set(get_weeks_for_course(course)))
+            course_presence[course]['dates_for_weeks'] = get_dates_for_weeks(course)
+            course_presence[course]['student_dates'] = get_student_dates(student, course)
 
+        context['course_presence'] = course_presence
         return context
 
     def get_queryset(self):
