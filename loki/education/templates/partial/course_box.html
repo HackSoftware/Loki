@@ -28,25 +28,16 @@
     </p>
   </div>
   <div class="col-sm-12 course-box-footer check-in-footer">
-    <div class="col-sm-3 check-in">
+    <div class="col-sm-12 check-in">
         <b>Присъствие</b>
         <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
     </div>
-    {% if course.video_channel or course.git_repository %}
-      {% if course.video_channel %}
-      <div class="col-sm-6">
-        Видео канал:
-        <a href="{{ course.video_channel }}" target="_blank">YouTube</a>
-
-      </div>
-      {% endif %}
-    {% endif %}
     <div class="check-in-table hidden-toggle col-sm-12">
       {% with course_data=course_presence|key:course %}
         {% with dates_for_weeks=course_data|key:"dates_for_weeks" student_dates=course_data|key:"student_dates" weeks=course_data|key:"weeks"%}
           {% include 'partial/table_presence.html' with dates_for_weeks=dates_for_weeks student_dates=student_dates weeks=weeks %}
         {% endwith %}
-        {% endwith %}
+      {% endwith %}
     </div>
   </div>
 
