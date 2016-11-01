@@ -960,19 +960,26 @@ $TabBorder: #C5C4C4;
 
 .task-name-container {
   background-color: silver;
-  height: 5%;
+  height: 50px;
   margin-top: 10px;
   margin-bottom: 10px;
-  padding-top: 15px;
+  padding-top: 10px;
   padding-left: 6%;
   padding-bottom:15px;
   font-size: 18px;
+  @media screen and (max-width: 622px) {
+      height: 70px;
+  }
+  @media screen and (max-width: 360px) {
+      height: 80px;
+  }
 
-  #solution-created-at {
+  .solution-created-at {
     float: right;
-    padding-right: 10%;
+    padding-right: 5%;
     display: inline-block;
-    font-size: 13px;
+    font-size: 14px;
+    margin-top: 4px;
   }
 }
 
@@ -982,4 +989,19 @@ $TabBorder: #C5C4C4;
 .task-test-output {
   width: 90%;
   word-wrap: break-word;
+}
+
+.solutions-task-div {
+  padding-left: 3%;
+  font-size: 18px;
+  a {
+    text-decoration: none;
+    color: #f7931e;
+  }
+
+  #solutions-task-name {
+    padding-left: 20px;
+    display: inline-block;
+  }
+
 }
