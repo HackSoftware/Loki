@@ -98,4 +98,8 @@ $(document).ready(function(){
     $(this).closest('.course-box').find('.check-in-table').toggle();
   });
 
+  $("#submit-url-solution").click(function() {
+    $("#submit-solution-form").submit();
+  });
+
 });

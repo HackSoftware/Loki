@@ -5,28 +5,29 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-        <h4 class="modal-title" id="myModalLabel">Задача</h4>
+        <h4 class="modal-title" id="myModalLabel"><b>{{ task.name}}</b></h4>
       </div>
       <div class="modal-body">
         {% if task.gradable %}
           <label for="message-text" class="form-control-label">Решение на задача:</label>
           <textarea class="form-control message-text" name="code"></textarea>
         {% else %}
-          <label for="message-text" class="form-control-label">Линк към решение на задача:</label>
-          <form method="POST" action="">
+          <label for="message-text-2" class="form-control-label">Линк към решение на задача:</label>
+          <form id="submit-solution-form" method="POST" action="">
             {% csrf_token %}
-            <textarea class="form-control" id="message-text-2" name="url"></textarea>
+            <input class="form-control" id="message-text-2" name="url"></input>
             <input type="hidden" name="task" value="{{ task.id }}">
-            <button type="submit" class="btn btn-warning submit-url"> Предай Задача </button>
           </form>
         {% endif %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
         {% csrf_token %}
         {% if task.gradable %}
           <button type="submit" class="btn btn-warning submit-solution" value="{{ task.id }}">Предай задача</button>
+        {% else %}
+          <button type="submit" class="btn btn-warning submit-url" id="submit-url-solution"> Предай Задача </button>
         {% endif %}
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
       </div>
     </div>
   </div>

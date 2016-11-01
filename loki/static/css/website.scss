@@ -1,5 +1,9 @@
 button, input {
-  border-radius: 0 !important;
+  border-radius: 0;
+}
+
+.btn {
+  border-radius:0;
 }
 
 $yellow: #FFCB57;
@@ -1002,6 +1006,13 @@ $TabBorder: #C5C4C4;
   #solutions-task-name {
     padding-left: 20px;
     display: inline-block;
+  }
+
+}
+
+.modal-body {
+  .submit-url {
+    margin-top: 5px;
   }
 
 }

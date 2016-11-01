@@ -1,5 +1,8 @@
 button, input {
-  border-radius: 0 !important; }
+  border-radius: 0; }
+
+.btn {
+  border-radius: 0; }
 
 .ease1s, body #page-wrap #faces .person, body #page-wrap #partners .partner, body #page-wrap #videos .video .video-thumb, #course_video .video .video-thumb, .course-partner-image {
   -webkit-transition: all 1s ease;
@@ -684,5 +687,8 @@ body {
   .solutions-task-div #solutions-task-name {
     padding-left: 20px;
     display: inline-block; }
+
+.modal-body .submit-url {
+  margin-top: 5px; }
 
 /*# sourceMappingURL=website.css.map */
