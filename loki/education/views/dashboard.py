@@ -5,7 +5,7 @@ from loki.education.models import Course, Task, Solution
 from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
                       CannotSeeCourseTaskListMixin)
 from ..helper import (get_weeks_for_course, get_dates_for_weeks, get_student_dates,
-                      task_solutions, latest_solution_statuses)
+                      task_solutions, latest_solution_statuses, percentage_presence)
 
 
 class CourseListView(DashboardPermissionMixin, ListView):
@@ -17,10 +17,14 @@ class CourseListView(DashboardPermissionMixin, ListView):
         course_presence = {}
 
         for course in self.get_queryset():
+            if not course.lecture_set.exists():
+                continue
+
             course_presence[course] = {}
             course_presence[course]['weeks'] = list(set(get_weeks_for_course(course)))
             course_presence[course]['dates_for_weeks'] = get_dates_for_weeks(course)
             course_presence[course]['student_dates'] = get_student_dates(student, course)
+            course_presence[course]['percentage_presence'] = percentage_presence(student, course)
 
         context['course_presence'] = course_presence
         return context

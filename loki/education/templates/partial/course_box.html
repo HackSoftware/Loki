@@ -31,6 +31,9 @@
     {% if course.lecture_set.exists %}
     <div class="col-sm-12 check-in">
         <b>Присъствие</b>
+        {% with course_data=course_presence|key:course %}
+        <b> {{ course_data|key:"percentage_presence" }} </b>
+        {% endwith %}
         <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
     </div>
     <div class="check-in-table hidden-toggle col-sm-12 col-sm-offset-1">
