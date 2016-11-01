@@ -108,6 +108,9 @@ class Lecture(models.Model):
     date = models.DateField()
     week = models.ForeignKey(Week, null=True, blank=True)
 
+    def is_date_in_future(self):
+        return self.date >= timezone.now().date()
+
 
 class StudentNote(models.Model):
     text = models.TextField(blank=True)
