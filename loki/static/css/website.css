@@ -649,21 +649,39 @@ body {
 
 .task-name-container {
   background-color: silver;
-  height: 5%;
+  height: 50px;
   margin-top: 10px;
   margin-bottom: 10px;
-  padding-top: 15px;
+  padding-top: 10px;
   padding-left: 6%;
   padding-bottom: 15px;
   font-size: 18px; }
-  .task-name-container #solution-created-at {
+  @media screen and (max-width: 622px) {
+    .task-name-container {
+      height: 70px; } }
+  @media screen and (max-width: 360px) {
+    .task-name-container {
+      height: 80px; } }
+  .task-name-container .solution-created-at {
     float: right;
-    padding-right: 10%;
+    padding-right: 5%;
     display: inline-block;
-    font-size: 13px; }
+    font-size: 14px;
+    margin-top: 4px; }
 
 .task-test-output {
   width: 90%;
   word-wrap: break-word; }
+
+.solutions-task-div {
+  padding-left: 3%;
+  font-size: 18px; }
+  .solutions-task-div #solutions-task-name {
+    padding-left: 20px;
+    display: inline-block; }
+  .solutions-task-div .fa-arrow-left {
+    color: #f7931e; }
+  .solutions-task-div a {
+    text-decoration: none; }
 
 /*# sourceMappingURL=website.css.map */

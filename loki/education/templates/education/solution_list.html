@@ -2,34 +2,48 @@
 
 {% block 'page-content' %}
 {% autoescape off %}
-
+<div class="solutions-task-div">
+  <a href="{% url 'education:course_dashboard' object_list.first.task.course.id %}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+  </a>
+  <div id="solutions-task-name">
+    <b>Предадени решения на задача:
+      <a class="task-solution-link" href={{solution.task.description}} target="_blank">
+        {{object_list.first.task.name}}
+      </a>
+    </b>
+  </div>
+</div>
 {% for solution in object_list %}
-  <div class="task-name-container"> Решение на задача: <b>{{ solution.task.name }} </b>
-    <div id="solution-created-at">Предадена на: <b>{{ solution.created_at }}</b></div>
+  <div class="task-name-container"><b>Решение</b>
+    <div class="solution-created-at"><b>Предадена на: {{ solution.created_at }}</b></div>
   </div>
   <div class="container">
     <section class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 solution-container">
-        <h4>Условие на задачата:
-          <a class="task-solution-link" href={{solution.task.description}} target="_blank">
-            {{solution.task.name}}
-          </a>
-        </h4>
-        <h4>Предадена задача: </h4>
+        {% if solution.task.gradable %}
+        <h5><b>Предадена задача: </b></h5>
         <div>
           <pre><code>{{solution.code}}</code></pre>
         </div>
-        <div>
-          Резултат:
+        {% else %}
+        <h5><b>Предаден линк:
+          <a class="solution-url-link" href={{solution.url}} target="_blank">
+            {{solution.url}}
+          </a></b>
+        </h5>
+        {% endif %}
+        <h5><b>Резултат:</b>
           <span class="solution-status" data-status="{{ solution.get_status }}" data-solution-id="{{ solution.id }}">
             {{ solution.get_status }}
           </span>
-        </div>
-          {{ snippets.courses_first_header.text }}
-        <h3>Test output</h3>
-        <div>
-          <pre><code>{{solution.test_output}}</code></pre>
-        </div>
+        </h5>
+        {% if solution.task.gradable %}
+          <h5><b>Test output</b></h5>
+          <div>
+            <pre><code>{{solution.test_output}}</code></pre>
+          </div>
+        {% endif %}
       </div>
     </section>
 
