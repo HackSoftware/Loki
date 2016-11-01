@@ -7,12 +7,12 @@
   <tbody>
     {% for week in weeks %}
       <tr>
-        <td>Week{{week}}</td>
+        <td><b>Седмица {{week}}</b></td>
         {% for date in dates_for_weeks|key:week %}
           {% if date in student_dates %}
-          <td class="check-in-date"> {{ date }} </td>
+          <td class="check-in-date"><b>{{ date }} </b></td>
           {% else %}
-          <td class="not-check-in-date"> {{ date }} </td>
+          <td class="not-check-in-date"><b> {{ date }} </b></td>
           {% endif %}
         {% endfor %}
       </tr>
