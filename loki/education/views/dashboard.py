@@ -50,6 +50,17 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
     def get_queryset(self):
         return Task.objects.filter(course=self.course).order_by('week')
 
+    def post(self, request, *args, **kwargs):
+        url = self.request.POST['url']
+        task_id = self.request.POST['task']
+        task = Task.objects.filter(id=task_id).first()
+        Solution.objects.create(student=self.request.user.student,
+                                url=url,
+                                task=task)
+
+        return super().get(request, *args, **kwargs)
+
+
 
 class SolutionView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
                    ListView):
