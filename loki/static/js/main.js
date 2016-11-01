@@ -31,25 +31,10 @@ $(document).ready(function(){
     form.submit();
   })
 
-  $(".submit-dialog-btn").click(function(){
-    var task = $(this).parent().parent();
-  });
-
-  $('#task-modal-box').on('show.bs.modal', function (event) {
-    var button = $(event.relatedTarget);
-    var taskName = button.data('task-name');
-    var modal = $(this);
-    modal.find('.modal-title').text(taskName);
-
-    window.modalTriggerButton = button;
-    var task_id = button.data("task-id");
-    $("#submit-solution").val(task_id);
-  });
-
-  $("#submit-solution").click(function(e){
+  $(".submit-solution").click(function(e){
     e.preventDefault();
     var code = $("#message-text").val();
-    var task_id = $("#submit-solution").attr("value");
+    var task_id = $(this).closest(".submit-solution").attr("value");
     var csrftoken = Cookies.get('csrftoken');
     $.ajax({
       url: '/education/api/solution/',
@@ -61,17 +46,17 @@ $(document).ready(function(){
       },
       headers: {"X-CSRFToken": csrftoken},
       success: function(data) {
-        $("#task-modal-box").modal('hide');
+        $("#task-modal-box-" + task_id).modal('hide');
         var solution = data;
-        window.modalTriggerButton.parent().parent().find('.last-solution-status').html('<img class="panda-loading-gif" src="/static/website_images/panda-loading.gif" />');
+        $("#task-" + task_id).find('.last-solution-status').html('<img class="panda-loading-gif" src="/static/website_images/panda-loading.gif" />');
         if (solution.status) {
-          pollForSolutionStatus(solution, updateSolutionStatus);
+          pollForSolutionStatus(solution, updateSolutionStatus, task_id);
         }
       }
     });
   });
 
-  function pollForSolutionStatus(solution, completeCb) {
+  function pollForSolutionStatus(solution, completeCb, taskId) {
     function poller(solution, completeCb) {
       setTimeout(function () {
         if (solution.hasOwnProperty('data')) {
@@ -81,7 +66,7 @@ $(document).ready(function(){
         }
         $.get(url, function(data) {
           if (data.status !== "pending" && data.status !== "submitted") {
-            completeCb(solution, data);
+            completeCb(solution, data, taskId);
           } else {
             poller(solution, completeCb);
           }
@@ -92,8 +77,8 @@ $(document).ready(function(){
     poller(solution, completeCb);
   };
 
-  var updateSolutionStatus = function(solution, new_data) {
-    window.modalTriggerButton.parent().parent().find('.last-solution-status').html('<b>' + new_data.status + '</b>');
+  var updateSolutionStatus = function(solution, new_data, taskId) {
+    $("#task-" + taskId).find('.last-solution-status').html('<b>' + new_data.status + '</b>');
   }
 
   var complete = function(solution, new_data) {
@@ -101,8 +86,9 @@ $(document).ready(function(){
   }
 
   $('.solution-status').each(function() {
+    var taskId = "";
     if ($(this).data('status') == 'pending') {
-      pollForSolutionStatus($(this), complete);
+      pollForSolutionStatus($(this), complete, taskId);
     }
   });
 
