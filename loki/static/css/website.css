@@ -599,6 +599,8 @@ body {
         background-color: rgba(255, 0, 0, 0.38); }
       .course-box .course-box-footer .check-in-table .check-in-date {
         background-color: rgba(130, 203, 130, 0.75); }
+      .course-box .course-box-footer .check-in-table .future-date {
+        background-color: rgba(128, 128, 128, 0.07); }
   .course-box .check-in-footer {
     background-color: #E1E1E1; }
 

@@ -28,6 +28,7 @@
     </p>
   </div>
   <div class="col-sm-12 course-box-footer check-in-footer">
+    {% if course.lecture_set.exists %}
     <div class="col-sm-12 check-in">
         <b>Присъствие</b>
         <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
@@ -39,6 +40,10 @@
         {% endwith %}
       {% endwith %}
     </div>
+    {% else %}
+    <div class="col-sm-12 check-in">
+        <b>Все още няма насрочени занятия за този курс :)</b>
+    </div>
+    {% endif %}
   </div>
-
 </div>
