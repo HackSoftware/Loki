@@ -678,12 +678,11 @@ body {
 .solutions-task-div {
   padding-left: 3%;
   font-size: 18px; }
+  .solutions-task-div a {
+    text-decoration: none;
+    color: #f7931e; }
   .solutions-task-div #solutions-task-name {
     padding-left: 20px;
     display: inline-block; }
-  .solutions-task-div .fa-arrow-left {
-    color: #f7931e; }
-  .solutions-task-div a {
-    text-decoration: none; }
 
 /*# sourceMappingURL=website.css.map */

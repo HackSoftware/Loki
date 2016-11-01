@@ -994,16 +994,14 @@ $TabBorder: #C5C4C4;
 .solutions-task-div {
   padding-left: 3%;
   font-size: 18px;
+  a {
+    text-decoration: none;
+    color: #f7931e;
+  }
 
   #solutions-task-name {
     padding-left: 20px;
     display: inline-block;
   }
 
-  .fa-arrow-left {
-      color: #f7931e;
-  }
-  a {
-    text-decoration: none;
-  }
 }
