@@ -33,7 +33,7 @@ $(document).ready(function(){
 
   $(".submit-solution").click(function(e){
     e.preventDefault();
-    var code = $("#message-text").val();
+    var code = $(this).parents(".modal-content").find("textarea.message-text").val();
     var task_id = $(this).closest(".submit-solution").attr("value");
     var csrftoken = Cookies.get('csrftoken');
     $.ajax({
@@ -78,6 +78,8 @@ $(document).ready(function(){
   };
 
   var updateSolutionStatus = function(solution, new_data, taskId) {
+    $("#solution-task-id-" + taskId).find('.no-solutions').html("");
+    $("#solution-task-id-" + taskId).find('.task-solution-link').html('<button class="btn btn-warning" id="btn-tasks-link">Решения</button>');
     $("#task-" + taskId).find('.last-solution-status').html('<b>' + new_data.status + '</b>');
   }
 

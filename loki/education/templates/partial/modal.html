@@ -8,13 +8,9 @@
         <h4 class="modal-title" id="myModalLabel">Задача</h4>
       </div>
       <div class="modal-body">
-          {{ task.gradable }}
           {% if task.gradable %}
           <label for="message-text" class="form-control-label">Решение на задача:</label>
-          <textarea class="form-control" id="message-text" name="code"></textarea>
-          <!-- {% else %}
-          <label for="message-text" class="form-control-label">Линк към решение на задача:</label>
-          <textarea class="form-control" id="message-text-2" name="url"></textarea> -->
+          <textarea class="form-control message-text" name="code"></textarea>
           {% endif %}
       </div>
       <div class="modal-footer">

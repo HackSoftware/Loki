@@ -47,13 +47,15 @@
                        <img class="panda-sleeps" src="{{STATIC_URL}}website_images/panda-sleeps.png" />
                      {% endif %}
                    </td>
-                   <td>
-                      {% if tasksolution|key:task.name %}
+                   <td id="solution-task-id-{{task.id}}">
                         <a class="task-solution-link" href="{% url 'education:solution_view' task.course.id task.id %}">
+                          {% if tasksolution|key:task.name %}
                           <button class="btn btn-warning" id="btn-tasks-link">Решения</button>
+                          {% else %}
                         </a>
-                      {% else %}
+                        <span class="no-solutions">
                         Няма предадено решение
+                        <span>
                       {% endif %}
                     </td>
                  </tr>
