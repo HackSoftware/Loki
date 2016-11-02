@@ -9,14 +9,15 @@
       <a class="course-name-tasks-link" href="{% url 'education:course_dashboard' course.id %}">
           <button class="btn btn-warning" id="btn-tasks-link">Предай задачи</button>
       </a>
-      <div class="course-materials-link">
-        <a href="{% url 'education:material_view' course.id %}">
-          <button class="btn btn-warning" id="btn-tasks-link">Материали</button>
-        </a>
-      </div>
     {% endif %}
     <div class="course-information">
-      <p>Начало на курса: <b>{{ course.start_time }}</b> <br>
+      <div>
+        <div class="course-materials-link">
+          <a href="{% url 'education:material_view' course.id %}">
+            <button class="btn btn-warning" id="btn-materials-link">Материали</button>
+          </a>
+        </div>
+         Начало на курса: <b>{{ course.start_time }}</b> <br>
          Край  на курса: <b>{{ course.end_time }}</b> <br>
          Продължителност: <b>{{ course.duration_in_weeks }}</b> седмици <br>
          <i id="course-socials" class="fa fa-github fa-3x"></i>
@@ -28,8 +29,8 @@
          {% for teacher in course.teacher_set.all %}
            {{ teacher.first_name }} {{ teacher.last_name }}, {{ teacher.email }}<br>
          {% endfor %}
-       </div>
-      </p>
+         </div>
+     </div>
     </div>
 
   </div>
