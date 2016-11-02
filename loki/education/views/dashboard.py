@@ -1,7 +1,7 @@
 from django.views.generic.list import ListView
 from django.utils import timezone
 
-from loki.education.models import Course, Task, Solution
+from loki.education.models import Course, Task, Solution, Material
 from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
                       CannotSeeCourseTaskListMixin)
 from ..helper import (get_weeks_for_course, get_dates_for_weeks, get_student_dates,
@@ -44,7 +44,7 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
         context = super().get_context_data(**kwargs)
         course = self.kwargs.get('course')
         solutions = Solution.objects.filter(student=self.request.user.student).filter(
-                                            task__course__in = [course])
+                                            task__course__in=[course])
         context['tasksolution'] = task_solutions(solutions)
         tasks = Task.objects.filter(course=self.course)
         context['latest_solutions'] = latest_solution_statuses(self.request.user.student,
@@ -65,7 +65,6 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
         return super().get(request, *args, **kwargs)
 
 
-
 class SolutionView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
                    ListView):
     model = Solution
@@ -73,3 +72,11 @@ class SolutionView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMix
     def get_queryset(self):
         task = Task.objects.get(id=self.kwargs.get("task"))
         return Solution.objects.filter(student=self.request.user, task=task).order_by("-created_at")
+
+
+class MaterialView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
+                   ListView):
+    model = Material
+
+    def get_queryset(self):
+        return Material.objects.filter(course=self.course).order_by("week")

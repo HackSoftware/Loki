@@ -278,7 +278,6 @@ class Solution(models.Model):
     objects = SolutionManager()
 
 
-
 class GraderRequest(models.Model):
     request_info = models.CharField(max_length=140)
     nonce = models.BigIntegerField(db_index=True)
@@ -301,3 +300,9 @@ class WorkingAt(models.Model):
 class Certificate(models.Model):
     assignment = models.OneToOneField(CourseAssignment)
     token = models.CharField(default=uuid.uuid4, unique=True, max_length=110)
+
+
+class Material(models.Model):
+    course = models.ForeignKey('Course')
+    week = models.ForeignKey(Week, null=True, blank=True)
+    description = models.TextField(blank=True, null=True)

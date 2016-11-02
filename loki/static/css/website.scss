@@ -987,15 +987,12 @@ $TabBorder: #C5C4C4;
   }
 }
 
-.solution-container  {
-
-}
 .task-test-output {
   width: 90%;
   word-wrap: break-word;
 }
 
-.solutions-task-div {
+.solutions-task-div, .material-course-div {
   padding-left: 3%;
   font-size: 18px;
   a {
@@ -1003,7 +1000,7 @@ $TabBorder: #C5C4C4;
     color: #f7931e;
   }
 
-  #solutions-task-name {
+  #solutions-task-name ,#material-course-name {
     padding-left: 20px;
     display: inline-block;
   }
@@ -1015,4 +1012,11 @@ $TabBorder: #C5C4C4;
     margin-top: 5px;
   }
 
+}
+
+.material-container {
+  .material-description {
+    width: 70%;
+    word-break: break-all;
+  }
 }

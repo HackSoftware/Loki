@@ -678,17 +678,21 @@ body {
   width: 90%;
   word-wrap: break-word; }
 
-.solutions-task-div {
+.solutions-task-div, .material-course-div {
   padding-left: 3%;
   font-size: 18px; }
-  .solutions-task-div a {
+  .solutions-task-div a, .material-course-div a {
     text-decoration: none;
     color: #f7931e; }
-  .solutions-task-div #solutions-task-name {
+  .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name {
     padding-left: 20px;
     display: inline-block; }
 
 .modal-body .submit-url {
   margin-top: 5px; }
+
+.material-container .material-description {
+  width: 70%;
+  word-break: break-all; }
 
 /*# sourceMappingURL=website.css.map */

@@ -9,23 +9,29 @@
       <a class="course-name-tasks-link" href="{% url 'education:course_dashboard' course.id %}">
           <button class="btn btn-warning" id="btn-tasks-link">Предай задачи</button>
       </a>
+      <div class="course-materials-link">
+        <a href="{% url 'education:material_view' course.id %}">
+          <button class="btn btn-warning" id="btn-tasks-link">Материали</button>
+        </a>
+      </div>
     {% endif %}
+    <div class="course-information">
+      <p>Начало на курса: <b>{{ course.start_time }}</b> <br>
+         Край  на курса: <b>{{ course.end_time }}</b> <br>
+         Продължителност: <b>{{ course.duration_in_weeks }}</b> седмици <br>
+         <i id="course-socials" class="fa fa-github fa-3x"></i>
+         <a href="{{ course.git_repository }}" target="_blank">Github repo на курса</a> <br>
+         <i id="course-socials" class="fa fa-facebook-square fa-3x"></i>
+         <a href="{{ course.fb_group }}" target="_blank">Facebook група на курса</a> <br>
+         <div class="course-teachers col-md-2"><b>Преподаватели: </b> </div>
+         <div class="course-teachers col-md-8 col-offset-3">
+         {% for teacher in course.teacher_set.all %}
+           {{ teacher.first_name }} {{ teacher.last_name }}, {{ teacher.email }}<br>
+         {% endfor %}
+       </div>
+      </p>
+    </div>
 
-
-    <p>Начало на курса: <b>{{ course.start_time }}</b> <br>
-       Край  на курса: <b>{{ course.end_time }}</b> <br>
-       Продължителност: <b>{{ course.duration_in_weeks }}</b> седмици <br>
-       <i id="course-socials" class="fa fa-github fa-3x"></i>
-       <a href="{{ course.git_repository }}" target="_blank">Github repo на курса</a> <br>
-       <i id="course-socials" class="fa fa-facebook-square fa-3x"></i>
-       <a href="{{ course.fb_group }}" target="_blank">Facebook група на курса</a> <br>
-       <div class="course-teachers col-md-2"><b>Преподаватели: </b> </div>
-       <div class="course-teachers col-md-8 col-offset-3">
-       {% for teacher in course.teacher_set.all %}
-         {{ teacher.first_name }} {{ teacher.last_name }}, {{ teacher.email }}<br>
-       {% endfor %}
-     </div>
-    </p>
   </div>
   <div class="col-sm-12 course-box-footer check-in-footer">
     {% if course.lecture_set.exists %}

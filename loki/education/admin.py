@@ -6,7 +6,8 @@ from .modelresource import StudentResource, CourseAssignmentResource, WorkingAtR
 from .models import (Student, Course, CourseAssignment, Teacher, Lecture,
                      CheckIn, StudentNote, WorkingAt, Task, Solution,
                      Certificate, ProgrammingLanguage, GraderRequest,
-                     RetestSolution, SourceCodeTest, BinaryFileTest, Week)
+                     RetestSolution, SourceCodeTest, BinaryFileTest, Week,
+                     Material)
 
 from .forms import FixJsonFieldDisplayInInheritedClassAdminForm
 
@@ -302,3 +303,19 @@ class WeekAdmin(admin.ModelAdmin):
     ]
 
     search_fields = ['number']
+
+
+@admin.register(Material)
+class MaterialAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'id',
+        'week',
+        'course',
+    ]
+
+    list_filter = [
+        'week'
+    ]
+
+    search_fields = ['course']

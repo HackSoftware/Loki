@@ -28,5 +28,7 @@ urlpatterns = [
     url(r'^course/(?P<course>[0-9]+)/dashboard/$',
         dashboard.CourseDashboardView.as_view(), name='course_dashboard'),
     url(r'^course/(?P<course>[0-9]+)/task/(?P<task>[0-9]+)/solutions/$',
-        dashboard.SolutionView.as_view(), name='solution_view')
+        dashboard.SolutionView.as_view(), name='solution_view'),
+    url(r'^course/(?P<course>[0-9]+)/materials/$',
+        dashboard.MaterialView.as_view(), name='material_view')
 ]
