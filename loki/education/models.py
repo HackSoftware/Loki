@@ -107,6 +107,7 @@ class Lecture(models.Model):
     course = models.ForeignKey('Course')
     date = models.DateField()
     week = models.ForeignKey(Week, null=True, blank=True)
+    presentation_url = models.URLField(blank=True, null=True)
 
     def is_date_in_future(self):
         return self.date >= timezone.now().date()

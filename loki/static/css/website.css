@@ -697,6 +697,9 @@ body {
     padding-left: 20px;
     display: inline-block; }
 
+#presentations {
+  background-color: rgba(128, 128, 128, 0.22); }
+
 .modal-body .submit-url {
   margin-top: 5px; }
 
