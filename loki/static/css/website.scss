@@ -992,7 +992,7 @@ $TabBorder: #C5C4C4;
   word-wrap: break-word;
 }
 
-.solutions-task-div, .material-course-div {
+.solutions-task-div, .material-course-div, .task-course-div {
   padding-left: 3%;
   font-size: 18px;
   a {
@@ -1000,7 +1000,7 @@ $TabBorder: #C5C4C4;
     color: #f7931e;
   }
 
-  #solutions-task-name ,#material-course-name {
+  #solutions-task-name ,#material-course-name, #task-course-name {
     padding-left: 20px;
     display: inline-block;
   }

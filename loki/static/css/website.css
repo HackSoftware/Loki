@@ -678,13 +678,13 @@ body {
   width: 90%;
   word-wrap: break-word; }
 
-.solutions-task-div, .material-course-div {
+.solutions-task-div, .material-course-div, .task-course-div {
   padding-left: 3%;
   font-size: 18px; }
-  .solutions-task-div a, .material-course-div a {
+  .solutions-task-div a, .material-course-div a, .task-course-div a {
     text-decoration: none;
     color: #f7931e; }
-  .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name {
+  .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .task-course-div #solutions-task-name, .task-course-div #material-course-name, .task-course-div #task-course-name {
     padding-left: 20px;
     display: inline-block; }
 
