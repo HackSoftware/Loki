@@ -16,6 +16,14 @@
   <div class="container">
     <section class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 material-container">
+        <div id="presentations">
+        {% for lecture in material.week.lecture_set.all %}
+          {% if lecture.presentation_url %}
+          <a class="course-presentation" href="{{ lecture.presentation_url }}" target="_blank"> Презентация от {{ lecture.date }} </a>
+          </br>
+          {% endif %}
+        {% endfor %}
+      </div>
         <div class="material-description">{{ material.description }}</div>
       </div>
     </section>
