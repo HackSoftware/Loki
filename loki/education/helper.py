@@ -96,18 +96,16 @@ def read_binary_file(path):
     return encoded.decode('ascii')
 
 
-def get_weeks_for_course(course):
-    return [lecture.week.number for lecture in course.lecture_set.all()
-            if lecture.week]
-
-
 def get_dates_for_weeks(course):
-    weeks = get_weeks_for_course(course)
+    lectures = course.lecture_set.filter(week__isnull=False).values('week', 'date')
     week_dates = {}
 
-    for week in weeks:
-        week_dates[week] = Lecture.objects.filter(
-                week__number=week).order_by('date').all()
+    for lecture in lectures:
+        week = lecture['week']
+        if week not in week_dates:
+            week_dates[week] = [lecture['date']]
+        else:
+            week_dates[week].append(lecture['date'])
 
     return week_dates
 
@@ -116,7 +114,7 @@ def get_student_dates(student, course):
     return CheckIn.objects.filter(student=student,
                                   date__gte=course.start_time,
                                   date__lte=course.end_time).values_list(
-                                      'date', flat=True).all()
+                                      'date', flat=True)
 
 
 def task_solutions(solutions):
