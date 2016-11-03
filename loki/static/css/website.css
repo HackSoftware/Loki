@@ -34,6 +34,9 @@ body {
         float: left;
         padding: 12px 20px 0 20px;
         width: 260px; }
+        @media screen and (max-width: 400px) {
+          body #page-wrap #header #logo {
+            width: 250px; } }
       body #page-wrap #header #login-form {
         padding-top: 30px; }
       body #page-wrap #header #user-profile-menu {
@@ -577,8 +580,21 @@ body {
       font-size: 18px;
       margin-right: 23%;
       margin-bottom: 5px; }
+      @media screen and (max-width: 980px) {
+        .course-box .course-text #btn-tasks-link {
+          margin-left: 62%; } }
+      @media screen and (max-width: 360px) {
+        .course-box .course-text #btn-tasks-link {
+          margin-left: 44%;
+          font-size: 16px; } }
+      @media screen and (max-width: 320px) {
+        .course-box .course-text #btn-tasks-link {
+          margin-left: 36%; } }
     .course-box .course-text #course-name {
       margin-right: 25%; }
+      @media screen and (max-width: 1197px) {
+        .course-box .course-text #course-name {
+          margin-right: 8%; } }
     .course-box .course-text .course-name-tasks-link {
       display: inline-block; }
     .course-box .course-text .course-materials-link {
@@ -589,6 +605,14 @@ body {
         margin-bottom: 5px;
         padding-right: 31px;
         padding-left: 28px; }
+        @media screen and (max-width: 980px) {
+          .course-box .course-text .course-materials-link #btn-materials-link {
+            margin-right: 20%; } }
+        @media screen and (max-width: 360px) {
+          .course-box .course-text .course-materials-link #btn-materials-link {
+            margin-right: 17%;
+            font-size: 16px;
+            padding-left: 21px; } }
   .course-box .course-logo {
     width: 100%;
     padding: 15px; }

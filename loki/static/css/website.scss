@@ -41,6 +41,9 @@ body {
                 float: left;
                 padding: 12px 20px 0 20px;
                 width: 260px;
+                @media screen and (max-width: 400px) {
+                  width: 250px;
+                }
             }
             #login-form {
                 padding-top: 30px;
@@ -824,10 +827,24 @@ $TabBorder: #C5C4C4;
             font-size: 18px;
             margin-right: 23%;
             margin-bottom: 5px;
+            @media screen and (max-width: 980px) {
+              margin-left: 62%;
+            }
+            @media screen and (max-width: 360px) {
+              margin-left: 44%;
+              font-size: 16px;
+            }
+            @media screen and(max-width: 320px) {
+              margin-left: 36%;
+            }
         }
 
         #course-name {
           margin-right: 25%;
+          @media screen and (max-width: 1197px) {
+              margin-right: 8%;
+          }
+
         }
 
         .course-name-tasks-link {
@@ -844,6 +861,14 @@ $TabBorder: #C5C4C4;
               margin-bottom: 5px;
               padding-right: 31px;
               padding-left: 28px;
+              @media screen and (max-width: 980px) {
+                margin-right: 20%;
+              }
+              @media screen and (max-width: 360px) {
+                margin-right: 17%;
+                font-size: 16px;
+                padding-left: 21px;
+              }
           }
         }
     }
