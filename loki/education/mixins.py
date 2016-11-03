@@ -23,7 +23,6 @@ class DashboardPermissionMixin(BaseUserPassesTestMixin):
             return False
 
         if not (self.request.user.get_student() or
-                self.request.user.get_teacher() or
                 self.request.user.is_superuser):
             return False
 

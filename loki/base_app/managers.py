@@ -47,3 +47,20 @@ class UserManager(BaseUserManager):
         student.save(using=self._db)
 
         return Student.objects.get(pk=student.id)
+
+    def promote_to_teacher(self, user):
+        Teacher = apps.get_model(app_label='education', model_name='Teacher')
+
+        if not user.is_active:
+            user.is_active = True
+            user.save(using=self._db)
+
+        teacher = Teacher(baseuser_ptr_id=user.id)
+        teacher.__dict__.update(user.__dict__)
+
+        """Will raise ValidationError if something's wrong"""
+        teacher.full_clean()
+
+        teacher.save(using=self._db)
+
+        return Teacher.objects.get(pk=teacher.id)
