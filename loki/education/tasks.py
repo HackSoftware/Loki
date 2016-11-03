@@ -100,8 +100,7 @@ def poll_solution(solution_id):
             elif data['result_status'] == 'not_ok':
                 solution.status = Solution.NOT_OK
 
-            solution.test_output = data['output']
-            solution.return_code = data['returncode']
+            solution.test_output = data['output']['test_output']
             solution.save()
             break
 
