@@ -786,7 +786,7 @@ $TabBorder: #C5C4C4;
 }
 
 .btn-hack-info {
-    background: #f6e0be;
+    background: #E1E1E1;
     color: black;
     margin-bottom: 10px;
     &:hover {
@@ -859,7 +859,7 @@ $TabBorder: #C5C4C4;
     }
 
     .course-box-footer {
-      background: #f6e0be;
+      background: #E1E1E1;;
       padding: 10px;
       margin-top: 5px;
       position: relative;
@@ -976,7 +976,7 @@ $TabBorder: #C5C4C4;
 }
 
 .task-name-container {
-  background-color: silver;
+  background-color: #E1E1E1;;
   height: 50px;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -991,13 +991,15 @@ $TabBorder: #C5C4C4;
       height: 80px;
   }
 
-  .solution-created-at {
+  .solution-created-at, .dates-week {
     float: right;
     padding-right: 5%;
     display: inline-block;
     font-size: 14px;
     margin-top: 4px;
   }
+
+
 }
 
 .task-test-output {
@@ -1020,10 +1022,6 @@ $TabBorder: #C5C4C4;
 
 }
 
-#presentations {
-  background-color: rgba(128, 128, 128, 0.22);
-}
-
 .modal-body {
   .submit-url {
     margin-top: 5px;
@@ -1032,6 +1030,9 @@ $TabBorder: #C5C4C4;
 }
 
 .material-container {
+  .course-presentation {
+    color: #F7931E;
+  }
   .material-description {
     width: 70%;
     word-break: break-all;

@@ -110,7 +110,7 @@ class Lecture(models.Model):
     presentation_url = models.URLField(blank=True, null=True)
 
     def is_date_in_future(self):
-        return self.date >= timezone.now().date()
+        return self.date > timezone.now().date()
 
 
 class StudentNote(models.Model):
@@ -307,3 +307,4 @@ class Material(models.Model):
     course = models.ForeignKey('Course')
     week = models.ForeignKey(Week, null=True, blank=True)
     description = models.TextField(blank=True, null=True)
+    title = models.CharField(max_length=100, blank=True, null=True)

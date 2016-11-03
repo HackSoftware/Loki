@@ -11,19 +11,22 @@
   </div>
 </div>
 {% for material in object_list %}
-  <div class="task-name-container"><b> Седмица {{ material.week.number }} ({{ material.week.lecture_set.order_by.last.date }} - {{ material.week.lecture_set.first.date }}) </b>
+  <div class="task-name-container"><b> {{ material.title }}</b>
+    <div class="dates-week"> <b> Седмица {{ material.week.number }} ({{ material.week.lecture_set.last.date }} - {{ material.week.lecture_set.first.date}}) </b>
+    </div>
   </div>
   <div class="container">
     <section class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 material-container">
-        <div id="presentations"> <b> Линкове към презентации: </b>
-        {% for lecture in material.week.lecture_set.all %}
-          {% if lecture.presentation_url %}
-          <a class="course-presentation" href="{{ lecture.presentation_url }}" target="_blank"> Презентация от {{ lecture.date }} </a>
-          {% endif %}
-        {% endfor %}
-      </div>
-        <div class="material-description"> Допълнителна информация: {{ material.description }}</div>
+          <div class="presentations">
+          {% for lecture in material.week.lecture_set.all %}
+            {% if lecture.presentation_url %}
+            <a class="course-presentation" href="{{ lecture.presentation_url }}" target="_blank"> Презентация от {{ lecture.date }} </a>
+            <br>
+            {% endif %}
+          {% endfor %}
+          </div>
+        <div class="material-description"> <b>Допълнителна информация: </b> {{ material.description }}</div>
       </div>
     </section>
 
