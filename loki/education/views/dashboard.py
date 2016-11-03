@@ -4,7 +4,7 @@ from django.utils import timezone
 from loki.education.models import Course, Task, Solution, Material
 from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
                       CannotSeeCourseTaskListMixin)
-from ..helper import (get_dates_for_weeks, get_student_dates,task_solutions,
+from ..helper import (get_dates_for_weeks, get_student_dates, task_solutions,
                       latest_solution_statuses, percentage_presence)
 
 

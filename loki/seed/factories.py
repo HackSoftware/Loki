@@ -332,7 +332,6 @@ class CheckInFactory(factory.DjangoModelFactory):
     date = faker.date()
 
 
-
 class WeekFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.Week
