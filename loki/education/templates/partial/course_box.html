@@ -12,11 +12,13 @@
     {% endif %}
     <div class="course-information">
       <div>
-        <div class="course-materials-link">
-          <a href="{% url 'education:material_view' course.id %}">
-            <button class="btn btn-warning" id="btn-materials-link">Материали</button>
-          </a>
-        </div>
+        {% if course.material_set.exists %}
+          <div class="course-materials-link">
+            <a href="{% url 'education:material_view' course.id %}">
+              <button class="btn btn-warning" id="btn-materials-link">Материали</button>
+            </a>
+          </div>
+        {% endif %}
          Начало на курса: <b>{{ course.start_time }}</b> <br>
          Край  на курса: <b>{{ course.end_time }}</b> <br>
          Продължителност: <b>{{ course.duration_in_weeks }}</b> седмици <br>
