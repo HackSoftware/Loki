@@ -549,7 +549,7 @@ body {
     color: #FFF; }
 
 .btn-hack-info {
-  background: #f6e0be;
+  background: #E1E1E1;
   color: black;
   margin-bottom: 10px; }
   .btn-hack-info:hover {
@@ -587,7 +587,7 @@ body {
     display: none;
     width: 80%; }
   .course-box .course-box-footer {
-    background: #f6e0be;
+    background: #E1E1E1;
     padding: 10px;
     margin-top: 5px;
     position: relative; }
@@ -653,7 +653,7 @@ body {
   padding-left: 8%; }
 
 .task-name-container {
-  background-color: silver;
+  background-color: #E1E1E1;
   height: 50px;
   margin-top: 10px;
   margin-bottom: 10px;
@@ -667,7 +667,7 @@ body {
   @media screen and (max-width: 360px) {
     .task-name-container {
       height: 80px; } }
-  .task-name-container .solution-created-at {
+  .task-name-container .solution-created-at, .task-name-container .dates-week {
     float: right;
     padding-right: 5%;
     display: inline-block;
@@ -688,12 +688,11 @@ body {
     padding-left: 20px;
     display: inline-block; }
 
-#presentations {
-  background-color: rgba(128, 128, 128, 0.22); }
-
 .modal-body .submit-url {
   margin-top: 5px; }
 
+.material-container .course-presentation {
+  color: #F7931E; }
 .material-container .material-description {
   width: 70%;
   word-break: break-all; }

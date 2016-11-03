@@ -148,4 +148,4 @@ def percentage_presence(student, course):
     lecture_dates = [l.date for l in Lecture.objects.filter(course=course).all()
                      if not l.is_date_in_future()]
 
-    return "{0}%".format((len(student_dates) / len(lecture_dates)) * 100)
+    return "{0}%".format(int((len(student_dates) / len(lecture_dates)) * 100))
