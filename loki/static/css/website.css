@@ -575,11 +575,20 @@ body {
       padding-left: 0; }
     .course-box .course-text #btn-tasks-link {
       font-size: 18px;
+      margin-right: 23%;
       margin-bottom: 5px; }
     .course-box .course-text #course-name {
       margin-right: 25%; }
     .course-box .course-text .course-name-tasks-link {
       display: inline-block; }
+    .course-box .course-text .course-materials-link {
+      float: right; }
+      .course-box .course-text .course-materials-link #btn-materials-link {
+        font-size: 18px;
+        margin-right: 23%;
+        margin-bottom: 5px;
+        padding-right: 31px;
+        padding-left: 28px; }
   .course-box .course-logo {
     width: 100%;
     padding: 15px; }

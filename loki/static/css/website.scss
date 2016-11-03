@@ -822,6 +822,7 @@ $TabBorder: #C5C4C4;
 
         #btn-tasks-link {
             font-size: 18px;
+            margin-right: 23%;
             margin-bottom: 5px;
         }
 
@@ -831,7 +832,19 @@ $TabBorder: #C5C4C4;
 
         .course-name-tasks-link {
           display: inline-block;
+        }
 
+        .course-materials-link {
+          float: right;
+
+
+          #btn-materials-link {
+              font-size: 18px;
+              margin-right: 23%;
+              margin-bottom: 5px;
+              padding-right: 31px;
+              padding-left: 28px;
+          }
         }
     }
 
