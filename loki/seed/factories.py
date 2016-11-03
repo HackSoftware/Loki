@@ -332,11 +332,20 @@ class CheckInFactory(factory.DjangoModelFactory):
     date = faker.date()
 
 
+
+class WeekFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.Week
+
+    number = faker.random_number()
+
+
 class LectureFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.Lecture
 
     course = factory.SubFactory(CourseFactory)
+    week = factory.SubFactory(WeekFactory)
     date = faker.date_time()
 
 
@@ -431,6 +440,16 @@ class GraderRequestFactory(factory.DjangoModelFactory):
 
     request_info = faker.text(max_nb_chars=140)
     nonce = faker.random_number(digits=3)
+
+
+class MaterialFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = education_models.Material
+
+    course = factory.SubFactory(CourseFactory)
+    week = factory.SubFactory(WeekFactory)
+    description = faker.text(max_nb_chars=200)
+    title = faker.word()
 
 
 class SnippetFactory(factory.DjangoModelFactory):

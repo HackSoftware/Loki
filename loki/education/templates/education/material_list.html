@@ -2,6 +2,7 @@
 
 {% block 'page-content' %}
 {% autoescape off %}
+{% if object_list.exists %}
 <div class="material-course-div">
   <a href="{% url 'education:course_list' %}">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -29,8 +30,17 @@
         <div class="material-description"> <b>Допълнителна информация: </b> {{ material.description }}</div>
       </div>
     </section>
-
   </div>
 {% endfor %}
+{% else %}
+<div class="material-course-div">
+  <a href="{% url 'education:course_list' %}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+  </a>
+  <div id="material-course-name">
+    <b>Все още няма материали за този курс : )</b>
+  </div>
+</div>
+{% endif %}
 {% endautoescape %}
 {% endblock %}

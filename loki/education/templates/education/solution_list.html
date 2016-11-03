@@ -2,6 +2,7 @@
 
 {% block 'page-content' %}
 {% autoescape off %}
+{% if object_list.exists %}
 <div class="solutions-task-div">
   <a href="{% url 'education:course_dashboard' object_list.first.task.course.id %}">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
@@ -49,5 +50,15 @@
 
   </div>
 {% endfor %}
+{% else %}
+<div class="solutions-task-div">
+  <a href="{% url 'education:course_list' %}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+  </a>
+  <div id="solutions-task-name">
+    <b>Няма предадени решения : )</b>
+  </div>
+</div>
+{% endif %}
 {% endautoescape %}
 {% endblock %}

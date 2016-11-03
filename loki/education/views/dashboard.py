@@ -9,6 +9,7 @@ from ..helper import (get_weeks_for_course, get_dates_for_weeks, get_student_dat
 
 
 class CourseListView(DashboardPermissionMixin, ListView):
+
     model = Course
 
     def get_context_data(self, **kwargs):

@@ -1019,7 +1019,14 @@ $TabBorder: #C5C4C4;
     padding-left: 20px;
     display: inline-block;
   }
+}
 
+.solution-url-link {
+  text-decoration: none;
+  color: #f7931e;
+  &:hover {
+    color: #f7931e;
+  }
 }
 
 .modal-body {
