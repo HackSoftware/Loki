@@ -6,6 +6,7 @@ class SolutionQuerySet(models.QuerySet):
     def get_latest_solution(self, user, task):
         return self.filter(student=user, task=task).last()
 
+
 class CheckInQuerySet(models.QuerySet):
 
     def get_student_dates(self, student, course):
