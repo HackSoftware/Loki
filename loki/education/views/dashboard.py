@@ -1,10 +1,10 @@
 from django.views.generic.list import ListView
 from django.utils import timezone
 
-from loki.education.models import Course, Task, Solution, Material
+from loki.education.models import Course, Task, Solution, Material, CheckIn
 from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
                       CannotSeeCourseTaskListMixin)
-from ..helper import (get_dates_for_weeks, get_student_dates, task_solutions,
+from ..helper import (get_dates_for_weeks, task_solutions,
                       latest_solution_statuses, percentage_presence)
 
 
@@ -24,8 +24,9 @@ class CourseListView(DashboardPermissionMixin, ListView):
             course_presence[course] = {}
             course_presence[course]['weeks'] = list(get_dates_for_weeks(course).keys())
             course_presence[course]['dates_for_weeks'] = get_dates_for_weeks(course)
-            course_presence[course]['student_dates'] = get_student_dates(student, course)
-            course_presence[course]['percentage_presence'] = percentage_presence(student, course)
+            course_presence[course]['student_dates'] = CheckIn.objects.get_student_dates(student, course)
+            student_dates = course_presence[course]['student_dates']
+            course_presence[course]['percentage_presence'] = percentage_presence(student_dates, course)
 
         context['course_presence'] = course_presence
         return context

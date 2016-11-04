@@ -10,6 +10,7 @@ from loki.base_app.models import BaseUser, City, Company
 from .validators import validate_mac
 from .exceptions import HasToBeRetested
 from .managers import SolutionManager
+from .query import CheckInQuerySet
 
 
 class StudentAndTeacherCommonModel(models.Model):
@@ -91,6 +92,8 @@ class CheckIn(models.Model):
     mac = models.CharField(max_length=17)
     student = models.ForeignKey('Student', null=True, blank=True)
     date = models.DateField(auto_now_add=True)
+
+    objects = CheckInQuerySet.as_manager()
 
     class Meta:
         unique_together = (('student', 'date'), ('mac', 'date'))

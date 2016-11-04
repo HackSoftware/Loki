@@ -8,6 +8,7 @@ import requests
 from PIL import Image
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
 from .models import CheckIn, Student, GraderRequest, Lecture, Solution
 
@@ -110,13 +111,6 @@ def get_dates_for_weeks(course):
     return week_dates
 
 
-def get_student_dates(student, course):
-    return CheckIn.objects.filter(student=student,
-                                  date__gte=course.start_time,
-                                  date__lte=course.end_time).values_list(
-                                      'date', flat=True)
-
-
 def task_solutions(solutions):
     task_solutions = {}
     for solution in solutions:
@@ -141,9 +135,8 @@ def latest_solution_statuses(user, tasks):
     return latest_solutions
 
 
-def percentage_presence(student, course):
-    student_dates = get_student_dates(student, course)
-    lecture_dates = [l.date for l in Lecture.objects.filter(course=course).all()
-                     if not l.is_date_in_future()]
-
+def percentage_presence(student_dates, course):
+    lecture_dates = Lecture.objects.filter(course=course,
+                                           date__lte=timezone.now().date()).values_list(
+                                           'date', flat=True)
     return "{0}%".format(int((len(student_dates) / len(lecture_dates)) * 100))
