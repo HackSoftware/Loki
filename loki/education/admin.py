@@ -310,6 +310,7 @@ class MaterialAdmin(admin.ModelAdmin):
 
     list_display = [
         'id',
+        'title',
         'week',
         'course',
     ]
