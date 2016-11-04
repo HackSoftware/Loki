@@ -19,9 +19,9 @@
             </a>
           </div>
         {% endif %}
-         Начало на курса: <b>{{ course.start_time }}</b> <br>
-         Край  на курса: <b>{{ course.end_time }}</b> <br>
-         Продължителност: <b>{{ course.duration_in_weeks }}</b> седмици <br>
+         <b>Начало на курса:</b> {{ course.start_time }} <br>
+         <b>Край  на курса:</b> {{ course.end_time }} <br>
+         <b>Продължителност:</b> {{ course.duration_in_weeks }} седмици <br>
          <i id="course-socials" class="fa fa-github fa-3x"></i>
          <a href="{{ course.git_repository }}" target="_blank">Github repo на курса</a> <br>
          <i id="course-socials" class="fa fa-facebook-square fa-3x"></i>

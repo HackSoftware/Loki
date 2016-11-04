@@ -987,7 +987,6 @@ $TabBorder: #C5C4C4;
 
   .panda-loading-gif {
     height: 50px;
-    /*margin-left: 20%;*/
   }
 
   .panda-sleeps {
@@ -998,10 +997,15 @@ $TabBorder: #C5C4C4;
     padding-left: 8%;
   }
 
+  .task-solution-link {
+    text-decoration: none;
+    color: #f7931e;
+  }
+
 }
 
 .task-name-container {
-  background-color: #E1E1E1;;
+  background-color: #E1E1E1;
   height: 50px;
   margin-top: 10px;
   margin-bottom: 10px;
