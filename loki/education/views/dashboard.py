@@ -53,7 +53,7 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
         return context
 
     def get_queryset(self):
-        return Task.objects.filter(course=self.course).order_by('week')
+        return Task.objects.filter(course=self.course).order_by('-week')
 
     def post(self, request, *args, **kwargs):
         url = self.request.POST['url']
@@ -80,4 +80,4 @@ class MaterialView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMix
     model = Material
 
     def get_queryset(self):
-        return Material.objects.filter(course=self.course).order_by("week")
+        return Material.objects.filter(course=self.course).order_by("-week")
