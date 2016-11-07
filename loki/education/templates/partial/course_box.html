@@ -5,14 +5,14 @@
   </div>
   <div class="col-sm-9 course-text">
     <h3 class="course-name-tasks-link" id="course-name">{{ course.name }}</h3>
-    {% if course.task_set.exists %}
+    {% if course.task_set.exists and course.is_active %}
       <a class="course-name-tasks-link" href="{% url 'education:course_dashboard' course.id %}">
           <button class="btn btn-warning" id="btn-tasks-link">Предай задачи</button>
       </a>
     {% endif %}
     <div class="course-information">
       <div>
-        {% if course.material_set.exists %}
+        {% if course.material_set.exists and course.is_active %}
           <div class="course-materials-link">
             <a href="{% url 'education:material_view' course.id %}">
               <button class="btn btn-warning" id="btn-materials-link">Материали</button>
@@ -37,7 +37,7 @@
 
   </div>
   <div class="col-sm-12 course-box-footer check-in-footer">
-    {% if course.lecture_set.exists %}
+    {% if course.lecture_set.exists and course.is_active %}
     <div class="col-sm-12 check-in">
         <b>Присъствие</b>
         {% with course_data=course_presence|key:course %}
@@ -52,6 +52,10 @@
         {% endwith %}
       {% endwith %}
     </div>
+    {% elif not course.is_active %}
+    {% with course_data=course_presence|key:course %}
+      <b> Присъствал си на {{ course_data|key:"percentage_presence" }} от курса :)</b>
+    {% endwith %}
     {% else %}
     <div class="col-sm-12 check-in">
         <b>Все още няма насрочени занятия за този курс :)</b>
