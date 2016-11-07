@@ -709,6 +709,11 @@ body {
     font-size: 14px;
     margin-top: 4px; }
 
+.solution-status .fail-status-solution, .last-solution-status .fail-status-solution {
+  color: #b70202; }
+.solution-status .pass-status-solution, .last-solution-status .pass-status-solution {
+  color: green; }
+
 .task-test-output {
   width: 90%;
   word-wrap: break-word; }

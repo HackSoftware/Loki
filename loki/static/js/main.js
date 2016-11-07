@@ -80,7 +80,15 @@ $(document).ready(function(){
   var updateSolutionStatus = function(solution, new_data, taskId) {
     $("#solution-task-id-" + taskId).find('.no-solutions').html("");
     $("#solution-task-id-" + taskId).find('.task-solution-link').html('<button class="btn btn-warning" id="btn-tasks-link">Решения</button>');
-    $("#task-" + taskId).find('.last-solution-status').html('<b>' + new_data.status + '</b>');
+    var $taskRow = $("#task-" + taskId);
+
+    if (new_data.status == 'ok') {
+      $taskRow.find('.last-solution-status').html('<span class="pass-status-solution"><b>PASS</b> </span>');
+    } else if (new_data.status == 'not_ok'){
+      $taskRow.find('.last-solution-status').html('<span class="fail-status-solution"><b>FAIL</b> </span>');
+    } else {
+      $taskRow.find('.last-solution-status').html('<b>' + new_data.status + '</b>');
+      }
   }
 
   var complete = function(solution, new_data) {

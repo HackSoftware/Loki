@@ -25,9 +25,9 @@
         <h5><b>Резултат:</b>
           <span class="solution-status" data-status="{{ solution.get_status }}" data-solution-id="{{ solution.id }}">
             {% if solution.get_status == 'not_ok' %}
-              FAIL
+              <span class="fail-status-solution"> <b>FAIL</b> </span>
             {% elif solution.get_status == 'ok' %}
-              PASS
+              <span class="pass-status-solution"> <b>PASS</b> <span>
             {% else %}
               {{ solution.get_status }}
             {% endif %}

@@ -1031,6 +1031,17 @@ $TabBorder: #C5C4C4;
 
 }
 
+
+.solution-status, .last-solution-status{
+  .fail-status-solution{
+    color: #b70202;
+  }
+  .pass-status-solution{
+    color: green;
+  }
+}
+
+
 .task-test-output {
   width: 90%;
   word-wrap: break-word;
