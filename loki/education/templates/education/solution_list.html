@@ -22,6 +22,23 @@
   <div class="container">
     <section class="row">
       <div class="col-lg-12 col-md-12 col-sm-12 solution-container">
+        <h5><b>Резултат:</b>
+          <span class="solution-status" data-status="{{ solution.get_status }}" data-solution-id="{{ solution.id }}">
+            {% if solution.get_status == 'not_ok' %}
+              FAIL
+            {% elif solution.get_status == 'ok' %}
+              PASS
+            {% else %}
+              {{ solution.get_status }}
+            {% endif %}
+          </span>
+        </h5>
+        {% if solution.task.gradable %}
+          <h5><b>Test output</b></h5>
+          <div>
+            <pre><code>{{solution.test_output}}</code></pre>
+          </div>
+        {% endif %}
         {% if solution.task.gradable %}
         <h5><b>Предадена задача: </b></h5>
         <div>
@@ -33,17 +50,6 @@
             {{solution.url}}
           </a></b>
         </h5>
-        {% endif %}
-        <h5><b>Резултат:</b>
-          <span class="solution-status" data-status="{{ solution.get_status }}" data-solution-id="{{ solution.id }}">
-            {{ solution.get_status }}
-          </span>
-        </h5>
-        {% if solution.task.gradable %}
-          <h5><b>Test output</b></h5>
-          <div>
-            <pre><code>{{solution.test_output}}</code></pre>
-          </div>
         {% endif %}
       </div>
     </section>
