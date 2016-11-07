@@ -678,12 +678,14 @@ body {
 .active-tasks-container #no-task-solution {
   padding-left: 10%; }
 .active-tasks-container .panda-loading-gif {
-  height: 50px;
-  /*margin-left: 20%;*/ }
+  height: 50px; }
 .active-tasks-container .panda-sleeps {
   height: 40px; }
 .active-tasks-container .last-solution-status {
   padding-left: 8%; }
+.active-tasks-container .task-solution-link {
+  text-decoration: none;
+  color: #f7931e; }
 
 .task-name-container {
   background-color: #E1E1E1;
