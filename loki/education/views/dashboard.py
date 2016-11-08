@@ -1,5 +1,4 @@
 from django.views.generic.list import ListView
-from django.utils import timezone
 
 from loki.education.models import Course, Task, Solution, Material, CheckIn
 from ..mixins import (DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
@@ -32,13 +31,13 @@ class CourseListView(DashboardPermissionMixin, ListView):
         return context
 
     def get_queryset(self):
-        now = timezone.now().date()
-
         return Course.objects.filter(courseassignment__user=self.request.user).order_by('-end_time')
 
 
-class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
-                          CannotSeeCourseTaskListMixin, ListView):
+class CourseDashboardView(DashboardPermissionMixin,
+                          CannotSeeOthersCoursesDashboardsMixin,
+                          CannotSeeCourseTaskListMixin,
+                          ListView):
     model = Task
 
     def get_context_data(self, **kwargs):
@@ -66,7 +65,8 @@ class CourseDashboardView(DashboardPermissionMixin, CannotSeeOthersCoursesDashbo
         return super().get(request, *args, **kwargs)
 
 
-class SolutionView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
+class SolutionView(DashboardPermissionMixin,
+                   CannotSeeOthersCoursesDashboardsMixin,
                    ListView):
     model = Solution
 
@@ -75,7 +75,8 @@ class SolutionView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMix
         return Solution.objects.filter(student=self.request.user, task=task).order_by("-created_at")
 
 
-class MaterialView(DashboardPermissionMixin, CannotSeeOthersCoursesDashboardsMixin,
+class MaterialView(DashboardPermissionMixin,
+                   CannotSeeOthersCoursesDashboardsMixin,
                    ListView):
     model = Material
 
