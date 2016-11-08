@@ -10,7 +10,7 @@ from loki.base_app.models import BaseUser, City, Company
 from .validators import validate_mac
 from .exceptions import HasToBeRetested
 from .managers import SolutionManager
-from .query import CheckInQuerySet
+from .query import CheckInQuerySet, CourseQuerySet
 
 
 class StudentAndTeacherCommonModel(models.Model):
@@ -68,6 +68,8 @@ class Course(models.Model):
     generate_certificates_until = models.DateField()
 
     partner = models.ManyToManyField('base_app.Partner', blank=True)
+
+    objects = CourseQuerySet.as_manager()
 
     def is_active(self):
         return self.end_time >= timezone.now().date()
