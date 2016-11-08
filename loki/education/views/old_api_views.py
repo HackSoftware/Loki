@@ -17,16 +17,18 @@ from rest_framework.response import Response
 
 from loki.base_app.models import City, Company
 
-from .premissions import IsStudent, IsTeacher, IsTeacherForCA
-from .models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
-                     Task, Solution, Certificate)
-from .serializers import (UpdateStudentSerializer, StudentNameSerializer,
-                          LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
-                          SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
-                          CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer,
-                          SolutionStatusSerializer)
-from .helper import (check_macs_for_student, mac_is_used_by_another_student)
-from .tasks import submit_solution
+from ..permissions import IsStudent, IsTeacher, IsTeacherForCA
+from ..models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
+                      Task, Solution, Certificate)
+
+from ..serializers import (UpdateStudentSerializer, StudentNameSerializer,
+                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
+                           SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
+                           CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer,
+                           SolutionStatusSerializer)
+from ..helper import (check_macs_for_student, mac_is_used_by_another_student)
+from ..tasks import submit_solution
+from ..mixins import SolutionApiAuthenticationPermissionMixin
 
 
 @csrf_exempt
@@ -38,7 +40,7 @@ def set_check_in(request):
     if settings.CHECKIN_TOKEN != token:
         return HttpResponse(status=511)
 
-    student = Student.objects.filter(mac=mac).first()
+    student = Student.objects.filter(mac__iexact=mac).first()
     if not student:
         student = None
     try:
@@ -205,11 +207,11 @@ class TasksAPI(generics.ListAPIView):
 
 
 class SolutionStatusAPI(
+        SolutionApiAuthenticationPermissionMixin,
         mixins.RetrieveModelMixin,
         generics.GenericAPIView):
     model = Solution
     serializer_class = SolutionStatusSerializer
-    permission_classes = (IsStudent,)
 
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
@@ -235,13 +237,13 @@ class StudentSolutionsList(generics.ListAPIView):
 
 
 class SolutionsAPI(
+        SolutionApiAuthenticationPermissionMixin,
         mixins.ListModelMixin,
         mixins.CreateModelMixin,
         mixins.UpdateModelMixin,
         generics.GenericAPIView):
     model = Solution
     serializer_class = SolutionSerializer
-    permission_classes = (IsStudent,)
     filter_fields = ('task__course__id',)
 
     def get(self, request, *args, **kwargs):

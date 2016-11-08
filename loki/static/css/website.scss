@@ -1,5 +1,9 @@
 button, input {
-  border-radius: 0 !important;
+  border-radius: 0;
+}
+
+.btn {
+  border-radius:0;
 }
 
 $yellow: #FFCB57;
@@ -37,6 +41,9 @@ body {
                 float: left;
                 padding: 12px 20px 0 20px;
                 width: 260px;
+                @media screen and (max-width: 400px) {
+                  width: 250px;
+                }
             }
             #login-form {
                 padding-top: 30px;
@@ -782,7 +789,7 @@ $TabBorder: #C5C4C4;
 }
 
 .btn-hack-info {
-    background: #f6e0be;
+    background: #E1E1E1;
     color: black;
     margin-bottom: 10px;
     &:hover {
@@ -806,17 +813,111 @@ $TabBorder: #C5C4C4;
 
     .course-text {
         text-align: left;
+
+        #course-socials {
+          font-size: 2em;
+        }
+
+        .course-teachers {
+          display: inline-block;
+          padding-left: 0;
+        }
+
+        #btn-tasks-link {
+            font-size: 18px;
+            margin-right: 23%;
+            margin-bottom: 5px;
+            @media screen and (max-width: 980px) {
+              margin-left: 62%;
+            }
+            @media screen and (max-width: 360px) {
+              margin-left: 44%;
+              font-size: 16px;
+            }
+            @media screen and(max-width: 320px) {
+              margin-left: 36%;
+            }
+        }
+
+        #course-name {
+          margin-right: 25%;
+          @media screen and (max-width: 1197px) {
+              margin-right: 8%;
+          }
+
+        }
+
+        .course-name-tasks-link {
+          display: inline-block;
+        }
+
+        .course-materials-link {
+          float: right;
+
+
+          #btn-materials-link {
+              font-size: 18px;
+              margin-right: 23%;
+              margin-bottom: 5px;
+              padding-right: 31px;
+              padding-left: 28px;
+              @media screen and (max-width: 980px) {
+                margin-right: 20%;
+              }
+              @media screen and (max-width: 360px) {
+                margin-right: 17%;
+                font-size: 16px;
+                padding-left: 21px;
+              }
+          }
+        }
     }
 
     .course-logo {
         width: 100%;
         padding: 15px;
     }
+
+    .hidden-toggle {
+      display: none;
+      width: 80%
+    }
+
+    .course-box-footer {
+      background: #E1E1E1;;
+      padding: 10px;
+      margin-top: 5px;
+      position: relative;
+
+      .check-in {
+        cursor: pointer;
+      }
+
+      .check-in-table {
+        background-color: white;
+        margin-top: 10px;
+        padding-left: 0px;
+        padding-right: 0px;
+
+        .not-check-in-date {
+          background-color: rgba(255, 0, 0, 0.38);
+        }
+
+        .check-in-date {
+          background-color: rgba(130, 203, 130, 0.75);
+        }
+
+        .future-date {
+          background-color: rgba(128, 128, 128, 0.07);
+        }
+      }
+    }
+
+    .check-in-footer {
+      background-color: #E1E1E1;
+    }
 }
-.course-box-footer {
-    background: #f6e0be;
-    padding: 5px;
-}
+
 
 .apply-form {
     h1 {
@@ -870,5 +971,117 @@ $TabBorder: #C5C4C4;
         width: 30px;
       }
     }
+  }
+}
+
+.active-tasks-container {
+
+
+  #submit-task-box {
+    margin-left: 43%;
+  }
+
+  #no-task-solution {
+    padding-left: 10%;
+  }
+
+  .panda-loading-gif {
+    height: 50px;
+  }
+
+  .panda-sleeps {
+    height: 40px;
+  }
+
+  .last-solution-status {
+    padding-left: 8%;
+  }
+
+  .task-solution-link {
+    text-decoration: none;
+    color: #f7931e;
+  }
+
+}
+
+.task-name-container {
+  background-color: #E1E1E1;
+  height: 50px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-left: 6%;
+  padding-bottom:15px;
+  font-size: 18px;
+  @media screen and (max-width: 622px) {
+      height: 70px;
+  }
+  @media screen and (max-width: 360px) {
+      height: 80px;
+  }
+
+  .solution-created-at, .dates-week {
+    float: right;
+    padding-right: 5%;
+    display: inline-block;
+    font-size: 14px;
+    margin-top: 4px;
+  }
+
+
+}
+
+
+.solution-status, .last-solution-status{
+  .fail-status-solution{
+    color: #b70202;
+  }
+  .pass-status-solution{
+    color: green;
+  }
+}
+
+
+.task-test-output {
+  width: 90%;
+  word-wrap: break-word;
+}
+
+.solutions-task-div, .material-course-div, .task-course-div {
+  padding-left: 3%;
+  font-size: 18px;
+  a {
+    text-decoration: none;
+    color: #f7931e;
+  }
+
+  #solutions-task-name ,#material-course-name, #task-course-name {
+    padding-left: 20px;
+    display: inline-block;
+  }
+}
+
+.solution-url-link {
+  text-decoration: none;
+  color: #f7931e;
+  &:hover {
+    color: #f7931e;
+  }
+}
+
+.modal-body {
+  .submit-url {
+    margin-top: 5px;
+  }
+
+}
+
+.material-container {
+  .course-presentation {
+    color: #F7931E;
+  }
+  .material-description {
+    width: 70%;
+    word-break: break-all;
   }
 }

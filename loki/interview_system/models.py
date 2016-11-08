@@ -1,11 +1,12 @@
 import uuid
 from django.db import models
+from django.utils import timezone
 
 from loki.base_app.models import BaseUser
 from loki.applications.models import ApplicationInfo, Application
 
 from .query import InterviewQuerySet
-from .managers import InterviewerManager
+from .managers import InterviewerManager, InterviewManager
 
 
 class Interviewer(BaseUser):
@@ -63,7 +64,7 @@ class Interview(models.Model):
     has_received_email = models.BooleanField(default=False)
     is_accepted = models.BooleanField(default=False)
 
-    objects = InterviewQuerySet.as_manager()
+    objects = InterviewManager.from_queryset(InterviewQuerySet)()
 
     def reset(self):
         self.application = None
@@ -71,3 +72,6 @@ class Interview(models.Model):
         self.has_confirmed = False
 
         self.save()
+
+    def active_date(self):
+        return timezone.now().date() <= self.date

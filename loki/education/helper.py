@@ -8,8 +8,9 @@ import requests
 from PIL import Image
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 
-from .models import CheckIn, Student, GraderRequest
+from .models import CheckIn, Student, GraderRequest, Lecture, Solution
 
 
 def crop_image(x1, y1, x2, y2, path):
@@ -94,3 +95,48 @@ def read_binary_file(path):
         encoded = base64.b64encode(f.read())
 
     return encoded.decode('ascii')
+
+
+def get_dates_for_weeks(course):
+    lectures = course.lecture_set.filter(week__isnull=False).values('week', 'date')
+    week_dates = {}
+
+    for lecture in lectures:
+        week = lecture['week']
+        if week not in week_dates:
+            week_dates[week] = [lecture['date']]
+        else:
+            week_dates[week].append(lecture['date'])
+
+    return week_dates
+
+
+def task_solutions(solutions):
+    task_solutions = {}
+    for solution in solutions:
+        task_name = solution.task.name
+        if task_name not in task_solutions:
+            task_solutions[task_name] = [solution]
+        elif task_name in task_solutions:
+            task_solutions[task_name].append(solution)
+        else:
+            task_solutions.update({task_name: solution})
+
+    return task_solutions
+
+
+def latest_solution_statuses(user, tasks):
+    latest_solutions = {}
+    for task in tasks:
+        task_name = task.name
+        solution = Solution.objects.get_latest_solution(user, task)
+        if solution:
+            latest_solutions[task_name] = solution.get_status_display()
+    return latest_solutions
+
+
+def percentage_presence(student_dates, course):
+    lecture_dates = Lecture.objects.filter(course=course,
+                                           date__lte=timezone.now().date()).values_list(
+                                           'date', flat=True)
+    return "{0}%".format(int((len(student_dates) / len(lecture_dates)) * 100))

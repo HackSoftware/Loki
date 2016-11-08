@@ -49,7 +49,7 @@ class AboutView(TemplateView):
 def courses(request):
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
     opened_course_applications = ApplicationInfo.objects.get_open_for_apply()
-    closed_course_applications = ApplicationInfo.objects.get_closed_for_apply()
+    closed_course_applications = ApplicationInfo.objects.get_ordered_closed_application_infos()
     return render(request, "website/courses.html", locals())
 
 
@@ -126,9 +126,9 @@ def profile(request):
         teacher = Teacher.objects.get(email=request.user.email)
     except Teacher.DoesNotExist:
         teacher = None
-    interviews = Interview.objects.filter(application__isnull=False,
-                                          application__user=user,
-                                          has_confirmed=True)
+
+    interviews = Interview.objects.get_active(user)
+
     return render(request, 'website/profile.html', locals())
 
 

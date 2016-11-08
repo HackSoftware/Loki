@@ -22,6 +22,7 @@
     <link rel="stylesheet" type="text/css" href="/static/bower_components/devicon/devicon-colors.css">
     <link href="/static/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/bower_components/jqueryui-datepicker/datepicker.css" rel="stylesheet">
+
     <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
     <!-- Facebook Pixel Code -->
     {% block 'head-content' %}
@@ -97,9 +98,13 @@
                     {% if user.get_teacher %}
                       <li><a href="{% url 'website:profile_edit_teacher' %}">Редакция на учителски данни</a></li>
                     {% endif %}
-
-                    {% if user.application_set.exists %}
+                    
+                    {% if user.application_set.exists and user.application_set.first.application_info.apply_is_active %}
                       <li><a href="{% url 'applications:edit_applications' %}">Редакция на кандидатури</a></li>
+                    {% endif %}
+
+                    {% if user.student.courseassignment_set.exists %}
+                      <li><a href="{% url 'education:course_list' %}">Моите курсове</a></li>
                     {% endif %}
                       <li><a href="{% url 'website:logout' %}">Изход</a></li>
                   </ul>

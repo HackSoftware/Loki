@@ -1,0 +1,46 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+{% if object_list.exists %}
+<div class="material-course-div">
+  <a href="{% url 'education:course_list' %}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+  </a>
+  <div id="material-course-name">
+    <b>{{object_list.first.course.name}}</b>
+  </div>
+</div>
+{% for material in object_list %}
+  <div class="task-name-container"><b> {{ material.title }}</b>
+    <div class="dates-week"> <b> Седмица {{ material.week.number }} ({{ material.week.lecture_set.last.date }} - {{ material.week.lecture_set.first.date}}) </b>
+    </div>
+  </div>
+  <div class="container">
+    <section class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 material-container">
+          <div class="presentations">
+          {% for lecture in material.week.lecture_set.all %}
+            {% if lecture.presentation_url %}
+            <a class="course-presentation" href="{{ lecture.presentation_url }}" target="_blank"> Презентация от {{ lecture.date }} </a>
+            <br>
+            {% endif %}
+          {% endfor %}
+          </div>
+        <div class="material-description"> <b>Допълнителна информация: </b> {{ material.description }}</div>
+      </div>
+    </section>
+  </div>
+{% endfor %}
+{% else %}
+<div class="material-course-div">
+  <a href="{% url 'education:course_list' %}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+  </a>
+  <div id="material-course-name">
+    <b>Все още няма материали за този курс : )</b>
+  </div>
+</div>
+{% endif %}
+{% endautoescape %}
+{% endblock %}

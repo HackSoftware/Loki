@@ -1,0 +1,65 @@
+{% load key %}
+<div class="col-sm-12 course-box">
+  <div class="col-sm-3">
+    <img src="{{ MEDIA_URL }}{{ course.coursedescription.custom_logo }}" class="course-logo" >
+  </div>
+  <div class="col-sm-9 course-text">
+    <h3 class="course-name-tasks-link" id="course-name">{{ course.name }}</h3>
+    {% if course.task_set.exists and course.is_active %}
+      <a class="course-name-tasks-link" href="{% url 'education:course_dashboard' course.id %}">
+          <button class="btn btn-warning" id="btn-tasks-link">Предай задачи</button>
+      </a>
+    {% endif %}
+    <div class="course-information">
+      <div>
+        {% if course.material_set.exists and course.is_active %}
+          <div class="course-materials-link">
+            <a href="{% url 'education:material_view' course.id %}">
+              <button class="btn btn-warning" id="btn-materials-link">Материали</button>
+            </a>
+          </div>
+        {% endif %}
+         <b>Начало на курса:</b> {{ course.start_time }} <br>
+         <b>Край  на курса:</b> {{ course.end_time }} <br>
+         <b>Продължителност:</b> {{ course.duration_in_weeks }} седмици <br>
+         <i id="course-socials" class="fa fa-github fa-3x"></i>
+         <a href="{{ course.git_repository }}" target="_blank">Github repo на курса</a> <br>
+         <i id="course-socials" class="fa fa-facebook-square fa-3x"></i>
+         <a href="{{ course.fb_group }}" target="_blank">Facebook група на курса</a> <br>
+         <div class="course-teachers col-md-2"><b>Преподаватели: </b> </div>
+         <div class="course-teachers col-md-8 col-offset-3">
+         {% for teacher in course.teacher_set.all %}
+           {{ teacher.first_name }} {{ teacher.last_name }}, {{ teacher.email }}<br>
+         {% endfor %}
+         </div>
+     </div>
+    </div>
+
+  </div>
+  <div class="col-sm-12 course-box-footer check-in-footer">
+    {% if course.lecture_set.exists and course.is_active %}
+    <div class="col-sm-12 check-in">
+        <b>Присъствие</b>
+        {% with course_data=course_presence|key:course %}
+        <b> {{ course_data|key:"percentage_presence" }} </b>
+        {% endwith %}
+        <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
+    </div>
+    <div class="check-in-table hidden-toggle col-sm-12 col-sm-offset-1">
+      {% with course_data=course_presence|key:course %}
+        {% with dates_for_weeks=course_data|key:"dates_for_weeks" student_dates=course_data|key:"student_dates" weeks=course_data|key:"weeks"%}
+          {% include 'partial/table_presence.html' with dates_for_weeks=dates_for_weeks student_dates=student_dates weeks=weeks %}
+        {% endwith %}
+      {% endwith %}
+    </div>
+    {% elif not course.is_active %}
+    {% with course_data=course_presence|key:course %}
+      <b> Присъствал си на {{ course_data|key:"percentage_presence" }} от курса :)</b>
+    {% endwith %}
+    {% else %}
+    <div class="col-sm-12 check-in">
+        <b>Все още няма насрочени занятия за този курс :)</b>
+    </div>
+    {% endif %}
+  </div>
+</div>

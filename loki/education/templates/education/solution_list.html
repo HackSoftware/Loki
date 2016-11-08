@@ -1,0 +1,70 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+{% if object_list.exists %}
+<div class="solutions-task-div">
+  <a href="{% url 'education:course_dashboard' object_list.first.task.course.id %}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+  </a>
+  <div id="solutions-task-name">
+    <b>Предадени решения на задача:
+      <a href={{solution.task.description}} target="_blank">
+        {{object_list.first.task.name}}
+      </a>
+    </b>
+  </div>
+</div>
+{% for solution in object_list %}
+  <div class="task-name-container"><b>Решение</b>
+    <div class="solution-created-at"><b>Предадена на: {{ solution.created_at }}</b></div>
+  </div>
+  <div class="container">
+    <section class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 solution-container">
+        <h5><b>Резултат:</b>
+          <span class="solution-status" data-status="{{ solution.get_status }}" data-solution-id="{{ solution.id }}">
+            {% if solution.get_status == 'not_ok' %}
+              <span class="fail-status-solution"> <b>FAIL</b> </span>
+            {% elif solution.get_status == 'ok' %}
+              <span class="pass-status-solution"> <b>PASS</b> <span>
+            {% else %}
+              {{ solution.get_status }}
+            {% endif %}
+          </span>
+        </h5>
+        {% if solution.task.gradable %}
+          <h5><b>Test output</b></h5>
+          <div>
+            <pre><code>{{solution.test_output}}</code></pre>
+          </div>
+        {% endif %}
+        {% if solution.task.gradable %}
+        <h5><b>Предадена задача: </b></h5>
+        <div>
+          <pre><code>{{solution.code}}</code></pre>
+        </div>
+        {% else %}
+        <h5><b>Предаден линк:
+          <a class="solution-url-link" href={{solution.url}} target="_blank">
+            {{solution.url}}
+          </a></b>
+        </h5>
+        {% endif %}
+      </div>
+    </section>
+
+  </div>
+{% endfor %}
+{% else %}
+<div class="solutions-task-div">
+  <a href="{% url 'education:course_list' %}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+  </a>
+  <div id="solutions-task-name">
+    <b>Няма предадени решения : )</b>
+  </div>
+</div>
+{% endif %}
+{% endautoescape %}
+{% endblock %}

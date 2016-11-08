@@ -9,10 +9,12 @@ from loki.base_app.models import BaseUser, City, Company
 
 from .validators import validate_mac
 from .exceptions import HasToBeRetested
+from .managers import SolutionManager
+from .query import CheckInQuerySet
 
 
 class StudentAndTeacherCommonModel(models.Model):
-    mac = mac = models.CharField(validators=[validate_mac], max_length=17, null=True)
+    mac = models.CharField(validators=[validate_mac], max_length=17, blank=True, null=True)
     phone = models.CharField(null=True, blank=True, max_length=20)
 
     class Meta:
@@ -91,13 +93,27 @@ class CheckIn(models.Model):
     student = models.ForeignKey('Student', null=True, blank=True)
     date = models.DateField(auto_now_add=True)
 
+    objects = CheckInQuerySet.as_manager()
+
     class Meta:
         unique_together = (('student', 'date'), ('mac', 'date'))
+
+
+class Week(models.Model):
+    number = models.IntegerField()
+
+    def __str__(self):
+        return "Week{0}".format(self.number)
 
 
 class Lecture(models.Model):
     course = models.ForeignKey('Course')
     date = models.DateField()
+    week = models.ForeignKey(Week, null=True, blank=True)
+    presentation_url = models.URLField(blank=True, null=True)
+
+    def is_date_in_future(self):
+        return self.date > timezone.now().date()
 
 
 class StudentNote(models.Model):
@@ -263,6 +279,8 @@ class Solution(models.Model):
     def get_assignment(self):
         return CourseAssignment.objects.get(user=self.student, course=self.task.course)
 
+    objects = SolutionManager()
+
 
 class GraderRequest(models.Model):
     request_info = models.CharField(max_length=140)
@@ -286,3 +304,10 @@ class WorkingAt(models.Model):
 class Certificate(models.Model):
     assignment = models.OneToOneField(CourseAssignment)
     token = models.CharField(default=uuid.uuid4, unique=True, max_length=110)
+
+
+class Material(models.Model):
+    course = models.ForeignKey('Course')
+    week = models.ForeignKey(Week, null=True, blank=True)
+    description = models.TextField(blank=True, null=True)
+    title = models.CharField(max_length=100, blank=True, null=True)
