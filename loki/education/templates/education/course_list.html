@@ -3,41 +3,52 @@
 {% block 'page-content' %}
 {% autoescape off %}
   <div class="container">
-    <section class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12">
-        {{ snippets.courses_first_header.text }}
-        <h3>Активни курсове </h3>
-      </div>
-    </section>
+    {% if not object_list.exists %}
+      <section class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          {{ snippets.courses_first_header.text }}
+          <h3>Не си присъствал на нито един курс в Hack Bulgaria!</h3>
+        </div>
+      </section>
+    {% endif %}
 
+    {% if object_list.get_active_courses.exists %}
+      <section class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          {{ snippets.courses_first_header.text }}
+          <h3>Активни курсове </h3>
+        </div>
+      </section>
 
-    <section class="row">
-      <div class="active-courses-container container-fluid">
-        {% for course in object_list %}
-          {% if course.is_active %}
+      <section class="row">
+        <div class="active-courses-container container-fluid">
+          {% for course in object_list %}
+            {% if course.is_active %}
+              {% include "partial/course_box.html" with course=course %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+      {% if object_list.get_closed_courses.exists  %}
+
+      <section class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          {{ snippets.courses_first_header.text }}
+          <h3>Архив на изминали курсове </h3>
+        </div>
+      </section>
+
+      <section class="row">
+        <div class="active-courses-container container-fluid">
+          {% for course in object_list %}
+           {% if not course.is_active %}
             {% include "partial/course_box.html" with course=course %}
-          {% endif %}
-        {% endfor %}
-      </div>
-    </section>
-
-    <section class="row">
-      <div class="col-lg-12 col-md-12 col-sm-12">
-        {{ snippets.courses_first_header.text }}
-        <h3>Архив на изминали курсове </h3>
-      </div>
-    </section>
-
-    <section class="row">
-      <div class="active-courses-container container-fluid">
-        {% for course in object_list %}
-         {% if not course.is_active %}
-          {% include "partial/course_box.html" with course=course %}
-         {% endif %}
-        {% endfor %}
-      </div>
-    </section>
-
+           {% endif %}
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
   </div>
 {% endautoescape %}
 {% endblock %}
