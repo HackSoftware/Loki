@@ -140,6 +140,5 @@ def percentage_presence(student_dates, course):
                                            date__lte=timezone.now().date()).values_list(
                                            'date', flat=True)
     student_dates = [date for date in student_dates if date in lecture_dates]
-    # import ipdb; ipdb.set_trace()
 
     return "{0}%".format(int((len(student_dates) / len(lecture_dates)) * 100))
