@@ -823,21 +823,6 @@ $TabBorder: #C5C4C4;
           padding-left: 0;
         }
 
-        #btn-tasks-link {
-            font-size: 18px;
-            margin-right: 23%;
-            margin-bottom: 5px;
-            @media screen and (max-width: 980px) {
-              margin-left: 62%;
-            }
-            @media screen and (max-width: 360px) {
-              margin-left: 44%;
-              font-size: 16px;
-            }
-            @media screen and(max-width: 320px) {
-              margin-left: 36%;
-            }
-        }
 
         #course-name {
           margin-right: 25%;
@@ -851,31 +836,35 @@ $TabBorder: #C5C4C4;
           display: inline-block;
         }
 
-        .course-materials-link {
-          float: right;
+        .course-btns {
+          margin-top: 20px;
 
-
-          #btn-materials-link {
-              font-size: 18px;
-              margin-right: 23%;
-              margin-bottom: 5px;
-              padding-right: 31px;
-              padding-left: 28px;
-              @media screen and (max-width: 980px) {
-                margin-right: 20%;
-              }
-              @media screen and (max-width: 360px) {
-                margin-right: 17%;
-                font-size: 16px;
-                padding-left: 21px;
-              }
+          #materials-link {
+            padding-left: 25px;
+            padding-right: 24px;
           }
+
+          a button {
+            margin-top: 5px;
+            text-align: center;
+
+            @media screen and (max-width: 992px) {
+              margin-right: 5px;
+              margin-left: -5px;
+            }
+          }
+
         }
+
     }
 
     .course-logo {
         width: 100%;
         padding: 15px;
+        @media screen and (max-width: 836px) {
+          width: 50%;
+        }
+
     }
 
     .hidden-toggle {
