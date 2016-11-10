@@ -8,6 +8,7 @@ from faker import Factory
 from loki.seed import factories
 from loki.base_app.models import GeneralPartner
 from loki.base_app.models import BaseUser
+from loki.education.models import Student, CheckIn
 
 faker = Factory.create()
 
@@ -17,13 +18,8 @@ class TestWebsite(TestCase):
     def setUp(self):
         self.client = Client()
         self.baseuser = factories.BaseUserFactory()
-        self.student = factories.StudentFactory(
-            baseuser_ptr_id=self.baseuser.id,
-            email=self.baseuser.email)
-        self.teacher = factories.TeacherFactory(
-            baseuser_ptr_id=self.baseuser.id,
-            email=self.baseuser.email
-        )
+        self.baseuser.is_active = True
+        self.baseuser.save()
 
     def test_index(self):
         url = reverse('website:index')
@@ -70,8 +66,6 @@ class TestWebsite(TestCase):
     def test_login_from_active_user(self):
 
         url = reverse('website:login')
-        self.baseuser.is_active = True
-        self.baseuser.save()
         data = {
             'email': self.baseuser.email,
             'password': factories.BaseUserFactory.password
@@ -85,7 +79,7 @@ class TestWebsite(TestCase):
     def test_login_with_unvalid_data(self):
         url = reverse('website:login')
         data = {
-            'email': self.baseuser.email,
+            'email': faker.email(),
             'password': factories.BaseUserFactory.password
         }
 
@@ -123,8 +117,6 @@ class TestWebsite(TestCase):
                          'Моля активирай акаунта си')
 
     def test_anonymous_required(self):
-        self.baseuser.is_active = True
-        self.baseuser.save()
         self.client.login(email=self.baseuser.email,
                           password=factories.BaseUserFactory.password)
 
@@ -135,8 +127,6 @@ class TestWebsite(TestCase):
         self.assertRedirects(response, reverse('website:profile'))
 
     def test_logout(self):
-        self.baseuser.is_active = True
-        self.baseuser.save()
         self.client.login(email=self.baseuser.email,
                           password=factories.BaseUserFactory.password)
         url = reverse('website:logout')
@@ -156,8 +146,6 @@ class TestWebsite(TestCase):
         self.response_302(response)
 
     def test_profile(self):
-        self.baseuser.is_active = True
-        self.baseuser.save()
         self.client.login(email=self.baseuser.email,
                           password=factories.BaseUserFactory.password)
 
@@ -176,8 +164,6 @@ class TestWebsite(TestCase):
         self.response_302(response)
 
     def test_profile_edit(self):
-        self.baseuser.is_active = True
-        self.baseuser.save()
         self.client.login(email=self.baseuser.email,
                           password=factories.BaseUserFactory.password)
 
@@ -234,8 +220,6 @@ class TestWebsite(TestCase):
         self.assertEqual(len(mail.outbox), 1)
 
     def test_register_anonymous_required(self):
-        self.baseuser.is_active = True
-        self.baseuser.save()
         self.client.login(email=self.baseuser.email,
                           password=factories.BaseUserFactory.password)
 
@@ -277,3 +261,33 @@ class TestWebsite(TestCase):
         self.assertEqual(response.context['message'],
                          'Потребител с посочения email не е открит')
         self.assertEqual(len(mail.outbox), 0)
+
+    def test_edit_student_profile(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        with self.login(email=student.email,
+                          password=factories.BaseUserFactory.password):
+
+            url = reverse('website:profile_edit_student')
+            data = {'mac': "a1:b2:c3:d4:e5:00"}
+
+            response = self.post('website:profile_edit_student', data=data)
+            self.response_200(response)
+
+        self.assertEqual(data['mac'], Student.objects.get(email=student.email).mac)
+
+    def test_check_ins_for_edit_student_profile(self):
+        check_in = factories.CheckInFactory(student=None)
+        mac = check_in.mac
+
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        with self.login(email=student.email,
+                          password=factories.BaseUserFactory.password):
+
+            url = reverse('website:profile_edit_student')
+            data = {'mac': mac}
+
+            response = self.post('website:profile_edit_student', data=data)
+            self.response_200(response)
+
+        self.assertEqual(mac, Student.objects.get(email=student.email).mac)
+        self.assertEqual(student, CheckIn.objects.filter(mac__iexact=mac).first().student)
