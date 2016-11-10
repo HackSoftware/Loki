@@ -77,7 +77,7 @@ class CanAttachMoreMentorsToTeam(permissions.BasePermission):
             count_mentorships = TeamMentorship.objects.filter(team=obj.team).count()
             return count_mentorships >= obj.team.season.max_mentor_pick
         """
-        When we remove mentor from team(request method is "DELETE")
+        When we remove mentor from team(request method is DELETE)
         we don't need to check the season's max_mentor_pick count.
         """
         return True

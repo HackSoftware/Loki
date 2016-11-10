@@ -199,6 +199,13 @@ def schedule_json(request):
     return Response(content, status=status.HTTP_200_OK)
 
 
+# @api_view(['POST'])
+# def test_auth(request):
+#     content = "Siriene"
+#
+#     return Response(content, status=status.HTTP_200_OK)
+
+
 class OnBoardCompetitor(APIView):
     permission_classes = (IsAuthenticated,)
 

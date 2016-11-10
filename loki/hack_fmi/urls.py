@@ -1,4 +1,5 @@
 from django.conf.urls import url
+from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 
 from .views import (SkillListView, TeamAPI, InvitationViewSet,
                     MentorListView, SeasonView, PublicTeamView,
@@ -17,6 +18,8 @@ invitation_urls = InvitationViewSet.get_urls()
 """
 
 urlpatterns = [
+    url(r'^api/login/', obtain_jwt_token),
+
     url(r'^api/skills/$', SkillListView.as_view(), name='skills'),
 
     url(r'^api/teams/(?P<pk>[0-9]+)?', TeamAPI.as_view(), name='teams'),
@@ -36,7 +39,7 @@ urlpatterns = [
     url(r'^api/invitation/(?P<pk>[0-9]+)/accept$', invitation_urls['invitation_accept'], name='invitation-accept'),
 
     # Auth
-    url(r'^api/login/', Login.as_view(), name='login'),
+    # url(r'^api/login/', Login.as_view(), name='login'),
     url(r'^api/logout/$', views.LogoutView.as_view(), name='logout'),
 
     url(r'^api/me/$', me, name='me'),
