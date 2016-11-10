@@ -18,7 +18,7 @@ invitation_urls = InvitationViewSet.get_urls()
 """
 
 urlpatterns = [
-    url(r'^api/login/', obtain_jwt_token),
+    url(r'^api/jwt-login/$', obtain_jwt_token),
 
     url(r'^api/skills/$', SkillListView.as_view(), name='skills'),
 
@@ -39,7 +39,7 @@ urlpatterns = [
     url(r'^api/invitation/(?P<pk>[0-9]+)/accept$', invitation_urls['invitation_accept'], name='invitation-accept'),
 
     # Auth
-    # url(r'^api/login/', Login.as_view(), name='login'),
+    url(r'^api/login/', Login.as_view(), name='login'),
     url(r'^api/logout/$', views.LogoutView.as_view(), name='logout'),
 
     url(r'^api/me/$', me, name='me'),
