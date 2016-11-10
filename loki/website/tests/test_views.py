@@ -265,11 +265,8 @@ class TestWebsite(TestCase):
     def test_edit_student_profile(self):
         student = BaseUser.objects.promote_to_student(self.baseuser)
         with self.login(email=student.email,
-                          password=factories.BaseUserFactory.password):
-
-            url = reverse('website:profile_edit_student')
+                        password=factories.BaseUserFactory.password):
             data = {'mac': "a1:b2:c3:d4:e5:00"}
-
             response = self.post('website:profile_edit_student', data=data)
             self.response_200(response)
 
@@ -281,11 +278,9 @@ class TestWebsite(TestCase):
 
         student = BaseUser.objects.promote_to_student(self.baseuser)
         with self.login(email=student.email,
-                          password=factories.BaseUserFactory.password):
+                        password=factories.BaseUserFactory.password):
 
-            url = reverse('website:profile_edit_student')
             data = {'mac': mac}
-
             response = self.post('website:profile_edit_student', data=data)
             self.response_200(response)
 
