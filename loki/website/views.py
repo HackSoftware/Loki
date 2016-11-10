@@ -15,6 +15,7 @@ from loki.base_app.models import Partner, GeneralPartner, BaseUser
 from loki.interview_system.models import Interview
 from loki.base_app.services import send_activation_mail, send_forgotten_password_email
 from loki.base_app.helper import get_or_none
+from loki.education.helper import check_macs_for_student
 
 
 class IndexView(TemplateView):
@@ -162,6 +163,7 @@ def profile_edit_student(request):
                                        instance=student)
         if student_form.is_valid():
             student_form.save()
+            check_macs_for_student(student, student.mac)
             if Teacher.objects.filter(email=request.user.email).exists():
                 teacher = Teacher.objects.get(email=request.user.email)
                 TeacherEditForm(request.POST, request.FILES,

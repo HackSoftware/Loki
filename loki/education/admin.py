@@ -173,6 +173,7 @@ class ProgrammingLanguageAdmin(admin.ModelAdmin):
 class SourceCodeTestAdmin(admin.ModelAdmin):
     list_display = [
         'task',
+        'course',
         'language',
         'test_type',
     ]
@@ -183,6 +184,9 @@ class SourceCodeTestAdmin(admin.ModelAdmin):
     ]
 
     search_fields = ['task']
+
+    def course(self, obj):
+        return obj.task.course
 
 
 @admin.register(BinaryFileTest)
