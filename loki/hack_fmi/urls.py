@@ -4,7 +4,7 @@ from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 from .views import (SkillListView, TeamAPI, InvitationViewSet,
                     MentorListView, SeasonView, PublicTeamView,
                     get_schedule, schedule_json, OnBoardCompetitor, TeamMembershipAPI,
-                    TeamMentorshipAPI)
+                    TeamMentorshipAPI, TestApi)
 from .auth import Login, me
 # from .signals import send_invitation
 
@@ -19,6 +19,8 @@ invitation_urls = InvitationViewSet.get_urls()
 
 urlpatterns = [
     url(r'^api/jwt-login/$', obtain_jwt_token),
+    # check for JWT auth
+    url(r'^api/jwt-test/$', TestApi.as_view(), name='test_api'),
 
     url(r'^api/skills/$', SkillListView.as_view(), name='skills'),
 

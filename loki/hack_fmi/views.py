@@ -4,6 +4,7 @@ from rest_framework import status, generics, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import mixins
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from .models import (Skill, Team, TeamMembership,
                      Mentor, Season, TeamMentorship)
@@ -199,13 +200,6 @@ def schedule_json(request):
     return Response(content, status=status.HTTP_200_OK)
 
 
-# @api_view(['POST'])
-# def test_auth(request):
-#     content = "Siriene"
-#
-#     return Response(content, status=status.HTTP_200_OK)
-
-
 class OnBoardCompetitor(APIView):
     permission_classes = (IsAuthenticated,)
 
@@ -217,3 +211,11 @@ class OnBoardCompetitor(APIView):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class TestApi(APIView):
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication, )
+
+    def get(self, request):
+        return Response("Great, status 200", status=status.HTTP_200_OK)
