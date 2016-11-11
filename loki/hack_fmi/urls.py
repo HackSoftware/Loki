@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
+from rest_framework import routers
 
 from .views import (SkillListView, TeamAPI, InvitationViewSet,
                     MentorListView, SeasonView, PublicTeamView,
@@ -17,14 +18,18 @@ invitation_urls = InvitationViewSet.get_urls()
   a different method of the InvitationViewSet is called.
 """
 
+router = routers.SimpleRouter()
+router.register(r'teams', TeamAPI)
+
 urlpatterns = [
-    url(r'^api/jwt-login/$', obtain_jwt_token),
+    url(r'^api/jwt-login/$', obtain_jwt_token, name='api-login'),
     # check for JWT auth
     url(r'^api/jwt-test/$', TestApi.as_view(), name='test_api'),
 
     url(r'^api/skills/$', SkillListView.as_view(), name='skills'),
-
-    url(r'^api/teams/(?P<pk>[0-9]+)?', TeamAPI.as_view(), name='teams'),
+    #
+    # url(r'^api/teams/(?P<pk>[0-9]+)?', TeamAPI.as_view({'get': 'retrive'}), name='teams_detail'),
+    # url(r'^api/teams/', TeamAPI.as_view(), name='teams_list'),
 
     url(r'^api/season/$', SeasonView.as_view(), name='season'),
 
@@ -49,4 +54,4 @@ urlpatterns = [
     url(r'^api/schedule/', get_schedule, name="get_schedule"),
     url(r'^api/schedule-json/', schedule_json, name="schedule_json"),
     url(r'^api/onboard-competitor/$', OnBoardCompetitor.as_view(), name='onboard_competitor'),
-]
+] + router.urls
