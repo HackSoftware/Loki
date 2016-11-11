@@ -62,15 +62,17 @@ class PublicTeamView(generics.ListAPIView):
     serializer_class = PublicTeamSerializer
 
 
-class TeamAPI(generics.UpdateAPIView, generics.ListCreateAPIView):
-    permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
-                          IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
-                          CantCreateTeamWithTeamNameThatAlreadyExists,
-                          TeamLiederCantCreateOtherTeam)
+class TeamAPI(mixins.CreateModelMixin,
+              mixins.ListModelMixin,
+              mixins.UpdateModelMixin,
+              mixins.RetrieveModelMixin,
+              viewsets.GenericViewSet):
+    permission_classes = (IsHackFMIUser,)
     serializer_class = TeamSerializer
+    queryset = Team.objects.all()
 
-    def get_queryset(self):
-        return Team.objects.all()
+    # def get_queryset(self):
+    #     return Team.objects.all()
 
     def perform_create(self, serializer):
         season = Season.objects.get(is_active=True)
@@ -105,6 +107,7 @@ class TeamMentorshipAPI(mixins.CreateModelMixin,
     permission_classes = (IsHackFMIUser, IsTeamLeader,
                           IsMentorDatePickUpToDate,
                           CanAttachMoreMentorsToTeam)
+    authentication_classes = (JSONWebTokenAuthentication,)
 
     serializer_class = TeamMentorshipSerializer
     queryset = TeamMentorship.objects.all()
@@ -214,7 +217,7 @@ class OnBoardCompetitor(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response("User is already competitor!")
+        return Response({"custom_errors": ["User is already competitor!"]}, status=status.HTTP_400_BAD_REQUEST)
 
 class TestApi(APIView):
     permission_classes = (IsAuthenticated,)
