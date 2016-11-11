@@ -8,7 +8,7 @@ from .models import (Competitor, Skill, Team, TeamMembership,
 
 @admin.register(Skill)
 class SkillAdmin(admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('id', 'name',)
 
 
 @admin.register(Competitor)

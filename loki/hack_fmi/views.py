@@ -202,6 +202,7 @@ def schedule_json(request):
 
 class OnBoardCompetitor(APIView):
     permission_classes = (IsAuthenticated,)
+    authentication_classes = (JSONWebTokenAuthentication,)
 
     def post(self, request, format=None):
         if not request.user.get_competitor():
