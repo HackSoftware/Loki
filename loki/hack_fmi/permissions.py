@@ -29,11 +29,15 @@ class IsTeamLeaderOrReadOnly(permissions.BasePermission):
 class IsTeamLeader(permissions.BasePermission):
     message = "You are not a leader of this team!"
 
-    def has_object_permission(self, request, view, obj):
-        if request.method in permissions.SAFE_METHODS:
-            return True
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            return TeamMembership.objects.filter(team__id=request.data['team'],
+                                                 competitor=request.user.get_competitor()).first().is_leader
+        return True
 
-        return obj.team.get_leader() == request.user.get_competitor()
+    def has_object_permission(self, request, view, obj):
+        if request.method != 'POST':
+            return obj.team.get_leader() == request.user.get_competitor()
 
 
 class IsMemberOfTeam(permissions.BasePermission):
@@ -72,14 +76,12 @@ class IsMentorDatePickUpToDate(permissions.BasePermission):
 class CanAttachMoreMentorsToTeam(permissions.BasePermission):
     message = "This team cannot attach other mentors!"
 
-    def has_object_permission(self, request, view, obj):
-        if request.method == "POST":
-            count_mentorships = TeamMentorship.objects.filter(team=obj.team).count()
-            return count_mentorships >= obj.team.season.max_mentor_pick
-        """
-        When we remove mentor from team(request method is DELETE)
-        we don't need to check the season's max_mentor_pick count.
-        """
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            max_mentors_pick = Team.objects.filter(id=request.data['team']).first().season.max_mentor_pick
+            mentors_for_current_team = TeamMentorship.objects.filter(team__id=request.data['team']).count()
+            return max_mentors_pick > mentors_for_current_team
+        # If request.method = 'DELETE'
         return True
 
 

@@ -880,6 +880,7 @@ class TeamMentorshipAPITest(TestCase):
         self.mentor = factories.MentorFactory(from_company=self.company)
 
     # def test_cannot_assign_mentor_if_you_are_not_hackfmi_user(self):
+    #     self.client.credentials()
     #     data = {'team': self.team.id,
     #             'mentor': self.mentor.id,
     #             }
@@ -891,6 +892,8 @@ class TeamMentorshipAPITest(TestCase):
 
     def test_cannot_assign_mentor_if_not_leader_of_team(self):
         self.team_membership.is_leader = False
+        self.team_membership.save()
+
         data = {'team': self.team.id,
                 'mentor': self.mentor.id,
                 }
@@ -900,7 +903,7 @@ class TeamMentorshipAPITest(TestCase):
 
         self.response_403(response)
 
-    def test_can_assign_mentor_if_not_leader_of_team(self):
+    def test_can_assign_mentor_if_leader_of_team(self):
         data = {'team': self.team.id,
                 'mentor': self.mentor.id,
                 }
@@ -909,6 +912,8 @@ class TeamMentorshipAPITest(TestCase):
         response = self.client.post(url, data)
 
         self.response_201(response)
+        self.assertTrue(TeamMentorship.objects.filter(team=data['team']).exists())
+        self.assertTrue(TeamMentorship.objects.filter(mentor=data['mentor']).exists())
 
     def test_assign_more_than_allowed_mentors_for_that_season(self):
         self.active_season.max_mentor_pick = 1
@@ -930,165 +935,66 @@ class TeamMentorshipAPITest(TestCase):
         response = self.client.post(url, new_data)
         self.response_403(response)
 
-    # def test_assign_mentor_before_mentor_pick_has_started(self):
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     team = factories.TeamFactory(
-    #         name=faker.name(),
-    #         season=self.season,
-    #     )
+    def test_assign_mentor_before_mentor_pick_has_started(self):
+        self.active_season.mentor_pick_start_date = date_increase(10)
+        self.active_season.mentor_pick_end_date = date_increase(10)
+        self.active_season.save()
 
-    #     team.season.mentor_pick_start_date = date_increase(10)
-    #     team.season.mentor_pick_end_date = date_increase(10)
-    #     team.season.save()
+        data = {'team': self.team.id,
+                'mentor': self.mentor.id,
+                }
 
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=team,
-    #         is_leader=True,
-    #     )
-    #     mentor = factories.MentorFactory(
-    #         from_company=self.company,
-    #     )
+        url = reverse('hack_fmi:team_mentorship')
+        response = self.client.post(url, data)
+        self.response_403(response)
 
-    #     self.client.force_authenticate(user=competitor)
+    def test_assign_mentor_after_mentor_pick_has_ended(self):
+        self.active_season.mentor_pick_start_date = date_decrease(10)
+        self.active_season.mentor_pick_end_date = date_decrease(10)
+        self.active_season.save()
 
-    #     url = reverse('hack_fmi:team_mentorship')
+        data = {'team': self.team.id,
+                'mentor': self.mentor.id,
+                }
 
-    #     data = {'team': team.id,
-    #             'mentor': mentor.id,
-    #             }
-    #     response = self.client.post(url, data)
+        url = reverse('hack_fmi:team_mentorship')
+        response = self.client.post(url, data)
+        self.response_403(response)
 
-    #     self.response_403(response)
+    def test_cannot_remove_mentor_from_team_if_not_teamleader(self):
+        data = {'team': self.team.id,
+                'mentor': self.mentor.id,
+                }
 
-    # def test_assign_mentor_after_mentor_pick_has_ended(self):
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     team = factories.TeamFactory(
-    #         name=faker.name(),
-    #         season=self.season,
-    #     )
+        url = reverse('hack_fmi:team_mentorship')
+        response = self.client.post(url, data)
+        self.response_201(response)
+        self.assertEqual(TeamMentorship.objects.filter(team=data['team']).count(), 1)
 
-    #     team.season.mentor_pick_start_date = date_decrease(10)
-    #     team.season.mentor_pick_end_date = date_decrease(10)
-    #     team.season.save()
+        self.team_membership.is_leader = False
+        self.team_membership.save()
+        existing_mentorship = TeamMentorship.objects.get(team=data['team'])
+        url = self.reverse('hack_fmi:team_mentorship', pk=existing_mentorship.id)
+        response = self.client.delete(url)
+        self.response_403(response)
+        self.assertEqual(TeamMentorship.objects.filter(team=data['team']).count(), 1)
 
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=team,
-    #         is_leader=True,
-    #     )
-    #     mentor = factories.MentorFactory(
-    #         from_company=self.company,
-    #     )
+    def test_can_remove_mentor_from_team_if_teamleader(self):
+        data = {'team': self.team.id,
+                'mentor': self.mentor.id,
+                }
 
-    #     self.client.force_authenticate(user=competitor)
+        self.assertEqual(TeamMentorship.objects.filter(team=data['team']).count(), 0)
+        url = reverse('hack_fmi:team_mentorship')
+        response = self.client.post(url, data)
+        self.response_201(response)
+        self.assertEqual(TeamMentorship.objects.filter(team=data['team']).count(), 1)
+        existing_mentorship = TeamMentorship.objects.get(team=data['team'])
 
-    #     url = reverse('hack_fmi:team_mentorship')
-
-    #     data = {'team': team.id,
-    #             'mentor': mentor.id,
-    #             }
-    #     response = self.client.post(url, data)
-
-    #     self.response_403(response)
-
-    # def test_remove_mentor_from_team_if_not_teamleader(self):
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     team = factories.TeamFactory(
-    #         name=faker.name(),
-    #         season=self.season,
-    #     )
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=team,
-    #         is_leader=False,
-    #     )
-    #     mentor = factories.MentorFactory(
-    #         from_company=self.company,
-    #     )
-    #     self.client.force_authenticate(user=competitor)
-
-    #     mentorship = factories.TeamMentorshipFactory(
-    #         team=team,
-    #         mentor=mentor
-    #     )
-
-    #     url = reverse('hack_fmi:team_mentorship', kwargs={'pk': mentorship.id})
-
-    #     response = self.client.delete(url)
-
-    #     self.response_403(response)
-
-    # def test_remove_mentor_from_team_if_leader(self):
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     team = factories.TeamFactory(
-    #         name=faker.name(),
-    #         season=self.season,
-    #     )
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=team,
-    #         is_leader=True,
-    #     )
-    #     mentor = factories.MentorFactory(
-    #         from_company=self.company,
-    #     )
-    #     self.client.force_authenticate(user=competitor)
-
-    #     mentorship = factories.TeamMentorshipFactory(
-    #         team=team,
-    #         mentor=mentor
-    #     )
-
-    #     url = reverse('hack_fmi:team_mentorship', kwargs={'pk': mentorship.id})
-
-    #     self.assertEqual(TeamMentorship.objects.filter(team=team).count(), 1)
-
-    #     response = self.client.delete(url)
-
-    #     self.assertEqual(response.status_code, 204)
-    #     self.assertEqual(TeamMentorship.objects.filter(team=team).count(), 0)
-
-    # def test_assign_mentor_to_team_in_mentor_pick_time(self):
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     team = factories.TeamFactory(
-    #         name=faker.name(),
-    #         season=self.season,
-    #     )
-
-    #     team.season.mentor_pick_start_date = date_decrease(10)
-    #     team.season.mentor_pick_end_date = date_increase(10)
-    #     team.season.save()
-
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=team,
-    #         is_leader=True,
-    #     )
-    #     mentor = factories.MentorFactory(
-    #         from_company=self.company,
-    #     )
-    #     self.client.force_authenticate(user=competitor)
-    #     url = reverse('hack_fmi:team_mentorship')
-    #     data = {
-    #         'team': team.id,
-    #         'mentor': mentor.id,
-    #     }
-    #     response = self.client.post(url, data)
-
-    #     self.response_201(response)
-    #     self.assertTrue(TeamMentorship.objects.filter(team=data['team']).exists())
-    #     self.assertTrue(TeamMentorship.objects.filter(mentor=data['mentor']).exists())
+        url = self.reverse('hack_fmi:team_mentorship', pk=existing_mentorship.id)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(TeamMentorship.objects.filter(team=data['team']).count(), 0)
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')
