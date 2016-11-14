@@ -37,38 +37,43 @@ class SkillTests(TestCase):
 
 class MentorListAPIViewTest(TestCase):
 
-    def test_get_all_mentors_for_current_active_season(self):
+    def setUp(self):
         self.client = APIClient()
-        company = factories.HackFmiPartnerFactory()
-        non_active_season = factories.SeasonFactory(is_active=False)
-        active_season = factories.SeasonFactory(is_active=True)
+        self.company = factories.HackFmiPartnerFactory()
+        self.active_season = factories.SeasonFactory(is_active=True)
+        self.non_active_season = factories.SeasonFactory(is_active=False)
+
+        self.competitor = factories.CompetitorFactory(email=faker.email())
+        self.competitor.is_active = True
+        self.competitor.set_password(factories.BaseUserFactory.password)
+        self.competitor.save()
+        data = {'email': self.competitor.email, 'password': factories.BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+        self.url = reverse('hack_fmi:mentors')
+
+    def test_get_all_mentors_for_current_active_season(self):
 
         self.assertEqual(Mentor.objects.all().count(), 0)
 
-        mentor = factories.MentorFactory(from_company=company)
-        mentor2 = factories.MentorFactory(from_company=company)
-        active_season.mentor_set.add(mentor)
-        active_season.mentor_set.add(mentor2)
-        active_season.save()
+        mentor = factories.MentorFactory(from_company=self.company)
+        mentor2 = factories.MentorFactory(from_company=self.company)
+        self.active_season.mentor_set.add(mentor)
+        self.active_season.mentor_set.add(mentor2)
+        self.active_season.save()
 
-        mentor3 = factories.MentorFactory(
-            from_company=company
-        )
-        non_active_season.mentor_set.add(mentor3)
-        non_active_season.save()
+        mentor3 = factories.MentorFactory(from_company=self.company)
+        self.non_active_season.mentor_set.add(mentor3)
+        self.non_active_season.save()
 
-        student = factories.StudentFactory(
-            email=faker.email()
-        )
-        self.client.force_authenticate(student)
-        url = reverse('hack_fmi:mentors')
-
-        response = self.client.get(url)
-        current_season = Season.objects.filter(is_active=True).first()
-        mentors_for_current_season = current_season.mentor_set.count()
+        response = self.client.get(self.url)
+        mentors_for_current_season = self.active_season.mentor_set.count()
 
         self.response_200(response)
         self.assertEqual(len(response.data), mentors_for_current_season)
+        self.assertContains(response, mentor.name)
+        self.assertContains(response, mentor2.name)
+        self.assertNotContains(response, mentor3.name)
 
 
 class SeasonViewTest(TestCase):
@@ -110,37 +115,35 @@ class PublicTeamViewTest(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-
-    def test_get_teams_for_current_season(self):
-        active_season = factories.SeasonFactory(
+        self.competitor = factories.CompetitorFactory(email=faker.email())
+        self.competitor.is_active = True
+        self.competitor.set_password(factories.BaseUserFactory.password)
+        self.competitor.save()
+        self.active_season = factories.SeasonFactory(
             is_active=True
         )
-        room = factories.RoomFactory(season=active_season)
-        team = factories.TeamFactory(
-            season=active_season,
-            room=room
-        )
-        url = reverse('hack_fmi:public_teams')
+        self.room = factories.RoomFactory(season=self.active_season)
+        self.team = factories.TeamFactory(season=self.active_season,
+                                          room=self.room)
+        data = {'email': self.competitor.email, 'password': factories.BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+        self.url = reverse('hack_fmi:public_teams')
+
+    def test_get_teams_for_current_season(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
         teams_in_active_season = Team.objects.filter(season__is_active=True).count()
 
-        response = self.client.get(url)
+        response = self.client.get(self.url)
 
         self.response_200(response)
         self.assertEqual(len(response.data), teams_in_active_season)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['name'], team.name)
+        self.assertEqual(response.data[0]['name'], self.team.name)
 
     def test_get_teams_only_from_current_active_season(self):
-        active_season = factories.SeasonFactory(
-            is_active=True
-        )
-        room = factories.RoomFactory(season=active_season)
-        team_in_active_season = factories.TeamFactory(
-            name=faker.name(),
-            season=active_season,
-            room=room,
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
         non_active_season = factories.SeasonFactory(
             is_active=False
         )
@@ -150,17 +153,27 @@ class PublicTeamViewTest(TestCase):
             season=non_active_season,
             room=room_for_non_active_season,
         )
-        url = reverse('hack_fmi:public_teams')
 
         teams_in_active_season = Team.objects.filter(season__is_active=True).count()
 
-        response = self.client.get(url)
+        response = self.client.get(self.url)
 
         self.response_200(response)
         self.assertEqual(len(response.data), teams_in_active_season)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['name'], team_in_active_season.name)
+        self.assertEqual(response.data[0]['name'], self.team.name)
         self.assertNotEqual(response.data[0]['name'], team_in_non_active_season.name)
+
+    def test_only_get_request_is_allowed_to_that_view(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        response = self.client.post(self.url)
+        self.response_405(response)
+
+        response = self.client.patch(self.url)
+        self.response_405(response)
+
+        response = self.client.delete(self.url)
+        self.response_405(response)
 
 
 class CreateJWTToken(TestCase):
