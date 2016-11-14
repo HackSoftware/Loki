@@ -10,7 +10,7 @@ from loki.website import models as website_models
 from loki.applications import models as application_models
 from loki.interview_system import models as interview_models
 
-
+from loki.hack_fmi.helper import date_increase, date_decrease
 faker = Factory.create()
 
 
@@ -237,8 +237,8 @@ class SeasonFactory(factory.DjangoModelFactory):
     max_team_members_count = faker.random_number(digits=1)
     sign_up_deadline = faker.date()
     make_team_dead_line = faker.date()
-    mentor_pick_start_date = faker.date()
-    mentor_pick_end_date = faker.date()
+    mentor_pick_start_date = date_decrease(20)
+    mentor_pick_end_date = date_increase(20)
     max_mentor_pick = faker.random_number(digits=1)
     is_active = faker.boolean(chance_of_getting_true=0)
 
