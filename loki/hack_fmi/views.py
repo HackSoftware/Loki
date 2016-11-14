@@ -50,8 +50,8 @@ class MeAPIView(generics.GenericAPIView):
             "competitor_info": comp_inf.data,
             "teams": teams.data
         }
+        return Response(data=data, status=status.HTTP_200_OK)
 
-        return Response("great", status=status.HTTP_200_OK)
 
 class SkillListView(generics.ListAPIView):
     permission_classes = (AllowAny,)

@@ -215,6 +215,7 @@ class MeAPIView(TestCase):
         response = self.get('hack_fmi:me')
         self.response_200(response)
 
+
 class TeamAPITest(TestCase):
 
     def setUp(self):
