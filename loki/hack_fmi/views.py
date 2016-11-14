@@ -46,6 +46,8 @@ class MentorListView(generics.ListAPIView):
     queryset = Mentor.objects.filter(seasons__is_active=True)
     serializer_class = MentorSerializer
 
+    authentication_classes = (JSONWebTokenAuthentication,)
+
 
 class SeasonView(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
@@ -60,6 +62,8 @@ class PublicTeamView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     queryset = Team.objects.filter(season__is_active=True)
     serializer_class = PublicTeamSerializer
+
+    authentication_classes = (JSONWebTokenAuthentication,)
 
 
 class TeamAPI(mixins.CreateModelMixin,
