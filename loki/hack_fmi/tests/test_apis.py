@@ -228,6 +228,44 @@ class MeAPIView(TestCase):
         response = self.get('hack_fmi:me')
         self.response_200(response)
 
+        # competitor_info = {"email": self.competitor.email,
+        #                   "first_name":self.competitor.first_name,
+        #                   "last_name":self.competitor.last_name,
+        #                   "is_vegetarian":self.competitor.is_vegetarian,
+        #                   "known_skills":[],
+        #                   "faculty_number":self.competitor.faculty_number,
+        #                   "shirt_size":self.competitor.shirt_size,
+        #                   "current_teammembership_set":[{"competitor":self.competitor.id,
+        #                                                 "team": self.team.id,
+        #                                                 "is_leader":self.team_membership.is_leader}],
+        #                   "teammembership_set":[{"competitor":self.competitor.id,
+        #                                          "team":self.team.id,
+        #                                          "is_leader":self.team_membership.is_leader}],
+        #                   "needs_work":self.competitor.needs_work,
+        #                   "social_links":self.competitor.social_links}
+        # teams = [{"id":self.team.id,
+        #           "name":self.team.name,
+        #           "members":[{"email": self.competitor.email,
+        #                       "first_name": self.competitor.first_name,
+        #                       "last_name": self.competitor.last_name,
+        #                       "is_vegetarian": self.competitor.is_vegetarian,
+        #                       "known_skills":[],
+        #                       "faculty_number": self.competitor.faculty_number,
+        #                       "shirt_size":self.competitor.shirt_size,
+        #                       "current_teammembership_set":[{"competitor": self.competitor.id,
+        #                                                      "team": self.team.id,
+        #                                                      "is_leader": self.team_membership.is_leader}],
+        #                       "teammembership_set":[{"competitor":self.competitor.id,
+        #                                              "team":self.team.id,
+        #                                              "is_leader":self.team_membership.is_leader}],
+        #                       "needs_work":self.competitor.needs_work,
+        #                       "social_links":self.competitor.social_links}],
+        #             "season":self.active_season.id,
+        #             "leader_id":self.competitor.id}]
+        #
+        # current_content = json.loads(str({"is_competitor":bool(self.competitor.get_competitor()),
+        #                    "competitor_info": competitor_info,
+        #                    "teams": teams}))
 
 class TeamAPITest(TestCase):
 
@@ -404,32 +442,20 @@ class TeamMembershipAPITest(TestCase):
             from_company=self.company)
         self.client = APIClient()
 
-        self.active_season = factories.SeasonFactory(
-            is_active=True
-        )
-        self.non_active_season = factories.SeasonFactory(
-            is_active=False)
+        self.active_season = factories.SeasonFactory(is_active=True)
+        self.non_active_season = factories.SeasonFactory(is_active=False)
 
-        self.room = factories.RoomFactory(
-            season=self.active_season)
-        self.team = factories.TeamFactory(
-            season=self.active_season,
-        )
-        self.non_active_team = factories.TeamFactory(
-            season=self.non_active_season)
+        self.room = factories.RoomFactory(season=self.active_season)
+        self.team = factories.TeamFactory(season=self.active_season)
+        self.non_active_team = factories.TeamFactory(season=self.non_active_season)
 
-        self.competitor = factories.CompetitorFactory(
-            email=faker.email())
+        self.competitor = factories.CompetitorFactory(email=faker.email())
 
     def test_user_cant_leave_team_if_he_has_not_been_a_member_in_that_team(self):
-        other_competitor = factories.CompetitorFactory(
-            email=faker.email()
-        )
-        other_membership = factories.TeamMembershipFactory(
-            competitor=other_competitor,
-            team=self.team,
-            is_leader=False,
-        )
+        other_competitor = factories.CompetitorFactory(email=faker.email())
+        other_membership = factories.TeamMembershipFactory(competitor=other_competitor,
+                                                           team=self.team,
+                                                           is_leader=False)
         factories.TeamMembershipFactory(
             competitor=self.competitor,
             team=self.team,
