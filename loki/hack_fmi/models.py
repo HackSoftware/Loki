@@ -138,7 +138,7 @@ class Team(models.Model):
         unique_together = (('name', 'season'),)
 
 
-class TeamMentorship(models.Model): 
+class TeamMentorship(models.Model):
     mentor = models.ForeignKey(Mentor)
     team = models.ForeignKey(Team)
 

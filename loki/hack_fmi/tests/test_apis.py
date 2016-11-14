@@ -260,8 +260,8 @@ class TeamAPITest(TestCase):
 
     def test_non_teamleaders_cant_change_team(self):
         data = {
-        'name': faker.name(),
-        'idea_description': faker.paragraph()
+            'name': faker.name(),
+            'idea_description': faker.paragraph()
         }
 
         url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
@@ -362,6 +362,10 @@ class TeamAPITest(TestCase):
 
     def test_cant_register_team_that_has_the_same_name(self):
         skill = factories.SkillFactory()
+
+        self.assertTrue(Team.objects.filter(name=self.team.name).exists())
+        self.assertEquals(Team.objects.filter(name=self.team.name).count(), 1)
+
         team_data = {
             'name': self.team.name,
             'idea_description': faker.text(),
@@ -369,11 +373,11 @@ class TeamAPITest(TestCase):
             'technologies': [skill.id, ],
         }
 
-        self.assertFalse(Team.objects.filter(name=team_data['name']).exists())
-
         url = self.reverse("hack_fmi:team-list")
         response = self.client.post(url, team_data)
+
         self.response_403(response)
+        self.assertEquals(Team.objects.filter(name=self.team.name).count(), 1)
 
     def test_cant_register_other_team_if_you_are_a_leader_of_already_existing_team(self):
         self.team_membership.is_leader = True
@@ -1340,16 +1344,16 @@ class TeamMentorshipAPITest(TestCase):
         self.company = factories.HackFmiPartnerFactory()
         self.mentor = factories.MentorFactory(from_company=self.company)
 
-    # def test_cannot_assign_mentor_if_you_are_not_hackfmi_user(self):
-    #     self.client.credentials()
-    #     data = {'team': self.team.id,
-    #             'mentor': self.mentor.id,
-    #             }
+    def test_cannot_assign_mentor_if_you_are_not_hackfmi_user(self):
+        self.client.credentials()
+        data = {'team': self.team.id,
+                'mentor': self.mentor.id,
+                }
 
-    #     url = reverse('hack_fmi:team_mentorship')
-    #     response = self.client.post(url, data)
+        url = reverse('hack_fmi:team_mentorship')
+        response = self.client.post(url, data)
 
-    #     self.response_403(response)
+        self.response_401(response)
 
     def test_cannot_assign_mentor_if_not_leader_of_team(self):
         self.team_membership.is_leader = False
