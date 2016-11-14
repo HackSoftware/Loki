@@ -5,7 +5,7 @@ from rest_framework import routers
 from .views import (MeAPIView, SkillListAPIView, TeamAPI, InvitationViewSet,
                     MentorListView, SeasonView, PublicTeamView,
                     get_schedule, schedule_json, OnBoardCompetitor, TeamMembershipAPI,
-                    TeamMentorshipAPI, TestApi)
+                    TeamMentorshipAPI, TestApi, MeSeasonAPIView)
 from .auth import Login
 # from .signals import send_invitation
 
@@ -47,7 +47,7 @@ urlpatterns = [
     url(r'^api/logout/$', views.LogoutView.as_view(), name='logout'),
 
     url(r'^api/me/$', MeAPIView.as_view(), name='me'),
-    # url(r'^api/me/(?P<pk>[0-9]+)/$)
+    url(r'^api/me/(?P<pk>[0-9]+)/$', MeSeasonAPIView.as_view(), name='me-season'),
 
     url(r'^api/schedule/', get_schedule, name="get_schedule"),
     url(r'^api/schedule-json/', schedule_json, name="schedule_json"),
