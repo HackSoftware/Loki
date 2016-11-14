@@ -2,7 +2,7 @@ from django.conf.urls import url
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 from rest_framework import routers
 
-from .views import (MeAPIView, SkillListView, TeamAPI, InvitationViewSet,
+from .views import (MeAPIView, SkillListAPIView, TeamAPI, InvitationViewSet,
                     MentorListView, SeasonView, PublicTeamView,
                     get_schedule, schedule_json, OnBoardCompetitor, TeamMembershipAPI,
                     TeamMentorshipAPI, TestApi)
@@ -26,7 +26,7 @@ urlpatterns = [
     # check for JWT auth
     url(r'^api/jwt-test/$', TestApi.as_view(), name='test_api'),
 
-    url(r'^api/skills/$', SkillListView.as_view(), name='skills'),
+    url(r'^api/skills/$', SkillListAPIView.as_view(), name='skills'),
 
     url(r'^api/season/$', SeasonView.as_view(), name='season'),
 

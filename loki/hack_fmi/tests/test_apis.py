@@ -24,15 +24,28 @@ from faker import Factory
 faker = Factory.create()
 
 
-class SkillTests(TestCase):
+class SkillListAPITests(TestCase):
 
-    def test_get_skill(self):
-        skill = factories.SkillFactory()
+    def setUp(self):
+        self.client = APIClient()
+        self.url = self.reverse('hack_fmi:skills')
+        self.skill = factories.SkillFactory()
+
+        self.competitor = factories.CompetitorFactory(email=faker.email())
+        self.competitor.is_active = True
+        self.competitor.set_password(factories.BaseUserFactory.password)
+        self.competitor.save()
+        data = {'email': self.competitor.email, 'password': factories.BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+
+    def test_get_all_skills(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
         skill2 = factories.SkillFactory()
-        url = reverse('hack_fmi:skills')
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.response_200(response)
-        self.assertEqual(response.data.pop()['name'], skill.name)
+        self.assertContains(response, self.skill.name)
+        self.assertContains(response, skill2.name)
 
 
 class MentorListAPIViewTest(TestCase):

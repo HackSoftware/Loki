@@ -53,10 +53,12 @@ class MeAPIView(generics.GenericAPIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-class SkillListView(generics.ListAPIView):
+class SkillListAPIView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
+
+    authentication_classes = (JSONWebTokenAuthentication,)
 
 
 class MentorListView(generics.ListAPIView):
