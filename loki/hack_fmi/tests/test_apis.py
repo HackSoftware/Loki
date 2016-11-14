@@ -207,120 +207,76 @@ class TeamAPITest(TestCase):
         response = self.client.get(url)
         self.response_200(response)
 
-    # def test_non_teamleaders_cant_change_team(self):
-    #     self.client.force_authenticate(competitor)
-    #
-    #     data = {
-    #         'name': faker.name(),
-    #         'idea_description': faker.paragraph(),
-    #     }
-    #     url = reverse('hack_fmi:teams', kwargs={'pk': team.id})
-    #
-    #     response = self.client.patch(url, data)
-    #
-    #     self.response_403(response)
-    #
-    # def test_only_leader_can_change_team(self):
-    #     team = factories.TeamFactory(
-    #         season=self.active_season,
-    #         room=self.room
-    #     )
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=team,
-    #         is_leader=True,
-    #     )
-    #     self.client.force_authenticate(competitor)
-    #
-    #     data = {
-    #         'name': faker.name(),
-    #         'idea_description': faker.paragraph(),
-    #     }
-    #     url = reverse('hack_fmi:teams', kwargs={'pk': team.id})
-    #
-    #     response = self.client.patch(url, data)
-    #
-    #     self.response_200(response)
-    #     self.assertIsNotNone(Team.objects.get(name=data['name']))
-    #     self.assertIsNotNone(Team.objects.get(idea_description=data['idea_description']))
-    #
-    # def test_user_can_get_to_teams_in_non_active_seasons(self):
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     non_active_season = factories.SeasonFactory(
-    #         is_active=False
-    #     )
-    #     team = factories.TeamFactory(
-    #         season=non_active_season,
-    #         room=self.room)
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=team,
-    #         is_leader=False,
-    #     )
-    #     self.client.force_authenticate(competitor)
-    #     url = reverse('hack_fmi:teams', kwargs={'pk': team.id})
-    #
-    #     response = self.client.get(url)
-    #
-    #     self.response_200(response)
-    #
-    # def test_user_cannot_change_teams_in_non_active_seasons(self):
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     non_active_season = factories.SeasonFactory(
-    #         is_active=False
-    #     )
-    #     team = factories.TeamFactory(
-    #         season=non_active_season,
-    #         room=self.room
-    #     )
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=team,
-    #         is_leader=False,
-    #     )
-    #     self.client.force_authenticate(competitor)
-    #     data = {
-    #         'name': faker.name(),
-    #         'idea_description': faker.paragraph(),
-    #     }
-    #     url = reverse('hack_fmi:teams', kwargs={'pk': team.id})
-    #
-    #     response = self.client.patch(url, data)
-    #
-    #     self.response_403(response)
-    #
+    def test_non_teamleaders_cant_change_team(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        data = {
+        'name': faker.name(),
+        'idea_description': faker.paragraph()
+        }
+
+        url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
+        response = self.client.patch(url, data)
+        self.response_403(response)
+
+    def test_only_leader_can_change_team(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        self.team_membership.is_leader = True
+        self.team_membership.save()
+
+        data = {
+            'name': faker.name(),
+            'idea_description': faker.paragraph(),
+        }
+
+        url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
+
+        response = self.client.patch(url, data)
+        self.response_200(response)
+
+        self.assertIsNotNone(Team.objects.get(name=data['name']))
+        self.assertIsNotNone(Team.objects.get(idea_description=data['idea_description']))
+
+    def test_user_can_get_to_teams_in_non_active_seasons(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        self.active_season.is_active = False
+        self.active_season.save()
+
+        url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
+        response = self.client.get(url)
+        self.response_200(response)
+
+    def test_user_cannot_change_teams_in_non_active_seasons(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        self.active_season.is_active = False
+        self.active_season.save()
+        self.team_membership.is_leader = True
+        self.team_membership.save()
+
+        data = {
+            'name': faker.name(),
+            'idea_description': faker.paragraph(),
+        }
+
+        url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
+        response = self.client.patch(url, data)
+        self.response_403(response)
+
     # def test_leader_cannot_change_teams_in_non_active_seasons(self):
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     non_active_season = factories.SeasonFactory(
-    #         is_active=False
-    #     )
-    #     team = factories.TeamFactory(
-    #         season=non_active_season,
-    #         room=self.room
-    #     )
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=team,
-    #         is_leader=True,
-    #     )
-    #     self.client.force_authenticate(competitor)
+    #     self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+    #     self.active_season.is_active = False
+    #     self.active_season.save()
+    #
+    #     self.team_membership.is_leader = True
+    #     self.team_membership.save()
+    #
     #     data = {
     #         'name': faker.name(),
     #         'idea_description': faker.paragraph(),
     #     }
-    #     url = reverse('hack_fmi:teams', kwargs={'pk': team.id})
     #
+    #     url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
     #     response = self.client.patch(url, data)
-    #
     #     self.response_403(response)
     #
     # def test_get_team_within_current_season_deadlines(self):

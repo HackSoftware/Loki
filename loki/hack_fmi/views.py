@@ -67,7 +67,7 @@ class TeamAPI(mixins.CreateModelMixin,
               mixins.UpdateModelMixin,
               mixins.RetrieveModelMixin,
               viewsets.GenericViewSet):
-    permission_classes = (IsHackFMIUser,)
+    permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly)
     serializer_class = TeamSerializer
     queryset = Team.objects.all()
 
