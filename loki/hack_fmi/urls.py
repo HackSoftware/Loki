@@ -27,9 +27,6 @@ urlpatterns = [
     url(r'^api/jwt-test/$', TestApi.as_view(), name='test_api'),
 
     url(r'^api/skills/$', SkillListView.as_view(), name='skills'),
-    #
-    # url(r'^api/teams/(?P<pk>[0-9]+)?', TeamAPI.as_view({'get': 'retrive'}), name='teams_detail'),
-    # url(r'^api/teams/', TeamAPI.as_view(), name='teams_list'),
 
     url(r'^api/season/$', SeasonView.as_view(), name='season'),
 

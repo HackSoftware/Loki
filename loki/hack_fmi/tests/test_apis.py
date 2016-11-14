@@ -262,22 +262,22 @@ class TeamAPITest(TestCase):
         response = self.client.patch(url, data)
         self.response_403(response)
 
-    # def test_leader_cannot_change_teams_in_non_active_seasons(self):
-    #     self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
-    #     self.active_season.is_active = False
-    #     self.active_season.save()
-    #
-    #     self.team_membership.is_leader = True
-    #     self.team_membership.save()
-    #
-    #     data = {
-    #         'name': faker.name(),
-    #         'idea_description': faker.paragraph(),
-    #     }
-    #
-    #     url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
-    #     response = self.client.patch(url, data)
-    #     self.response_403(response)
+    def test_leader_cannot_change_teams_in_non_active_seasons(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        self.active_season.is_active = False
+        self.active_season.save()
+
+        self.team_membership.is_leader = True
+        self.team_membership.save()
+
+        data = {
+            'name': faker.name(),
+            'idea_description': faker.paragraph(),
+        }
+
+        url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
+        response = self.client.patch(url, data)
+        self.response_403(response)
     #
     # def test_get_team_within_current_season_deadlines(self):
     #     competitor = factories.CompetitorFactory(
