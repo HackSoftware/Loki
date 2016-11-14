@@ -152,12 +152,9 @@ class PublicTeamSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
-            'members',
             'idea_description',
             'repository',
-            'technologies',
             'technologies_full',
-            'mentors',
             'need_more_members',
             'members_needed_desc',
             'room',
