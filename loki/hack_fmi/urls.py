@@ -2,11 +2,11 @@ from django.conf.urls import url
 from rest_framework_jwt.views import obtain_jwt_token, verify_jwt_token
 from rest_framework import routers
 
-from .views import (SkillListView, TeamAPI, InvitationViewSet,
+from .views import (MeAPIView, SkillListView, TeamAPI, InvitationViewSet,
                     MentorListView, SeasonView, PublicTeamView,
                     get_schedule, schedule_json, OnBoardCompetitor, TeamMembershipAPI,
                     TeamMentorshipAPI, TestApi)
-from .auth import Login, me
+from .auth import Login
 # from .signals import send_invitation
 
 from djoser import views
@@ -46,7 +46,8 @@ urlpatterns = [
     url(r'^api/login/', Login.as_view(), name='login'),
     url(r'^api/logout/$', views.LogoutView.as_view(), name='logout'),
 
-    url(r'^api/me/$', me, name='me'),
+    url(r'^api/me/$', MeAPIView.as_view(), name='me'),
+    # url(r'^api/me/(?P<pk>[0-9]+)/$)
 
     url(r'^api/schedule/', get_schedule, name="get_schedule"),
     url(r'^api/schedule-json/', schedule_json, name="schedule_json"),

@@ -177,6 +177,29 @@ class CreateJWTToken(TestCase):
         self.assertEqual(decoded_payload['email'], data['email'])
 
 
+class MeAPIView(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.active_season = factories.SeasonFactory(is_active=True)
+        self.room = factories.RoomFactory(season=self.active_season)
+        self.team = factories.TeamFactory(season=self.active_season, room=self.room)
+        self.competitor = factories.CompetitorFactory(email=faker.email())
+        self.competitor.is_active = True
+        self.competitor.set_password(factories.BaseUserFactory.password)
+        self.competitor.save()
+        self.team_membership = factories.TeamMembershipFactory(competitor=self.competitor,
+                                                               team=self.team,
+                                                               is_leader=True)
+
+        data = {'email': self.competitor.email, 'password': factories.BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+    def test_get_me(self):
+        response = self.get('hack_fmi:me')
+        self.response_200(response)
+
 class TeamAPITest(TestCase):
 
     def setUp(self):

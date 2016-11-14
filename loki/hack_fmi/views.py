@@ -13,7 +13,8 @@ from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           SeasonSerializer, PublicTeamSerializer,
                           OnBoardingCompetitorSerializer,
                           TeamMembershipSerializer,
-                          TeamMentorshipSerializer)
+                          TeamMentorshipSerializer, MeSerializer,
+                          CustomTeamSerializer, CompetitorSerializer)
 from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
                           IsTeamLeader, IsSeasonDeadlineUpToDate,
@@ -34,6 +35,23 @@ from loki.base_app.helper import try_open
 
 import json
 
+class MeAPIView(generics.GenericAPIView):
+    authentication_classes = (JSONWebTokenAuthentication, )
+    permission_classes = (IsHackFMIUser, )
+
+    def get(self, request, *args, **kwargs):
+        competitor = self.request.user
+        teams_member_ships = TeamMembership.objects.filter(competitor=competitor).all()
+        teams = [tm.team for tm in teams_member_ships]
+        comp_inf = CompetitorSerializer(competitor.get_competitor())
+        teams = CustomTeamSerializer(teams, many=True)
+        data = {
+            "is_competitor": bool(competitor.get_competitor()),
+            "competitor_info": comp_inf.data,
+            "teams": teams.data
+        }
+
+        return Response("great", status=status.HTTP_200_OK)
 
 class SkillListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
