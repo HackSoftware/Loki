@@ -71,11 +71,10 @@ class TeamAPI(mixins.CreateModelMixin,
                           IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
                           TeamLiederCantCreateOtherTeam)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
     serializer_class = TeamSerializer
     queryset = Team.objects.all()
-
-    # def get_queryset(self):
-    #     return Team.objects.all()
 
     def perform_create(self, serializer):
         season = Season.objects.get(is_active=True)

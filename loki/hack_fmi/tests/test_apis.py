@@ -195,21 +195,20 @@ class TeamAPITest(TestCase):
         data = {'email': self.competitor.email, 'password': factories.BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.token = response.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
     def test_can_not_access_other_team_detail(self):
+        self.client.credentials()
         response = self.get('hack_fmi:team-detail', pk=self.team.id)
         self.response_401(response)
 
     def test_competitor_can_get_team_information_for_his_team_in_active_season_within_the_season_deadlines(self):
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
         url = self.reverse('hack_fmi:team-list')
 
         response = self.client.get(url)
         self.response_200(response)
 
     def test_non_teamleaders_cant_change_team(self):
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
-
         data = {
         'name': faker.name(),
         'idea_description': faker.paragraph()
@@ -220,7 +219,6 @@ class TeamAPITest(TestCase):
         self.response_403(response)
 
     def test_only_leader_can_change_team(self):
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
         self.team_membership.is_leader = True
         self.team_membership.save()
 
@@ -238,16 +236,14 @@ class TeamAPITest(TestCase):
         self.assertIsNotNone(Team.objects.get(idea_description=data['idea_description']))
 
     def test_user_can_get_to_teams_in_non_active_seasons(self):
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
         self.active_season.is_active = False
         self.active_season.save()
 
-        url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
+        url = self.reverse('hack_fmi:team-list')
         response = self.client.get(url)
         self.response_200(response)
 
     def test_user_cannot_change_teams_in_non_active_seasons(self):
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
         self.active_season.is_active = False
         self.active_season.save()
         self.team_membership.is_leader = True
@@ -263,7 +259,6 @@ class TeamAPITest(TestCase):
         self.response_403(response)
 
     def test_leader_cannot_change_teams_in_non_active_seasons(self):
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
         self.active_season.is_active = False
         self.active_season.save()
 
