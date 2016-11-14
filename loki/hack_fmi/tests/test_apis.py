@@ -1,4 +1,5 @@
 import unittest
+import datetime
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.management import call_command
@@ -161,6 +162,7 @@ class PublicTeamViewTest(TestCase):
         self.assertEqual(response.data[0]['name'], team_in_active_season.name)
         self.assertNotEqual(response.data[0]['name'], team_in_non_active_season.name)
 
+
 class CreateJWTToken(TestCase):
     def test_create_jwt_token(self):
         competitor = factories.CompetitorFactory(email=faker.email())
@@ -296,135 +298,75 @@ class TeamAPITest(TestCase):
         url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
         response = self.client.patch(url, data)
         self.response_403(response)
-    #
-    # def test_get_team_within_current_season_deadlines(self):
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     team = factories.TeamFactory(
-    #         season=self.active_season,
-    #         room=self.room
-    #     )
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=team,
-    #         is_leader=True,
-    #     )
-    #     self.client.force_authenticate(competitor)
-    #     url = reverse('hack_fmi:teams', kwargs={'pk': team.id})
-    #
-    #     response = self.client.get(url)
-    #
-    #     self.response_200(response)
-    #
-    # def test_cannot_change_team_out_of_the_current_season_deadline(self):
-    #     self.active_season.make_team_dead_line = date_increase(100)
-    #     self.active_season.save()
-    #
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     team = factories.TeamFactory(
-    #         season=self.active_season,
-    #         room=self.room
-    #     )
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=team,
-    #         is_leader=True,
-    #     )
-    #     data = {
-    #         'name': faker.name(),
-    #         'idea_description': faker.paragraph(),
-    #     }
-    #
-    #     self.client.force_authenticate(competitor)
-    #
-    #     url = reverse('hack_fmi:teams', kwargs={'pk': team.id})
-    #
-    #     response = self.client.patch(url, data)
-    #
-    #     self.response_403(response)
-    #
-    # def test_whether_when_you_register_your_own_team_you_become_leader_of_that_team(self):
-    #     skill = factories.SkillFactory()
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email(),
-    #     )
-    #
-    #     team_data = {
-    #         'name': faker.name(),
-    #         'idea_description': faker.text(),
-    #         'repository': faker.url(),
-    #         'technologies': [skill.id, ],
-    #
-    #     }
 
-    #     self.assertFalse(Team.objects.filter(name=team_data['name']).exists())
-    #     self.client.force_authenticate(user=competitor)
-    #
-    #     url = reverse('hack_fmi:teams')
-    #     response = self.client.post(url, team_data)
-    #
-    #     self.response_201(response)
-    #     self.assertTrue(Team.objects.filter(name=team_data['name']).exists())
-    #     self.assertEqual(len(response.data['members']), 1)
-    #     self.assertEqual(len(response.data['technologies']), 1)
-    #     self.assertTrue(TeamMembership.objects.filter(competitor=competitor, is_leader=True).exists())
-    #     self.assertEqual(TeamMentorship.objects.all().count(), 0)
-    #
-    # def test_cant_register_team_that_has_the_same_name(self):
-    #     skill = factories.SkillFactory()
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email(),
-    #     )
-    #
-    #     team_data = {
-    #         'name': faker.name(),
-    #         'idea_description': faker.text(),
-    #         'repository': faker.url(),
-    #         'technologies': [skill.id, ],
-    #
-    #     }
-    #     factories.TeamFactory(**team_data)
-    #
-    #     self.assertTrue(Team.objects.filter(name=team_data['name']).exists())
-    #
-    #     self.client.force_authenticate(user=competitor)
-    #
-    #     url = reverse('hack_fmi:teams')
-    #     response = self.client.post(url, team_data)
-    #
-    #     self.response_403(response)
-    #
-    # def test_cant_register_other_team_if_you_are_a_leader_of_already_existing_team(self):
-    #     skill = factories.SkillFactory()
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     existing_team = factories.TeamFactory()
-    #     factories.TeamMembershipFactory(
-    #         competitor=competitor,
-    #         team=existing_team,
-    #         is_leader=True
-    #     )
-    #
-    #     self.client.force_authenticate(competitor)
-    #
-    #     team_data = {
-    #         'name': faker.name(),
-    #         'idea_description': faker.text(),
-    #         'repository': faker.url(),
-    #         'technologies': [skill.id, ],
-    #
-    #     }
-    #     self.assertFalse(Team.objects.filter(name=team_data['name']).exists())
-    #
-    #     url = reverse('hack_fmi:teams')
-    #     response = self.client.post(url, team_data)
-    #
-    #     self.response_403(response)
-    #     self.assertFalse(Team.objects.filter(name=team_data['name']).exists())
+    def test_get_team_within_current_season_deadlines(self):
+        url = self.reverse("hack_fmi:team-detail", pk=self.team.id)
+        response = self.client.get(url)
+        self.response_200(response)
+
+    def test_cannot_change_team_out_of_the_current_season_deadline(self):
+        curr_date = datetime.datetime.strptime(self.active_season.make_team_dead_line, '%Y-%m-%d')
+        change_date = curr_date + datetime.timedelta(days=10)
+        self.active_season.make_team_dead_line = change_date
+        self.active_season.save()
+
+        data = {
+            'name': faker.name(),
+            'idea_description': faker.paragraph(),
+        }
+
+        url = self.reverse("hack_fmi:team-detail", pk=self.team.id)
+        response = self.client.patch(url, data)
+        self.response_403(response)
+
+    def test_whether_when_you_register_your_own_team_you_become_leader_of_that_team(self):
+        skill = factories.SkillFactory()
+        team_data = {
+            'name': faker.name(),
+            'idea_description': faker.text(),
+            'repository': faker.url(),
+            'technologies': [skill.id, ],
+        }
+
+        self.assertFalse(Team.objects.filter(name=team_data['name']).exists())
+
+        url = self.reverse("hack_fmi:team-list")
+        response = self.client.post(url, team_data)
+        self.response_201(response)
+        self.assertTrue(Team.objects.filter(name=team_data['name']).exists())
+        self.assertEqual(len(response.data['members']), 1)
+        self.assertTrue(TeamMembership.objects.filter(competitor=self.competitor, is_leader=True).exists())
+
+    def test_cant_register_team_that_has_the_same_name(self):
+        skill = factories.SkillFactory()
+        team_data = {
+            'name': self.team.name,
+            'idea_description': faker.text(),
+            'repository': faker.url(),
+            'technologies': [skill.id, ],
+        }
+
+        self.assertFalse(Team.objects.filter(name=team_data['name']).exists())
+
+        url = self.reverse("hack_fmi:team-list")
+        response = self.client.post(url, team_data)
+        self.response_403(response)
+
+    def test_cant_register_other_team_if_you_are_a_leader_of_already_existing_team(self):
+        self.team_membership.is_leader = True
+        self.team_membership.save()
+
+        skill = factories.SkillFactory()
+        team_data = {
+            'name': faker.name(),
+            'idea_description': faker.text(),
+            'repository': faker.url(),
+            'technologies': [skill.id, ],
+        }
+
+        url = self.reverse("hack_fmi:team-list")
+        response = self.client.post(url, team_data)
+        self.response_403(response)
 
 
 class TeamMembershipAPITest(TestCase):
