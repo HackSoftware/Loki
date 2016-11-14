@@ -138,7 +138,6 @@ class SeasonSerializer(serializers.ModelSerializer):
 
 
 class PublicTeamSerializer(serializers.ModelSerializer):
-    members = PublicCompetiorSerializer(many=True, read_only=True)
     technologies_full = SkillSerializer(
         many=True,
         read_only=True,
@@ -159,9 +158,8 @@ class PublicTeamSerializer(serializers.ModelSerializer):
             'members_needed_desc',
             'room',
             'picture',
-            'place',
+            'place'
         )
-
 
 
 class TeamMentorshipSerializer(serializers.ModelSerializer):

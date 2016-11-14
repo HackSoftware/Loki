@@ -35,6 +35,7 @@ from loki.base_app.helper import try_open
 
 import json
 
+
 class MeAPIView(generics.GenericAPIView):
     authentication_classes = (JSONWebTokenAuthentication, )
     permission_classes = (IsHackFMIUser, )
@@ -58,32 +59,25 @@ class SkillListAPIView(generics.ListAPIView):
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
 
-    authentication_classes = (JSONWebTokenAuthentication,)
-
 
 class MentorListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     queryset = Mentor.objects.filter(seasons__is_active=True)
     serializer_class = MentorSerializer
 
-    authentication_classes = (JSONWebTokenAuthentication,)
-
 
 class SeasonView(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
+    serializer_class = SeasonSerializer
 
     def get_object(self):
         return Season.objects.filter(is_active=True).first()
 
-    serializer_class = SeasonSerializer
-
 
 class PublicTeamView(generics.ListAPIView):
     permission_classes = (AllowAny,)
-    queryset = Team.objects.filter(season__is_active=True)
     serializer_class = PublicTeamSerializer
-
-    authentication_classes = (JSONWebTokenAuthentication,)
+    queryset = Team.objects.filter(season__is_active=True)
 
 
 class TeamAPI(mixins.CreateModelMixin,
