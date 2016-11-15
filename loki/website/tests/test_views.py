@@ -286,3 +286,18 @@ class TestWebsite(TestCase):
 
         self.assertEqual(mac, Student.objects.get(email=student.email).mac)
         self.assertEqual(student, CheckIn.objects.filter(mac__iexact=mac).first().student)
+
+    # def test_check_ins_for_edit_teacher_profile(self):
+    #     check_in = factories.CheckInFactory(student=None)
+    #     mac = check_in.mac
+    #
+    #     teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+    #     with self.login(email=teacher.email,
+    #                     password=factories.BaseUserFactory.password):
+    #
+    #         data = {'mac': mac}
+    #         response = self.post('website:profile_edit_teacher', data=data)
+    #         self.response_200(response)
+    #
+    #     self.assertEqual(mac, Teacher.objects.get(email=teacher.email).mac)
+    #     self.assertEqual(teacher, CheckIn.objects.filter(mac__iexact=mac).first().student)

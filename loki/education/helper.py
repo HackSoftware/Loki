@@ -135,10 +135,10 @@ def latest_solution_statuses(user, tasks):
     return latest_solutions
 
 
-def percentage_presence(student_dates, course):
+def percentage_presence(user_dates, course):
     lecture_dates = Lecture.objects.filter(course=course,
                                            date__lte=timezone.now().date()).values_list(
                                            'date', flat=True)
-    student_dates = [date for date in student_dates if date in lecture_dates]
+    user_dates = [date for date in user_dates if date in lecture_dates]
 
-    return "{0}%".format(int((len(student_dates) / len(lecture_dates)) * 100))
+    return "{0}%".format(int((len(user_dates) / len(lecture_dates)) * 100))

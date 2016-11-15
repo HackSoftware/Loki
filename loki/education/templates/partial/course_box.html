@@ -24,8 +24,19 @@
     </div>
     <div class="col-sm-3 course-btns">
       {% if course.task_set.exists and course.is_active %}
+        {% if user.get_student %}
+          <a href="{% url 'education:course_dashboard' course.id %}">
+            <button class="btn btn-warning">Предай задачи</button>
+          </a>
+        {% else %}
+          <a href="{% url 'education:course_dashboard' course.id %}">
+            <button class="btn btn-warning" id="tasks-link">Задачи</button>
+          </a>
+        {% endif %}
+      {% endif %}
+      {% if user.get_teacher and course.student_set.exists %}
         <a href="{% url 'education:course_dashboard' course.id %}">
-          <button class="btn btn-warning">Предай задачи</button>
+          <button class="btn btn-warning" id="students-link">Студенти</button>
         </a>
       {% endif %}
       {% if course.material_set.exists and course.is_active %}
@@ -47,8 +58,8 @@
       </div>
       <div class="check-in-table hidden-toggle col-sm-12 col-sm-offset-1">
         {% with course_data=course_presence|key:course %}
-          {% with dates_for_weeks=course_data|key:"dates_for_weeks" student_dates=course_data|key:"student_dates" weeks=course_data|key:"weeks"%}
-            {% include 'partial/table_presence.html' with dates_for_weeks=dates_for_weeks student_dates=student_dates weeks=weeks %}
+          {% with dates_for_weeks=course_data|key:"dates_for_weeks" user_dates=course_data|key:"user_dates" weeks=course_data|key:"weeks"%}
+            {% include 'partial/table_presence.html' with dates_for_weeks=dates_for_weeks user_dates=user_dates weeks=weeks %}
           {% endwith %}
         {% endwith %}
       </div>

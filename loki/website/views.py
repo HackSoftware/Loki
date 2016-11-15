@@ -187,6 +187,7 @@ def profile_edit_teacher(request):
                                        instance=teacher)
         if teacher_form.is_valid():
             teacher_form.save()
+            check_macs_for_student(teacher, teacher.mac)
             if Student.objects.filter(email=request.user.email).exists():
                 student = Student.objects.get(email=request.user.email)
                 StudentEditForm(request.POST, request.FILES,

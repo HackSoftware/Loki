@@ -588,6 +588,12 @@ body {
       .course-box .course-text .course-btns #materials-link {
         padding-left: 25px;
         padding-right: 24px; }
+      .course-box .course-text .course-btns #students-link {
+        padding-left: 31px;
+        padding-right: 30px; }
+      .course-box .course-text .course-btns #tasks-link {
+        padding-left: 39px;
+        padding-right: 37px; }
       .course-box .course-text .course-btns a button {
         margin-top: 5px;
         text-align: center; }
