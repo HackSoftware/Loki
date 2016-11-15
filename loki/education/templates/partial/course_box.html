@@ -35,7 +35,7 @@
         {% endif %}
       {% endif %}
       {% if user.get_teacher and course.student_set.exists %}
-        <a href="{% url 'education:course_dashboard' course.id %}">
+        <a href="{% url 'education:students_view' course.id %}">
           <button class="btn btn-warning" id="students-link">Студенти</button>
         </a>
       {% endif %}

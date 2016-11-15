@@ -1,0 +1,11 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+{% if object_list.exists %}
+  {% for student in object_list %}
+    {{ student }}
+  {% endfor %}
+{% endif %}
+{% endautoescape %}
+{% endblock %}
