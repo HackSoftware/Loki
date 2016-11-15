@@ -255,7 +255,7 @@ class RoomFactory(factory.DjangoModelFactory):
     class Meta:
         model = hack_fmi_models.Room
 
-    number = faker.random_number()
+    number = factory.Sequence(lambda n: n)
     season = factory.SubFactory(SeasonFactory)
     capacity = faker.random_number(digits=1)
 
@@ -276,7 +276,7 @@ class TeamFactory(factory.DjangoModelFactory):
     class Meta:
         model = hack_fmi_models.Team
 
-    name = faker.name()
+    name = factory.Sequence(lambda _: faker.word())
     mentors = factory.RelatedFactory(MentorFactory)
     technologies = factory.RelatedFactory(SkillFactory)
     idea_description = faker.text()

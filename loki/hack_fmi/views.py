@@ -43,8 +43,7 @@ class MeAPIView(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         competitor = self.request.user
-        teams_member_ships = TeamMembership.objects.filter(competitor=competitor).all()
-        teams = [tm.team for tm in teams_member_ships]
+        teams = TeamMembership.objects.list_all_teams_for_competitor(competitor=competitor)
         comp_inf = CompetitorSerializer(competitor.get_competitor())
         teams = CustomTeamSerializer(teams, many=True)
         data = {
@@ -56,17 +55,17 @@ class MeAPIView(generics.GenericAPIView):
 
 
 class MeSeasonAPIView(generics.GenericAPIView):
-    authentication_classes = (IsAuthenticated, )
+    authentication_classes = (JSONWebTokenAuthentication, )
     # permission_classes = (IsTeamInActiveSeason, )
 
     def get(self, request, *args, **kwargs):
-        season_id = self.kwargs.get('pk')
+        season_id = self.kwargs.get('season_pk')
         competitor = self.request.user.get_competitor()
 
         season = get_object_or_404(Season, pk=season_id)
         comp_inf = CompetitorSerializer(competitor)
-        team_obj = Team.objects.filter(season=season,
-                                       members__in=[competitor]).first()
+        team_obj = Team.objects.get_all_teams_for_current_season(season=season).\
+                                get_all_teams_for_competitor(competitor=competitor).first()
 
         team = CustomTeamSerializer(team_obj)
         data = {

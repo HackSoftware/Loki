@@ -3,6 +3,9 @@ from django.db import models
 from ckeditor.fields import RichTextField
 from loki.base_app.models import BaseUser
 
+from .query import TeamQuerySet, TeamMembershipQuerySet
+from .managers import TeamMembershipManager
+
 
 class Season(models.Model):
     name = models.CharField(max_length=100, null=True)
@@ -119,6 +122,8 @@ class Team(models.Model):
     picture = models.ImageField(blank=True)
     place = models.SmallIntegerField(blank=True, null=True)
 
+    objects = TeamQuerySet.as_manager()
+
     def add_member(self, competitor, is_leader=False):
         return TeamMembership.objects.create(
             competitor=competitor,
@@ -152,6 +157,8 @@ class TeamMembership(models.Model):
     competitor = models.ForeignKey('Competitor')
     team = models.ForeignKey('Team')
     is_leader = models.BooleanField(default=False)
+
+    objects = TeamMembershipManager.from_queryset(TeamMembershipQuerySet)()
 
     def __str__(self):
         return "{} {}".format(self.competitor, self.team)

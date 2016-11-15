@@ -251,6 +251,60 @@ class TestMeAPIView(TestCase):
         data_equals = [True for val in teams_info if str(val) in response_values]
         self.assertTrue(all(data_equals))
 
+    def test_post_me(self):
+        response = self.post('hack_fmi:me')
+        self.response_405(response)
+
+    def test_get_with_wrong_jwt(self):
+        self.token = faker.text()
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        response = self.get('hack_fmi:me')
+        self.response_401(response)
+
+
+class TestMeSeasonAPIView(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.active_season = factories.SeasonFactory(is_active=True)
+        self.room = factories.RoomFactory(season=self.active_season)
+        self.team = factories.TeamFactory(season=self.active_season, room=self.room)
+        self.competitor = factories.CompetitorFactory(email=faker.email())
+        self.competitor.is_active = True
+        self.competitor.set_password(factories.BaseUserFactory.password)
+        self.competitor.save()
+        self.team_membership = factories.TeamMembershipFactory(competitor=self.competitor,
+                                                               team=self.team,
+                                                               is_leader=True)
+
+        data = {'email': self.competitor.email, 'password': factories.BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+    def test_get_me(self):
+        response = self.get('hack_fmi:me-season', season_pk=self.active_season.id)
+        self.response_200(response)
+        """
+        Assert if there are all the keys I need in the response.
+        """
+        key_equals = [True for k in ['is_competitor', 'competitor_info', 'team'] if k in response.data.keys()]
+        self.assertTrue(all(key_equals))
+
+    def test_post_me(self):
+        response = self.post('hack_fmi:me-season')
+        self.response_404(response)
+
+    def test_get_with_wrong_jwt(self):
+        self.token = faker.text()
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        response = self.get('hack_fmi:me-season', season_pk=self.active_season.id)
+        self.response_401(response)
+
+    def test_get_with_wrong_season_id(self):
+        wrong_id = Season.objects.all().last().id + 1
+        response = self.get('hack_fmi:me-season', season_pk=wrong_id)
+        self.response_404(response)
+
 
 class TeamAPITest(TestCase):
 
