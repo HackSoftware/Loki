@@ -25,7 +25,6 @@ class CourseListView(DashboardPermissionMixin, ListView):
         for course in self.get_queryset():
             if not course.lecture_set.exists():
                 continue
-
             course_presence[course] = {}
             course_presence[course]['weeks'] = list(get_dates_for_weeks(course).keys())
             course_presence[course]['dates_for_weeks'] = get_dates_for_weeks(course)
@@ -38,6 +37,7 @@ class CourseListView(DashboardPermissionMixin, ListView):
             course_presence[course]['percentage_presence'] = percentage_presence(user_dates, course)
 
         context['course_presence'] = course_presence
+
         return context
 
     def get_queryset(self):

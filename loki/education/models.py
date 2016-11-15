@@ -92,13 +92,13 @@ class Course(models.Model):
 
 class CheckIn(models.Model):
     mac = models.CharField(max_length=17)
-    student = models.ForeignKey('Student', null=True, blank=True)
+    user = models.ForeignKey(BaseUser, null=True, blank=True, related_name='checkins')
     date = models.DateField(auto_now_add=True)
 
     objects = CheckInQuerySet.as_manager()
 
     class Meta:
-        unique_together = (('student', 'date'), ('mac', 'date'))
+        unique_together = (('user', 'date'), ('mac', 'date'))
 
 
 class Week(models.Model):

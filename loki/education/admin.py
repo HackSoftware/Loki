@@ -99,9 +99,9 @@ class CheckInAdmin(admin.ModelAdmin):
     list_display = [
         'date',
         'mac',
-        'student'
+        'user'
     ]
-    search_fields = ['mac', 'student__email']
+    search_fields = ['mac', 'user__email']
 
 
 class WorkingAtAdmin(ImportExportActionModelAdmin):

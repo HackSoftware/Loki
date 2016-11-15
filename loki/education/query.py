@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils import timezone
 
+from loki.base_app.models import BaseUser
+
 
 class SolutionQuerySet(models.QuerySet):
 
@@ -11,7 +13,8 @@ class SolutionQuerySet(models.QuerySet):
 class CheckInQuerySet(models.QuerySet):
 
     def get_student_dates(self, student, course):
-        return self.filter(student=student,
+        user = BaseUser.objects.get(id=student.baseuser_ptr_id)
+        return self.filter(user=user,
                            date__gte=course.start_time,
                            date__lte=course.end_time).values_list(
                                               'date', flat=True)

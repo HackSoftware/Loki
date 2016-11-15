@@ -328,7 +328,7 @@ class CheckInFactory(factory.DjangoModelFactory):
         model = education_models.CheckIn
 
     mac = factory.Sequence(lambda n: 'd0:00:ad:{0}{0}:d8:e9'.format(n))
-    student = factory.SubFactory(StudentFactory)
+    user = factory.SubFactory(BaseUserFactory)
     date = faker.date()
 
 

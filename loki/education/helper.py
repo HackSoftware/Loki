@@ -24,11 +24,11 @@ def crop_image(x1, y1, x2, y2, path):
     return settings.MEDIA_URL + 'avatar/' + 'cropped_' + path[2:]
 
 
-def check_macs_for_student(student, mac):
+def check_macs_for_student(user, mac):
     check_ins = CheckIn.objects.filter(mac__iexact=mac)
     for check_in in check_ins:
-        if not check_in.student and check_in.mac.lower() == mac.lower():
-            check_in.student = student
+        if not check_in.user and check_in.mac.lower() == mac.lower():
+            check_in.user = user
             check_in.save()
 
 

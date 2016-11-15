@@ -1,6 +1,5 @@
 import time
 
-from django.core.management import call_command
 from django.core.exceptions import ValidationError
 from django.test import TestCase, Client
 from django.core.urlresolvers import reverse
@@ -10,9 +9,9 @@ from rest_framework.test import APIClient
 
 from loki.base_app.models import BaseUser, Company, City
 from loki.education.models import (Student, CheckIn, Lecture,
-                                   CourseAssignment, StudentNote, WorkingAt,
+                                   StudentNote, WorkingAt,
                                    Solution, SourceCodeTest)
-from loki.hack_fmi.helper import date_increase, date_decrease
+from loki.hack_fmi.helper import date_decrease
 from loki.seed import factories
 
 from faker import Factory
@@ -25,7 +24,8 @@ class CheckInTest(TestCase):
     def setUp(self):
 
         self.student = factories.StudentFactory()
-
+        self.student.is_active = True
+        self.student.save()
         self.teacher = factories.TeacherFactory()
         self.student_no_mac = Student.objects.create(
             email=faker.email(),
@@ -44,10 +44,12 @@ class CheckInTest(TestCase):
             'mac': self.student.mac,
             'token': settings.CHECKIN_TOKEN,
         }
+
         url = reverse('education:set_check_in')
         self.client.post(url, data, format='json')
-        self.assertIn(self.student.mac,
-                      CheckIn.objects.get(mac=data['mac']).student.mac)
+
+        self.assertEqual(self.student.mac,
+                         CheckIn.objects.get(mac=data['mac']).mac)
 
     def test_check_in_with_mac_and_no_user(self):
         data = {
@@ -58,34 +60,6 @@ class CheckInTest(TestCase):
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, 200)
         self.client.post(url, data, format='json')
-
-    def test_check_macs_command(self):
-        data = {
-            'mac': faker.mac_address(),
-            'token': settings.CHECKIN_TOKEN,
-        }
-        url = reverse('education:set_check_in')
-        self.client.post(url, data, format='json')
-        self.assertIsNone(CheckIn.objects.get(mac=data['mac']).student)
-        self.student_no_mac.mac = data['mac']
-        self.student_no_mac.save()
-        call_command('check_macs')
-        self.assertEqual(CheckIn.objects.
-                         get(mac=data['mac']).student, self.student_no_mac)
-
-    def test_get_check_ins_for_specific_course(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.teacher)
-        data = {
-            'student_id': self.student.id,
-            'course_id': self.course.id
-        }
-        url = reverse('education:get_check_ins')
-        response = self.client.get(url, data, format='json')
-        check_ins = CheckIn.objects.filter(student_id=self.student.id,
-                                           date__gte=self.course.start_time,
-                                           date__lte=self.course.end_time)
-        self.assertEqual(len(response.data), len(check_ins))
 
 
 class AuthenticationTests(TestCase):
@@ -109,22 +83,6 @@ class AuthenticationTests(TestCase):
             BaseUser.objects.first().email,
             Student.objects.first().email
         )
-
-
-class UpdateStudentsTests(TestCase):
-
-    def setUp(self):
-        self.student = factories.StudentFactory()
-
-    def test_student_update(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.student)
-        url = reverse('education:student_update')
-        data = {'mac': faker.mac_address()}
-        self.client.patch(url, data, format='json')
-
-        student = Student.objects.filter(email=self.student.email).first()
-        self.assertEqual(student.mac, data['mac'])
 
 
 class TeachersAPIsTests(TestCase):
@@ -198,106 +156,6 @@ class TeachersAPIsTests(TestCase):
         note = StudentNote.objects.filter(
             assignment=self.course_assignment2).first()
         self.assertIsNone(note)
-
-
-class CheckPresenceTests(TestCase):
-
-    def setUp(self):
-        self.course1 = factories.CourseFactory(
-            start_time=date_decrease(30),
-            end_time=date_increase(30),
-            generate_certificates_until=date_decrease(1))
-        self.course2 = factories.CourseFactory(
-            start_time=date_decrease(30),
-            end_time=date_increase(30),
-            generate_certificates_until=date_decrease(1))
-
-        self.lecture1 = factories.LectureFactory(
-            course=self.course1,
-            date=date_decrease(1)
-        )
-        self.lecture2 = factories.LectureFactory(
-            course=self.course1,
-            date=date_decrease(2)
-        )
-        self.lecture3 = factories.LectureFactory(
-            course=self.course1,
-            date=date_decrease(3)
-        )
-
-        self.student = factories.StudentFactory()
-        self.course_assignment = factories.CourseAssignmentFactory(
-            user=self.student,
-            course=self.course1,
-            student_presence=None
-        )
-        self.check_in_1 = factories.CheckInFactory(
-            student=self.student,
-        )
-        self.check_in_1.date = date_decrease(1)
-        self.check_in_1.save()
-        self.check_in_2 = factories.CheckInFactory(
-            student=self.student,
-        )
-        self.check_in_2.date = date_decrease(2)
-        self.check_in_2.save()
-
-    def test_command(self):
-        self.assertIsNone(self.course_assignment.student_presence)
-        call_command('check_presence')
-        ca = CourseAssignment.objects.get(id=self.course_assignment.id)
-        self.assertEqual(ca.student_presence, 67)
-
-
-class DropStudentTests(TestCase):
-
-    def setUp(self):
-        self.course1 = factories.CourseFactory()
-        self.student = factories.StudentFactory(email=faker.email())
-        self.course_assignment = factories.CourseAssignmentFactory(
-            user=self.student,
-            course=self.course1,
-            is_attending=True
-        )
-        self.teacher = factories.TeacherFactory(email=faker.email())
-        self.teacher.teached_courses.add(self.course1)
-        self.teacher.save()
-
-    def test_drop_student_who_is_attending(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.teacher)
-        data = {
-            'ca_id': self.course_assignment.id,
-            'is_attending': False
-        }
-        url = reverse('education:drop_student')
-        self.assertTrue(self.course_assignment.is_attending)
-        self.client.patch(url, data, format='json')
-        cass = CourseAssignment.objects.get(id=self.course_assignment.id)
-        self.assertFalse(cass.is_attending)
-
-
-class CheckMacsTests(TestCase):
-
-    def setUp(self):
-        self.student = factories.StudentFactory(
-            email=faker.email())
-        self.student_no_mac = factories.StudentFactory(
-            email=faker.email())
-        self.check_1 = factories.CheckInFactory(
-            student=self.student_no_mac
-        )
-        self.check_1.date = date_decrease(1)
-        self.check_1.save()
-
-    def test_student_enters_mac(self):
-        self.client = APIClient()
-        self.client.force_authenticate(user=self.student_no_mac)
-        data = {'mac': self.check_1.mac}
-        url = reverse('education:student_update')
-        self.client.patch(url, data, format='json')
-        ch = CheckIn.objects.filter(mac=self.check_1.mac).first()
-        self.assertEqual(ch.student, self.student_no_mac)
 
 
 class TestGetCompanies(TestCase):
