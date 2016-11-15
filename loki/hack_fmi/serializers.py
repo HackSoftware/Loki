@@ -85,10 +85,6 @@ class CustomTeamSerializer(serializers.ModelSerializer):
             'leader_id'
         )
 
-class MeSerializer(serializers.Serializer):
-    is_competitor = serializers.BooleanField()
-    competitor_info = CompetitorSerializer()
-    teams = CustomTeamSerializer(many=True)
 
 class SkillSerializer(serializers.ModelSerializer):
 
