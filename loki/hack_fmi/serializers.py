@@ -223,13 +223,15 @@ class InvitationTeamSerializer(serializers.ModelSerializer):
 class InvitationSerializer(serializers.ModelSerializer):
     team = InvitationTeamSerializer(read_only=True)
     competitor_email = serializers.EmailField(required=True, write_only=True)
+    competitor = CompetitorSerializer(required=False)
 
     class Meta:
         model = Invitation
         fields = (
             'id',
             'team',
-            'competitor_email'
+            'competitor_email',
+            'competitor'
         )
 
     def validate(self, data):
@@ -237,9 +239,6 @@ class InvitationSerializer(serializers.ModelSerializer):
 
         if Invitation.objects.filter(competitor=competitor).count() > 0:
             raise serializers.ValidationError("You have already sent a an invitation for that user!")
-
-        if not competitor.exists():
-            raise serializers.ValidationError("Competitor with this email does not exists!")
 
         competitor_email = data.pop('competitor_email')
         competitor = Competitor.objects.get(email=competitor_email)

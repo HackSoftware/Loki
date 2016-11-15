@@ -29,7 +29,8 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           CanNotAcceptInvitationIfTeamLeader,
                           CanAttachMoreMentorsToTeam,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
-                          TeamLiederCantCreateOtherTeam)
+                          TeamLiederCantCreateOtherTeam,
+                          IsInvitedMemberCompetitor)
 from .helper import send_team_delete_email
 
 from loki.base_app.helper import try_open
@@ -195,6 +196,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         },
             permission_classes=[IsHackFMIUser,
                                 IsTeamleaderOrCantCreateIvitation,
+                                IsInvitedMemberCompetitor,
                                 IsInvitedMemberAlreadyInYourTeam,
                                 IsInvitedMemberAlreadyInOtherTeam,
                                 CanInviteMoreMembersInTeam]
