@@ -53,6 +53,7 @@ class MeAPIView(generics.GenericAPIView):
         }
         return Response(data=data, status=status.HTTP_200_OK)
 
+
 class MeSeasonAPIView(generics.GenericAPIView):
     authentication_classes = (JSONWebTokenAuthentication, )
     permission_classes = (IsHackFMIUser, )
@@ -63,7 +64,7 @@ class MeSeasonAPIView(generics.GenericAPIView):
         season = Season.objects.get_object_or_404(pk=season_id)
         teams_member_ships = TeamMembership.objects.filter(competitor=competitor).all()
         comp_inf = CompetitorSerializer(competitor.get_competitor())
-        team = [team.team for team in teams_member_ships if team.team.season==season]
+        teams = [team.team for team in teams_member_ships if team.team.season == season]
         teams = CustomTeamSerializer(teams, many=True)
         data = {
             "is_competitor": bool(competitor.get_competitor()),
