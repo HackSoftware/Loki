@@ -66,10 +66,10 @@ class CustomTeamSerializer(serializers.ModelSerializer):
 
     def get_leader_id(self, obj):
         team_membership_query_set = TeamMembership.objects.filter(
-            team__season__is_active=True,
             team=obj,
             is_leader=True
         )
+
         leader = team_membership_query_set.first().team.get_leader()
 
         return leader.id
