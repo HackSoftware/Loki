@@ -244,7 +244,7 @@ def schedule_json(request):
     return Response(content, status=status.HTTP_200_OK)
 
 
-class OnBoardCompetitor(APIView):
+class OnBoardCompetitorAPI(APIView):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
