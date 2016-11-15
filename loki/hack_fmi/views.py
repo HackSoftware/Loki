@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, viewsets
@@ -13,7 +14,7 @@ from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           SeasonSerializer, PublicTeamSerializer,
                           OnBoardingCompetitorSerializer,
                           TeamMembershipSerializer,
-                          TeamMentorshipSerializer, MeSerializer,
+                          TeamMentorshipSerializer,
                           CustomTeamSerializer, CompetitorSerializer)
 from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
@@ -55,21 +56,23 @@ class MeAPIView(generics.GenericAPIView):
 
 
 class MeSeasonAPIView(generics.GenericAPIView):
-    authentication_classes = (JSONWebTokenAuthentication, )
-    permission_classes = (IsHackFMIUser, )
+    authentication_classes = (IsAuthenticated, )
+    # permission_classes = (IsTeamInActiveSeason, )
 
     def get(self, request, *args, **kwargs):
         season_id = self.kwargs.get('pk')
-        competitor = self.request.user
-        season = Season.objects.get_object_or_404(pk=season_id)
-        teams_member_ships = TeamMembership.objects.filter(competitor=competitor).all()
-        comp_inf = CompetitorSerializer(competitor.get_competitor())
-        teams = [team.team for team in teams_member_ships if team.team.season == season]
-        teams = CustomTeamSerializer(teams, many=True)
+        competitor = self.request.user.get_competitor()
+
+        season = get_object_or_404(Season, pk=season_id)
+        comp_inf = CompetitorSerializer(competitor)
+        team_obj = Team.objects.filter(season=season,
+                                       members__in=[competitor]).first()
+
+        team = CustomTeamSerializer(team_obj)
         data = {
             "is_competitor": bool(competitor.get_competitor()),
             "competitor_info": comp_inf.data,
-            "team": teams.data
+            "team": team.data
         }
         return Response(data=data, status=status.HTTP_200_OK)
 

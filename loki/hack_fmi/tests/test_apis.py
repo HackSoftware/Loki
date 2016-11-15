@@ -13,7 +13,7 @@ from rest_framework_jwt import utils
 from test_plus.test import TestCase
 
 from ..helper import date_increase, date_decrease
-from ..models import (TeamMembership,
+from ..models import (TeamMembership, Competitor,
                       Season, Team, Invitation, Room,
                       TeamMentorship, Mentor)
 
@@ -238,8 +238,8 @@ class TestMeAPIView(TestCase):
                                     "teammembership_set": [collections.OrderedDict((("competitor", self.competitor.id),
                                                                                     ("team", self.team.id),
                                                                                     ("is_leader", self.team_membership.is_leader)))],
-                       "needs_work": self.competitor.needs_work,
-                       "social_links": self.competitor.social_links}],
+                                    "needs_work": self.competitor.needs_work,
+                                    "social_links": self.competitor.social_links}],
                        "season": self.active_season.id,
                        "leader_id": self.competitor.id}]
         """
@@ -421,13 +421,13 @@ class TeamAPITest(TestCase):
         self.response_403(response)
 
 
-class TeamMembershipAPITest(TestCase):
+class TestTeamMembershipAPI(TestCase):
 
     def setUp(self):
-        self.company = factories.HackFmiPartnerFactory()
-        self.mentor = factories.MentorFactory(
-            from_company=self.company)
         self.client = APIClient()
+
+        self.company = factories.HackFmiPartnerFactory()
+        self.mentor = factories.MentorFactory(from_company=self.company)
 
         self.active_season = factories.SeasonFactory(is_active=True)
         self.non_active_season = factories.SeasonFactory(is_active=False)
@@ -437,50 +437,76 @@ class TeamMembershipAPITest(TestCase):
         self.non_active_team = factories.TeamFactory(season=self.non_active_season)
 
         self.competitor = factories.CompetitorFactory(email=faker.email())
+        self.competitor.is_active = True
+        self.competitor.set_password(factories.BaseUserFactory.password)
+        self.competitor.save()
+        data = {'email': self.competitor.email, 'password': factories.BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
 
     def test_user_cant_leave_team_if_he_has_not_been_a_member_in_that_team(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
         other_competitor = factories.CompetitorFactory(email=faker.email())
         other_membership = factories.TeamMembershipFactory(competitor=other_competitor,
                                                            team=self.team,
                                                            is_leader=False)
-        factories.TeamMembershipFactory(
-            competitor=self.competitor,
-            team=self.team,
-            is_leader=True,
-        )
-        self.client.force_authenticate(self.competitor)
+        factories.TeamMembershipFactory(competitor=self.competitor,
+                                        team=self.team,
+                                        is_leader=True)
 
-        url = reverse('hack_fmi:team_membership', kwargs={'pk': other_membership.id})
+        url = self.reverse('hack_fmi:team_membership', pk=other_membership.id)
 
         response = self.client.delete(url)
 
         self.response_403(response)
 
-    def test_cant_leave_team_if_yoy_are_not_a_hackfmi_user(self):
-        other_competitor = factories.StudentFactory(
-            email=faker.email())
-        membership = factories.TeamMembershipFactory(
-            competitor=self.competitor,
-            team=self.team,
-            is_leader=True,
-        )
+    def test_cant_leave_team_if_you_are_not_logged_as_hackfmi_user(self):
+        # In case you are logged in as a Student, but you are not Competitor
+        other_competitor = factories.StudentFactory(email=faker.email())
+        other_competitor.is_active = True
+        other_competitor.set_password(factories.BaseUserFactory.password)
+        other_competitor.save()
+        self.assertFalse(Competitor.objects.filter(email=other_competitor.email).exists())
 
-        self.client.force_authenticate(other_competitor)
+        data = {'email': other_competitor.email, 'password': factories.BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
 
-        url = reverse('hack_fmi:team_membership', kwargs={'pk': membership.id})
+        token = response.data['token']
+
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + token)
+
+        membership = factories.TeamMembershipFactory(competitor=self.competitor,
+                                                     team=self.team,
+                                                     is_leader=True)
+
+        url = self.reverse('hack_fmi:team_membership', pk=membership.id)
 
         response = self.client.delete(url)
 
         self.response_403(response)
+
+    def test_cant_leave_team_if_you_are_not_logged_in(self):
+
+        other_competitor = factories.StudentFactory(email=faker.email())
+        self.assertFalse(Competitor.objects.filter(email=other_competitor.email).exists())
+
+        membership = factories.TeamMembershipFactory(competitor=self.competitor,
+                                                     team=self.team,
+                                                     is_leader=True)
+
+        url = self.reverse('hack_fmi:team_membership', pk=membership.id)
+
+        response = self.client.delete(url)
+
+        self.response_401(response)
 
     def test_leave_team_from_non_active_season(self):
-        membership = factories.TeamMembershipFactory(
-            competitor=self.competitor,
-            team=self.non_active_team,
-            is_leader=True,
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
-        self.client.force_authenticate(self.competitor)
+        membership = factories.TeamMembershipFactory(competitor=self.competitor,
+                                                     team=self.non_active_team,
+                                                     is_leader=True)
 
         url = reverse('hack_fmi:team_membership', kwargs={'pk': membership.id})
 
@@ -489,14 +515,14 @@ class TeamMembershipAPITest(TestCase):
         self.response_403(response)
 
     def test_non_team_leader_leaves_team(self):
-        membership = factories.TeamMembershipFactory(
-            competitor=self.competitor,
-            team=self.team,
-            is_leader=False,
-        )
+        # You can leave team without being a team leader
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        membership = factories.TeamMembershipFactory(competitor=self.competitor,
+                                                     team=self.team,
+                                                     is_leader=False)
 
         self.assertTrue(TeamMembership.objects.filter(competitor=self.competitor).exists())
-        self.client.force_authenticate(self.competitor)
 
         url = reverse('hack_fmi:team_membership', kwargs={'pk': membership.id})
 
@@ -506,20 +532,16 @@ class TeamMembershipAPITest(TestCase):
         self.assertFalse(TeamMembership.objects.filter(competitor=self.competitor).exists())
 
     def test_delete_team_if_competitor_is_leader(self):
-        team = factories.TeamFactory(
-            name=faker.name(),
-            season=self.active_season,
-        )
-        membership = factories.TeamMembershipFactory(
-            competitor=self.competitor,
-            team=team,
-            is_leader=True,
-        )
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        team = factories.TeamFactory(name=faker.name(),
+                                     season=self.active_season)
+        membership = factories.TeamMembershipFactory(competitor=self.competitor,
+                                                     team=team,
+                                                     is_leader=True)
+
         self.assertEqual(team.get_leader(), self.competitor)
         self.assertTrue(Team.objects.filter(name=team.name).exists())
         self.assertTrue(TeamMembership.objects.filter(competitor=self.competitor).exists())
-
-        self.client.force_authenticate(self.competitor)
 
         url = reverse('hack_fmi:team_membership', kwargs={'pk': membership.id})
 
@@ -529,310 +551,330 @@ class TeamMembershipAPITest(TestCase):
         self.assertFalse(Team.objects.filter(name=team.name).exists())
         self.assertFalse(TeamMembership.objects.filter(competitor=self.competitor).exists())
 
+    def test_cant_delete_team_when_leaving_if_you_are_not_leader(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        team = factories.TeamFactory(name=faker.name(),
+                                     season=self.active_season)
+        membership = factories.TeamMembershipFactory(competitor=self.competitor,
+                                                     team=team,
+                                                     is_leader=False)
 
-class InvitationTests(TestCase):
+        self.assertNotEqual(team.get_leader(), self.competitor)
+        self.assertTrue(Team.objects.filter(name=team.name).exists())
+        self.assertTrue(TeamMembership.objects.filter(competitor=self.competitor).exists())
 
-    def setUp(self):
-        self.client = APIClient()
+        url = reverse('hack_fmi:team_membership', kwargs={'pk': membership.id})
 
-        self.season = factories.SeasonFactory(
-            is_active=True,
-        )
+        response = self.client.delete(url)
 
-    def test_send_invitation_for_team(self):
-        """
-        Every time a test is run, SeasonFactory generates random max_team_members_count.
-        That's why we intentionaly specifi max_team_members_count.
-        """
-        self.season.max_team_members_count = 2
-        self.season.save()
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertTrue(Team.objects.filter(name=team.name).exists())
+        self.assertFalse(TeamMembership.objects.filter(competitor=self.competitor).exists())
 
-        recipient = factories.CompetitorFactory(
-            email=faker.email(),
-        )
-        team = factories.TeamFactory(
-            name=faker.name(),
-            season=self.season,
-        )
-        factories.TeamMembershipFactory(
-            competitor=recipient,
-            team=team,
-            is_leader=True,
-        )
-        self.client.force_authenticate(user=recipient)
 
-        receiver = factories.CompetitorFactory(
-            email=faker.email()
-        )
+# class InvitationTests(TestCase):
 
-        url = reverse('hack_fmi:invitation-list')
-        data = {'competitor_email': receiver.email}
-        response = self.client.post(url, data)
+#     def setUp(self):
+#         self.client = APIClient()
 
-        self.response_201(response)
-        self.assertEquals(Invitation.objects.count(), 1)
-        self.assertEqual(Invitation.objects.first().team.id, team.id)
-        self.assertEqual(Invitation.objects.first().competitor.id, receiver.id)
+#         self.season = factories.SeasonFactory(
+#             is_active=True,
+#         )
 
-    def test_if_email_is_sent_to_user(self):
-        competitor = factories.CompetitorFactory(
-            email=faker.email()
-        )
-        subject = "Invitation for hackFMI membership"
-        body = faker.paragraph()
+#     def test_send_invitation_for_team(self):
+#         """
+#         Every time a test is run, SeasonFactory generates random max_team_members_count.
+#         That's why we intentionaly specifi max_team_members_count.
+#         """
+#         self.season.max_team_members_count = 2
+#         self.season.save()
 
-        msg = EmailMultiAlternatives(subject=subject,
-                                     body=body,
-                                     from_email=settings.DJANGO_DEFAULT_FROM_EMAIL,
-                                     to=[competitor.email])
+#         recipient = factories.CompetitorFactory(
+#             email=faker.email(),
+#         )
+#         team = factories.TeamFactory(
+#             name=faker.name(),
+#             season=self.season,
+#         )
+#         factories.TeamMembershipFactory(
+#             competitor=recipient,
+#             team=team,
+#             is_leader=True,
+#         )
+#         self.client.force_authenticate(user=recipient)
 
-        response = msg.send()
+#         receiver = factories.CompetitorFactory(
+#             email=faker.email()
+#         )
 
-        self.assertEqual(response, 1)
+#         url = reverse('hack_fmi:invitation-list')
+#         data = {'competitor_email': receiver.email}
+#         response = self.client.post(url, data)
 
-    def test_non_leaders_cant_send_invitations(self):
-        competitor = factories.CompetitorFactory(
-            email=faker.email(),
-        )
-        team = factories.TeamFactory(
-            name=faker.name(),
-            season=self.season,
-        )
-        factories.TeamMembershipFactory(
-            competitor=competitor,
-            team=team,
-            is_leader=False,
-        )
-        self.client.force_authenticate(user=competitor)
+#         self.response_201(response)
+#         self.assertEquals(Invitation.objects.count(), 1)
+#         self.assertEqual(Invitation.objects.first().team.id, team.id)
+#         self.assertEqual(Invitation.objects.first().competitor.id, receiver.id)
 
-        url = reverse('hack_fmi:invitation-list')
-        data = {'competitor_email': faker.word() + faker.email()}
-        response = self.client.post(url, data,)
+#     def test_if_email_is_sent_to_user(self):
+#         competitor = factories.CompetitorFactory(
+#             email=faker.email()
+#         )
+#         subject = "Invitation for hackFMI membership"
+#         body = faker.paragraph()
 
-        self.response_403(response)
+#         msg = EmailMultiAlternatives(subject=subject,
+#                                      body=body,
+#                                      from_email=settings.DJANGO_DEFAULT_FROM_EMAIL,
+#                                      to=[competitor.email])
 
-    def test_send_invitation_to_not_existing_user(self):
-        """
-        Every time a test is run, SeasonFactory generates random max_team_members_count.
-        That's why we intentionaly specifi max_team_members_count.
-        """
-        self.season.max_team_members_count = 2
-        self.season.save()
+#         response = msg.send()
 
-        recipient = factories.CompetitorFactory(
-            email=faker.email(),
-        )
-        team = factories.TeamFactory(
-            name=faker.name(),
-            season=self.season,
-        )
-        factories.TeamMembershipFactory(
-            competitor=recipient,
-            team=team,
-            is_leader=True,
-        )
-        self.client.force_authenticate(user=recipient)
+#         self.assertEqual(response, 1)
 
-        url = reverse('hack_fmi:invitation-list')
-        data = {'competitor_email': faker.word() + faker.email()}
-        response = self.client.post(url, data)
+#     def test_non_leaders_cant_send_invitations(self):
+#         competitor = factories.CompetitorFactory(
+#             email=faker.email(),
+#         )
+#         team = factories.TeamFactory(
+#             name=faker.name(),
+#             season=self.season,
+#         )
+#         factories.TeamMembershipFactory(
+#             competitor=competitor,
+#             team=team,
+#             is_leader=False,
+#         )
+#         self.client.force_authenticate(user=competitor)
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+#         url = reverse('hack_fmi:invitation-list')
+#         data = {'competitor_email': faker.word() + faker.email()}
+#         response = self.client.post(url, data,)
 
-    def test_send_invitation_twice_to_same_competitor(self):
-        recipient = factories.CompetitorFactory(
-            email=faker.email(),
-        )
-        team = factories.TeamFactory(
-            name=faker.name(),
-            season=self.season,
-        )
-        factories.TeamMembershipFactory(
-            competitor=recipient,
-            team=team,
-            is_leader=True,
-        )
-        self.client.force_authenticate(user=recipient)
+#         self.response_403(response)
 
-        Invitation.objects.create(
-            team=team,
-            competitor=recipient,
-        )
-        url = reverse('hack_fmi:invitation-list')
-        data = {'competitor_email': recipient.email}
-        response = self.client.post(url, data)
+#     def test_send_invitation_to_not_existing_user(self):
+#         """
+#         Every time a test is run, SeasonFactory generates random max_team_members_count.
+#         That's why we intentionaly specifi max_team_members_count.
+#         """
+#         self.season.max_team_members_count = 2
+#         self.season.save()
 
-        self.response_403(response)
+#         recipient = factories.CompetitorFactory(
+#             email=faker.email(),
+#         )
+#         team = factories.TeamFactory(
+#             name=faker.name(),
+#             season=self.season,
+#         )
+#         factories.TeamMembershipFactory(
+#             competitor=recipient,
+#             team=team,
+#             is_leader=True,
+#         )
+#         self.client.force_authenticate(user=recipient)
 
-    def test_send_invitation_when_team_is_full(self):
-        self.season.max_team_members_count = 2
-        self.season.save()
+#         url = reverse('hack_fmi:invitation-list')
+#         data = {'competitor_email': faker.word() + faker.email()}
+#         response = self.client.post(url, data)
 
-        recipient = factories.CompetitorFactory(
-            email=faker.email(),
-        )
-        team = factories.TeamFactory(
-            name=faker.name(),
-            season=self.season,
-        )
-        factories.TeamMembershipFactory(
-            competitor=recipient,
-            team=team,
-            is_leader=True,
-        )
-        self.client.force_authenticate(user=recipient)
+#         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        competitor2 = factories.CompetitorFactory(
-            email=faker.email()
-        )
+#     def test_send_invitation_twice_to_same_competitor(self):
+#         recipient = factories.CompetitorFactory(
+#             email=faker.email(),
+#         )
+#         team = factories.TeamFactory(
+#             name=faker.name(),
+#             season=self.season,
+#         )
+#         factories.TeamMembershipFactory(
+#             competitor=recipient,
+#             team=team,
+#             is_leader=True,
+#         )
+#         self.client.force_authenticate(user=recipient)
 
-        factories.TeamMembershipFactory(
-            competitor=competitor2,
-            team=team,
-            is_leader=False,
-        )
+#         Invitation.objects.create(
+#             team=team,
+#             competitor=recipient,
+#         )
+#         url = reverse('hack_fmi:invitation-list')
+#         data = {'competitor_email': recipient.email}
+#         response = self.client.post(url, data)
 
-        self.assertEqual(TeamMembership.objects.filter(team=team).count(), 2)
+#         self.response_403(response)
 
-        url = reverse('hack_fmi:invitation-list')
-        data = {'competitor_email': recipient.email}
+#     def test_send_invitation_when_team_is_full(self):
+#         self.season.max_team_members_count = 2
+#         self.season.save()
 
-        response = self.client.post(url, data)
+#         recipient = factories.CompetitorFactory(
+#             email=faker.email(),
+#         )
+#         team = factories.TeamFactory(
+#             name=faker.name(),
+#             season=self.season,
+#         )
+#         factories.TeamMembershipFactory(
+#             competitor=recipient,
+#             team=team,
+#             is_leader=True,
+#         )
+#         self.client.force_authenticate(user=recipient)
 
-        self.response_403(response)
-        self.assertEqual(TeamMembership.objects.filter(team=team).count(), 2)
+#         competitor2 = factories.CompetitorFactory(
+#             email=faker.email()
+#         )
 
-    def test_user_cant_get_his_invitations_if_not_being_hackfmi_user(self):
-        user = factories.BaseUserFactory(
-            email=faker.email()
-        )
-        self.client.force_authenticate(user=user)
+#         factories.TeamMembershipFactory(
+#             competitor=competitor2,
+#             team=team,
+#             is_leader=False,
+#         )
 
-        url = reverse('hack_fmi:invitation-list')
-        response = self.client.get(url)
+#         self.assertEqual(TeamMembership.objects.filter(team=team).count(), 2)
 
-        self.response_403(response)
+#         url = reverse('hack_fmi:invitation-list')
+#         data = {'competitor_email': recipient.email}
 
-    def test_user_can_get_his_invitations_if_hackfmi_user(self):
-        competitor = factories.CompetitorFactory(
-            email=faker.email()
-        )
-        team = factories.TeamFactory(
-            name=faker.name(),
-            season=self.season,
-        )
-        factories.InvitationFactory(
-            team=team,
-            competitor=competitor
-        )
-        self.client.force_authenticate(user=competitor)
+#         response = self.client.post(url, data)
 
-        url = reverse('hack_fmi:invitation-list')
-        response = self.client.get(url)
+#         self.response_403(response)
+#         self.assertEqual(TeamMembership.objects.filter(team=team).count(), 2)
 
-        self.response_200(response)
-        self.assertEqual(len(response.data), 1)
+#     def test_user_cant_get_his_invitations_if_not_being_hackfmi_user(self):
+#         user = factories.BaseUserFactory(
+#             email=faker.email()
+#         )
+#         self.client.force_authenticate(user=user)
 
-    def test_send_invitation_to_user_that_already_has_team(self):
-        recipient = factories.CompetitorFactory(
-            email=faker.email(),
-        )
-        receiver = factories.CompetitorFactory(
-            email=faker.email(),
-        )
-        team = factories.TeamFactory(
-            name=faker.name(),
-            season=self.season,
-        )
-        factories.TeamMembershipFactory(
-            competitor=recipient,
-            team=team,
-            is_leader=True,
-        )
-        self.client.force_authenticate(user=recipient)
+#         url = reverse('hack_fmi:invitation-list')
+#         response = self.client.get(url)
 
-        receiver_team = factories.TeamFactory(
-            name=faker.name(),
-            season=self.season,
-        )
+#         self.response_403(response)
 
-        factories.TeamMembershipFactory(
-            team=receiver_team,
-            competitor=receiver,
-        )
+#     def test_user_can_get_his_invitations_if_hackfmi_user(self):
+#         competitor = factories.CompetitorFactory(
+#             email=faker.email()
+#         )
+#         team = factories.TeamFactory(
+#             name=faker.name(),
+#             season=self.season,
+#         )
+#         factories.InvitationFactory(
+#             team=team,
+#             competitor=competitor
+#         )
+#         self.client.force_authenticate(user=competitor)
 
-        url = reverse('hack_fmi:invitation-list')
-        data = {
-            'competitor_email': receiver.email
-        }
-        response = self.client.post(url, data)
+#         url = reverse('hack_fmi:invitation-list')
+#         response = self.client.get(url)
 
-        self.response_403(response)
+#         self.response_200(response)
+#         self.assertEqual(len(response.data), 1)
 
-    def test_accept_invitation(self):
-        competitor_not_leader = factories.CompetitorFactory(
-            email=faker.email(),
-        )
-        team = factories.TeamFactory(
-            name=faker.name(),
-            season=self.season,
-        )
-        self.client.force_authenticate(user=competitor_not_leader)
+#     def test_send_invitation_to_user_that_already_has_team(self):
+#         recipient = factories.CompetitorFactory(
+#             email=faker.email(),
+#         )
+#         receiver = factories.CompetitorFactory(
+#             email=faker.email(),
+#         )
+#         team = factories.TeamFactory(
+#             name=faker.name(),
+#             season=self.season,
+#         )
+#         factories.TeamMembershipFactory(
+#             competitor=recipient,
+#             team=team,
+#             is_leader=True,
+#         )
+#         self.client.force_authenticate(user=recipient)
 
-        inv = factories.InvitationFactory(
-            team=team,
-            competitor=competitor_not_leader
-        )
-        url = reverse('hack_fmi:invitation-accept', kwargs={'pk': inv.id})
+#         receiver_team = factories.TeamFactory(
+#             name=faker.name(),
+#             season=self.season,
+#         )
 
-        response = self.client.post(url)
-        self.response_200(response)
-        self.assertEqual(Invitation.objects.all().count(), 0)
-        self.\
-            assertTrue(TeamMembership.objects.filter(team=inv.team, competitor=inv.competitor).exists())
+#         factories.TeamMembershipFactory(
+#             team=receiver_team,
+#             competitor=receiver,
+#         )
 
-    def test_accept_invitation_already_has_team(self):
-        competitor = factories.CompetitorFactory(
-            email=faker.email()
-        )
-        team = factories.TeamFactory(
-            season=self.season
-        )
-        factories.TeamMembershipFactory(
-            competitor=competitor,
-            team=team,
-        )
+#         url = reverse('hack_fmi:invitation-list')
+#         data = {
+#             'competitor_email': receiver.email
+#         }
+#         response = self.client.post(url, data)
 
-        inv = factories.InvitationFactory(
-            team=team,
-            competitor=competitor
-        )
-        self.client.force_authenticate(user=competitor)
+#         self.response_403(response)
 
-        url = reverse('hack_fmi:invitation-accept', kwargs={'pk': inv.id})
+#     def test_accept_invitation(self):
+#         competitor_not_leader = factories.CompetitorFactory(
+#             email=faker.email(),
+#         )
+#         team = factories.TeamFactory(
+#             name=faker.name(),
+#             season=self.season,
+#         )
+#         self.client.force_authenticate(user=competitor_not_leader)
 
-        response = self.client.post(url)
+#         inv = factories.InvitationFactory(
+#             team=team,
+#             competitor=competitor_not_leader
+#         )
+#         url = reverse('hack_fmi:invitation-accept', kwargs={'pk': inv.id})
 
-        self.response_403(response)
+#         response = self.client.post(url)
+#         self.response_200(response)
+#         self.assertEqual(Invitation.objects.all().count(), 0)
+#         self.\
+#             assertTrue(TeamMembership.objects.filter(team=inv.team, competitor=inv.competitor).exists())
 
-    def test_can_not_accept_invitation_to_other_team_if_you_are_a_leader(self):
-        competitor = factories.CompetitorFactory(
-            email=faker.email()
-        )
-        team = factories.TeamFactory(
-            season=self.season
-        )
-        factories.TeamMembershipFactory(
-            competitor=competitor,
-            team=team,
-            is_leader=True,
-        )
-        self.client.force_authenticate(competitor)
+#     def test_accept_invitation_already_has_team(self):
+#         competitor = factories.CompetitorFactory(
+#             email=faker.email()
+#         )
+#         team = factories.TeamFactory(
+#             season=self.season
+#         )
+#         factories.TeamMembershipFactory(
+#             competitor=competitor,
+#             team=team,
+#         )
 
-        inv = factories.InvitationFactory(
-            team=team,
-            competitor=competitor
-        )
+#         inv = factories.InvitationFactory(
+#             team=team,
+#             competitor=competitor
+#         )
+#         self.client.force_authenticate(user=competitor)
+
+#         url = reverse('hack_fmi:invitation-accept', kwargs={'pk': inv.id})
+
+#         response = self.client.post(url)
+
+#         self.response_403(response)
+
+#     def test_can_not_accept_invitation_to_other_team_if_you_are_a_leader(self):
+#         competitor = factories.CompetitorFactory(
+#             email=faker.email()
+#         )
+#         team = factories.TeamFactory(
+#             season=self.season
+#         )
+#         factories.TeamMembershipFactory(
+#             competitor=competitor,
+#             team=team,
+#             is_leader=True,
+#         )
+#         self.client.force_authenticate(competitor)
+
+#         inv = factories.InvitationFactory(
+#             team=team,
+#             competitor=competitor
+#         )
 
 # class TeamMembershipAPITest(TestCase):
 
