@@ -29,7 +29,7 @@
             <button class="btn btn-warning">Предай задачи</button>
           </a>
         {% else %}
-          <a href="{% url 'education:course_dashboard' course.id %}">
+          <a href="{% url 'education:teacher_task_dashboard' course.id %}">
             <button class="btn btn-warning" id="tasks-link">Задачи</button>
           </a>
         {% endif %}

@@ -103,3 +103,16 @@ class StudentCourseView(ListView):
     def get_queryset(self):
         course_id = self.kwargs.get("course")
         return Student.objects.filter(courses__id__exact=course_id)
+
+
+class TeacherTaskView(DashboardPermissionMixin,
+                      ListView):
+    """
+    Teacher View for creating, editing and deleting tasks
+    """
+    model = Task
+    template_name = 'education/teacher_task_list.html'
+
+    def get_queryset(self):
+        course_id = self.kwargs.get("course")
+        return Task.objects.filter(course=course_id)

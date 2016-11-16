@@ -1,0 +1,11 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+{% if object_list.exists %}
+  {% for task in object_list %}
+    {{ task }}
+  {% endfor %}
+{% endif %}
+{% endautoescape %}
+{% endblock %}

@@ -185,14 +185,15 @@ class MaterialViewTests(TestCase):
             response = self.get('education:material_view', course=self.course.id)
             self.assertEqual(response.status_code, 403)
 
-    def test_teacher_cannot_access_course_materials(self):
+    def test_teacher_can_access_course_materials(self):
         teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
         week = WeekFactory()
         LectureFactory(week=week, course=self.course)
         MaterialFactory(week=week, course=self.course)
         with self.login(email=teacher.email, password=BaseUserFactory.password):
             response = self.get('education:material_view', course=self.course.id)
-            self.assertEqual(response.status_code, 403)
+            self.assertEqual(response.status_code, 200)
 
     def test_student_can_access_course_materials_if_no_materials(self):
         with self.login(email=self.student.email, password=BaseUserFactory.password):
@@ -204,8 +205,28 @@ class MaterialViewTests(TestCase):
             response = self.get('education:material_view', course=self.course.id)
             self.assertEqual(response.status_code, 403)
 
-    def test_teacher_cannot_access_course_materials_if_no_materials(self):
+    def test_teacher_can_access_course_materials_if_no_materials(self):
         teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
         with self.login(email=teacher.email, password=BaseUserFactory.password):
             response = self.get('education:material_view', course=self.course.id)
+            self.assertEqual(response.status_code, 200)
+
+    def test_teacher_cannot_access_no_materials_of_course_not_in_teached_courses(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
+        course2 = CourseFactory()
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:material_view', course=course2.id)
+            self.assertEqual(response.status_code, 403)
+
+    def test_teacher_cannot_access_materials_of_course_not_in_teached_courses(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
+        week = WeekFactory()
+        course2 = CourseFactory()
+        LectureFactory(week=week, course=self.course)
+        MaterialFactory(week=week, course=self.course)
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:material_view', course=course2.id)
             self.assertEqual(response.status_code, 403)
