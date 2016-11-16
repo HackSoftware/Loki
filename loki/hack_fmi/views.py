@@ -24,7 +24,7 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsInvitedMemberAlreadyInYourTeam,
                           IsInvitedMemberAlreadyInOtherTeam,
                           CanInviteMoreMembersInTeam,
-                          CanAcceptWronglyDedicatedIvitation,
+                          CanNotAccessWronglyDedicatedIvitation,
                           IsInvitedUserInTeam,
                           CanNotAcceptInvitationIfTeamLeader,
                           CanAttachMoreMentorsToTeam,
@@ -55,6 +55,7 @@ class MeAPIView(generics.GenericAPIView):
         }
         return Response(data=data, status=status.HTTP_200_OK)
 
+
 class MeSeasonAPIView(generics.GenericAPIView):
     authentication_classes = (IsAuthenticated, )
     # permission_classes = (IsTeamInActiveSeason, )
@@ -75,6 +76,7 @@ class MeSeasonAPIView(generics.GenericAPIView):
             "team": team.data
         }
         return Response(data=data, status=status.HTTP_200_OK)
+
 
 class SkillListAPIView(generics.ListAPIView):
     permission_classes = (AllowAny,)
@@ -170,7 +172,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
                                          team__season__is_active=True)
 
     def get_object(self):
-        obj = Invitation.objects.get(id=self.kwargs['pk'])
+        obj = get_object_or_404(Invitation, id=self.kwargs['pk'])
         self.check_object_permissions(self.request, obj)
         return obj
 
@@ -206,16 +208,16 @@ class InvitationViewSet(viewsets.ModelViewSet):
             'delete': 'destroy',
         },
             permission_classes=[IsHackFMIUser,
-                                CanAcceptWronglyDedicatedIvitation]
+                                CanNotAccessWronglyDedicatedIvitation]
         )
 
         invitation_accept = cls.as_view({
             'post': 'accept',
         },
             permission_classes=[IsHackFMIUser,
+                                CanNotAcceptInvitationIfTeamLeader,
                                 IsInvitedUserInTeam,
-                                CanAcceptWronglyDedicatedIvitation,
-                                CanNotAcceptInvitationIfTeamLeader]
+                                CanNotAccessWronglyDedicatedIvitation]
         )
 
         return locals()

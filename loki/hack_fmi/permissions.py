@@ -195,13 +195,13 @@ class CanInviteMoreMembersInTeam(permissions.BasePermission):
         return True
 
 
-class CanAcceptWronglyDedicatedIvitation(permissions.BasePermission):
+class CanNotAccessWronglyDedicatedIvitation(permissions.BasePermission):
 
     message = "This invitation is not dedicated to you!"
 
     def has_object_permission(self, request, view, obj):
-        if TeamMembership.objects.filter(competitor=request.user.get_competitor(), is_leader=True).count() != 0:
-            return True
+        # if TeamMembership.objects.filter(competitor=request.user.get_competitor(), is_leader=True).count() != 0:
+            # return True
 
         return request.user.get_competitor() == obj.competitor
 
@@ -211,7 +211,7 @@ class IsInvitedUserInTeam(permissions.BasePermission):
     message = "You have already been a member in another team!"
 
     def has_object_permission(self, request, view, obj):
-        return not TeamMembership.objects.filter(competitor=obj.competitor).exists()
+        return not TeamMembership.objects.filter(competitor=request.user.get_competitor()).exists()
 
 
 class CanNotAcceptInvitationIfTeamLeader(permissions.BasePermission):
