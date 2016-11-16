@@ -57,6 +57,18 @@ class CompetitorSerializer(serializers.ModelSerializer):
         return new_user
 
 
+class CompetitorInTeamSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Competitor
+        fields = (
+            'id',
+            'email',
+            'first_name',
+            'last_name',
+        )
+
+
 class CustomTeamSerializer(serializers.ModelSerializer):
     members = CompetitorSerializer(many=True, read_only=True)
     leader_id = serializers.SerializerMethodField()
@@ -160,12 +172,14 @@ class TeamMentorshipSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    members = CompetitorSerializer(many=True, read_only=True)
-    technologies = serializers.PrimaryKeyRelatedField(
-        many=True,
-        read_only=False,
-        queryset=Skill.objects.all()
-    )
+    members = CompetitorInTeamSerializer(many=True, read_only=True)
+    leader_id = serializers.SerializerMethodField()
+    room = serializers.StringRelatedField()
+
+    def get_leader_id(self, obj):
+        leader_membership = TeamMembership.objects.get_team_membership_of_leader(team=obj)
+        if leader_membership:
+            return leader_membership.first().team.get_leader().id
 
     technologies_full = SkillSerializer(
         many=True,
@@ -173,25 +187,16 @@ class TeamSerializer(serializers.ModelSerializer):
         source='technologies',
     )
 
-    mentors_full = MentorSerializer(
-        many=True,
-        read_only=True,
-        source='mentors',
-    )
-
-    room = serializers.StringRelatedField()
-
     class Meta:
         model = Team
         fields = (
             'id',
             'name',
             'members',
+            'leader_id',
             'idea_description',
             'repository',
-            'technologies',
             'technologies_full',
-            'mentors_full',
             'need_more_members',
             'members_needed_desc',
             'room',
