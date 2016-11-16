@@ -66,6 +66,7 @@ class Competitor(BaseUser):
 
     objects = CompetitorQuerySet.as_manager()
 
+
 def active_season():
     active = Season.objects.get(is_active=True)
     return active.id

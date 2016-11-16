@@ -66,7 +66,7 @@ class MeSeasonAPIView(generics.GenericAPIView):
         season = get_object_or_404(Season, pk=season_id)
         comp_inf = CompetitorSerializer(competitor)
         team_obj = Team.objects.get_all_teams_for_current_season(season=season).\
-                                get_all_teams_for_competitor(competitor=competitor).first()
+            get_all_teams_for_competitor(competitor=competitor).first()
 
         team = CustomTeamSerializer(team_obj)
         data = {
@@ -163,7 +163,7 @@ class TeamMentorshipAPI(mixins.CreateModelMixin,
 
 
 class InvitationViewSet(viewsets.ModelViewSet):
-
+    authentication_classes = (JSONWebTokenAuthentication,)
     serializer_class = InvitationSerializer
 
     def get_queryset(self):
@@ -259,6 +259,7 @@ class OnBoardCompetitor(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"custom_errors": ["User is already competitor!"]}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class TestApi(APIView):
     permission_classes = (IsAuthenticated,)

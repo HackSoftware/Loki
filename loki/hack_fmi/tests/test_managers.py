@@ -46,8 +46,8 @@ class TestTeamManager(TestCase):
         self.assertEqual(2, Team.objects.get_all_teams_for_current_season(season=self.active_season).count())
 
     def test_get_all_teams_for_competitor_for_current_season(self):
-        self.assertEqual(self.team, Team.objects.get_all_teams_for_current_season(season=self.active_season).\
-                                         get_all_teams_for_competitor(competitor=self.competitor).first())
+        self.assertEqual(self.team, Team.objects.get_all_teams_for_current_season(season=self.active_season).
+                         get_all_teams_for_competitor(competitor=self.competitor).first())
 
 
 class TestTeamMembershipManager(TestCase):
@@ -81,5 +81,5 @@ class TestTeamMembershipManager(TestCase):
         get_team_memberships_for_active_season() ought to return QuerySet object.
         That's why I'm able to call .first() on it and compare the result to self.team_membership
         """
-        self.assertEqual(self.team_membership, TeamMembership.objects.\
-                                               get_team_memberships_for_active_season(competitor=self.competitor).first())
+        self.assertEqual(self.team_membership, TeamMembership.objects.
+                         get_team_memberships_for_active_season(competitor=self.competitor).first())

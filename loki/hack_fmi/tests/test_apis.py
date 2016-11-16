@@ -1,11 +1,8 @@
 import unittest
 import collections
-from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.management import call_command
 from django.core.management.base import CommandError
-
-from django.core.mail import EmailMultiAlternatives
 
 from rest_framework import status
 from rest_framework.test import APIClient
@@ -200,12 +197,14 @@ class TestMeAPIView(TestCase):
                            "known_skills": [],
                            "faculty_number": self.competitor.faculty_number,
                            "shirt_size": self.competitor.shirt_size,
-                           "current_teammembership_set": [collections.OrderedDict((("competitor", self.competitor.id),
-                                                                                   ("team", self.team.id),
-                                                                                   ("is_leader", self.team_membership.is_leader)))],
-                           "teammembership_set": [collections.OrderedDict((("competitor", self.competitor.id),
-                                                                           ("team", self.team.id),
-                                                                           ("is_leader", self.team_membership.is_leader)))],
+                           "current_teammembership_set": [collections.OrderedDict((
+                                ("competitor", self.competitor.id),
+                                ("team", self.team.id),
+                                ("is_leader", self.team_membership.is_leader)))],
+                           "teammembership_set": [collections.OrderedDict((
+                                ("competitor", self.competitor.id),
+                                ("team", self.team.id),
+                                ("is_leader", self.team_membership.is_leader)))],
                            "needs_work": self.competitor.needs_work,
                            "social_links": self.competitor.social_links}
 
@@ -232,12 +231,14 @@ class TestMeAPIView(TestCase):
                                     "known_skills": [],
                                     "faculty_number": self.competitor.faculty_number,
                                     "shirt_size": self.competitor.shirt_size,
-                                    "current_teammembership_set": [collections.OrderedDict((("competitor", self.competitor.id),
-                                                                                            ("team", self.team.id),
-                                                                                            ("is_leader", self.team_membership.is_leader)))],
-                                    "teammembership_set": [collections.OrderedDict((("competitor", self.competitor.id),
-                                                                                    ("team", self.team.id),
-                                                                                    ("is_leader", self.team_membership.is_leader)))],
+                                    "current_teammembership_set": [collections.OrderedDict((
+                                        ("competitor", self.competitor.id),
+                                        ("team", self.team.id),
+                                        ("is_leader", self.team_membership.is_leader)))],
+                                    "teammembership_set": [collections.OrderedDict((
+                                        ("competitor", self.competitor.id),
+                                        ("team", self.team.id),
+                                        ("is_leader", self.team_membership.is_leader)))],
                                     "needs_work": self.competitor.needs_work,
                                     "social_links": self.competitor.social_links}],
                        "season": self.active_season.id,

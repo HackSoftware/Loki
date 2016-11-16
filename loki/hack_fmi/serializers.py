@@ -159,8 +159,6 @@ class TeamMentorshipSerializer(serializers.ModelSerializer):
         )
 
 
-
-
 class TeamSerializer(serializers.ModelSerializer):
     members = CompetitorSerializer(many=True, read_only=True)
     technologies = serializers.PrimaryKeyRelatedField(
