@@ -19,7 +19,7 @@ invitation_urls = InvitationViewSet.get_urls()
 """
 
 router = routers.SimpleRouter()
-router.register(r'teams', TeamAPI)
+router.register(r'api/teams', TeamAPI)
 
 urlpatterns = [
     url(r'^api/jwt-login/$', obtain_jwt_token, name='api-login'),
