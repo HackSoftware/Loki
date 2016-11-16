@@ -24,10 +24,7 @@ class CompetitorSerializer(serializers.ModelSerializer):
     teammembership_set = TeamMembershipSerializer(many=True, read_only=True)
 
     def get_active_teams(self, obj):
-        team_membership_query_set = TeamMembership.objects.filter(
-            team__season__is_active=True,
-            competitor=obj
-        )
+        team_membership_query_set = TeamMembership.objects.get_team_memberships_for_active_season(competitor=obj)
 
         serializer = TeamMembershipSerializer(
             instance=team_membership_query_set,
@@ -65,15 +62,9 @@ class CustomTeamSerializer(serializers.ModelSerializer):
     leader_id = serializers.SerializerMethodField()
 
     def get_leader_id(self, obj):
-        team_membership_query_set = TeamMembership.objects.filter(
-            team__season__is_active=True,
-            team=obj,
-            is_leader=True
-        )
-        leader = team_membership_query_set.first().team.get_leader()
+        leader = TeamMembership.objects.get_leader_of_team(team=obj)
 
         return leader.id
-
 
     class Meta:
         model = Team

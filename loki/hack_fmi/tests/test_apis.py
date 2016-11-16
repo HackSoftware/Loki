@@ -1,5 +1,5 @@
 import unittest
-import datetime
+import collections
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.core.management import call_command
@@ -24,7 +24,7 @@ from faker import Factory
 faker = Factory.create()
 
 
-class SkillListAPITests(TestCase):
+class TestSkillListAPI(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -39,7 +39,7 @@ class SkillListAPITests(TestCase):
         self.assertContains(response, skill2.name)
 
 
-class MentorListAPIViewTest(TestCase):
+class TestMentorListAPIView(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -72,7 +72,7 @@ class MentorListAPIViewTest(TestCase):
         self.assertNotContains(response, mentor3.name)
 
 
-class SeasonViewTest(TestCase):
+class TestSeasonView(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -97,7 +97,7 @@ class SeasonViewTest(TestCase):
         self.assertTrue(Season.objects.get(name=new_active_season.name).is_active)
 
 
-class PublicTeamViewTest(TestCase):
+class TestPublicTeamView(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -149,7 +149,7 @@ class PublicTeamViewTest(TestCase):
         self.response_405(response)
 
 
-class CreateJWTToken(TestCase):
+class TestCreateJWTToken(TestCase):
     def test_create_jwt_token(self):
         competitor = factories.CompetitorFactory(email=faker.email())
         competitor.is_active = True
@@ -165,7 +165,7 @@ class CreateJWTToken(TestCase):
         self.assertEqual(decoded_payload['email'], data['email'])
 
 
-class MeAPIView(TestCase):
+class TestMeAPIView(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.active_season = factories.SeasonFactory(is_active=True)
@@ -187,48 +187,126 @@ class MeAPIView(TestCase):
     def test_get_me(self):
         response = self.get('hack_fmi:me')
         self.response_200(response)
+        """
+        Assert if there are all the keys I need in the response.
+        """
+        key_equals = [True for k in ['teams', 'competitor_info', 'is_competitor'] if k in response.data.keys()]
+        self.assertTrue(all(key_equals))
 
-        # competitor_info = {"email": self.competitor.email,
-        #                   "first_name":self.competitor.first_name,
-        #                   "last_name":self.competitor.last_name,
-        #                   "is_vegetarian":self.competitor.is_vegetarian,
-        #                   "known_skills":[],
-        #                   "faculty_number":self.competitor.faculty_number,
-        #                   "shirt_size":self.competitor.shirt_size,
-        #                   "current_teammembership_set":[{"competitor":self.competitor.id,
-        #                                                 "team": self.team.id,
-        #                                                 "is_leader":self.team_membership.is_leader}],
-        #                   "teammembership_set":[{"competitor":self.competitor.id,
-        #                                          "team":self.team.id,
-        #                                          "is_leader":self.team_membership.is_leader}],
-        #                   "needs_work":self.competitor.needs_work,
-        #                   "social_links":self.competitor.social_links}
-        # teams = [{"id":self.team.id,
-        #           "name":self.team.name,
-        #           "members":[{"email": self.competitor.email,
-        #                       "first_name": self.competitor.first_name,
-        #                       "last_name": self.competitor.last_name,
-        #                       "is_vegetarian": self.competitor.is_vegetarian,
-        #                       "known_skills":[],
-        #                       "faculty_number": self.competitor.faculty_number,
-        #                       "shirt_size":self.competitor.shirt_size,
-        #                       "current_teammembership_set":[{"competitor": self.competitor.id,
-        #                                                      "team": self.team.id,
-        #                                                      "is_leader": self.team_membership.is_leader}],
-        #                       "teammembership_set":[{"competitor":self.competitor.id,
-        #                                              "team":self.team.id,
-        #                                              "is_leader":self.team_membership.is_leader}],
-        #                       "needs_work":self.competitor.needs_work,
-        #                       "social_links":self.competitor.social_links}],
-        #             "season":self.active_season.id,
-        #             "leader_id":self.competitor.id}]
-        #
-        # current_content = json.loads(str({"is_competitor":bool(self.competitor.get_competitor()),
-        #                    "competitor_info": competitor_info,
-        #                    "teams": teams}))
+        competitor_info = {"email": self.competitor.email,
+                           "first_name": self.competitor.first_name,
+                           "last_name": self.competitor.last_name,
+                           "is_vegetarian": self.competitor.is_vegetarian,
+                           "known_skills": [],
+                           "faculty_number": self.competitor.faculty_number,
+                           "shirt_size": self.competitor.shirt_size,
+                           "current_teammembership_set": [collections.OrderedDict((("competitor", self.competitor.id),
+                                                                                   ("team", self.team.id),
+                                                                                   ("is_leader", self.team_membership.is_leader)))],
+                           "teammembership_set": [collections.OrderedDict((("competitor", self.competitor.id),
+                                                                           ("team", self.team.id),
+                                                                           ("is_leader", self.team_membership.is_leader)))],
+                           "needs_work": self.competitor.needs_work,
+                           "social_links": self.competitor.social_links}
+
+        """
+        In order to test if the competitor_info in the response.data is the proper one
+        I make list of its values and join them (cannot use .values() method because the dict in the response
+        is OrderedDict). After that I check if all the values in the data are the ones I want and assert it.
+        """
+        response_values = ", ".join([str(v) for v in response.data['competitor_info'].values()])
+        data_equals = [True for val in competitor_info.values() if str(val) in response_values]
+        self.assertTrue(all(data_equals))
+
+        """
+        Assert 'is_competitor' is the proper boolean.
+        """
+        self.assertEqual(response.data['is_competitor'], bool(self.competitor.get_competitor()))
+
+        teams_info = [{"id": self.team.id,
+                       "name": self.team.name,
+                       "members": [{"email": self.competitor.email,
+                                    "first_name": self.competitor.first_name,
+                                    "last_name": self.competitor.last_name,
+                                    "is_vegetarian": self.competitor.is_vegetarian,
+                                    "known_skills": [],
+                                    "faculty_number": self.competitor.faculty_number,
+                                    "shirt_size": self.competitor.shirt_size,
+                                    "current_teammembership_set": [collections.OrderedDict((("competitor", self.competitor.id),
+                                                                                            ("team", self.team.id),
+                                                                                            ("is_leader", self.team_membership.is_leader)))],
+                                    "teammembership_set": [collections.OrderedDict((("competitor", self.competitor.id),
+                                                                                    ("team", self.team.id),
+                                                                                    ("is_leader", self.team_membership.is_leader)))],
+                                    "needs_work": self.competitor.needs_work,
+                                    "social_links": self.competitor.social_links}],
+                       "season": self.active_season.id,
+                       "leader_id": self.competitor.id}]
+        """
+        In order to test if the teams_info in the response.data is the proper one
+        I make list of its values and join them (cannot use .values() method because 'teams' in response is
+        list of OrderedDicts). After that I check if all the values in the data are the ones I want and assert it.
+        """
+        response_values = ", ".join([str(v) for v in response.data['teams']])
+        data_equals = [True for val in teams_info if str(val) in response_values]
+        self.assertTrue(all(data_equals))
+
+    def test_post_me(self):
+        response = self.post('hack_fmi:me')
+        self.response_405(response)
+
+    def test_get_with_wrong_jwt(self):
+        self.token = faker.text()
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        response = self.get('hack_fmi:me')
+        self.response_401(response)
 
 
-class TeamAPITest(TestCase):
+class TestMeSeasonAPIView(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.active_season = factories.SeasonFactory(is_active=True)
+        self.room = factories.RoomFactory(season=self.active_season)
+        self.team = factories.TeamFactory(season=self.active_season, room=self.room)
+        self.competitor = factories.CompetitorFactory(email=faker.email())
+        self.competitor.is_active = True
+        self.competitor.set_password(factories.BaseUserFactory.password)
+        self.competitor.save()
+        self.team_membership = factories.TeamMembershipFactory(competitor=self.competitor,
+                                                               team=self.team,
+                                                               is_leader=True)
+
+        data = {'email': self.competitor.email, 'password': factories.BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+    def test_get_me(self):
+        response = self.get('hack_fmi:me-season', season_pk=self.active_season.id)
+        self.response_200(response)
+        """
+        Assert if there are all the keys I need in the response.
+        """
+        key_equals = [True for k in ['is_competitor', 'competitor_info', 'team'] if k in response.data.keys()]
+        self.assertTrue(all(key_equals))
+
+    def test_post_me(self):
+        response = self.post('hack_fmi:me-season')
+        self.response_404(response)
+
+    def test_get_with_wrong_jwt(self):
+        self.token = faker.text()
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        response = self.get('hack_fmi:me-season', season_pk=self.active_season.id)
+        self.response_401(response)
+
+    def test_get_with_wrong_season_id(self):
+        wrong_id = Season.objects.all().last().id + 1
+        response = self.get('hack_fmi:me-season', season_pk=wrong_id)
+        self.response_404(response)
+
+
+class TestTeamAPI(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -898,7 +976,7 @@ class TestInvitationViewSet(TestCase):
         self.assertEqual(TeamMembership.objects.count(), 0)
 
 
-class TeamMentorshipAPITest(TestCase):
+class TestTeamMentorshipAPI(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -1040,7 +1118,7 @@ class TeamMentorshipAPITest(TestCase):
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')
-class RoomTests(TestCase):
+class TestRooms(TestCase):
 
     def setUp(self):
         self.season = Season.objects.create(
