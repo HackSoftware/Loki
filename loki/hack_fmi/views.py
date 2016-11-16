@@ -31,7 +31,7 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
                           TeamLiederCantCreateOtherTeam,
                           IsInvitedMemberCompetitor)
-from .helper import send_team_delete_email
+from .helper import send_team_delete_email, send_invitation
 
 from loki.base_app.helper import try_open
 
@@ -43,12 +43,22 @@ class MeAPIView(generics.GenericAPIView):
     permission_classes = (IsHackFMIUser, )
 
     def get(self, request, *args, **kwargs):
-        competitor = self.request.user
+        competitor = self.request.user.get_competitor()
+
+        # TODO: watch out if the user is not competitor
+        if not competitor:
+            data = {
+                "is_competitor": bool(competitor),
+                "competitor_info": None,
+                "team": None
+            }
+            return Response(data=data, status=status.HTTP_200_OK)
+
         teams = TeamMembership.objects.list_all_teams_for_competitor(competitor=competitor)
-        comp_inf = CompetitorSerializer(competitor.get_competitor())
+        comp_inf = CompetitorSerializer(competitor)
         teams = CustomTeamSerializer(teams, many=True)
         data = {
-            "is_competitor": bool(competitor.get_competitor()),
+            "is_competitor": bool(competitor),
             "competitor_info": comp_inf.data,
             "teams": teams.data
         }
@@ -63,6 +73,15 @@ class MeSeasonAPIView(generics.GenericAPIView):
         season_id = self.kwargs.get('season_pk')
         competitor = self.request.user.get_competitor()
 
+        # TODO: watch out if the user is not competitor
+        if not competitor:
+            data = {
+                "is_competitor": bool(competitor),
+                "competitor_info": None,
+                "team": None
+            }
+            return Response(data=data, status=status.HTTP_200_OK)
+
         season = get_object_or_404(Season, pk=season_id)
         comp_inf = CompetitorSerializer(competitor)
         team_obj = Team.objects.get_all_teams_for_current_season(season=season).\
@@ -70,7 +89,7 @@ class MeSeasonAPIView(generics.GenericAPIView):
 
         team = CustomTeamSerializer(team_obj)
         data = {
-            "is_competitor": bool(competitor.get_competitor()),
+            "is_competitor": bool(competitor),
             "competitor_info": comp_inf.data,
             "team": team.data
         }
@@ -176,8 +195,8 @@ class InvitationViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         team = TeamMembership.objects.get_team_memberships_for_active_season(competitor=self.request.user).first().team
-
-        serializer.save(team=team)
+        invitation = serializer.save(team=team)
+        send_invitation(invitation)
 
     def accept(self, request, *args, **kwargs):
         invitation = self.get_object()
