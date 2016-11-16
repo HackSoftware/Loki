@@ -143,6 +143,10 @@ REST_FRAMEWORK = {
     'UPLOADED_FILES_USE_URL': False,
 }
 
+# JWT Authorization
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': timedelta(seconds=3600),
+}
 
 # # CELERY
 # INSTALLED_APPS += ('loki.celery.CeleryConfig',
