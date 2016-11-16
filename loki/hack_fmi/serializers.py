@@ -62,9 +62,9 @@ class CustomTeamSerializer(serializers.ModelSerializer):
     leader_id = serializers.SerializerMethodField()
 
     def get_leader_id(self, obj):
-        leader = TeamMembership.objects.get_leader_of_team(team=obj)
-
-        return leader.id
+        leader_membership = TeamMembership.objects.get_team_membership_for_competitor_leader(team=obj)
+        if leader_membership:
+            return leader_membership.first().team.get_leader().id
 
     class Meta:
         model = Team

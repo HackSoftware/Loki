@@ -4,7 +4,7 @@ from rest_framework import routers
 
 from .views import (MeAPIView, SkillListAPIView, TeamAPI, InvitationViewSet,
                     MentorListView, SeasonView, PublicTeamView,
-                    get_schedule, schedule_json, OnBoardCompetitor, TeamMembershipAPI,
+                    get_schedule, schedule_json, OnBoardCompetitorAPI, TeamMembershipAPI,
                     TeamMentorshipAPI, TestApi, MeSeasonAPIView)
 from .auth import Login
 # from .signals import send_invitation
@@ -51,5 +51,5 @@ urlpatterns = [
 
     url(r'^api/schedule/', get_schedule, name="get_schedule"),
     url(r'^api/schedule-json/', schedule_json, name="schedule_json"),
-    url(r'^api/onboard-competitor/$', OnBoardCompetitor.as_view(), name='onboard_competitor'),
+    url(r'^api/onboard-competitor/$', OnBoardCompetitorAPI.as_view(), name='onboard_competitor'),
 ] + router.urls

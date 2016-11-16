@@ -475,6 +475,59 @@ class TestTeamAPI(TestCase):
         response = self.client.post(url, team_data)
         self.response_403(response)
 
+class OnBoardCompetitorAPITest(TestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+        self.base_user = factories.BaseUserFactory(email=faker.email())
+        self.base_user.is_active = True
+        self.base_user.save()
+        self.skill = factories.SkillFactory()
+
+        data = {'email': self.base_user.email, 'password': factories.BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+
+    def test_onboarding_base_user_with_correct_authorization_token_and_correct_data(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        data = {
+            "known_skills": [self.skill.id],
+            "shirt_size": 2,
+            "needs_work": False,
+            "is_vegetarian": False,
+            "social_links": faker.text()
+        }
+
+        response = self.client.post(self.reverse('hack_fmi:onboard_competitor'), data=data)
+        self.response_201(response)
+
+        self.assertEquals(1, Competitor.objects.all().count())
+
+    def test_onboarding_base_user_with_uncorrect_authorization_token(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + faker.text())
+        data = {
+            "known_skills": [self.skill.id],
+            "shirt_size": 2,
+            "needs_work": False,
+            "is_vegetarian": False,
+            "social_links": faker.text()
+        }
+
+        response = self.client.post(self.reverse('hack_fmi:onboard_competitor'), data=data)
+        self.response_401(response)
+
+        self.assertEquals(0, Competitor.objects.all().count())
+
+    def test_onboarding_baseuser_with_correct_token_and_uncorrect_data(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        data = {
+            "baba": faker.text()
+        }
+
+        response = self.client.post(self.reverse('hack_fmi:onboard_competitor'), data=data)
+        self.assertEquals(400, response.status_code)
+
+        self.assertEquals(0, Competitor.objects.all().count())
 
 class TestTeamMembershipAPI(TestCase):
 
