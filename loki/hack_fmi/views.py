@@ -167,8 +167,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
     serializer_class = InvitationSerializer
 
     def get_queryset(self):
-        return Invitation.objects.filter(competitor=self.request.user,
-                                         team__season__is_active=True)
+        return Invitation.objects.get_competitor_invitations_for_active_season(competitor=self.request.user)
 
     def get_object(self):
         obj = get_object_or_404(Invitation, id=self.kwargs['pk'])
@@ -176,16 +175,14 @@ class InvitationViewSet(viewsets.ModelViewSet):
         return obj
 
     def perform_create(self, serializer):
-        team = TeamMembership.objects.get(competitor=self.request.user, team__season__is_active=True).team
+        team = TeamMembership.objects.get_team_memberships_for_active_season(competitor=self.request.user).first().team
 
         serializer.save(team=team)
 
     def accept(self, request, *args, **kwargs):
         invitation = self.get_object()
-        TeamMembership.objects.create(
-            team=invitation.team,
-            competitor=invitation.competitor
-        )
+        TeamMembership.objects.create(team=invitation.team,
+                                      competitor=invitation.competitor)
         invitation.delete()
         return Response("You have accepted this invitation!")
 

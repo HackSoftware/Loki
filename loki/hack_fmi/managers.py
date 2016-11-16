@@ -14,3 +14,10 @@ class TeamMembershipManager(models.Manager):
 
     def get_leader_of_team(self, team):
         return self.get_queryset().get_team_membership_of_leader(team=team).first().team.get_leader()
+
+    def is_competitor_leader_of_team(self, competitor, team):
+        return self.get_queryset().get_all_team_memberships_for_competitor(competitor=competitor).\
+            get_team_membership_of_leader(team=team).exists()
+
+    def is_competitor_leader(self, competitor):
+        return self.get_queryset().get_team_membership_for_competitor_leader(competitor=competitor).exists()

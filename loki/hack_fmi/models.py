@@ -3,7 +3,8 @@ from django.db import models
 from ckeditor.fields import RichTextField
 from loki.base_app.models import BaseUser
 
-from .query import TeamQuerySet, TeamMembershipQuerySet
+from .query import (TeamQuerySet, TeamMembershipQuerySet,
+                    TeamMentorshipQuerySet, CompetitorQuerySet, InvitationQuerySet)
 from .managers import TeamMembershipManager
 
 
@@ -63,6 +64,7 @@ class Competitor(BaseUser):
     social_links = models.TextField(blank=True)
     registered = models.BooleanField(default=False)
 
+    objects = CompetitorQuerySet.as_manager()
 
 def active_season():
     active = Season.objects.get(is_active=True)
@@ -147,6 +149,8 @@ class TeamMentorship(models.Model):
     mentor = models.ForeignKey(Mentor)
     team = models.ForeignKey(Team)
 
+    objects = TeamMentorshipQuerySet.as_manager()
+
     def clean(self):
         """
         TODO: Take in mind the season max_mentor_count
@@ -167,6 +171,8 @@ class TeamMembership(models.Model):
 class Invitation(models.Model):
     team = models.ForeignKey(Team)
     competitor = models.ForeignKey(Competitor)
+
+    objects = InvitationQuerySet.as_manager()
 
     class Meta:
         unique_together = ('team', 'competitor')

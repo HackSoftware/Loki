@@ -31,8 +31,9 @@ class IsTeamLeader(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == 'POST':
-            return TeamMembership.objects.filter(team__id=request.data['team'],
-                                                 competitor=request.user.get_competitor()).first().is_leader
+            team = Team.objects.get_team_by_id(id=request.data['team']).first()
+            competitor = request.user.get_competitor()
+            return TeamMembership.objects.is_competitor_leader_of_team(competitor=competitor, team=team)
         return True
 
     def has_object_permission(self, request, view, obj):
@@ -78,8 +79,9 @@ class CanAttachMoreMentorsToTeam(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == 'POST':
-            max_mentors_pick = Team.objects.filter(id=request.data['team']).first().season.max_mentor_pick
-            mentors_for_current_team = TeamMentorship.objects.filter(team__id=request.data['team']).count()
+            team = Team.objects.get_team_by_id(id=request.data['team']).first()
+            max_mentors_pick = team.season.max_mentor_pick
+            mentors_for_current_team = TeamMentorship.objects.get_all_team_mentorships_for_team(team=team).count()
             return max_mentors_pick > mentors_for_current_team
         # If request.method = 'DELETE'
         return True
@@ -95,7 +97,7 @@ class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
         We check whether a team with that name alredy exists when we register or change a team
         (POST and PATCH), otherwise we return True.
         """
-        return not Team.objects.filter(name=request.data['name']).exists()
+        return not Team.objects.get_team_by_name(name=request.data['name']).exists()
 
 
 class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
@@ -103,7 +105,8 @@ class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == "POST":
-            return not TeamMembership.objects.filter(competitor=request.user, is_leader=True).exists()
+            user = request.user.get_competitor()
+            return not TeamMembership.objects.is_competitor_leader(competitor=user)
         """
         TeamLeaders cant send POST queries in order to register another team, since they have their own one.
         TeamLeaders can only change and see their own teams(GET and PATCH queries return True)
@@ -122,11 +125,9 @@ class IsTeamleaderOrCantCreateIvitation(permissions.BasePermission):
     message = "Only team leaders can invite members to team"
 
     def has_permission(self, request, view):
-        
-
         if request.method == "POST":
             user = request.user.get_competitor()
-            return TeamMembership.objects.filter(competitor=user, is_leader=True).exists()
+            return TeamMembership.objects.is_competitor_leader(competitor=user)
 
         """
         Return True if you just want to see all the invitations without creating a new invitation.
@@ -140,9 +141,12 @@ class IsInvitedMemberAlreadyInYourTeam(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == "POST":
-            leader_team = TeamMembership.objects.get(competitor=request.user.get_competitor()).team
-            return TeamMembership.objects.filter(competitor__email=request.data['competitor_email'],
-                                                 team=leader_team).count() == 0
+            leader_team = TeamMembership.objects.\
+                get_all_team_memberships_for_competitor(competitor=request.user.get_competitor()).first().team
+            competitor = Competitor.objects.get_competitor_by_email(email=request.data['competitor_email'])
+            return not TeamMembership.objects.\
+                get_all_team_memberships_for_competitor(competitor=competitor).\
+                get_all_team_memberships_for_team(team=leader_team).exists()
 
         """
         Return True if you just want to see all the invitations without creating a new invitation.
@@ -157,7 +161,8 @@ class IsInvitedMemberAlreadyInOtherTeam(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == "POST":
-            return TeamMembership.objects.filter(competitor__email=request.data['competitor_email']).count() == 0
+            competitor = Competitor.objects.get_competitor_by_email(email=request.data['competitor_email'])
+            return TeamMembership.objects.get_all_team_memberships_for_competitor(competitor=competitor).count() == 0
 
         """
         Return True if you just want to see all the invitations without creating a new invitation.
@@ -185,7 +190,7 @@ class CanInviteMoreMembersInTeam(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
             user_team = TeamMembership.objects.get(competitor=request.user.get_competitor()).team
-            members_in_team = TeamMembership.objects.filter(team=user_team).count()
+            members_in_team = TeamMembership.objects.get_all_team_memberships_for_team(team=user_team).count()
 
             return members_in_team < user_team.season.max_team_members_count
 
@@ -200,9 +205,6 @@ class CanNotAccessWronglyDedicatedIvitation(permissions.BasePermission):
     message = "This invitation is not dedicated to you!"
 
     def has_object_permission(self, request, view, obj):
-        # if TeamMembership.objects.filter(competitor=request.user.get_competitor(), is_leader=True).count() != 0:
-            # return True
-
         return request.user.get_competitor() == obj.competitor
 
 
@@ -211,7 +213,8 @@ class IsInvitedUserInTeam(permissions.BasePermission):
     message = "You have already been a member in another team!"
 
     def has_object_permission(self, request, view, obj):
-        return not TeamMembership.objects.filter(competitor=request.user.get_competitor()).exists()
+        return not TeamMembership.objects.\
+            get_all_team_memberships_for_competitor(competitor=request.user.get_competitor()).exists()
 
 
 class CanNotAcceptInvitationIfTeamLeader(permissions.BasePermission):
@@ -219,7 +222,7 @@ class CanNotAcceptInvitationIfTeamLeader(permissions.BasePermission):
     message = "You are a leader of your team and cannot accept any invitations!"
 
     def has_object_permission(self, request, view, obj):
-        return not TeamMembership.objects.filter(competitor=request.user.get_competitor(), is_leader=True).exists()
+        return not TeamMembership.objects.is_competitor_leader(competitor=request.user.get_competitor())
 
 
 class IsInvitedMemberCompetitor(permissions.BasePermission):
@@ -228,5 +231,5 @@ class IsInvitedMemberCompetitor(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == "POST":
-            return Competitor.objects.filter(email=request.data['competitor_email']).exists()
+            return Competitor.objects.get_competitor_by_email(email=request.data['competitor_email']).exists()
         return True
