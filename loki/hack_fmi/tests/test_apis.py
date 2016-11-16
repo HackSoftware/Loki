@@ -24,7 +24,7 @@ from faker import Factory
 faker = Factory.create()
 
 
-class SkillListAPITests(TestCase):
+class TestSkillListAPI(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -39,7 +39,7 @@ class SkillListAPITests(TestCase):
         self.assertContains(response, skill2.name)
 
 
-class MentorListAPIViewTest(TestCase):
+class TestMentorListAPIView(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -72,7 +72,7 @@ class MentorListAPIViewTest(TestCase):
         self.assertNotContains(response, mentor3.name)
 
 
-class SeasonViewTest(TestCase):
+class TestSeasonView(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -97,7 +97,7 @@ class SeasonViewTest(TestCase):
         self.assertTrue(Season.objects.get(name=new_active_season.name).is_active)
 
 
-class PublicTeamViewTest(TestCase):
+class TestPublicTeamView(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -149,7 +149,7 @@ class PublicTeamViewTest(TestCase):
         self.response_405(response)
 
 
-class CreateJWTToken(TestCase):
+class TestCreateJWTToken(TestCase):
     def test_create_jwt_token(self):
         competitor = factories.CompetitorFactory(email=faker.email())
         competitor.is_active = True
@@ -306,7 +306,7 @@ class TestMeSeasonAPIView(TestCase):
         self.response_404(response)
 
 
-class TeamAPITest(TestCase):
+class TestTeamAPI(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -1442,7 +1442,7 @@ class TestTeamMembershipAPI(TestCase):
 #         self.assertEqual(Invitation.objects.all().count(), 1)
 
 
-class TeamMentorshipAPITest(TestCase):
+class TestTeamMentorshipAPI(TestCase):
 
     def setUp(self):
         self.client = APIClient()
@@ -1584,7 +1584,7 @@ class TeamMentorshipAPITest(TestCase):
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')
-class RoomTests(TestCase):
+class TestRooms(TestCase):
 
     def setUp(self):
         self.season = Season.objects.create(
