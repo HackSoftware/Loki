@@ -75,3 +75,11 @@ class TestTeamMembershipManager(TestCase):
 
     def test_get_leader_of_team(self):
         self.assertEqual(self.competitor, TeamMembership.objects.get_leader_of_team(team=self.team))
+
+    def test_get_team_memberships_for_active_season(self):
+        """
+        get_team_memberships_for_active_season() ought to return QuerySet object.
+        That's why I'm able to call .first() on it and compare the result to self.team_membership
+        """
+        self.assertEqual(self.team_membership, TeamMembership.objects.\
+                                               get_team_memberships_for_active_season(competitor=self.competitor).first())

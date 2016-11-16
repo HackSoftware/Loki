@@ -8,7 +8,7 @@ class TeamMembershipQuerySet(models.QuerySet):
     def get_team_membership_of_leader(self, team):
         return self.filter(team=team, is_leader=True)
 
-    def get_teams_for_active_season(self, competitor):
+    def get_team_memberships_for_active_season(self, competitor):
         return self.get_all_team_memberships_for_competitor(competitor=competitor).filter(team__season__is_active=True)
 
 
