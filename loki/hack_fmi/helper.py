@@ -23,12 +23,12 @@ def send_team_delete_email(team):
 def send_invitation(invitation):
     receiver = invitation.competitor.email
     template_id = settings.EMAIL_TEMPLATES['send_invitation']
-    # link =
+    link = ''
     context = {
-        "full_name": BaseUser.objects.get(email=receiver).full_name,
-        "leader_name": invitation.team.get_leader(),
+        "receiver_full_name": BaseUser.objects.get(email=receiver).full_name,
+        "leader_name": invitation.team.get_leader().full_name,
         "team_name": invitation.team.name,
-        # "redirect_link": link
+        "redirect_link": link
     }
     send_template_email(receiver, template_id, context)
 
