@@ -61,7 +61,7 @@ class IsSeasonDeadlineUpToDate(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
             active_season = Season.objects.get(is_active=True)
-            return active_season.make_team_dead_line < date.today()
+            return active_season.make_team_dead_line > date.today()
         return True
 
 
