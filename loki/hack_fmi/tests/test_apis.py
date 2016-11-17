@@ -289,7 +289,7 @@ class TestMeSeasonAPIView(TestCase):
         """
         Assert if there are all the keys I need in the response.
         """
-        key_equals = [True for k in ['is_competitor', 'competitor_info', 'team'] if k in response.data.keys()]
+        key_equals = [True for k in ['is_competitor', 'competitor_info', 'team', 'team_membership_id'] if k in response.data.keys()]
         self.assertTrue(all(key_equals))
 
     def test_post_me(self):

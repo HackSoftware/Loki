@@ -7,6 +7,7 @@ class TeamMembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamMembership
         fields = (
+            'id',
             'competitor',
             'team',
             'is_leader',
