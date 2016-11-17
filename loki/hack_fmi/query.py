@@ -12,10 +12,17 @@ class TeamMembershipQuerySet(models.QuerySet):
         return self.filter(team=team, is_leader=True)
 
     def get_team_memberships_for_active_season(self, competitor):
-        return self.get_all_team_memberships_for_competitor(competitor=competitor).filter(team__season__is_active=True)
+        try:
+            return self.get_all_team_memberships_for_competitor(
+                competitor=competitor).filter(team__season__is_active=True)
+        except AttributeError:  # Competitor is None
+            None
 
     def get_team_membership_for_competitor_leader(self, competitor):
-        return self.get_all_team_memberships_for_competitor(competitor=competitor).filter(is_leader=True)
+        try:
+            return self.get_all_team_memberships_for_competitor(competitor=competitor).filter(is_leader=True)
+        except AttributeError:  # Competitor is None
+            None
 
 
 class TeamQuerySet(models.QuerySet):
