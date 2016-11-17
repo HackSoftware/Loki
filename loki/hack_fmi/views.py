@@ -245,7 +245,6 @@ def schedule_json(request):
 
 
 class OnBoardCompetitorAPI(APIView):
-    permission_classes = (IsAuthenticated,)
     authentication_classes = (JSONWebTokenAuthentication,)
 
     def post(self, request, format=None):
