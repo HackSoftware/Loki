@@ -88,12 +88,17 @@ class MeSeasonAPIView(generics.GenericAPIView):
             get_all_teams_for_competitor(competitor=competitor).first()
 
         team = CustomTeamSerializer(team_obj)
-        tm_id = TeamMembership.objects.filter(team=team_obj, competitor=competitor).first()
+        tm_obj = TeamMembership.objects.filter(team=team_obj, competitor=competitor).first()
+        if not tm_obj:
+            tm_id = None
+        else:
+            tm_id = tm_obj.id
+
         data = {
             "is_competitor": bool(competitor),
             "competitor_info": comp_inf.data,
             "team": team.data,
-            "team_membership_id": tm_id.id
+            "team_membership_id": tm_id
         }
         return Response(data=data, status=status.HTTP_200_OK)
 
