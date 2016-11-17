@@ -58,8 +58,11 @@ class IsTeamMembershipInActiveSeason(permissions.BasePermission):
 class IsSeasonDeadlineUpToDate(permissions.BasePermission):
     message = "The deadline for creating new teams has expired!"
 
-    def has_object_permission(self, request, view, obj):
-        return obj.season.make_team_dead_line < date.today()
+    def has_permission(self, request, view):
+        if request.method == "POST":
+            active_season = Season.objects.get(is_active=True)
+            return active_season.make_team_dead_line < date.today()
+        return True
 
 
 class IsMentorDatePickUpToDate(permissions.BasePermission):

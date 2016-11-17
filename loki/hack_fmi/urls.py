@@ -19,7 +19,7 @@ invitation_urls = InvitationViewSet.get_urls()
 """
 
 router = routers.SimpleRouter()
-router.register(r'teams', TeamAPI)
+router.register(r'api/teams', TeamAPI)
 
 urlpatterns = [
     url(r'^api/jwt-login/$', obtain_jwt_token, name='api-login'),
@@ -47,6 +47,7 @@ urlpatterns = [
     url(r'^api/logout/$', views.LogoutView.as_view(), name='logout'),
 
     url(r'^api/me/$', MeAPIView.as_view(), name='me'),
+    # TODO: change season_pk to get parameter
     url(r'^api/me/(?P<season_pk>[0-9]+)/$', MeSeasonAPIView.as_view(), name='me-season'),
 
     url(r'^api/schedule/', get_schedule, name="get_schedule"),

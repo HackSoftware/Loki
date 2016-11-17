@@ -1,5 +1,6 @@
 import unittest
 import collections
+from django.core import mail
 from django.core.urlresolvers import reverse
 from django.core.management import call_command
 from django.core.management.base import CommandError
@@ -715,6 +716,7 @@ class TestInvitationViewSet(TestCase):
         data = {'competitor_email': non_competitor.email}
         response = self.client.post(url, data)
         self.response_403(response)
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_send_invitation_for_team_to_other_competitor(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
@@ -740,22 +742,27 @@ class TestInvitationViewSet(TestCase):
         self.assertEquals(Invitation.objects.count(), 1)
         self.assertEqual(Invitation.objects.first().team.id, self.team.id)
         self.assertEqual(Invitation.objects.first().competitor.id, receiver.id)
+        self.assertEqual(len(mail.outbox), 1)
 
-    # def test_if_email_is_sent_to_user(self):
-    #     competitor = factories.CompetitorFactory(
-    #         email=faker.email()
-    #     )
-    #     subject = "Invitation for hackFMI membership"
-    #     body = faker.paragraph()
+    def test_sent_email_after_an_invitation_is_made(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
-    #     msg = EmailMultiAlternatives(subject=subject,
-    #                                  body=body,
-    #                                  from_email=settings.DJANGO_DEFAULT_FROM_EMAIL,
-    #                                  to=[competitor.email])
+        factories.TeamMembershipFactory(competitor=self.recipient,
+                                        team=self.team,
+                                        is_leader=True)
 
-    #     response = msg.send()
+        receiver = factories.CompetitorFactory(email=faker.email())
 
-    #     self.assertEqual(response, 1)
+        self.assertEquals(Invitation.objects.count(), 0)
+
+        url = self.reverse('hack_fmi:invitation-list')
+        data = {'competitor_email': receiver.email}
+        response = self.client.post(url, data)
+        self.response_201(response)
+        self.assertEquals(Invitation.objects.count(), 1)
+        self.assertEqual(Invitation.objects.first().team.id, self.team.id)
+        self.assertEqual(Invitation.objects.first().competitor.id, receiver.id)
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_non_leaders_cant_send_invitations(self):
         non_leader = factories.CompetitorFactory(email=faker.email())
@@ -778,6 +785,7 @@ class TestInvitationViewSet(TestCase):
         response = self.client.post(url, data,)
 
         self.response_403(response)
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_send_invitation_to_not_existing_user(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
@@ -797,6 +805,7 @@ class TestInvitationViewSet(TestCase):
         response = self.client.post(url, data)
 
         self.response_403(response)
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_send_invitation_twice_to_same_competitor(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
@@ -811,6 +820,7 @@ class TestInvitationViewSet(TestCase):
         response = self.client.post(url, data)
 
         self.response_403(response)
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_send_invitation_when_team_is_full(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
@@ -836,6 +846,7 @@ class TestInvitationViewSet(TestCase):
 
         self.response_403(response)
         self.assertEqual(TeamMembership.objects.filter(team=self.team).count(), 2)
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_send_invitation_to_user_that_already_has_team(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
@@ -857,6 +868,7 @@ class TestInvitationViewSet(TestCase):
         response = self.client.post(url, data)
 
         self.response_403(response)
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_user_cant_get_his_invitations_if_not_being_hackfmi_user(self):
         self.client.credentials()
