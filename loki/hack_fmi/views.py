@@ -67,7 +67,7 @@ class MeAPIView(generics.GenericAPIView):
 
 class MeSeasonAPIView(generics.GenericAPIView):
     authentication_classes = (JSONWebTokenAuthentication, )
-    # permission_classes = (IsTeamInActiveSeason, )
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
         season_id = self.kwargs.get('season_pk')
@@ -147,7 +147,7 @@ class TeamAPI(mixins.CreateModelMixin,
 class TeamMembershipAPI(generics.DestroyAPIView):
     permission_classes = (IsHackFMIUser, IsMemberOfTeam,
                           IsTeamMembershipInActiveSeason,)
-
+    authentication_classes = (JSONWebTokenAuthentication, )
     serializer_class = TeamMembershipSerializer
 
     def get_queryset(self):
@@ -264,7 +264,8 @@ def schedule_json(request):
 
 
 class OnBoardCompetitorAPI(APIView):
-    authentication_classes = (JSONWebTokenAuthentication,)
+    authentication_classes = (JSONWebTokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
 
     def post(self, request, format=None):
         if not request.user.get_competitor():
