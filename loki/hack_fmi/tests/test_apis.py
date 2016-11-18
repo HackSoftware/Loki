@@ -1163,8 +1163,8 @@ class TestTeamMentorshipAPI(TestCase):
         self.response_403(response)
 
     def test_assign_mentor_before_mentor_pick_has_started(self):
-        self.active_season.mentor_pick_start_date = date_increase(10)
-        self.active_season.mentor_pick_end_date = date_increase(10)
+        self.active_season.mentor_pick_start_date = date_increase(20)
+        self.active_season.mentor_pick_end_date = date_increase(20)
         self.active_season.save()
 
         data = {'team': self.team.id,
@@ -1176,8 +1176,8 @@ class TestTeamMentorshipAPI(TestCase):
         self.response_403(response)
 
     def test_assign_mentor_after_mentor_pick_has_ended(self):
-        self.active_season.mentor_pick_start_date = date_decrease(10)
-        self.active_season.mentor_pick_end_date = date_decrease(10)
+        self.active_season.mentor_pick_start_date = date_decrease(20)
+        self.active_season.mentor_pick_end_date = date_decrease(20)
         self.active_season.save()
 
         data = {'team': self.team.id,

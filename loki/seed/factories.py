@@ -236,7 +236,10 @@ class SeasonFactory(factory.DjangoModelFactory):
     min_team_members_count = int(faker.random_element(elements=('1', '2')))
     max_team_members_count = int(faker.random_element(elements=('7', '8')))
     sign_up_deadline = faker.date()
-    make_team_dead_line = faker.date()
+    # Increase with 20 days form date.today()
+    make_team_dead_line = date_increase(10)
+    # In order to be able to pick up mentor in date.today(),
+    # the pick up period must have started ==> date_decrease
     mentor_pick_start_date = date_decrease(20)
     mentor_pick_end_date = date_increase(20)
     max_mentor_pick = faker.random_number(digits=1)
