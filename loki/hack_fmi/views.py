@@ -193,7 +193,8 @@ class InvitationViewSet(viewsets.ModelViewSet):
     serializer_class = InvitationSerializer
 
     def get_queryset(self):
-        return Invitation.objects.get_competitor_invitations_for_active_season(competitor=self.request.user)
+        return Invitation.objects.get_competitor_invitations_for_active_season(
+            competitor=self.request.user.get_competitor())
 
     def get_object(self):
         obj = get_object_or_404(Invitation, id=self.kwargs['pk'])
@@ -201,7 +202,10 @@ class InvitationViewSet(viewsets.ModelViewSet):
         return obj
 
     def perform_create(self, serializer):
-        team = TeamMembership.objects.get_team_memberships_for_active_season(competitor=self.request.user).first().team
+        # Request user is the leader of the team and he has exactly one TeamMembership.
+        team = TeamMembership.objects.get_team_memberships_for_active_season(
+            competitor=self.request.user.get_competitor()).first().team
+
         invitation = serializer.save(team=team)
         send_invitation(invitation)
 

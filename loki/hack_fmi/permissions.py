@@ -109,7 +109,7 @@ class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
             user = request.user.get_competitor()
-            return not TeamMembership.objects.is_competitor_leader(competitor=user)
+            return not TeamMembership.objects.is_competitor_leader_in_current_season(competitor=user)
         """
         TeamLeaders cant send POST queries in order to register another team, since they have their own one.
         TeamLeaders can only change and see their own teams(GET and PATCH queries return True)
@@ -125,12 +125,12 @@ class IsTeamInActiveSeason(permissions.BasePermission):
 
 
 class IsTeamleaderOrCantCreateIvitation(permissions.BasePermission):
-    message = "Only team leaders can invite members to team"
+    message = "Only cureent season team leaders can invite members to team"
 
     def has_permission(self, request, view):
         if request.method == "POST":
             user = request.user.get_competitor()
-            return TeamMembership.objects.is_competitor_leader(competitor=user)
+            return TeamMembership.objects.is_competitor_leader_in_current_season(competitor=user)
 
         """
         Return True if you just want to see all the invitations without creating a new invitation.
@@ -225,7 +225,8 @@ class CanNotAcceptInvitationIfTeamLeader(permissions.BasePermission):
     message = "You are a leader of your team and cannot accept any invitations!"
 
     def has_object_permission(self, request, view, obj):
-        return not TeamMembership.objects.is_competitor_leader(competitor=request.user.get_competitor())
+        competitor = request.user.get_competitor()
+        return not TeamMembership.objects.is_competitor_leader_in_current_season(competitor=competitor)
 
 
 class IsInvitedMemberCompetitor(permissions.BasePermission):
