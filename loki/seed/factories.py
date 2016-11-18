@@ -151,7 +151,7 @@ class BaseUserPasswordResetTokenFactory(factory.DjangoModelFactory):
         model = base_app_models.BaseUserPasswordResetToken
 
     user = factory.SubFactory(BaseUserFactory)
-    token = factory.Sequence(lambda n: '{}{}'.format(faker.word(), n))
+    token = factory.Sequence(lambda n: '{}{}'.format(faker.text(max_nb_chars=20), n))
 
 
 class SkillFactory(factory.DjangoModelFactory):
