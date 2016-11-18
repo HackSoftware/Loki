@@ -226,7 +226,7 @@ THUMBNAIL_PROCESSORS = (
 
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DJANGO_DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL', default="HackBulgaria <team@hackbulgaria.com>")
 
