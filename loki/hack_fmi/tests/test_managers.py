@@ -36,7 +36,6 @@ class TestTeamManager(TestCase):
 
     def test_get_all_teams_for_competitor_if_competitor_has_no_team(self):
         competitor = CompetitorFactory(email=faker.email())
-
         self.assertEqual(0, Team.objects.get_all_teams_for_competitor(competitor=competitor).count())
 
     def test_get_all_teams_for_competitor_if_competitor_is_None(self):
