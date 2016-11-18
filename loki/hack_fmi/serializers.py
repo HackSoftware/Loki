@@ -71,7 +71,7 @@ class CompetitorInTeamSerializer(serializers.ModelSerializer):
 
 
 class CustomTeamSerializer(serializers.ModelSerializer):
-    members = CompetitorSerializer(many=True, read_only=True)
+    members = CompetitorInTeamSerializer(many=True, read_only=True)
     leader_id = serializers.SerializerMethodField()
 
     def get_leader_id(self, obj):

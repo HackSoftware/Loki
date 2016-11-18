@@ -31,75 +31,53 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
                           TeamLiederCantCreateOtherTeam,
                           IsInvitedMemberCompetitor)
-from .helper import send_team_delete_email, send_invitation
+from .helper import send_team_delete_email, send_invitation, get_object_variable_or_none
+from .mixins import MeSerializerMixin
 
 from loki.base_app.helper import try_open
 
 import json
 
 
-class MeAPIView(generics.GenericAPIView):
+class MeAPIView(MeSerializerMixin, generics.GenericAPIView):
     authentication_classes = (JSONWebTokenAuthentication, )
-    permission_classes = (IsHackFMIUser, )
+    # Check user is authenticated in IsHackFMIUser permission
+    permission_classes = (IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
-        competitor = self.request.user.get_competitor()
-
-        # TODO: watch out if the user is not competitor
-        if not competitor:
-            data = {
-                "is_competitor": bool(competitor),
-                "competitor_info": None,
-                "team": None
-            }
-            return Response(data=data, status=status.HTTP_200_OK)
-
-        teams = TeamMembership.objects.list_all_teams_for_competitor(competitor=competitor)
-        comp_inf = CompetitorSerializer(competitor)
-        teams = CustomTeamSerializer(teams, many=True)
-        data = {
-            "is_competitor": bool(competitor),
-            "competitor_info": comp_inf.data,
-            "teams": teams.data
-        }
+        data = super().get(request, *args, **kwargs)
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-class MeSeasonAPIView(generics.GenericAPIView):
+class MeSeasonAPIView(MeSerializerMixin, generics.GenericAPIView):
     authentication_classes = (JSONWebTokenAuthentication, )
     permission_classes = (IsAuthenticated, )
 
     def get(self, request, *args, **kwargs):
-        season_id = self.kwargs.get('season_pk')
-        competitor = self.request.user.get_competitor()
+        data = super().get(request, *args, **kwargs)
 
-        # TODO: watch out if the user is not competitor
-        if not competitor:
-            data = {
-                "is_competitor": bool(competitor),
-                "competitor_info": None,
-                "team": None
-            }
+        if not data['is_competitor']:
             return Response(data=data, status=status.HTTP_200_OK)
 
+        season_id = self.kwargs.get('season_pk')
         season = get_object_or_404(Season, pk=season_id)
-        comp_inf = CompetitorSerializer(competitor)
-        team_obj = Team.objects.get_all_teams_for_current_season(season=season).\
+
+        competitor = self.request.user.get_competitor()
+        team = Team.objects.get_all_teams_for_current_season(season=season).\
             get_all_teams_for_competitor(competitor=competitor).first()
 
-        team = CustomTeamSerializer(team_obj)
-        tm_obj = TeamMembership.objects.filter(team=team_obj, competitor=competitor).first()
-        if not tm_obj:
-            tm_id = None
-        else:
-            tm_id = tm_obj.id
+        team_data = None
+        tm_id = None
 
-        data = {
-            "is_competitor": bool(competitor),
-            "competitor_info": comp_inf.data,
-            "team": team.data,
-            "team_membership_id": tm_id
-        }
+        if team:
+            team_data = CustomTeamSerializer(team).data
+            tm_id = get_object_variable_or_none(
+                queryset=TeamMembership.objects.filter(team=team, competitor=competitor),
+                variable="id")
+
+        data["team"] = team_data
+        data["team_membership_id"] = tm_id
+
         return Response(data=data, status=status.HTTP_200_OK)
 
 

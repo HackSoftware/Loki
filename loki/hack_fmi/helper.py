@@ -43,3 +43,9 @@ def date_decrease(days):
     new_date = old_date - timedelta(days=days)
     result = new_date.strftime("%Y-%m-%d")
     return result
+
+
+def get_object_variable_or_none(queryset, variable):
+    if not queryset.first():
+        return None
+    return queryset.values(variable)[0][variable]
