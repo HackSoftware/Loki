@@ -1080,7 +1080,6 @@ class TestInvitationViewSet(TestCase):
             competitor=self.receiver).count(), 1)
         url = self.reverse('hack_fmi:invitation-accept', pk=inv.id)
         response = self.client.post(url)
-        import ipdb; ipdb.set_trace()
         self.response_200(response)
         self.assertEqual(Invitation.objects.count(), 0)
         self.assertTrue(TeamMembership.objects.filter(team=inv.team, competitor=inv.competitor).exists())
