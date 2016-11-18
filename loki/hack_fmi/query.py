@@ -38,6 +38,9 @@ class TeamQuerySet(models.QuerySet):
     def get_team_by_name(self, name):
         return self.filter(name=name)
 
+    def get_team_by_name_for_active_season(self, name):
+        return self.get_team_by_name(name=name).filter(is_active=True)
+
 
 class TeamMentorshipQuerySet(models.QuerySet):
     def get_all_team_mentorships_for_team(self, team):
