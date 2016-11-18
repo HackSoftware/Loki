@@ -100,7 +100,7 @@ class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
         We check whether a team with that name alredy exists when we register or change a team
         (POST and PATCH), otherwise we return True.
         """
-        return not Team.objects.get_team_by_name(name=request.data['name']).exists()
+        return not Team.objects.get_team_by_name_for_active_season(name=request.data['name']).exists()
 
 
 class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
@@ -217,7 +217,7 @@ class IsInvitedUserInTeam(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return not TeamMembership.objects.\
-            get_all_team_memberships_for_competitor(competitor=request.user.get_competitor()).exists()
+            get_team_memberships_for_active_season(competitor=request.user.get_competitor()).exists()
 
 
 class CanNotAcceptInvitationIfTeamLeader(permissions.BasePermission):

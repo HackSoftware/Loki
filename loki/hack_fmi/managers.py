@@ -30,4 +30,7 @@ class TeamMembershipManager(models.Manager):
         # .first() as one competitor can be part of exactly one team in current season
         if not self.get_queryset().get_all_team_memberships_for_competitor(competitor=competitor):
             return False
-        return self.get_queryset().get_team_memberships_for_active_season(competitor=competitor).first().is_leader
+        tm = self.get_queryset().get_team_memberships_for_active_season(competitor=competitor).first()
+        if not tm:
+            return False
+        return tm.is_leader
