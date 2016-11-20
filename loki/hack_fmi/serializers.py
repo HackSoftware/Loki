@@ -198,6 +198,7 @@ class TeamSerializer(serializers.ModelSerializer):
             'leader_id',
             'idea_description',
             'repository',
+            'technologies',
             'technologies_full',
             'need_more_members',
             'members_needed_desc',
