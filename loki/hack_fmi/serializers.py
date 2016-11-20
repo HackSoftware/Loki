@@ -36,6 +36,7 @@ class CompetitorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Competitor
         fields = (
+            'id',
             'email',
             'first_name',
             'last_name',
