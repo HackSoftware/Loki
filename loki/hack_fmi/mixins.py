@@ -13,6 +13,7 @@ class MeSerializerMixin:
             "team": None
         }
         if competitor:
+            # TODO: Only `id`, `email`, `first_name` & `last_name` are needed. Create new serializer.
             comp_inf = CompetitorSerializer(competitor)
 
             teams = TeamMembership.objects.list_all_teams_for_competitor(competitor=competitor)
