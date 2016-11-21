@@ -752,6 +752,8 @@ class TestTeamMembershipAPI(TestCase):
 
         self.response_403(response)
 
+        self.assertEqual(len(mail.outbox), 0)
+
     def test_non_team_leader_leaves_team(self):
         # You can leave team without being a team leader
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
@@ -808,6 +810,36 @@ class TestTeamMembershipAPI(TestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertTrue(Team.objects.filter(name=team.name).exists())
         self.assertFalse(TeamMembership.objects.filter(competitor=self.competitor).exists())
+        self.assertEqual(len(mail.outbox), 0)
+
+    def test_delete_team_if_leader_must_erase_the_memberships_of_the_members(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        team = factories.TeamFactory(name=faker.name(),
+                                     season=self.active_season,
+                                     room=self.room)
+        leader_membership = factories.TeamMembershipFactory(competitor=self.competitor,
+                                                            team=team,
+                                                            is_leader=True)
+        self.assertEqual(team.get_leader(), self.competitor)
+
+        another_competitor = factories.CompetitorFactory()
+        factories.TeamMembershipFactory(competitor=another_competitor,
+                                        team=team,
+                                        is_leader=Factory)
+        self.assertEquals(TeamMembership.objects.count(), 2)
+
+        self.assertTrue(Team.objects.filter(name=team.name).exists())
+
+        url = self.reverse('hack_fmi:team_membership', pk=leader_membership.id)
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Team.objects.filter(name=team.name).exists())
+        self.assertFalse(TeamMembership.objects.filter(competitor=self.competitor).exists())
+        self.assertFalse(TeamMembership.objects.filter(competitor=another_competitor).exists())
+        # TODO: change the email template for leader
+        self.assertEqual(len(mail.outbox), 2)
 
 
 class TestInvitationViewSet(TestCase):
