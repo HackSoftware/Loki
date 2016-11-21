@@ -1,4 +1,4 @@
-from .serializers import CompetitorSerializer, CustomTeamSerializer
+from .serializers import CompetitorInTeamSerializer, CustomTeamSerializer
 from .models import TeamMembership
 
 
@@ -10,11 +10,10 @@ class MeSerializerMixin:
         data = {
             "is_competitor": bool(competitor),
             "competitor_info": None,
-            "team": None
+            "teams": None
         }
         if competitor:
-            # TODO: Only `id`, `email`, `first_name` & `last_name` are needed. Create new serializer.
-            comp_inf = CompetitorSerializer(competitor)
+            comp_inf = CompetitorInTeamSerializer(competitor)
 
             teams = TeamMembership.objects.list_all_teams_for_competitor(competitor=competitor)
 

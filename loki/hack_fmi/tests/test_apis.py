@@ -287,7 +287,7 @@ class TestMeAPIView(TestCase):
                                      'is_competitor'] if k in response.data.keys()]
         self.assertTrue(all(key_equals))
         # If request user is not competitor, 'competitor_info' and 'team' fields must be None
-        self.assertEqual(response.data['team'], None)
+        self.assertEqual(response.data['teams'], None)
         self.assertEqual(response.data['competitor_info'], None)
         self.assertFalse(response.data['is_competitor'])
 
@@ -304,7 +304,7 @@ class TestMeAPIView(TestCase):
 
         response = self.client.get(url)
         self.response_200(response)
-        self.assertIsNone(response.data['team'])
+        self.assertIsNone(response.data['teams'])
         self.assertIsNone(response.data['team_membership_id'])
         self.assertIsNotNone(response.data['competitor_info'])
         self.assertTrue(response.data['is_competitor'])
@@ -380,7 +380,7 @@ class TestMeSeasonAPIView(TestCase):
                                      'is_competitor'] if k in response.data.keys()]
         self.assertTrue(all(key_equals))
         # If request user is not competitor, 'competitor_info' and 'team' fields must be None
-        self.assertIsNone(response.data['team'])
+        self.assertIsNone(response.data['teams'])
         self.assertIsNone(response.data['competitor_info'])
         self.assertFalse(response.data['is_competitor'])
 
@@ -395,7 +395,7 @@ class TestMeSeasonAPIView(TestCase):
 
         response = self.client.get(url)
         self.response_200(response)
-        self.assertIsNone(response.data['team'])
+        self.assertIsNone(response.data['teams'])
         self.assertIsNone(response.data['team_membership_id'])
         self.assertIsNotNone(response.data['competitor_info'])
         self.assertTrue(response.data['is_competitor'])
@@ -414,7 +414,7 @@ class TestMeSeasonAPIView(TestCase):
         response = self.client.get(url)
         self.response_200(response)
         # self.competitor in team for season and in self.team for active_season
-        self.assertEqual(response.data['team']['id'], team.id)
+        self.assertEqual(response.data['teams']['id'], team.id)
         self.assertEqual(response.data['team_membership_id'], membership.id)
         self.assertIsNotNone(response.data['competitor_info'])
         self.assertTrue(response.data['is_competitor'])
@@ -429,7 +429,7 @@ class TestMeSeasonAPIView(TestCase):
         response = self.client.get(url)
         self.response_200(response)
 
-        self.assertIsNone(response.data['team'])
+        self.assertIsNone(response.data['teams'])
         self.assertIsNone(response.data['team_membership_id'])
         self.assertIsNotNone(response.data['competitor_info'])
         self.assertTrue(response.data['is_competitor'])

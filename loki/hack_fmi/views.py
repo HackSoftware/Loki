@@ -75,7 +75,7 @@ class MeSeasonAPIView(MeSerializerMixin, generics.GenericAPIView):
                 queryset=TeamMembership.objects.filter(team=team, competitor=competitor),
                 variable="id")
 
-        data["team"] = team_data
+        data["teams"] = team_data
         data["team_membership_id"] = tm_id
 
         return Response(data=data, status=status.HTTP_200_OK)
