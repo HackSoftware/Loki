@@ -476,7 +476,7 @@ class TestTeamAPI(TestCase):
         response = self.client.patch(url, data)
         self.response_403(response)
 
-    def test_only_leader_can_change_team(self):
+    def test_leader_can_change_team_and_name(self):
         self.team_membership.is_leader = True
         self.team_membership.save()
 
@@ -490,8 +490,23 @@ class TestTeamAPI(TestCase):
         response = self.client.patch(url, data)
         self.response_200(response)
 
-        self.assertIsNotNone(Team.objects.get(name=data['name']))
-        self.assertIsNotNone(Team.objects.get(idea_description=data['idea_description']))
+        self.assertEqual(data['name'], Team.objects.get(id=self.team.id).name)
+        self.assertEqual(data['idea_description'], Team.objects.get(id=self.team.id).idea_description)
+
+    def test_only_leader_can_change_team(self):
+        self.team_membership.is_leader = True
+        self.team_membership.save()
+
+        data = {
+            'idea_description': faker.paragraph(),
+        }
+
+        url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
+
+        response = self.client.patch(url, data)
+        self.response_200(response)
+
+        self.assertEqual(data['idea_description'], Team.objects.get(id=self.team.id).idea_description)
 
     def test_user_can_get_to_teams_in_non_active_seasons(self):
         self.active_season.is_active = False
