@@ -18,7 +18,7 @@ from ..models import (TeamMembership, Competitor,
 from loki.seed.factories import (SkillFactory, HackFmiPartnerFactory, SeasonFactory,
                                 MentorFactory, RoomFactory, TeamFactory,
                                 CompetitorFactory, BaseUserFactory, TeamMembershipFactory,
-                                StudentFactory)
+                                StudentFactory, InvitationFactory)
 
 from faker import Factory
 
@@ -955,7 +955,7 @@ class TestInvitationViewSet(TestCase):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + receiver_token)
 
         InvitationFactory(team=self.sender_team,
-                                    competitor=self.receiver)
+                          competitor=self.receiver)
         url = self.reverse('hack_fmi:invitation-list')
         response = self.client.get(url)
 
@@ -974,8 +974,8 @@ class TestInvitationViewSet(TestCase):
     def test_cannot_accept_invitation_if_not_hackfmi_user(self):
         user = BaseUserFactory(email=faker.email())
         user.is_active = True
-        user.set_password(BaseUserFactory.password)
         user.save()
+
         data = {'email': user.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         token = response.data['token']
@@ -988,16 +988,13 @@ class TestInvitationViewSet(TestCase):
         self.response_403(response)
 
     def test_accept_invitation(self):
-        self.receiver.is_active = True
-        self.receiver.set_password(BaseUserFactory.password)
-        self.receiver.save()
         data = {'email': self.receiver.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         receiver_token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + receiver_token)
 
         inv = InvitationFactory(team=self.sender_team,
-                                          competitor=self.receiver)
+                                competitor=self.receiver)
         self.assertEqual(Invitation.objects.all().count(), 1)
         url = reverse('hack_fmi:invitation-accept', kwargs={'pk': inv.id})
         response = self.client.post(url)
@@ -1014,11 +1011,11 @@ class TestInvitationViewSet(TestCase):
 
     def test_cannot_accept_invitation_if_receiver_already_has_team(self):
         TeamMembershipFactory(competitor=self.receiver,
-                                        team=self.receiver_team,
-                                        is_leader=False)
+                              team=self.receiver_team,
+                              is_leader=False)
 
         inv = InvitationFactory(team=self.sender_team,
-                                          competitor=self.receiver)
+                                competitor=self.receiver)
 
         self.assertEqual(Invitation.objects.count(), 1)
         self.assertEqual(TeamMembership.objects.count(), 2)
@@ -1033,7 +1030,7 @@ class TestInvitationViewSet(TestCase):
     def test_cannot_accept_invitation_that_is_not_dedicated_to_request_user(self):
         another_competitor = CompetitorFactory()
         inv = InvitationFactory(team=self.sender_team,
-                                          competitor=another_competitor)
+                                competitor=another_competitor)
         self.assertEqual(Invitation.objects.count(), 1)
         self.assertEqual(TeamMembership.objects.count(), 1)
 
@@ -1045,9 +1042,6 @@ class TestInvitationViewSet(TestCase):
         self.assertEqual(TeamMembership.objects.count(), 1)
 
     def test_can_accept_invitation_if_you_are_a_leader_in_non_active_season(self):
-        self.receiver.is_active = True
-        self.receiver.set_password(BaseUserFactory.password)
-        self.receiver.save()
         data = {'email': self.receiver.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         receiver_token = response.data['token']
@@ -1055,14 +1049,14 @@ class TestInvitationViewSet(TestCase):
 
         inactive_season = SeasonFactory(is_active=False)
         old_receiver_team = TeamFactory(name=faker.name(),
-                                                  season=inactive_season)
+                                        season=inactive_season)
 
         TeamMembershipFactory(competitor=self.receiver,
-                                        team=old_receiver_team,
-                                        is_leader=True)
+                              team=old_receiver_team,
+                              is_leader=True)
 
         inv = InvitationFactory(team=self.sender_team,
-                                          competitor=self.receiver)
+                                competitor=self.receiver)
 
         self.assertEqual(Invitation.objects.count(), 1)
         self.assertEqual(TeamMembership.objects.get_all_team_memberships_for_competitor(
@@ -1076,13 +1070,13 @@ class TestInvitationViewSet(TestCase):
 
     def test_cannot_accept_invitation_to_other_team_if_you_are_a_leader_in_current_season(self):
         TeamMembershipFactory(competitor=self.receiver,
-                                        team=self.receiver_team,
-                                        is_leader=True)
+                              team=self.receiver_team,
+                              is_leader=True)
 
         self.assertTrue(TeamMembership.objects.is_competitor_leader_in_current_season(competitor=self.receiver))
 
         inv = InvitationFactory(team=self.sender_team,
-                                          competitor=self.receiver)
+                                competitor=self.receiver)
 
         self.assertEqual(Invitation.objects.count(), 1)
         self.assertEqual(TeamMembership.objects.count(), 2)
@@ -1097,7 +1091,6 @@ class TestInvitationViewSet(TestCase):
     def test_user_cannot_delete_invitation_if_not_hackfmi_user(self):
         user = BaseUserFactory(email=faker.email())
         user.is_active = True
-        user.set_password(BaseUserFactory.password)
         user.save()
         data = {'email': user.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
@@ -1114,7 +1107,7 @@ class TestInvitationViewSet(TestCase):
     def test_cannot_delete_wrongly_dedicated_invitation(self):
         another_competitor = CompetitorFactory()
         inv = InvitationFactory(team=self.sender_team,
-                                          competitor=another_competitor)
+                                competitor=another_competitor)
 
         self.assertEqual(Invitation.objects.count(), 1)
         self.assertEqual(TeamMembership.objects.count(), 1)
@@ -1127,16 +1120,13 @@ class TestInvitationViewSet(TestCase):
         self.assertEqual(TeamMembership.objects.count(), 1)
 
     def test_delete_invitation(self):
-        self.receiver.is_active = True
-        self.receiver.set_password(BaseUserFactory.password)
-        self.receiver.save()
         data = {'email': self.receiver.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         receiver_token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + receiver_token)
 
         inv = InvitationFactory(team=self.sender_team,
-                                          competitor=self.receiver)
+                                competitor=self.receiver)
         self.assertEqual(Invitation.objects.count(), 1)
         self.assertEqual(TeamMembership.objects.count(), 1)
 
@@ -1160,8 +1150,8 @@ class TestTeamMentorshipAPI(TestCase):
         self.competitor.set_password(BaseUserFactory.password)
         self.competitor.save()
         self.team_membership = TeamMembershipFactory(competitor=self.competitor,
-                                                               team=self.team,
-                                                               is_leader=True)
+                                                     team=self.team,
+                                                     is_leader=True)
 
         data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
@@ -1204,8 +1194,7 @@ class TestTeamMentorshipAPI(TestCase):
         response = self.client.post(url, data)
 
         self.response_201(response)
-        self.assertTrue(TeamMentorship.objects.filter(team=data['team']).exists())
-        self.assertTrue(TeamMentorship.objects.filter(mentor=data['mentor']).exists())
+        self.assertTrue(TeamMentorship.objects.filter(team=self.team, mentor=self.mentor).exists())
 
     def test_assign_more_than_allowed_mentors_for_that_season(self):
         self.active_season.max_mentor_pick = 1
