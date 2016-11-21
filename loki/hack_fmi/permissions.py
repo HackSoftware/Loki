@@ -99,9 +99,14 @@ class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
         """
         new_name_of_team = request.data.get('name') if request.data.get('name') else None
 
-        if new_name_of_team and new_name_of_team != view.get_object().name:
+        if request.method == "PATCH" and new_name_of_team and new_name_of_team != view.get_object().name:
             qs = Team.objects.get_team_by_name_for_active_season(name=new_name_of_team)
             return not qs.exists()
+
+        if request.method == "POST":
+            qs = Team.objects.get_team_by_name_for_active_season(name=new_name_of_team)
+            return not qs.exists()
+
         return True
 
 
