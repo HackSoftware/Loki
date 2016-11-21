@@ -1,5 +1,4 @@
-from .serializers import CompetitorInTeamSerializer, CustomTeamSerializer
-from .models import TeamMembership
+from .serializers import CompetitorInTeamSerializer
 
 
 class MeSerializerMixin:
@@ -9,20 +8,11 @@ class MeSerializerMixin:
 
         data = {
             "is_competitor": bool(competitor),
-            "competitor_info": None,
-            "teams": None
+            "competitor_info": None
         }
         if competitor:
             comp_inf = CompetitorInTeamSerializer(competitor)
 
-            teams = TeamMembership.objects.list_all_teams_for_competitor(competitor=competitor)
-
-            teams_data = None
-
-            if teams:
-                teams_data = CustomTeamSerializer(teams, many=True).data
-
             data["competitor_info"] = comp_inf.data
-            data["teams"] = teams_data
 
         return data
