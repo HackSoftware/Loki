@@ -107,7 +107,7 @@ class TestTeamMembershipManager(TestCase):
                                                      team=team,
                                                      is_leader=False)
 
-        self.assertEqual(team,
+        self.assertEqual([team],
                          TeamMembership.objects.list_all_teams_for_competitor(competitor=self.competitor))
 
     def test_list_all_teams_for_competitor_if_competitor_has_no_team(self):
