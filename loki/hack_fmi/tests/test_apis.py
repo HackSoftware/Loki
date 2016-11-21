@@ -77,10 +77,10 @@ class TestSeasonView(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.company = factories.HackFmiPartnerFactory()
-        self.mentor = factories.MentorFactory(from_company=self.company)
-        self.active_season = factories.SeasonFactory(is_active=True)
-        self.non_active_season = factories.SeasonFactory(is_active=False)
+        self.company = HackFmiPartnerFactory()
+        self.mentor = MentorFactory(from_company=self.company)
+        self.active_season = SeasonFactory(is_active=True)
+        self.non_active_season = SeasonFactory(is_active=False)
 
     def test_get_active_season(self):
         url = self.reverse('hack_fmi:season')
@@ -91,72 +91,73 @@ class TestSeasonView(TestCase):
         self.assertTrue(Season.objects.filter(is_active=True).exists())
 
     def test_season_deactivates_automatically(self):
-        new_active_season = factories.SeasonFactory(is_active=True)
+        new_active_season = SeasonFactory(is_active=True)
         self.assertTrue(Season.objects.filter(is_active=True).exists())
-        self.assertFalse(Season.objects.get(name=self.active_season.name).is_active)
-        self.assertTrue(Season.objects.get(name=new_active_season.name).is_active)
+        self.active_season.refresh_from_db()
+        new_active_season.refresh_from_db()
+        self.assertFalse(self.active_season.is_active)
+        self.assertTrue(new_active_season.is_active)
 
 
 class TestPublicTeamView(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.active_season = factories.SeasonFactory(
+        self.active_season = SeasonFactory(
             is_active=True
         )
-        self.room = factories.RoomFactory(season=self.active_season)
-        self.team = factories.TeamFactory(season=self.active_season,
-                                          room=self.room)
+        self.room = RoomFactory(season=self.active_season)
+        self.team = TeamFactory(season=self.active_season,
+                                room=self.room)
         self.url = reverse('hack_fmi:public_teams')
 
     def test_get_teams_for_current_season(self):
-        teams_in_active_season = Team.objects.filter(season__is_active=True).count()
-
         response = self.client.get(self.url)
-
         self.response_200(response)
-        self.assertEqual(len(response.data), teams_in_active_season)
+
+        teams_in_active_season = Team.objects.filter(season__is_active=True).count()
+        self.assertEqual(1, teams_in_active_season)
+        self.assertEqual(1, len(response.data))
         self.assertEqual(response.data[0]['name'], self.team.name)
 
     def test_get_teams_only_from_current_active_season(self):
-        non_active_season = factories.SeasonFactory(
-            is_active=False
-        )
-        room_for_non_active_season = factories.RoomFactory(season=non_active_season)
-        team_in_non_active_season = factories.TeamFactory(
-            name=faker.name(),
-            season=non_active_season,
-            room=room_for_non_active_season,
-        )
+        non_active_season = SeasonFactory(is_active=False)
 
-        teams_in_active_season = Team.objects.filter(season__is_active=True).count()
+        room_for_non_active_season = RoomFactory(season=non_active_season)
+        team_in_non_active_season = TeamFactory(name=faker.name(),
+                                                season=non_active_season,
+                                                room=room_for_non_active_season)
 
         response = self.client.get(self.url)
-
         self.response_200(response)
-        self.assertEqual(len(response.data), teams_in_active_season)
+
+        teams_in_active_season = Team.objects.filter(season__is_active=True).count()
+        self.assertEqual(1, len(response.data))
+        self.assertEqual(1, teams_in_active_season)
         self.assertEqual(response.data[0]['name'], self.team.name)
         self.assertNotEqual(response.data[0]['name'], team_in_non_active_season.name)
 
-    def test_only_get_request_is_allowed_to_that_view(self):
+    def test_can_not_send_post_request(self):
         response = self.client.post(self.url)
         self.response_405(response)
 
+    def test_can_not_send_patch_request(self):
         response = self.client.patch(self.url)
         self.response_405(response)
 
+    def test_can_not_send_delete_request(self):
         response = self.client.delete(self.url)
         self.response_405(response)
 
 
 class TestCreateJWTToken(TestCase):
     def test_create_jwt_token(self):
-        competitor = factories.CompetitorFactory(email=faker.email())
+        competitor = CompetitorFactory(email=faker.email())
         competitor.is_active = True
-        competitor.set_password(factories.BaseUserFactory.password)
+        competitor.set_password(BaseUserFactory.password)
         competitor.save()
 
-        data = {'email': competitor.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': competitor.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
 
         decoded_payload = utils.jwt_decode_handler(response.data['token'])
