@@ -158,7 +158,6 @@ class PublicTeamSerializer(serializers.ModelSerializer):
             'need_more_members',
             'members_needed_desc',
             'room',
-            'picture',
             'place'
         )
 
@@ -203,7 +202,6 @@ class TeamSerializer(serializers.ModelSerializer):
             'need_more_members',
             'members_needed_desc',
             'room',
-            'picture',
             'place',
         )
 
