@@ -417,18 +417,18 @@ class TestTeamAPI(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.active_season = factories.SeasonFactory(is_active=True)
-        self.room = factories.RoomFactory(season=self.active_season)
-        self.team = factories.TeamFactory(season=self.active_season, room=self.room)
-        self.competitor = factories.CompetitorFactory(email=faker.email())
+        self.active_season = SeasonFactory(is_active=True)
+        self.room = RoomFactory(season=self.active_season)
+        self.team = TeamFactory(season=self.active_season, room=self.room)
+        self.competitor = CompetitorFactory(email=faker.email())
         self.competitor.is_active = True
-        self.competitor.set_password(factories.BaseUserFactory.password)
+        self.competitor.set_password(BaseUserFactory.password)
         self.competitor.save()
-        self.team_membership = factories.TeamMembershipFactory(competitor=self.competitor,
-                                                               team=self.team,
-                                                               is_leader=False)
+        self.team_membership = TeamMembershipFactory(competitor=self.competitor,
+                                                     team=self.team,
+                                                     is_leader=False)
 
-        data = {'email': self.competitor.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
@@ -552,7 +552,7 @@ class TestTeamAPI(TestCase):
         self.response_403(response)
 
     def test_whether_when_you_register_your_own_team_you_become_leader_of_that_team(self):
-        skill = factories.SkillFactory()
+        skill = SkillFactory()
         team_data = {
             'name': faker.name(),
             'idea_description': faker.text(),
@@ -570,7 +570,7 @@ class TestTeamAPI(TestCase):
         self.assertTrue(TeamMembership.objects.filter(competitor=self.competitor, is_leader=True).exists())
 
     def test_cant_register_team_that_has_the_same_name(self):
-        skill = factories.SkillFactory()
+        skill = SkillFactory()
 
         self.assertTrue(Team.objects.filter(name=self.team.name).exists())
         self.assertEquals(Team.objects.filter(name=self.team.name).count(), 1)
@@ -592,7 +592,7 @@ class TestTeamAPI(TestCase):
         self.team_membership.is_leader = True
         self.team_membership.save()
 
-        skill = factories.SkillFactory()
+        skill = SkillFactory()
         team_data = {
             'name': faker.name(),
             'idea_description': faker.text(),
@@ -609,12 +609,12 @@ class OnBoardCompetitorAPITest(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.base_user = factories.BaseUserFactory(email=faker.email())
+        self.base_user = BaseUserFactory(email=faker.email())
         self.base_user.is_active = True
         self.base_user.save()
-        self.skill = factories.SkillFactory()
+        self.skill = SkillFactory()
 
-        data = {'email': self.base_user.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': self.base_user.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.token = response.data['token']
 
