@@ -17,7 +17,7 @@ from ..models import (TeamMembership, Competitor,
 
 from loki.seed.factories import (SkillFactory, HackFmiPartnerFactory, SeasonFactory,
                                 MentorFactory, RoomFactory, TeamFactory,
-                                CompetitorFactory, BaseUserFactory)
+                                CompetitorFactory, BaseUserFactory, TeamMembershipFactory)
 
 from faker import Factory
 
@@ -103,9 +103,7 @@ class TestPublicTeamView(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.active_season = SeasonFactory(
-            is_active=True
-        )
+        self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season,
                                 room=self.room)
@@ -169,18 +167,18 @@ class TestCreateJWTToken(TestCase):
 class TestMeAPIView(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.active_season = factories.SeasonFactory(is_active=True)
-        self.room = factories.RoomFactory(season=self.active_season)
-        self.team = factories.TeamFactory(season=self.active_season, room=self.room)
-        self.competitor = factories.CompetitorFactory(email=faker.email())
+        self.active_season = SeasonFactory(is_active=True)
+        self.room = RoomFactory(season=self.active_season)
+        self.team = TeamFactory(season=self.active_season, room=self.room)
+        self.competitor = CompetitorFactory(email=faker.email())
         self.competitor.is_active = True
-        self.competitor.set_password(factories.BaseUserFactory.password)
+        self.competitor.set_password(BaseUserFactory.password)
         self.competitor.save()
-        self.team_membership = factories.TeamMembershipFactory(competitor=self.competitor,
-                                                               team=self.team,
-                                                               is_leader=True)
+        self.team_membership = TeamMembershipFactory(competitor=self.competitor,
+                                                     team=self.team,
+                                                     is_leader=True)
 
-        data = {'email': self.competitor.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
@@ -262,20 +260,19 @@ class TestMeAPIView(TestCase):
         response = self.client.post(self.url)
         self.response_405(response)
 
-    def test_get_with_wrong_jwt(self):
-        self.token = faker.text()
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+    def test_request_with_wrong_jwt(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + faker.text())
         response = self.client.get(self.url)
         self.response_401(response)
 
     def test_get_if_request_user_not_competitor(self):
         self.client.credentials()
-        non_competitor = factories.BaseUserFactory(email=faker.email())
+        non_competitor = BaseUserFactory(email=faker.email())
         non_competitor.is_active = True
         non_competitor.set_password(factories.BaseUserFactory.password)
         non_competitor.save()
 
-        data = {'email': non_competitor.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': non_competitor.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         token = response.data['token']
 
