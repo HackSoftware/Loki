@@ -118,7 +118,7 @@ class TeamAPI(mixins.CreateModelMixin,
                           TeamLiederCantCreateOtherTeam)
     authentication_classes = (JSONWebTokenAuthentication,)
 
-    serializer_class = TeamSerializer
+    serializer_class = TeamSerializer(partial=True)
     queryset = Team.objects.all()
 
     def perform_create(self, serializer):
