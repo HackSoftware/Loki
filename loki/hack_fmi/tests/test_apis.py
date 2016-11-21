@@ -182,10 +182,9 @@ class TestMeAPIView(TestCase):
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
-
         self.url = self.reverse('hack_fmi:me')
 
-    def test_get_method_return_all_need_data(self):
+    def test_get_me_returns_required_data(self):
         response = self.client.get(self.url)
         self.response_200(response)
         """
@@ -290,7 +289,7 @@ class TestMeAPIView(TestCase):
         self.assertIsNone(response.data['competitor_info'])
         self.assertFalse(response.data['is_competitor'])
 
-    def test_cannot_see_teams_when_comp_not_in_any_team(self):
+    def test_cannot_see_teams_when_competitor_not_in_any_team(self):
         # 'team' field must be empty
         season = SeasonFactory(is_active=True)
         TeamFactory(season=season)
@@ -307,25 +306,25 @@ class TestMeAPIView(TestCase):
 class TestMeSeasonAPIView(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.active_season = factories.SeasonFactory(is_active=True)
-        self.room = factories.RoomFactory(season=self.active_season)
-        self.team = factories.TeamFactory(season=self.active_season, room=self.room)
-        self.competitor = factories.CompetitorFactory(email=faker.email())
+        self.active_season = SeasonFactory(is_active=True)
+        self.room = RoomFactory(season=self.active_season)
+        self.team = TeamFactory(season=self.active_season, room=self.room)
+        self.competitor = CompetitorFactory(email=faker.email())
         self.competitor.is_active = True
-        self.competitor.set_password(factories.BaseUserFactory.password)
+        self.competitor.set_password(BaseUserFactory.password)
         self.competitor.save()
-        self.team_membership = factories.TeamMembershipFactory(competitor=self.competitor,
-                                                               team=self.team,
-                                                               is_leader=True)
+        self.team_membership = TeamMembershipFactory(competitor=self.competitor,
+                                                     team=self.team,
+                                                     is_leader=True)
 
-        data = {'email': self.competitor.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
         self.url = self.reverse('hack_fmi:me-season', season_pk=self.active_season.id)
 
-    def test_get_me(self):
+    def test_get_me_returns_required_data(self):
         response = self.client.get(self.url)
         self.response_200(response)
         """
@@ -351,14 +350,13 @@ class TestMeSeasonAPIView(TestCase):
         response = self.get('hack_fmi:me-season', season_pk=wrong_id)
         self.response_404(response)
 
-    def test_get_if_request_user_not_competitor(self):
+    def test_baseuser_can_get_required_data(self):
         self.client.credentials()
-        non_competitor = factories.BaseUserFactory(email=faker.email())
+        non_competitor = BaseUserFactory(email=faker.email())
         non_competitor.is_active = True
-        non_competitor.set_password(factories.BaseUserFactory.password)
         non_competitor.save()
 
-        data = {'email': non_competitor.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': non_competitor.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         token = response.data['token']
 
@@ -377,12 +375,10 @@ class TestMeSeasonAPIView(TestCase):
         self.assertIsNone(response.data['competitor_info'])
         self.assertFalse(response.data['is_competitor'])
 
-    def test_cant_get_team_if_request_competitor_has_not_been_part_in_any_team_from_season_pk(self):
+    def test_cannot_see_teams_when_competitor_not_in_any_team_for_given_season(self):
         # 'team' and 'teammembership_id' fields must be empty
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
-
-        season = factories.SeasonFactory()
-        factories.TeamFactory(season=season)
+        season = SeasonFactory()
+        TeamFactory(season=season)
 
         url = self.reverse('hack_fmi:me-season', season_pk=season.id)
 
@@ -394,28 +390,17 @@ class TestMeSeasonAPIView(TestCase):
         self.assertTrue(response.data['is_competitor'])
 
     def test_get_exactly_one_team_and_teammembership_for_season(self):
-        # For the season pk, a competitor must be part only in one team.
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
-
-        season = factories.SeasonFactory()
-        team = factories.TeamFactory(season=season)
-        membership = factories.TeamMembershipFactory(team=team,
-                                                     competitor=self.competitor)
-
-        url = self.reverse('hack_fmi:me-season', season_pk=season.id)
-
+        url = self.reverse('hack_fmi:me-season', season_pk=self.active_season.id)
         response = self.client.get(url)
         self.response_200(response)
-        # self.competitor in team for season and in self.team for active_season
-        self.assertEqual(response.data['team']['id'], team.id)
-        self.assertEqual(response.data['team_membership_id'], membership.id)
+
+        self.assertEqual(response.data['team']['id'], self.team.id)
+        self.assertEqual(response.data['team_membership_id'], self.team_membership.id)
         self.assertIsNotNone(response.data['competitor_info'])
         self.assertTrue(response.data['is_competitor'])
 
     def test_cant_get_teams_for_season_if_there_are_no_teams_in_that_season(self):
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
-
-        season = factories.SeasonFactory()
+        season = SeasonFactory()
         self.assertFalse(Team.objects.filter(season__pk=season.id).exists())
         url = self.reverse('hack_fmi:me-season', season_pk=season.id)
 
