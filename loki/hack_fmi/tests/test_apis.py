@@ -185,7 +185,7 @@ class TestMeAPIView(TestCase):
 
         self.url = self.reverse('hack_fmi:me')
 
-    def test_get_me(self):
+    def test_get_method_return_all_need_data(self):
         response = self.client.get(self.url)
         self.response_200(response)
         """
@@ -256,7 +256,7 @@ class TestMeAPIView(TestCase):
         data_equals = [True for val in teams_info if str(val) in response_values]
         self.assertTrue(all(data_equals))
 
-    def test_post_me(self):
+    def test_post_method_not_allowed(self):
         response = self.client.post(self.url)
         self.response_405(response)
 
@@ -265,11 +265,10 @@ class TestMeAPIView(TestCase):
         response = self.client.get(self.url)
         self.response_401(response)
 
-    def test_get_if_request_user_not_competitor(self):
+    def test_baseuser_can_access_me(self):
         self.client.credentials()
         non_competitor = BaseUserFactory(email=faker.email())
         non_competitor.is_active = True
-        non_competitor.set_password(factories.BaseUserFactory.password)
         non_competitor.save()
 
         data = {'email': non_competitor.email, 'password': BaseUserFactory.password}
@@ -287,22 +286,18 @@ class TestMeAPIView(TestCase):
                                      'is_competitor'] if k in response.data.keys()]
         self.assertTrue(all(key_equals))
         # If request user is not competitor, 'competitor_info' and 'team' fields must be None
-        self.assertEqual(response.data['teams'], None)
-        self.assertEqual(response.data['competitor_info'], None)
+        self.assertIsNone(response.data['teams'])
+        self.assertIsNone(response.data['competitor_info'])
         self.assertFalse(response.data['is_competitor'])
 
-    def test_cant_get_team_if_request_competitor_has_not_been_part_in_any_team_from_current_active_season(self):
+    def test_cannot_see_teams_when_comp_not_in_any_team(self):
         # 'team' field must be empty
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
-
-        season = factories.SeasonFactory(is_active=True)
-        factories.TeamFactory(season=season)
+        season = SeasonFactory(is_active=True)
+        TeamFactory(season=season)
         self.assertFalse(TeamMembership.objects.filter(competitor=self.competitor,
                                                        team__season=season).exists())
 
-        url = self.reverse('hack_fmi:me')
-
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.response_200(response)
         self.assertIsNone(response.data['teams'])
         self.assertIsNotNone(response.data['competitor_info'])
@@ -342,13 +337,12 @@ class TestMeSeasonAPIView(TestCase):
                                      'team_membership_id'] if k in response.data.keys()]
         self.assertTrue(all(key_equals))
 
-    def test_post_me(self):
+    def test_post_method_not_allowed(self):
         response = self.client.post(self.url)
         self.response_405(response)
 
-    def test_get_with_wrong_jwt(self):
-        self.token = faker.text()
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+    def test_get_request_with_wrong_jwt(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + faker.text())
         response = self.get('hack_fmi:me-season', season_pk=self.active_season.id)
         self.response_401(response)
 
