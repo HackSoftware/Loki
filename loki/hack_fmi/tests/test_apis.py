@@ -18,7 +18,7 @@ from ..models import (TeamMembership, Competitor,
 from loki.seed.factories import (SkillFactory, HackFmiPartnerFactory, SeasonFactory,
                                 MentorFactory, RoomFactory, TeamFactory,
                                 CompetitorFactory, BaseUserFactory, TeamMembershipFactory,
-                                StudentFactory, InvitationFactory)
+                                StudentFactory, InvitationFactory, TeamMentorshipFactory)
 
 from faker import Factory
 
@@ -1243,39 +1243,22 @@ class TestTeamMentorshipAPI(TestCase):
         self.response_403(response)
 
     def test_cannot_remove_mentor_from_team_if_not_teamleader(self):
-        data = {'team': self.team.id,
-                'mentor': self.mentor.id,
-                }
-
-        url = reverse('hack_fmi:team_mentorship')
-        response = self.client.post(url, data)
-        self.response_201(response)
-        self.assertEqual(TeamMentorship.objects.filter(team=data['team']).count(), 1)
+        mentorship = TeamMentorshipFactory(team=self.team, mentor=self.mentor)
 
         self.team_membership.is_leader = False
         self.team_membership.save()
-        existing_mentorship = TeamMentorship.objects.get(team=data['team'])
-        url = self.reverse('hack_fmi:team_mentorship', pk=existing_mentorship.id)
+        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship.id)
         response = self.client.delete(url)
         self.response_403(response)
-        self.assertEqual(TeamMentorship.objects.filter(team=data['team']).count(), 1)
+        self.assertIsNotNone(mentorship)
 
     def test_can_remove_mentor_from_team_if_teamleader(self):
-        data = {'team': self.team.id,
-                'mentor': self.mentor.id,
-                }
+        mentorship = TeamMentorshipFactory(team=self.team, mentor=self.mentor)
 
-        self.assertEqual(TeamMentorship.objects.filter(team=data['team']).count(), 0)
-        url = reverse('hack_fmi:team_mentorship')
-        response = self.client.post(url, data)
-        self.response_201(response)
-        self.assertEqual(TeamMentorship.objects.filter(team=data['team']).count(), 1)
-        existing_mentorship = TeamMentorship.objects.get(team=data['team'])
-
-        url = self.reverse('hack_fmi:team_mentorship', pk=existing_mentorship.id)
+        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship.id)
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
-        self.assertEqual(TeamMentorship.objects.filter(team=data['team']).count(), 0)
+        self.assertEqual(TeamMentorship.objects.filter(team=self.team, mentor=self.mentor).count(), 0)
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')
