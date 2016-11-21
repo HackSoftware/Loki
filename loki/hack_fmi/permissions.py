@@ -9,9 +9,6 @@ class IsHackFMIUser(permissions.BasePermission):
     message = "You are not a member of the HackFMI system!"
 
     def has_permission(self, request, view):
-        if not request.user.is_authenticated():
-            return False
-
         is_hackfmi_user = request.user.get_competitor()
         return request.user and is_hackfmi_user
 
