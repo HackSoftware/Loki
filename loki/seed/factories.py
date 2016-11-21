@@ -287,6 +287,7 @@ class TeamFactory(factory.DjangoModelFactory):
     season = factory.SubFactory(SeasonFactory)
     need_more_members = faker.boolean()
     room = factory.SubFactory(RoomFactory)
+    place = faker.random_number(digits=1)
 
 
 class TeamMembershipFactory(factory.DjangoModelFactory):
