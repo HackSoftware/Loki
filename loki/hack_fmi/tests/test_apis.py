@@ -812,10 +812,10 @@ class TestInvitationViewSet(TestCase):
         self.sender.set_password(BaseUserFactory.password)
         self.sender.save()
         self.sender_team = TeamFactory(name=faker.name(),
-                                                 season=self.season)
+                                       season=self.season)
         self.sender_team_membership = TeamMembershipFactory(competitor=self.sender,
-                                                                      team=self.sender_team,
-                                                                      is_leader=True)
+                                                            team=self.sender_team,
+                                                            is_leader=True)
 
         data = {'email': self.sender.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
@@ -823,18 +823,20 @@ class TestInvitationViewSet(TestCase):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + sender_token)
 
         self.receiver = CompetitorFactory(email=faker.email())
+        self.receiver.is_active = True
+        self.receiver.set_password(BaseUserFactory.password)
+        self.receiver.save()
+
         self.receiver_team = TeamFactory(name=faker.name(),
-                                                   season=self.season)
+                                         season=self.season)
 
     def test_cant_send_invitation_for_joining_team_if_request_user_not_a_competitor(self):
         non_competitor = BaseUserFactory(email=faker.email())
         non_competitor.is_active = True
-        non_competitor.set_password(BaseUserFactory.password)
         non_competitor.save()
         data = {'email': non_competitor.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         token = response.data['token']
-
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + token)
 
         url = self.reverse('hack_fmi:invitation-list')
@@ -888,7 +890,7 @@ class TestInvitationViewSet(TestCase):
 
     def test_send_invitation_twice_to_same_competitor(self):
         InvitationFactory(team=self.sender_team,
-                                    competitor=self.receiver)
+                          competitor=self.receiver)
 
         self.assertTrue(Invitation.objects.filter(competitor=self.receiver).exists())
 
@@ -911,8 +913,8 @@ class TestInvitationViewSet(TestCase):
         competitor = CompetitorFactory(email=faker.email())
 
         TeamMembershipFactory(competitor=competitor,
-                                        team=self.sender_team,
-                                        is_leader=False)
+                              team=self.sender_team,
+                              is_leader=False)
 
         self.assertEqual(TeamMembership.objects.filter(team=self.sender_team).count(), 2)
 
@@ -926,11 +928,11 @@ class TestInvitationViewSet(TestCase):
 
     def test_cant_send_invitation_to_user_that_already_has_team(self):
         InvitationFactory(team=self.sender_team,
-                                    competitor=self.receiver)
+                          competitor=self.receiver)
 
         TeamMembershipFactory(team=self.receiver_team,
-                                        competitor=self.receiver,
-                                        is_leader=False)
+                              competitor=self.receiver,
+                              is_leader=False)
 
         url = self.reverse('hack_fmi:invitation-list')
         data = {'competitor_email': self.receiver.email}
@@ -947,9 +949,6 @@ class TestInvitationViewSet(TestCase):
         self.response_401(response)
 
     def test_user_can_get_his_invitations_if_hackfmi_user(self):
-        self.receiver.is_active = True
-        self.receiver.set_password(BaseUserFactory.password)
-        self.receiver.save()
         data = {'email': self.receiver.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         receiver_token = response.data['token']
@@ -973,16 +972,16 @@ class TestInvitationViewSet(TestCase):
         self.response_401(response)
 
     def test_cannot_accept_invitation_if_not_hackfmi_user(self):
-        user = factories.BaseUserFactory(email=faker.email())
+        user = BaseUserFactory(email=faker.email())
         user.is_active = True
-        user.set_password(factories.BaseUserFactory.password)
+        user.set_password(BaseUserFactory.password)
         user.save()
-        data = {'email': user.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': user.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + token)
 
-        inv = factories.InvitationFactory()
+        inv = InvitationFactory()
         url = self.reverse('hack_fmi:invitation-accept', pk=inv.id)
         response = self.client.post(url)
 
@@ -990,14 +989,14 @@ class TestInvitationViewSet(TestCase):
 
     def test_accept_invitation(self):
         self.receiver.is_active = True
-        self.receiver.set_password(factories.BaseUserFactory.password)
+        self.receiver.set_password(BaseUserFactory.password)
         self.receiver.save()
-        data = {'email': self.receiver.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': self.receiver.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         receiver_token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + receiver_token)
 
-        inv = factories.InvitationFactory(team=self.sender_team,
+        inv = InvitationFactory(team=self.sender_team,
                                           competitor=self.receiver)
         self.assertEqual(Invitation.objects.all().count(), 1)
         url = reverse('hack_fmi:invitation-accept', kwargs={'pk': inv.id})
@@ -1014,11 +1013,11 @@ class TestInvitationViewSet(TestCase):
         self.response_404(response)
 
     def test_cannot_accept_invitation_if_receiver_already_has_team(self):
-        factories.TeamMembershipFactory(competitor=self.receiver,
+        TeamMembershipFactory(competitor=self.receiver,
                                         team=self.receiver_team,
                                         is_leader=False)
 
-        inv = factories.InvitationFactory(team=self.sender_team,
+        inv = InvitationFactory(team=self.sender_team,
                                           competitor=self.receiver)
 
         self.assertEqual(Invitation.objects.count(), 1)
@@ -1032,8 +1031,8 @@ class TestInvitationViewSet(TestCase):
         self.assertEqual(TeamMembership.objects.count(), 2)
 
     def test_cannot_accept_invitation_that_is_not_dedicated_to_request_user(self):
-        another_competitor = factories.CompetitorFactory()
-        inv = factories.InvitationFactory(team=self.sender_team,
+        another_competitor = CompetitorFactory()
+        inv = InvitationFactory(team=self.sender_team,
                                           competitor=another_competitor)
         self.assertEqual(Invitation.objects.count(), 1)
         self.assertEqual(TeamMembership.objects.count(), 1)
@@ -1047,22 +1046,22 @@ class TestInvitationViewSet(TestCase):
 
     def test_can_accept_invitation_if_you_are_a_leader_in_non_active_season(self):
         self.receiver.is_active = True
-        self.receiver.set_password(factories.BaseUserFactory.password)
+        self.receiver.set_password(BaseUserFactory.password)
         self.receiver.save()
-        data = {'email': self.receiver.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': self.receiver.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         receiver_token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + receiver_token)
 
-        inactive_season = factories.SeasonFactory(is_active=False)
-        old_receiver_team = factories.TeamFactory(name=faker.name(),
+        inactive_season = SeasonFactory(is_active=False)
+        old_receiver_team = TeamFactory(name=faker.name(),
                                                   season=inactive_season)
 
-        factories.TeamMembershipFactory(competitor=self.receiver,
+        TeamMembershipFactory(competitor=self.receiver,
                                         team=old_receiver_team,
                                         is_leader=True)
 
-        inv = factories.InvitationFactory(team=self.sender_team,
+        inv = InvitationFactory(team=self.sender_team,
                                           competitor=self.receiver)
 
         self.assertEqual(Invitation.objects.count(), 1)
@@ -1076,13 +1075,13 @@ class TestInvitationViewSet(TestCase):
         self.assertEqual(TeamMembership.objects.filter(competitor=self.receiver).count(), 2)
 
     def test_cannot_accept_invitation_to_other_team_if_you_are_a_leader_in_current_season(self):
-        factories.TeamMembershipFactory(competitor=self.receiver,
+        TeamMembershipFactory(competitor=self.receiver,
                                         team=self.receiver_team,
                                         is_leader=True)
 
         self.assertTrue(TeamMembership.objects.is_competitor_leader_in_current_season(competitor=self.receiver))
 
-        inv = factories.InvitationFactory(team=self.sender_team,
+        inv = InvitationFactory(team=self.sender_team,
                                           competitor=self.receiver)
 
         self.assertEqual(Invitation.objects.count(), 1)
@@ -1096,16 +1095,16 @@ class TestInvitationViewSet(TestCase):
         self.assertEqual(TeamMembership.objects.count(), 2)
 
     def test_user_cannot_delete_invitation_if_not_hackfmi_user(self):
-        user = factories.BaseUserFactory(email=faker.email())
+        user = BaseUserFactory(email=faker.email())
         user.is_active = True
-        user.set_password(factories.BaseUserFactory.password)
+        user.set_password(BaseUserFactory.password)
         user.save()
-        data = {'email': user.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': user.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         token = response.data['token']
 
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + token)
-        inv = factories.InvitationFactory()
+        inv = InvitationFactory()
 
         url = self.reverse('hack_fmi:invitation-detail', pk=inv.id)
         response = self.client.delete(url)
@@ -1113,8 +1112,8 @@ class TestInvitationViewSet(TestCase):
         self.response_403(response)
 
     def test_cannot_delete_wrongly_dedicated_invitation(self):
-        another_competitor = factories.CompetitorFactory()
-        inv = factories.InvitationFactory(team=self.sender_team,
+        another_competitor = CompetitorFactory()
+        inv = InvitationFactory(team=self.sender_team,
                                           competitor=another_competitor)
 
         self.assertEqual(Invitation.objects.count(), 1)
@@ -1129,14 +1128,14 @@ class TestInvitationViewSet(TestCase):
 
     def test_delete_invitation(self):
         self.receiver.is_active = True
-        self.receiver.set_password(factories.BaseUserFactory.password)
+        self.receiver.set_password(BaseUserFactory.password)
         self.receiver.save()
-        data = {'email': self.receiver.email, 'password': factories.BaseUserFactory.password}
+        data = {'email': self.receiver.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         receiver_token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + receiver_token)
 
-        inv = factories.InvitationFactory(team=self.sender_team,
+        inv = InvitationFactory(team=self.sender_team,
                                           competitor=self.receiver)
         self.assertEqual(Invitation.objects.count(), 1)
         self.assertEqual(TeamMembership.objects.count(), 1)
