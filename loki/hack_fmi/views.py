@@ -121,7 +121,7 @@ class TeamAPI(mixins.CreateModelMixin,
               mixins.UpdateModelMixin,
               mixins.RetrieveModelMixin,
               viewsets.GenericViewSet):
-    permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
+    permission_classes = (IsAuthenticated, IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
                           TeamLiederCantCreateOtherTeam)
@@ -139,7 +139,7 @@ class TeamAPI(mixins.CreateModelMixin,
 
 
 class TeamMembershipAPI(generics.DestroyAPIView):
-    permission_classes = (IsHackFMIUser, IsMemberOfTeam,
+    permission_classes = (IsAuthenticated, IsHackFMIUser, IsMemberOfTeam,
                           IsTeamMembershipInActiveSeason,)
     authentication_classes = (JSONWebTokenAuthentication, )
     serializer_class = TeamMembershipSerializer
@@ -160,7 +160,7 @@ class TeamMentorshipAPI(mixins.CreateModelMixin,
                         mixins.DestroyModelMixin,
                         generics.GenericAPIView):
 
-    permission_classes = (IsHackFMIUser, IsTeamLeader,
+    permission_classes = (IsAuthenticated, IsHackFMIUser, IsTeamLeader,
                           IsMentorDatePickUpToDate,
                           CanAttachMoreMentorsToTeam)
     authentication_classes = (JSONWebTokenAuthentication,)
@@ -209,7 +209,8 @@ class InvitationViewSet(viewsets.ModelViewSet):
             'get': 'list',
             'post': 'create',
         },
-            permission_classes=[IsHackFMIUser,
+            permission_classes=[IsAuthenticated,
+                                IsHackFMIUser,
                                 IsTeamleaderOrCantCreateIvitation,
                                 IsInvitedMemberCompetitor,
                                 IsInvitedMemberAlreadyInYourTeam,
@@ -220,14 +221,16 @@ class InvitationViewSet(viewsets.ModelViewSet):
         invitation_detail = cls.as_view({
             'delete': 'destroy',
         },
-            permission_classes=[IsHackFMIUser,
+            permission_classes=[IsAuthenticated,
+                                IsHackFMIUser,
                                 CanNotAccessWronglyDedicatedIvitation]
         )
 
         invitation_accept = cls.as_view({
             'post': 'accept',
         },
-            permission_classes=[IsHackFMIUser,
+            permission_classes=[IsAuthenticated,
+                                IsHackFMIUser,
                                 CanNotAcceptInvitationIfTeamLeader,
                                 IsInvitedUserInTeam,
                                 CanNotAccessWronglyDedicatedIvitation]
