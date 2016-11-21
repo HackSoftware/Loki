@@ -113,7 +113,6 @@ class Mentor(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=100)
     members = models.ManyToManyField('Competitor', through='TeamMembership')
-
     mentors = models.ManyToManyField('Mentor', through='TeamMentorship')
     technologies = models.ManyToManyField('Skill', blank=True)
     idea_description = models.TextField()
@@ -122,7 +121,6 @@ class Team(models.Model):
     need_more_members = models.BooleanField(default=True)
     members_needed_desc = models.CharField(max_length=255, blank=True)
     room = models.ForeignKey('Room', null=True, blank=True)
-    place = models.SmallIntegerField(blank=True, null=True)
 
     objects = TeamQuerySet.as_manager()
 

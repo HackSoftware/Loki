@@ -46,13 +46,18 @@ class MeAPIView(MeSerializerMixin, generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         data = super().get(request, *args, **kwargs)
-
-        teams = TeamMembership.objects.list_all_teams_for_competitor(competitor=request.user.get_competitor)
-
         teams_data = None
+        data["teams"] = teams_data
+
+        if not data['is_competitor']:
+            return Response(data=data, status=status.HTTP_200_OK)
+
+        competitor = self.request.user.get_competitor()
+        teams = TeamMembership.objects.list_all_teams_for_competitor(competitor=competitor)
 
         if teams:
             teams_data = CustomTeamSerializer(teams, many=True).data
+
         data["teams"] = teams_data
 
         return Response(data=data, status=status.HTTP_200_OK)
@@ -65,6 +70,9 @@ class MeSeasonAPIView(MeSerializerMixin, generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         data = super().get(request, *args, **kwargs)
 
+        team_data = None
+        data["team"] = None
+
         if not data['is_competitor']:
             return Response(data=data, status=status.HTTP_200_OK)
 
@@ -75,7 +83,6 @@ class MeSeasonAPIView(MeSerializerMixin, generics.GenericAPIView):
         team = Team.objects.get_all_teams_for_current_season(season=season).\
             get_all_teams_for_competitor(competitor=competitor).first()
 
-        team_data = None
         tm_id = None
 
         if team:

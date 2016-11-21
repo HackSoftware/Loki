@@ -9,7 +9,7 @@ class TeamMembershipManager(models.Manager):
         return TeamMembershipQuerySet(self.model, using=self._db)
 
     def list_all_teams_for_competitor(self, competitor):
-        qs = self.get_queryset().get_all_team_memberships_for_competitor(competitor=competitor)
+        qs = self.get_queryset().get_team_memberships_for_active_season(competitor=competitor)
         return [team_membership.team for team_membership in qs]
 
     # TODO: watch out when get_team_membership_of_leader returns [] -> .first()
