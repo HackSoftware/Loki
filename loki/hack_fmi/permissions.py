@@ -100,7 +100,9 @@ class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
         We check whether a team with that name alredy exists when we register or change a team
         (POST and PATCH), otherwise we return True.
         """
-        return not Team.objects.get_team_by_name_for_active_season(name=request.data['name']).exists()
+        if request.data.get('name'):
+            return not Team.objects.get_team_by_name_for_active_season(name=request.data['name']).exists()
+        return True
 
 
 class TeamLiederCantCreateOtherTeam(permissions.BasePermission):

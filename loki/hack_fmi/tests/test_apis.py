@@ -550,6 +550,14 @@ class TestTeamAPI(TestCase):
         response = self.client.patch(url, data)
         self.response_403(response)
 
+    def test_user_set_team_name_that_already_exists(self):
+        data = {
+            "name": self.team.name
+        }
+        url = self.reverse("hack_fmi:team-detail", pk=self.team.id)
+        response = self.client.patch(url, data)
+        self.response_403(response)
+
     def test_whether_when_you_register_your_own_team_you_become_leader_of_that_team(self):
         skill = factories.SkillFactory()
         team_data = {
