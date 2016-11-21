@@ -15,7 +15,9 @@ from ..models import (TeamMembership, Competitor,
                       Season, Team, Invitation, Room,
                       TeamMentorship, Mentor)
 
-from loki.seed import factories
+from loki.seed.factories import (SkillFactory, HackFmiPartnerFactory, SeasonFactory,
+                                MentorFactory, RoomFactory, TeamFactory,
+                                CompetitorFactory, BaseUserFactory)
 
 from faker import Factory
 
@@ -27,10 +29,10 @@ class TestSkillListAPI(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.url = self.reverse('hack_fmi:skills')
-        self.skill = factories.SkillFactory()
+        self.skill = SkillFactory()
 
     def test_get_all_skills(self):
-        skill2 = factories.SkillFactory()
+        skill2 = SkillFactory()
         response = self.client.get(self.url)
         self.response_200(response)
         self.assertContains(response, self.skill.name)
@@ -41,22 +43,22 @@ class TestMentorListAPIView(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.company = factories.HackFmiPartnerFactory()
-        self.active_season = factories.SeasonFactory(is_active=True)
-        self.non_active_season = factories.SeasonFactory(is_active=False)
+        self.company = HackFmiPartnerFactory()
+        self.active_season = SeasonFactory(is_active=True)
+        self.non_active_season = SeasonFactory(is_active=False)
         self.url = reverse('hack_fmi:mentors')
 
     def test_get_all_mentors_for_current_active_season(self):
 
         self.assertEqual(Mentor.objects.all().count(), 0)
 
-        mentor = factories.MentorFactory(from_company=self.company)
-        mentor2 = factories.MentorFactory(from_company=self.company)
+        mentor = MentorFactory(from_company=self.company)
+        mentor2 = MentorFactory(from_company=self.company)
         self.active_season.mentor_set.add(mentor)
         self.active_season.mentor_set.add(mentor2)
         self.active_season.save()
 
-        mentor3 = factories.MentorFactory(from_company=self.company)
+        mentor3 = MentorFactory(from_company=self.company)
         self.non_active_season.mentor_set.add(mentor3)
         self.non_active_season.save()
 
