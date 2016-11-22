@@ -651,7 +651,7 @@ class OnBoardCompetitorAPITest(TestCase):
 
     def setUp(self):
         self.client = APIClient()
-        self.base_user = BaseUserFactory(email=faker.email())
+        self.base_user = BaseUserFactory()
         self.base_user.is_active = True
         self.base_user.save()
         self.skill = SkillFactory()
@@ -667,7 +667,8 @@ class OnBoardCompetitorAPITest(TestCase):
             "shirt_size": 2,
             "needs_work": False,
             "is_vegetarian": False,
-            "social_links": faker.text()
+            "social_links": faker.text(),
+            "other_skills": faker.word()
         }
 
         response = self.client.post(self.reverse('hack_fmi:onboard_competitor'), data=data)
@@ -682,7 +683,8 @@ class OnBoardCompetitorAPITest(TestCase):
             "shirt_size": 2,
             "needs_work": False,
             "is_vegetarian": False,
-            "social_links": faker.text()
+            "social_links": faker.text(),
+            "other_skills": faker.word()
         }
 
         response = self.client.post(self.reverse('hack_fmi:onboard_competitor'), data=data)

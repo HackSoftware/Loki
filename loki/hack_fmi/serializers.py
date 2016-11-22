@@ -259,12 +259,14 @@ class OnBoardingCompetitorSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # TODO: Find a better way to do this
         known_skills = validated_data.pop("known_skills")
+        other_skills = validated_data.pop("other_skills")
 
         competitor = Competitor(**validated_data)
         competitor.baseuser_ptr_id = self.baseuser.id
         competitor.__dict__.update(self.baseuser.__dict__)
         competitor.save()
         competitor.known_skills = known_skills
+        competitor.other_skills = other_skills
         return competitor
 
     class Meta:
@@ -282,4 +284,5 @@ class OnBoardingCompetitorSerializer(serializers.ModelSerializer):
             'needs_work',
             'social_links',
             'known_skills',
+            'other_skills'
         )
