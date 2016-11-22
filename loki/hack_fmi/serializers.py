@@ -87,7 +87,6 @@ class CustomTeamSerializer(serializers.ModelSerializer):
             'name',
             'members',
             'season',
-            'leader_id'
         )
 
 
@@ -175,12 +174,18 @@ class TeamMentorshipSerializer(serializers.ModelSerializer):
 class TeamSerializer(serializers.ModelSerializer):
     members = CompetitorInTeamSerializer(many=True, read_only=True)
     leader_id = serializers.SerializerMethodField()
+    leader_email = serializers.SerializerMethodField()
     room = serializers.StringRelatedField()
 
     def get_leader_id(self, obj):
         leader_membership = TeamMembership.objects.get_team_membership_of_leader(team=obj)
         if leader_membership:
             return leader_membership.first().team.get_leader().id
+
+    def get_leader_email(self, obj):
+        leader_membership = TeamMembership.objects.get_team_membership_of_leader(team=obj)
+        if leader_membership:
+            return leader_membership.first().team.get_leader().email
 
     technologies_full = SkillSerializer(
         many=True,
@@ -195,6 +200,7 @@ class TeamSerializer(serializers.ModelSerializer):
             'name',
             'members',
             'leader_id',
+            'leader_email',
             'idea_description',
             'repository',
             'technologies',
