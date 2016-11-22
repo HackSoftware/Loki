@@ -509,9 +509,9 @@ class TestTeamAPI(TestCase):
 
         response = self.client.patch(url, data)
         self.response_200(response)
-
-        self.assertEqual(data['name'], Team.objects.get(id=self.team.id).name)
-        self.assertEqual(data['idea_description'], Team.objects.get(id=self.team.id).idea_description)
+        self.team.refresh_from_db()
+        self.assertEqual(self.team.name, data['name'])
+        self.assertEqual(self.team.idea_description, data['idea_description'])
 
     def test_only_leader_can_change_team(self):
         self.team_membership.is_leader = True
@@ -525,8 +525,8 @@ class TestTeamAPI(TestCase):
 
         response = self.client.patch(url, data)
         self.response_200(response)
-
-        self.assertEqual(data['idea_description'], Team.objects.get(id=self.team.id).idea_description)
+        self.team.refresh_from_db()
+        self.assertEqual(self.team.idea_description, data['idea_description'])
 
     def test_user_can_get_to_teams_in_non_active_seasons(self):
         self.active_season.is_active = False
@@ -593,7 +593,7 @@ class TestTeamAPI(TestCase):
         response = self.client.patch(url, data)
         self.response_403(response)
 
-    def test_whether_when_you_register_your_own_team_you_become_leader_of_that_team(self):
+    def test_user_become_leader_of_team_when_register_that_team(self):
         skill = SkillFactory()
         team_data = {
             'name': faker.name(),
