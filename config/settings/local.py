@@ -12,4 +12,3 @@ EMAIL_BACKEND = 'loki.emails.backends.SendGridConsoleBackend'
 # TESTING
 # ------------------------------------------------------------------------------
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-
