@@ -31,12 +31,14 @@ class IsTeamLeader(permissions.BasePermission):
             team = Team.objects.get_team_by_id(id=request.data['team']).first()
             competitor = request.user.get_competitor()
             return TeamMembership.objects.is_competitor_leader_of_team(competitor=competitor, team=team)
+
         return True
 
     def has_object_permission(self, request, view, obj):
         if request.method != 'POST':
             return obj.team.get_leader() == request.user.get_competitor()
 
+        return True
 
 class IsMemberOfTeam(permissions.BasePermission):
     message = "You are not a member of this team!"
