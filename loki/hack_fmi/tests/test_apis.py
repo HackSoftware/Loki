@@ -172,7 +172,7 @@ class TestPublicTeamView(TestCase):
 
 class TestCreateJWTToken(TestCase):
     def test_create_jwt_token(self):
-        competitor = CompetitorFactory(email=faker.email())
+        competitor = CompetitorFactory()
         competitor.is_active = True
         competitor.set_password(BaseUserFactory.password)
         competitor.save()
@@ -192,7 +192,7 @@ class TestMeAPIView(TestCase):
         self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season, room=self.room)
-        self.competitor = CompetitorFactory(email=faker.email())
+        self.competitor = CompetitorFactory()
         self.competitor.is_active = True
         self.competitor.set_password(BaseUserFactory.password)
         self.competitor.save()
@@ -288,7 +288,7 @@ class TestMeAPIView(TestCase):
 
     def test_baseuser_can_access_me(self):
         self.client.credentials()
-        non_competitor = BaseUserFactory(email=faker.email())
+        non_competitor = BaseUserFactory()
         non_competitor.is_active = True
         non_competitor.save()
 
@@ -331,7 +331,7 @@ class TestMeSeasonAPIView(TestCase):
         self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season, room=self.room)
-        self.competitor = CompetitorFactory(email=faker.email())
+        self.competitor = CompetitorFactory()
         self.competitor.is_active = True
         self.competitor.set_password(BaseUserFactory.password)
         self.competitor.save()
@@ -374,7 +374,7 @@ class TestMeSeasonAPIView(TestCase):
 
     def test_baseuser_can_get_required_data(self):
         self.client.credentials()
-        non_competitor = BaseUserFactory(email=faker.email())
+        non_competitor = BaseUserFactory()
         non_competitor.is_active = True
         non_competitor.save()
 
@@ -442,7 +442,7 @@ class TestTeamAPI(TestCase):
         self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season, room=self.room)
-        self.competitor = CompetitorFactory(email=faker.email())
+        self.competitor = CompetitorFactory()
         self.competitor.is_active = True
         self.competitor.set_password(BaseUserFactory.password)
         self.competitor.save()
@@ -1174,7 +1174,7 @@ class TestTeamMentorshipAPI(TestCase):
         self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season, room=self.room)
-        self.competitor = CompetitorFactory(email=faker.email())
+        self.competitor = CompetitorFactory()
         self.competitor.is_active = True
         self.competitor.set_password(BaseUserFactory.password)
         self.competitor.save()
