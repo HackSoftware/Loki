@@ -58,6 +58,7 @@ class Competitor(BaseUser):
 
     is_vegetarian = models.BooleanField(default=False)
     known_skills = models.ManyToManyField(Skill)
+    other_skills = models.CharField(max_length=255, blank=True, default='')
     faculty_number = models.IntegerField(null=True)
     shirt_size = models.SmallIntegerField(choices=SHIRT_SIZE, default=S)
     needs_work = models.BooleanField(default=True)

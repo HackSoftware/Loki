@@ -87,6 +87,7 @@ class CustomTeamSerializer(serializers.ModelSerializer):
             'name',
             'members',
             'season',
+            'leader_id'
         )
 
 
