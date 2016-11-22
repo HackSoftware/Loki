@@ -709,85 +709,83 @@ class TestTeamMembershipAPI(TestCase):
     def setUp(self):
         self.client = APIClient()
 
-        self.company = HackFmiPartnerFactory()
-        self.mentor = MentorFactory(from_company=self.company)
-
         self.active_season = SeasonFactory(is_active=True)
         self.non_active_season = SeasonFactory(is_active=False)
 
-        self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season)
         self.non_active_team = TeamFactory(season=self.non_active_season)
 
-        self.competitor = CompetitorFactory(email=faker.email())
+        self.competitor = CompetitorFactory()
         self.competitor.is_active = True
         self.competitor.set_password(BaseUserFactory.password)
         self.competitor.save()
 
+        data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.competitor_token = response.data['token']
+
         self.team_membership = TeamMembershipFactory(competitor=self.competitor,
                                                      team=self.team,
                                                      is_leader=True)
-        data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
-        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
-        self.token = response.data['token']
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.competitor_token)
 
-    def test_only_teammember_can_leave_team(self):
-        other_competitor = CompetitorFactory(email=faker.email())
+    def test_competitor_cant_leave_team_that_he_is_not_part_of(self):
+        other_competitor = CompetitorFactory()
         other_membership = TeamMembershipFactory(competitor=other_competitor,
                                                  team=self.team,
                                                  is_leader=False)
-
+        self.team_membership.delete()
         url = self.reverse('hack_fmi:team_membership', pk=other_membership.id)
-
         response = self.client.delete(url)
         self.response_403(response)
 
     def test_only_competitor_leave_team(self):
         # In case you are logged in as a Student, but you are not Competitor
-        student = StudentFactory(email=faker.email())
+        student = StudentFactory()
         student.is_active = True
         student.set_password(BaseUserFactory.password)
         student.save()
-        self.assertFalse(Competitor.objects.filter(email=student.email).exists())
-
         data = {'email': student.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        student_token = response.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + student_token)
 
-        token = response.data['token']
+        membership = TeamMembershipFactory()
 
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + token)
-
-        url = self.reverse('hack_fmi:team_membership', pk=self.team_membership.id)
+        url = self.reverse('hack_fmi:team_membership', pk=membership.id)
 
         response = self.client.delete(url)
         self.response_403(response)
 
     def test_cant_leave_team_if_you_are_not_logged_in(self):
         self.client.credentials()
-        url = self.reverse('hack_fmi:team_membership', pk=self.team_membership.id)
+        membership = TeamMembershipFactory()
+
+        url = self.reverse('hack_fmi:team_membership', pk=membership.id)
         response = self.client.delete(url)
+
         self.response_401(response)
 
-    def test_leave_team_from_non_active_season(self):
+    def test_cant_leave_team_from_non_active_season(self):
+        self.team_membership.delete()
         membership = TeamMembershipFactory(competitor=self.competitor,
                                            team=self.non_active_team,
                                            is_leader=True)
 
-        url = reverse('hack_fmi:team_membership', kwargs={'pk': membership.id})
-
+        url = self.reverse('hack_fmi:team_membership', pk=membership.id)
         response = self.client.delete(url)
+
         self.response_403(response)
         self.assertEqual(len(mail.outbox), 0)
 
-    def test_non_team_leader_leaves_team(self):
+    def test_non_leader_leaves_team(self):
         # You can leave team without being a team leader
         self.team_membership.is_leader = False
         self.team_membership.save()
 
         self.assertTrue(TeamMembership.objects.filter(competitor=self.competitor).exists())
 
-        url = reverse('hack_fmi:team_membership', kwargs={'pk': self.team_membership.id})
+        url = self.reverse('hack_fmi:team_membership', pk=self.team_membership.id)
         response = self.client.delete(url)
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
