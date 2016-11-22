@@ -110,6 +110,27 @@ class TestPublicTeamView(TestCase):
                                 room=self.room)
         self.url = reverse('hack_fmi:public_teams')
 
+    def test_get_teams_returns_required_data_for_public_teams(self):
+        response = self.client.get(self.url)
+        self.response_200(response)
+        required_fields = ['id',
+                           'name',
+                           'idea_description',
+                           'repository',
+                           'technologies_full',
+                           'need_more_members',
+                           'members_needed_desc',
+                           'room',
+                           'place']
+        # responde.data is list which contains one OrderdDict object.
+        key_equals = [True for k in required_fields if k in response.data[0].keys()]
+        self.assertTrue(all(key_equals))
+
+    def test_get_teams_does_not_return_leader_email(self):
+        response = self.client.get(self.url)
+        self.response_200(response)
+        self.assertFalse('leader_email' in response.data[0].keys())
+
     def test_get_teams_for_current_season(self):
         response = self.client.get(self.url)
         self.response_200(response)
@@ -433,6 +454,26 @@ class TestTeamAPI(TestCase):
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+    def test_get_teams_returns_required_data_for_private_teams(self):
+        response = self.client.get(self.reverse('hack_fmi:team-list'))
+        self.response_200(response)
+        required_fields = ['id',
+                           'name',
+                           'members',
+                           'leader_id',
+                           'leader_email',
+                           'idea_description',
+                           'repository',
+                           'technologies',
+                           'technologies_full',
+                           'need_more_members',
+                           'members_needed_desc',
+                           'room',
+                           'place']
+        # responde.data is list which contains one OrderdDict object.
+        key_equals = [True for k in required_fields if k in response.data[0].keys()]
+        self.assertTrue(all(key_equals))
 
     def test_can_not_access_other_team_detail(self):
         self.client.credentials()

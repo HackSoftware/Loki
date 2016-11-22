@@ -40,7 +40,7 @@ urlpatterns = [
 
     url(r'^api/invitation/$', invitation_urls['invitation_list'], name='invitation-list'),
     url(r'^api/invitation/(?P<pk>[0-9]+)/$', invitation_urls['invitation_detail'], name='invitation-detail'),
-    url(r'^api/invitation/(?P<pk>[0-9]+)/accept$', invitation_urls['invitation_accept'], name='invitation-accept'),
+    url(r'^api/invitation/(?P<pk>[0-9]+)/accept/$', invitation_urls['invitation_accept'], name='invitation-accept'),
 
     # Auth
     url(r'^api/login/', Login.as_view(), name='login'),
