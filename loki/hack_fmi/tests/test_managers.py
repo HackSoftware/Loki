@@ -17,7 +17,7 @@ class TestTeamManager(TestCase):
         self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season, room=self.room)
-        self.competitor = CompetitorFactory(email=faker.email())
+        self.competitor = CompetitorFactory()
         self.team_membership = TeamMembershipFactory(competitor=self.competitor,
                                                      team=self.team,
                                                      is_leader=True)
@@ -35,7 +35,7 @@ class TestTeamManager(TestCase):
         self.assertEqual(2, Team.objects.get_all_teams_for_competitor(competitor=self.competitor).count())
 
     def test_get_all_teams_for_competitor_if_competitor_has_no_team(self):
-        competitor = CompetitorFactory(email=faker.email())
+        competitor = CompetitorFactory()
         self.assertEqual(0, Team.objects.get_all_teams_for_competitor(competitor=competitor).count())
 
     def test_get_all_teams_for_competitor_if_competitor_is_None(self):
@@ -48,7 +48,7 @@ class TestTeamManager(TestCase):
 
         room = RoomFactory(season=self.active_season)
         team = TeamFactory(season=self.active_season, room=room)
-        competitor = CompetitorFactory(email=faker.email())
+        competitor = CompetitorFactory()
         self.team_membership = TeamMembershipFactory(competitor=competitor,
                                                      team=team,
                                                      is_leader=False)
@@ -89,7 +89,7 @@ class TestTeamMembershipManager(TestCase):
         self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season, room=self.room)
-        self.competitor = CompetitorFactory(email=faker.email())
+        self.competitor = CompetitorFactory()
         self.team_membership = TeamMembershipFactory(competitor=self.competitor,
                                                      team=self.team,
                                                      is_leader=True)
@@ -111,7 +111,7 @@ class TestTeamMembershipManager(TestCase):
                          TeamMembership.objects.list_all_teams_for_competitor(competitor=self.competitor))
 
     def test_list_all_teams_for_competitor_if_competitor_has_no_team(self):
-        competitor = CompetitorFactory(email=faker.email())
+        competitor = CompetitorFactory()
         self.assertEqual(0, TeamMembership.objects.get_all_team_memberships_for_competitor(
             competitor=competitor).count())
         self.assertEqual([], TeamMembership.objects.list_all_teams_for_competitor(competitor=competitor))
@@ -122,12 +122,12 @@ class TestTeamMembershipManager(TestCase):
     def test_get_leader_of_team_if_team_has_no_leader(self):
         self.team_membership.is_leader = False
         self.team_membership.save()
-        self.assertIsNone(TeamMembership.objects.get_leader_of_team(team=self.team))
+        self.assertEqual(None, TeamMembership.objects.get_leader_of_team(team=self.team))
 
     def test_get_leader_of_team_if_team_is_None(self):
         self.team = None
         self.team_membership.save()
-        self.assertIsNone(TeamMembership.objects.get_leader_of_team(team=self.team))
+        self.assertEqual(None, TeamMembership.objects.get_leader_of_team(team=self.team))
 
     def test_is_competitor_leader_of_team(self):
         self.assertTrue(TeamMembership.objects.is_competitor_leader_of_team(competitor=self.competitor, team=self.team))
@@ -138,7 +138,7 @@ class TestTeamMembershipManager(TestCase):
                                                                              team=self.team))
 
     def test_is_competitor_leader_of_team_if_competitor_has_no_team(self):
-        competitor = CompetitorFactory(email=faker.email())
+        competitor = CompetitorFactory()
         team = None
         self.assertFalse(TeamMembership.objects.is_competitor_leader_of_team(competitor=competitor,
                                                                              team=team))
@@ -163,7 +163,7 @@ class TestTeamMembershipManager(TestCase):
         self.team_membership.is_leader = False
         self.team_membership.save()
         self.assertRaises(AttributeError, TeamMembership.objects.get_leader_of_team(team=self.team))
-        self.assertIsNone(TeamMembership.objects.get_leader_of_team(team=self.team))
+        self.assertEqual(None, TeamMembership.objects.get_leader_of_team(team=self.team))
 
     """
     Tests for TeamMembershipQuerySet.
@@ -174,8 +174,8 @@ class TestTeamMembershipManager(TestCase):
             competitor=self.competitor).first())
 
     def test_get_all_team_memberships_for_competitor_if_competitor_has_no_team_membership(self):
-        competitor = CompetitorFactory(email=faker.email())
-        self.assertIsNone(TeamMembership.objects.get_all_team_memberships_for_competitor(
+        competitor = CompetitorFactory()
+        self.assertEqual(None, TeamMembership.objects.get_all_team_memberships_for_competitor(
             competitor=competitor).first())
 
     def test_get_all_team_memberships_for_competitor_if_competitor_is_None(self):
@@ -201,16 +201,16 @@ class TestTeamMembershipManager(TestCase):
     def test_get_all_team_memberships_for_team_if_team_has_no_team_membership(self):
         room = RoomFactory(season=self.active_season)
         team = TeamFactory(season=self.active_season, room=room)
-        self.assertIsNone(TeamMembership.objects.get_all_team_memberships_for_team(
+        self.assertEqual(None, TeamMembership.objects.get_all_team_memberships_for_team(
             team=team).first())
 
     def test_get_all_team_memberships_for_team_if_team_is_None(self):
         team = None
-        self.assertIsNone(TeamMembership.objects.get_all_team_memberships_for_team(
+        self.assertEqual(None, TeamMembership.objects.get_all_team_memberships_for_team(
             team=team).first())
 
     def test_get_all_team_memberships_for_team_with_two_competitors(self):
-        competitor = CompetitorFactory(email=faker.email())
+        competitor = CompetitorFactory()
         team_membership = TeamMembershipFactory(competitor=competitor,
                                                 team=self.team,
                                                 is_leader=False)
@@ -238,8 +238,8 @@ class TestTeamMembershipManager(TestCase):
 
     def test_get_team_memberships_for_active_season_if_competitor_is_None(self):
         competitor = None
-        self.assertIsNone(TeamMembership.objects.
-                          get_team_memberships_for_active_season(competitor=competitor).first())
+        self.assertEqual(None, TeamMembership.objects.
+                         get_team_memberships_for_active_season(competitor=competitor).first())
 
     def test_get_team_membership_for_competitor_leader(self):
         self.assertEqual(self.team_membership, TeamMembership.objects.
@@ -248,12 +248,12 @@ class TestTeamMembershipManager(TestCase):
     def test_get_team_membership_for_competitor_leader_is_not_leader(self):
         self.team_membership.is_leader = False
         self.team_membership.save()
-        self.assertIsNone(TeamMembership.objects.
-                          get_team_membership_for_competitor_leader(competitor=self.competitor).first())
+        self.assertEqual(None, TeamMembership.objects.
+                         get_team_membership_for_competitor_leader(competitor=self.competitor).first())
 
     def test_get_team_membership_for_competitor_leader_if_competitor_is_None(self):
-        self.assertIsNone(TeamMembership.objects.
-                          get_team_membership_for_competitor_leader(competitor=None).first())
+        self.assertEqual(None, TeamMembership.objects.
+                         get_team_membership_for_competitor_leader(competitor=None).first())
         self.assertRaises(AttributeError, TeamMembership.objects.
                           get_team_membership_for_competitor_leader(competitor=None).first())
 
@@ -263,7 +263,7 @@ class TestTeamMentorshipManager(TestCase):
         self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season, room=self.room)
-        self.competitor = CompetitorFactory(email=faker.email())
+        self.competitor = CompetitorFactory()
         self.team_membership = TeamMembershipFactory(competitor=self.competitor,
                                                      team=self.team,
                                                      is_leader=True)
@@ -281,21 +281,21 @@ class TestTeamMentorshipManager(TestCase):
     def test_get_all_team_mentorships_for_team_with_no_mentors(self):
         room = RoomFactory(season=self.active_season)
         team = TeamFactory(season=self.active_season, room=room)
-        self.assertIsNone(TeamMentorship.objects.get_all_team_mentorships_for_team(
+        self.assertEqual(None, TeamMentorship.objects.get_all_team_mentorships_for_team(
             team=team).first())
 
     def test_get_all_team_mentorships_for_none_team(self):
-        self.assertIsNone(TeamMentorship.objects.get_all_team_mentorships_for_team(
+        self.assertEqual(None, TeamMentorship.objects.get_all_team_mentorships_for_team(
             team=None).first())
 
 
 class TestCompetitorManager(TestCase):
     def setUp(self):
-        self.email = faker.email()
-        self.competitor = CompetitorFactory(email=self.email)
+        self.competitor = CompetitorFactory()
 
     def test_get_competitor_by_email(self):
-        self.assertEqual(self.competitor, Competitor.objects.get_competitor_by_email(email=self.email).first())
+        self.assertEqual(self.competitor, Competitor.objects.get_competitor_by_email(
+            email=self.competitor.email).first())
 
     def test_get_competitor_by_wrong_email(self):
         email = faker.email()
@@ -308,12 +308,12 @@ class TestInvitationManager(TestCase):
         self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season, room=self.room)
-        self.leader_competitor = CompetitorFactory(email=faker.email())
+        self.leader_competitor = CompetitorFactory()
         self.team_membership = TeamMembershipFactory(competitor=self.leader_competitor,
                                                      team=self.team,
                                                      is_leader=True)
 
-        self.invited_competitor = CompetitorFactory(email=faker.email())
+        self.invited_competitor = CompetitorFactory()
 
         self.invitaion = InvitationFactory(team=self.team, competitor=self.invited_competitor)
 
@@ -329,6 +329,6 @@ class TestInvitationManager(TestCase):
             competitor=self.invited_competitor).first())
 
     def test_get_competitor_invitations_for_active_season_if_competitor_has_no_invitations(self):
-        competitor = CompetitorFactory(email=faker.email())
+        competitor = CompetitorFactory()
         self.assertIsNone(Invitation.objects.get_competitor_invitations_for_active_season(
             competitor=competitor).first())
