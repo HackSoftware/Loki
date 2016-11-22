@@ -93,4 +93,3 @@ class TestInvitationViewSetIntegration(TestCase):
                                                    team=self.team).exists())
         self.assertTrue(TeamMembership.objects.filter(team=self.team,
                                                       competitor=self.invited_user).exists())
-

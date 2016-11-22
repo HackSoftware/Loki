@@ -16,9 +16,9 @@ from ..models import (TeamMembership, Competitor,
                       TeamMentorship, Mentor)
 
 from loki.seed.factories import (SkillFactory, HackFmiPartnerFactory, SeasonFactory,
-                                MentorFactory, RoomFactory, TeamFactory,
-                                CompetitorFactory, BaseUserFactory, TeamMembershipFactory,
-                                StudentFactory, InvitationFactory, TeamMentorshipFactory)
+                                 MentorFactory, RoomFactory, TeamFactory,
+                                 CompetitorFactory, BaseUserFactory, TeamMembershipFactory,
+                                 StudentFactory, InvitationFactory, TeamMentorshipFactory)
 
 from faker import Factory
 
@@ -202,13 +202,13 @@ class TestMeAPIView(TestCase):
                            "faculty_number": self.competitor.faculty_number,
                            "shirt_size": self.competitor.shirt_size,
                            "current_teammembership_set": [collections.OrderedDict((
-                                ("competitor", self.competitor.id),
-                                ("team", self.team.id),
-                                ("is_leader", self.team_membership.is_leader)))],
+                                                          ("competitor", self.competitor.id),
+                                                          ("team", self.team.id),
+                                                          ("is_leader", self.team_membership.is_leader)))],
                            "teammembership_set": [collections.OrderedDict((
-                                ("competitor", self.competitor.id),
-                                ("team", self.team.id),
-                                ("is_leader", self.team_membership.is_leader)))],
+                                                  ("competitor", self.competitor.id),
+                                                  ("team", self.team.id),
+                                                  ("is_leader", self.team_membership.is_leader)))],
                            "needs_work": self.competitor.needs_work,
                            "social_links": self.competitor.social_links}
 
@@ -692,9 +692,8 @@ class TestTeamMembershipAPI(TestCase):
     def test_only_teammember_can_leave_team(self):
         other_competitor = CompetitorFactory(email=faker.email())
         other_membership = TeamMembershipFactory(competitor=other_competitor,
-                                                           team=self.team,
-                                                           is_leader=False)
-
+                                                 team=self.team,
+                                                 is_leader=False)
 
         url = self.reverse('hack_fmi:team_membership', pk=other_membership.id)
 
@@ -729,8 +728,8 @@ class TestTeamMembershipAPI(TestCase):
 
     def test_leave_team_from_non_active_season(self):
         membership = TeamMembershipFactory(competitor=self.competitor,
-                                                     team=self.non_active_team,
-                                                     is_leader=True)
+                                           team=self.non_active_team,
+                                           is_leader=True)
 
         url = reverse('hack_fmi:team_membership', kwargs={'pk': membership.id})
 
@@ -740,7 +739,7 @@ class TestTeamMembershipAPI(TestCase):
 
     def test_non_team_leader_leaves_team(self):
         # You can leave team without being a team leader
-        self.team_membership.is_leader=False
+        self.team_membership.is_leader = False
         self.team_membership.save()
 
         self.assertTrue(TeamMembership.objects.filter(competitor=self.competitor).exists())
@@ -764,7 +763,7 @@ class TestTeamMembershipAPI(TestCase):
         self.assertFalse(TeamMembership.objects.filter(competitor=self.competitor).exists())
 
     def test_non_leader_cannot_delete_team(self):
-        self.team_membership.is_leader=False
+        self.team_membership.is_leader = False
         self.team_membership.save()
 
         self.assertNotEqual(self.team.get_leader(), self.competitor)

@@ -194,6 +194,7 @@ class TestTeamMembershipManager(TestCase):
         team_membership = TeamMembershipFactory(competitor=self.competitor,
                                                 team=team,
                                                 is_leader=True)
+        team_membership.refresh_from_db()
         self.assertEqual(2, TeamMembership.objects.get_all_team_memberships_for_competitor(
             competitor=self.competitor).count())
 
@@ -213,6 +214,7 @@ class TestTeamMembershipManager(TestCase):
         team_membership = TeamMembershipFactory(competitor=competitor,
                                                 team=self.team,
                                                 is_leader=False)
+        team_membership.refresh_from_db()
         self.assertEqual(2, TeamMembership.objects.get_all_team_memberships_for_team(
             team=self.team).count())
 

@@ -15,7 +15,7 @@ from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           OnBoardingCompetitorSerializer,
                           TeamMembershipSerializer,
                           TeamMentorshipSerializer,
-                          CustomTeamSerializer, CompetitorSerializer)
+                          CustomTeamSerializer)
 from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
                           IsTeamLeader, IsSeasonDeadlineUpToDate,
