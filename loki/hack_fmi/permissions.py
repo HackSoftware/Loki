@@ -40,6 +40,7 @@ class IsTeamLeader(permissions.BasePermission):
 
         return True
 
+
 class IsMemberOfTeam(permissions.BasePermission):
     message = "You are not a member of this team!"
 

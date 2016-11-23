@@ -4,6 +4,7 @@ from loki.seed.factories import (BaseUserFactory, CompetitorFactory, TeamFactory
                                  TeamMembershipFactory)
 from loki.hack_fmi.permissions import IsHackFMIUser, IsTeamLeaderOrReadOnly, IsTeamLeader
 
+
 class HackFMIUserTest(TestCase):
 
     def setUp(self):
@@ -18,6 +19,7 @@ class HackFMIUserTest(TestCase):
         user = CompetitorFactory()
         request = make_mock_object(user=user)
         self.assertTrue(self.permission.has_permission(request=request, view=None))
+
 
 class IsTeamLeaderOrReadOnlyTest(TestCase):
     def setUp(self):
@@ -60,6 +62,7 @@ class IsTeamLeaderOrReadOnlyTest(TestCase):
 
         request = make_mock_object(user=self.competitor, method='PATCH')
         self.assertTrue(self.permission.has_object_permission(request=request, view=None, obj=self.team))
+
 
 class IsTeamLeaderTest(TestCase):
     def setUp(self):
@@ -105,6 +108,3 @@ class IsTeamLeaderTest(TestCase):
 
         request = make_mock_object(user=self.competitor, method='POST', data=data)
         self.assertTrue(self.permission.has_permission(request=request, view=None))
-
-if __name__ == '__main__':
-    unittest.main()
