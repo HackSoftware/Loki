@@ -137,11 +137,16 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
     'UPLOADED_FILES_USE_URL': False,
 }
 
+# JWT Authorization
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': timedelta(seconds=3600),
+}
 
 # # CELERY
 # INSTALLED_APPS += ('loki.celery.CeleryConfig',
@@ -221,7 +226,7 @@ THUMBNAIL_PROCESSORS = (
 
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DJANGO_DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL', default="HackBulgaria <team@hackbulgaria.com>")
 
@@ -240,7 +245,8 @@ templates = {
     "password_reset": lambda **env_kwargs: env('PASSWORD_RESET_TEMPLATE_ID', **env_kwargs),
     "application_completed_default": lambda **env_kwargs: env('APPLICATION_COMPLETED_DEFAULT', **env_kwargs),
     "hackfmi_team_deleted": lambda **env_kwargs: env('HACKFMI_TEAM_DELETED_TEMPLATE_ID', **env_kwargs),
-    "interview_confirmation": lambda **env_kwargs: env('CONFIRM_INTERVIEW', **env_kwargs)
+    "interview_confirmation": lambda **env_kwargs: env('CONFIRM_INTERVIEW', **env_kwargs),
+    "send_invitation": lambda **env_kwargs: env('SEND_INVITATION', **env_kwargs)
 }
 
 # Get all email templates from the env with default value ""

@@ -3,6 +3,10 @@ from django.db import models
 from ckeditor.fields import RichTextField
 from loki.base_app.models import BaseUser
 
+from .query import (TeamQuerySet, TeamMembershipQuerySet,
+                    TeamMentorshipQuerySet, CompetitorQuerySet, InvitationQuerySet)
+from .managers import TeamMembershipManager
+
 
 class Season(models.Model):
     name = models.CharField(max_length=100, null=True)
@@ -54,11 +58,14 @@ class Competitor(BaseUser):
 
     is_vegetarian = models.BooleanField(default=False)
     known_skills = models.ManyToManyField(Skill)
+    other_skills = models.CharField(max_length=255, blank=True, default='')
     faculty_number = models.IntegerField(null=True)
     shirt_size = models.SmallIntegerField(choices=SHIRT_SIZE, default=S)
     needs_work = models.BooleanField(default=True)
     social_links = models.TextField(blank=True)
     registered = models.BooleanField(default=False)
+
+    objects = CompetitorQuerySet.as_manager()
 
 
 def active_season():
@@ -107,7 +114,6 @@ class Mentor(models.Model):
 class Team(models.Model):
     name = models.CharField(max_length=100)
     members = models.ManyToManyField('Competitor', through='TeamMembership')
-
     mentors = models.ManyToManyField('Mentor', through='TeamMentorship')
     technologies = models.ManyToManyField('Skill', blank=True)
     idea_description = models.TextField()
@@ -116,8 +122,8 @@ class Team(models.Model):
     need_more_members = models.BooleanField(default=True)
     members_needed_desc = models.CharField(max_length=255, blank=True)
     room = models.ForeignKey('Room', null=True, blank=True)
-    picture = models.ImageField(blank=True)
-    place = models.SmallIntegerField(null=True)
+    place = models.SmallIntegerField(blank=True, null=True)
+    objects = TeamQuerySet.as_manager()
 
     def add_member(self, competitor, is_leader=False):
         return TeamMembership.objects.create(
@@ -142,6 +148,8 @@ class TeamMentorship(models.Model):
     mentor = models.ForeignKey(Mentor)
     team = models.ForeignKey(Team)
 
+    objects = TeamMentorshipQuerySet.as_manager()
+
     def clean(self):
         """
         TODO: Take in mind the season max_mentor_count
@@ -153,6 +161,8 @@ class TeamMembership(models.Model):
     team = models.ForeignKey('Team')
     is_leader = models.BooleanField(default=False)
 
+    objects = TeamMembershipManager.from_queryset(TeamMembershipQuerySet)()
+
     def __str__(self):
         return "{} {}".format(self.competitor, self.team)
 
@@ -160,6 +170,8 @@ class TeamMembership(models.Model):
 class Invitation(models.Model):
     team = models.ForeignKey(Team)
     competitor = models.ForeignKey(Competitor)
+
+    objects = InvitationQuerySet.as_manager()
 
     class Meta:
         unique_together = ('team', 'competitor')

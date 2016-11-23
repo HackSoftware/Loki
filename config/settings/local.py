@@ -1,5 +1,6 @@
 from .common import *  # noqa
 
+ALLOWED_HOSTS = []
 DEBUG = env.bool('DJANGO_DEBUG', default=True)
 TEMPLATE_DEBUG = env.bool('DJANGO_TEMPLATE_DEBUG', default=True)
 
@@ -11,5 +12,3 @@ EMAIL_BACKEND = 'loki.emails.backends.SendGridConsoleBackend'
 # TESTING
 # ------------------------------------------------------------------------------
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-
-ALLOWED_HOSTS = []

@@ -3,6 +3,94 @@ from rest_framework import serializers
 from .models import Skill, Competitor, Team, TeamMembership, Season, Invitation, Mentor, TeamMentorship
 
 
+class TeamMembershipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeamMembership
+        fields = (
+            'id',
+            'competitor',
+            'team',
+            'is_leader',
+        )
+
+
+class CompetitorSerializer(serializers.ModelSerializer):
+    known_skills = serializers.PrimaryKeyRelatedField(
+        queryset=Skill.objects.all(),
+        many=True,
+        read_only=False
+    )
+
+    current_teammembership_set = serializers.SerializerMethodField('get_active_teams')
+    teammembership_set = TeamMembershipSerializer(many=True, read_only=True)
+
+    def get_active_teams(self, obj):
+        team_membership_query_set = TeamMembership.objects.get_team_memberships_for_active_season(competitor=obj)
+
+        serializer = TeamMembershipSerializer(
+            instance=team_membership_query_set,
+            many=True, context=self.context
+        )
+        return serializer.data
+
+    class Meta:
+        model = Competitor
+        fields = (
+            'id',
+            'email',
+            'first_name',
+            'last_name',
+            'is_vegetarian',
+            'known_skills',
+            'faculty_number',
+            'shirt_size',
+            'password',
+            'current_teammembership_set',
+            'teammembership_set',
+            'needs_work',
+            'social_links',
+        )
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def create(self, validated_data):
+        new_user = super().create(validated_data)
+        new_user.set_password(validated_data['password'])
+        new_user.save()
+        return new_user
+
+
+class CompetitorInTeamSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Competitor
+        fields = (
+            'id',
+            'email',
+            'first_name',
+            'last_name',
+        )
+
+
+class CustomTeamSerializer(serializers.ModelSerializer):
+    members = CompetitorInTeamSerializer(many=True, read_only=True)
+    leader_id = serializers.SerializerMethodField()
+
+    def get_leader_id(self, obj):
+        leader_membership = TeamMembership.objects.get_team_membership_of_leader(team=obj)
+        if leader_membership:
+            return leader_membership.first().team.get_leader().id
+
+    class Meta:
+        model = Team
+        fields = (
+            'id',
+            'name',
+            'members',
+            'season',
+            'leader_id'
+        )
+
+
 class SkillSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -51,7 +139,6 @@ class SeasonSerializer(serializers.ModelSerializer):
 
 
 class PublicTeamSerializer(serializers.ModelSerializer):
-    members = PublicCompetiorSerializer(many=True, read_only=True)
     technologies_full = SkillSerializer(
         many=True,
         read_only=True,
@@ -65,27 +152,13 @@ class PublicTeamSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'name',
-            'members',
             'idea_description',
             'repository',
-            'technologies',
             'technologies_full',
-            'mentors',
             'need_more_members',
             'members_needed_desc',
             'room',
-            'picture',
-            'place',
-        )
-
-
-class TeamMembershipSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TeamMembership
-        fields = (
-            'competitor',
-            'team',
-            'is_leader',
+            'place'
         )
 
 
@@ -99,60 +172,21 @@ class TeamMentorshipSerializer(serializers.ModelSerializer):
         )
 
 
-class CompetitorSerializer(serializers.ModelSerializer):
-    known_skills = serializers.PrimaryKeyRelatedField(
-        queryset=Skill.objects.all(),
-        many=True,
-        read_only=False
-    )
-
-    current_teammembership_set = serializers.SerializerMethodField('get_active_teams')
-    teammembership_set = TeamMembershipSerializer(many=True, read_only=True)
-
-    def get_active_teams(self, obj):
-        team_membership_query_set = TeamMembership.objects.filter(
-            team__season__is_active=True,
-            competitor=obj
-        )
-
-        serializer = TeamMembershipSerializer(
-            instance=team_membership_query_set,
-            many=True, context=self.context
-        )
-        return serializer.data
-
-    class Meta:
-        model = Competitor
-        fields = (
-            'email',
-            'first_name',
-            'last_name',
-            'is_vegetarian',
-            'known_skills',
-            'faculty_number',
-            'shirt_size',
-            'password',
-            'current_teammembership_set',
-            'teammembership_set',
-            'needs_work',
-            'social_links',
-        )
-        extra_kwargs = {'password': {'write_only': True}}
-
-    def create(self, validated_data):
-        new_user = super().create(validated_data)
-        new_user.set_password(validated_data['password'])
-        new_user.save()
-        return new_user
-
-
 class TeamSerializer(serializers.ModelSerializer):
-    members = CompetitorSerializer(many=True, read_only=True)
-    technologies = serializers.PrimaryKeyRelatedField(
-        many=True,
-        read_only=False,
-        queryset=Skill.objects.all()
-    )
+    members = CompetitorInTeamSerializer(many=True, read_only=True)
+    leader_id = serializers.SerializerMethodField()
+    leader_email = serializers.SerializerMethodField()
+    room = serializers.StringRelatedField()
+
+    def get_leader_id(self, obj):
+        leader_membership = TeamMembership.objects.get_team_membership_of_leader(team=obj)
+        if leader_membership:
+            return leader_membership.first().team.get_leader().id
+
+    def get_leader_email(self, obj):
+        leader_membership = TeamMembership.objects.get_team_membership_of_leader(team=obj)
+        if leader_membership:
+            return leader_membership.first().team.get_leader().email
 
     technologies_full = SkillSerializer(
         many=True,
@@ -160,29 +194,21 @@ class TeamSerializer(serializers.ModelSerializer):
         source='technologies',
     )
 
-    mentors_full = MentorSerializer(
-        many=True,
-        read_only=True,
-        source='mentors',
-    )
-
-    room = serializers.StringRelatedField()
-
     class Meta:
         model = Team
         fields = (
             'id',
             'name',
             'members',
+            'leader_id',
+            'leader_email',
             'idea_description',
             'repository',
             'technologies',
             'technologies_full',
-            'mentors_full',
             'need_more_members',
             'members_needed_desc',
             'room',
-            'picture',
             'place',
         )
 
@@ -199,13 +225,15 @@ class InvitationTeamSerializer(serializers.ModelSerializer):
 class InvitationSerializer(serializers.ModelSerializer):
     team = InvitationTeamSerializer(read_only=True)
     competitor_email = serializers.EmailField(required=True, write_only=True)
+    competitor = CompetitorSerializer(required=False)
 
     class Meta:
         model = Invitation
         fields = (
             'id',
             'team',
-            'competitor_email'
+            'competitor_email',
+            'competitor'
         )
 
     def validate(self, data):
@@ -213,9 +241,6 @@ class InvitationSerializer(serializers.ModelSerializer):
 
         if Invitation.objects.filter(competitor=competitor).count() > 0:
             raise serializers.ValidationError("You have already sent a an invitation for that user!")
-
-        if not competitor.exists():
-            raise serializers.ValidationError("Competitor with this email does not exists!")
 
         competitor_email = data.pop('competitor_email')
         competitor = Competitor.objects.get(email=competitor_email)
@@ -234,12 +259,14 @@ class OnBoardingCompetitorSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # TODO: Find a better way to do this
         known_skills = validated_data.pop("known_skills")
+        other_skills = validated_data.pop("other_skills")
 
         competitor = Competitor(**validated_data)
         competitor.baseuser_ptr_id = self.baseuser.id
         competitor.__dict__.update(self.baseuser.__dict__)
         competitor.save()
         competitor.known_skills = known_skills
+        competitor.other_skills = other_skills
         return competitor
 
     class Meta:
@@ -257,4 +284,5 @@ class OnBoardingCompetitorSerializer(serializers.ModelSerializer):
             'needs_work',
             'social_links',
             'known_skills',
+            'other_skills'
         )
