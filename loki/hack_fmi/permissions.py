@@ -240,7 +240,7 @@ class CanNotAcceptInvitationIfTeamLeader(permissions.BasePermission):
 
 class IsInvitedMemberCompetitor(permissions.BasePermission):
 
-    message = "Competitor with this email does not exists!!"
+    message = "Competitor with this email does not exist!!"
 
     def has_permission(self, request, view):
         if request.method == "POST":
