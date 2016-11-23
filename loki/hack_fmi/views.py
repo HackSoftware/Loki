@@ -127,13 +127,17 @@ class TeamAPI(JwtApiAuthenticationMixin,
               mixins.UpdateModelMixin,
               mixins.RetrieveModelMixin,
               viewsets.GenericViewSet):
-    permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
-                          IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
-                          CantCreateTeamWithTeamNameThatAlreadyExists,
-                          TeamLiederCantCreateOtherTeam)
-
     serializer_class = TeamSerializer
     queryset = Team.objects.all()
+
+    def get_permissions(self):
+        permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
+                              IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
+                              CantCreateTeamWithTeamNameThatAlreadyExists,
+                              TeamLiederCantCreateOtherTeam)
+        self.permission_classes += super().permission_classes + permission_classes
+
+        return [permission() for permission in self.permission_classes]
 
     def perform_create(self, serializer):
         season = Season.objects.get(is_active=True)
@@ -145,9 +149,13 @@ class TeamAPI(JwtApiAuthenticationMixin,
 
 class TeamMembershipAPI(JwtApiAuthenticationMixin,
                         generics.DestroyAPIView):
-    permission_classes = (IsHackFMIUser, IsMemberOfTeam,
-                          IsTeamMembershipInActiveSeason,)
     serializer_class = TeamMembershipSerializer
+
+    def get_permissions(self):
+        self.permission_classes += super().permission_classes + (IsHackFMIUser, IsMemberOfTeam,
+                                                                 IsTeamMembershipInActiveSeason,)
+
+        return [permission() for permission in self.permission_classes]
 
     def get_queryset(self):
         return TeamMembership.objects.all()
@@ -166,12 +174,17 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
                         mixins.DestroyModelMixin,
                         generics.GenericAPIView):
 
-    permission_classes = (IsHackFMIUser, IsTeamLeader,
-                          IsMentorDatePickUpToDate,
-                          CanAttachMoreMentorsToTeam)
-
     serializer_class = TeamMentorshipSerializer
     queryset = TeamMentorship.objects.all()
+
+    def get_permissions(self):
+        permission_classes = (IsHackFMIUser, IsTeamLeader,
+                              IsMentorDatePickUpToDate,
+                              CanAttachMoreMentorsToTeam)
+
+        self.permission_classes += super().permission_classes + permission_classes
+
+        return [permission() for permission in self.permission_classes]
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -182,6 +195,21 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
 
 class InvitationViewSet(JwtApiAuthenticationMixin, viewsets.ModelViewSet):
     serializer_class = InvitationSerializer
+
+    list_permission_classes = (IsHackFMIUser,
+                               IsTeamleaderOrCantCreateIvitation,
+                               IsInvitedMemberCompetitor,
+                               IsInvitedMemberAlreadyInYourTeam,
+                               IsInvitedMemberAlreadyInOtherTeam,
+                               CanInviteMoreMembersInTeam)
+
+    detail_permission_classes = (IsHackFMIUser,
+                                 CanNotAccessWronglyDedicatedIvitation)
+
+    accept_permission_classes = (IsHackFMIUser,
+                                 CanNotAcceptInvitationIfTeamLeader,
+                                 IsInvitedUserInTeam,
+                                 CanNotAccessWronglyDedicatedIvitation)
 
     def get_queryset(self):
         return Invitation.objects.get_competitor_invitations_for_active_season(
@@ -213,28 +241,19 @@ class InvitationViewSet(JwtApiAuthenticationMixin, viewsets.ModelViewSet):
             'get': 'list',
             'post': 'create',
         },
-            permission_classes=[IsHackFMIUser,
-                                IsTeamleaderOrCantCreateIvitation,
-                                IsInvitedMemberCompetitor,
-                                IsInvitedMemberAlreadyInYourTeam,
-                                IsInvitedMemberAlreadyInOtherTeam,
-                                CanInviteMoreMembersInTeam]
+            permission_classes=cls.permission_classes + cls.list_permission_classes
         )
 
         invitation_detail = cls.as_view({
             'delete': 'destroy',
         },
-            permission_classes=[IsHackFMIUser,
-                                CanNotAccessWronglyDedicatedIvitation]
+            permission_classes=cls.permission_classes + cls.detail_permission_classes
         )
 
         invitation_accept = cls.as_view({
             'post': 'accept',
         },
-            permission_classes=[IsHackFMIUser,
-                                CanNotAcceptInvitationIfTeamLeader,
-                                IsInvitedUserInTeam,
-                                CanNotAccessWronglyDedicatedIvitation]
+            permission_classes=cls.permission_classes + cls.accept_permission_classes
         )
 
         return locals()

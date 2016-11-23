@@ -254,7 +254,6 @@ class IsJWTTokenBlackListed(permissions.BasePermission):
     message = "You cannot login with that token anymore!"
 
     def has_permission(self, request, view):
-        import ipdb; ipdb.set_trace()  # breakpoint d58443f5 //
         token = request.META.get('HTTP_AUTHORIZATION', False)
-        
+
         return not BlackListToken.objects.filter(token=token).exists()
