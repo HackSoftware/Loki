@@ -208,7 +208,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         TeamMembership.objects.create(team=invitation.team,
                                       competitor=invitation.competitor)
         invitation.delete()
-        return Response("You have accepted this invitation!")
+        return Response("You have accepted this invitation!", status=status.HTTP_200_OK)
 
     @classmethod
     def get_urls(cls):
