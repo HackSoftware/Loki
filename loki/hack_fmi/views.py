@@ -130,6 +130,10 @@ class TeamAPI(JwtApiAuthenticationMixin,
     serializer_class = TeamSerializer
     queryset = Team.objects.all()
 
+    """
+    Get away from overriding JwtApiAuthenticationMixin'permission classes
+    """
+
     def get_permissions(self):
         permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                               IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
