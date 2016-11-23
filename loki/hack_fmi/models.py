@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from ckeditor.fields import RichTextField
 from loki.base_app.models import BaseUser
@@ -178,3 +179,8 @@ class Invitation(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.team, self.competitor)
+
+
+class BlackListToken(models.Model):
+    token = models.TextField(unique=True)
+    created_at = models.DateTimeField(default=timezone.now)

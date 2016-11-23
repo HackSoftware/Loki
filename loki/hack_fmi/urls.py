@@ -5,7 +5,7 @@ from rest_framework import routers
 from .views import (MeAPIView, SkillListAPIView, TeamAPI, InvitationViewSet,
                     MentorListView, SeasonView, PublicTeamView,
                     get_schedule, schedule_json, OnBoardCompetitorAPI, TeamMembershipAPI,
-                    TeamMentorshipAPI, TestApi, MeSeasonAPIView)
+                    TeamMentorshipAPI, TestApi, MeSeasonAPIView, JWTLogoutView)
 from .auth import Login
 # from .signals import send_invitation
 
@@ -27,6 +27,9 @@ urlpatterns = [
     url(r'^api/jwt-test/$', TestApi.as_view(), name='test_api'),
 
     url(r'^api/jwt-refresh/$', refresh_jwt_token, name='api-refresh'),
+
+    url(r'^api/jwt-logout/$', JWTLogoutView.as_view(), name='api-logout'),
+
 
     url(r'^api/skills/$', SkillListAPIView.as_view(), name='skills'),
 

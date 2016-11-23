@@ -1,4 +1,9 @@
+from rest_framework.permissions import IsAuthenticated
+
+from rest_framework_jwt.authentication import JSONWebTokenAuthentication
+
 from .serializers import CompetitorInTeamSerializer
+from .permissions import IsJWTTokenBlackListed
 
 
 class MeSerializerMixin:
@@ -16,3 +21,8 @@ class MeSerializerMixin:
             data["competitor_info"] = comp_inf.data
 
         return data
+
+
+class JwtApiAuthenticationMixin:
+    authentication_classes = (JSONWebTokenAuthentication, )
+    permission_classes = (IsJWTTokenBlackListed, IsAuthenticated)
