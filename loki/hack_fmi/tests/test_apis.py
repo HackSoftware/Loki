@@ -673,7 +673,6 @@ class OnBoardCompetitorAPITest(TestCase):
 
         response = self.client.post(self.reverse('hack_fmi:onboard_competitor'), data=data)
         self.response_201(response)
-
         self.assertEquals(1, Competitor.objects.all().count())
 
     def test_onboarding_base_user_with_uncorrect_authorization_token(self):
@@ -1188,7 +1187,7 @@ class TestTeamMentorshipAPI(TestCase):
         self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season, room=self.room)
-        self.competitor = CompetitorFactory(email=faker.email())
+        self.competitor = CompetitorFactory()
         self.competitor.is_active = True
         self.competitor.set_password(BaseUserFactory.password)
         self.competitor.save()
@@ -1302,6 +1301,57 @@ class TestTeamMentorshipAPI(TestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
         self.assertEqual(TeamMentorship.objects.filter(team=self.team, mentor=self.mentor).count(), 0)
+
+
+class TestSeasonInfoAPIView(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.season = SeasonFactory(is_active=True)
+        self.competitor = CompetitorFactory()
+        self.competitor.is_active = True
+        self.competitor.set_password(BaseUserFactory.password)
+        self.competitor.save()
+
+        data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+
+        self.url = self.reverse("hack_fmi:season_info")
+
+    def test_cannot_make_get_request(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        response = self.client.get(self.url)
+        self.response_405(response)  # Method nto allowed
+
+    def test_cannot_post_data_for_non_active_season(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        self.season.is_active = False
+        self.season.save()
+        data = {'season': self.season.id,
+                'competitor': self.competitor.id,
+                'looking_for_team': True}
+        response = self.client.post(self.url, data=data)
+        self.response_403(response)
+
+    def test_save_model_after_post(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        data = {'competitor': self.competitor.id,
+                'season': self.season.id,
+                'looking_for_team': True}
+        response = self.client.post(self.url, data=data)
+        self.response_201(response)
+
+    def test_cannot_add_competitor_that_has_team_membership_in_curreent_season(self):
+        team = TeamFactory(season=self.season)
+        TeamMembershipFactory(competitor=self.competitor,
+                              team=team)
+
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        data = {'competitor': self.competitor.id,
+                'season': self.season.id,
+                'looking_for_team': True}
+        response = self.client.post(self.url, data=data)
+        self.response_403(response)
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')

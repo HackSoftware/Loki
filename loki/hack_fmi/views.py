@@ -13,8 +13,10 @@ from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           InvitationSerializer, MentorSerializer,
                           SeasonSerializer, PublicTeamSerializer,
                           OnBoardingCompetitorSerializer,
+                          SeasonCompetitorInfoSerializer,
                           TeamMembershipSerializer,
                           TeamMentorshipSerializer,
+                          AllCompetitorsSerializer,
                           CustomTeamSerializer)
 from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
@@ -30,7 +32,8 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           CanAttachMoreMentorsToTeam,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
                           TeamLiederCantCreateOtherTeam,
-                          IsInvitedMemberCompetitor)
+                          IsInvitedMemberCompetitor, IsSeasonActive,
+                          IsCompetitorMemberOfTeamForActiveSeason)
 from .helper import send_team_delete_email, send_invitation, get_object_variable_or_none
 from .mixins import MeSerializerMixin
 
@@ -101,6 +104,15 @@ class SkillListAPIView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
+
+
+class AllCompetitorsAPIView(generics.ListAPIView):
+    permission_classes = (IsAuthenticated, IsTeamLeader,
+                          IsTeamMembershipInActiveSeason,
+                          CanInviteMoreMembersInTeam)
+    authentication_classes = (JSONWebTokenAuthentication,)
+
+    serializer_class = AllCompetitorsSerializer(many=True)
 
 
 class MentorListView(generics.ListAPIView):
@@ -294,3 +306,10 @@ class TestApi(APIView):
 
     def get(self, request):
         return Response("Great, status 200", status=status.HTTP_200_OK)
+
+
+class SeasonInfoAPIView(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated, IsSeasonActive,
+                          IsCompetitorMemberOfTeamForActiveSeason)
+    authentication_classes = (JSONWebTokenAuthentication, )
+    serializer_class = SeasonCompetitorInfoSerializer

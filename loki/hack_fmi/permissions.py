@@ -244,3 +244,25 @@ class IsInvitedMemberCompetitor(permissions.BasePermission):
         if request.method == "POST":
             return Competitor.objects.get_competitor_by_email(email=request.data['competitor_email']).exists()
         return True
+
+
+class IsSeasonActive(permissions.BasePermission):
+
+    message = "You cannot post data in nonactive season!"
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            return Season.objects.filter(id=request.data['season']).first().is_active
+        return True
+
+
+class IsCompetitorMemberOfTeamForActiveSeason(permissions.BasePermission):
+
+    message = "You are already member of team in this season!"
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            competitor = Competitor.objects.filter(id=request.data['competitor']).first()
+            return not TeamMembership.objects.get_team_memberships_for_active_season(
+                competitor=competitor).exists()
+        return True

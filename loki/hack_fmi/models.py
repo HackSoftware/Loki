@@ -178,3 +178,9 @@ class Invitation(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.team, self.competitor)
+
+
+class SeasonCompetitorInfo(models.Model):
+    competitor = models.ForeignKey(Competitor)
+    season = models.ForeignKey(Season)
+    looking_for_team = models.BooleanField(default=False)
