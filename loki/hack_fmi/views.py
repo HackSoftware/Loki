@@ -5,6 +5,7 @@ from rest_framework import status, generics, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
 from rest_framework import mixins
+from rest_framework_jwt.views import RefreshJSONWebToken
 
 from .models import (Skill, Team, TeamMembership,
                      Mentor, Season, TeamMentorship, BlackListToken)
@@ -317,4 +318,12 @@ class JWTLogoutView(JwtApiAuthenticationMixin,
     def post(self, request, *args, **kwargs):
         token = request.META.get('HTTP_AUTHORIZATION')
         BlackListToken.objects.create(token=token)
-        return Response(status=status.HTTP_201_CREATED)
+        # Response requires data or message
+        return Response("The token is blacklisted!", status=status.HTTP_202_ACCEPTED)
+
+
+class CustomJSONWebTokenAPIView(JwtApiAuthenticationMixin, RefreshJSONWebToken):
+
+    def post(self, request, *args, **kwargs):
+        BlackListToken.objects.create(token=' JWT ' + request.data['token'])
+        return super().post(request, *args, **kwargs)

@@ -14,7 +14,7 @@ from test_plus.test import TestCase
 from ..helper import date_increase, date_decrease
 from ..models import (TeamMembership, Competitor,
                       Season, Team, Invitation, Room,
-                      TeamMentorship, Mentor)
+                      TeamMentorship, Mentor, BlackListToken)
 
 from loki.seed.factories import (SkillFactory, HackFmiPartnerFactory, SeasonFactory,
                                  MentorFactory, RoomFactory, TeamFactory,
@@ -202,9 +202,10 @@ class TestRefreshJWTToken(TestCase):
         self.response_200(response)
         token = response.data.get('token')
         self.assertIsNotNone(token)
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + token)
         return token
 
-    def test_refresh_already_expired_token(self):
+    def test_refresh_token(self):
         existing_token = self.authenticate(self.user.email, BaseUserFactory.password)
         data = {'token': existing_token}
         """
@@ -215,7 +216,7 @@ class TestRefreshJWTToken(TestCase):
         response = self.client.post(self.reverse('hack_fmi:api-refresh'), data=data)
         self.response_200(response)
 
-    def test_can_access_api_with_already_refreshed_token(self):
+    def test_cant_access_api_with_already_refreshed_token(self):
         """
         The token has just been refreshed, but it is still active, until it expires
         """
@@ -228,7 +229,7 @@ class TestRefreshJWTToken(TestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + existing_token)
         response = self.client.get(self.reverse('hack_fmi:me'))
-        self.response_200(response)
+        self.response_403(response)
 
     def test_can_access_api_with_new_token(self):
         existing_token = self.authenticate(self.user.email, BaseUserFactory.password)
@@ -242,6 +243,113 @@ class TestRefreshJWTToken(TestCase):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + new_token)
         response = self.client.get(self.reverse('hack_fmi:me'))
         self.response_200(response)
+
+
+class JWTLogoutView(TestCase):
+    """
+    On /logout the current token is being blackilisted and user must not
+    be able to access any view with the same token.
+    """
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = BaseUserFactory()
+        self.user.is_active = True
+        self.user.save()
+
+    def authenticate(self, email, password):
+
+        data = {'email': email, 'password': password}
+        response = self.client.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.response_200(response)
+        token = response.data.get('token')
+        self.assertIsNotNone(token)
+        return token
+
+    def refresh_token(self, existing_token):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + existing_token)
+
+        data = {'token': existing_token}
+        """
+        The jwt hashing depends on timestamp at the exact moment.
+        Otherwise, it generates same tokens.
+        """
+        time.sleep(1)
+        response = self.client.post(self.reverse('hack_fmi:api-refresh'), data=data)
+        self.response_200(response)
+        return response.data['token']
+
+    def get_blacklisted_token(self):
+        existing_token = self.authenticate(self.user.email, BaseUserFactory.password)
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + existing_token)
+
+        url = self.reverse('hack_fmi:api-logout')
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 202)
+
+        self.assertTrue(BlackListToken.objects.filter(token=' JWT ' + existing_token).exists())
+        return existing_token
+
+    def test_token_is_blacklisted(self):
+        existing_token = self.authenticate(self.user.email, BaseUserFactory.password)
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + existing_token)
+
+        url = self.reverse('hack_fmi:api-logout')
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 202)
+
+        self.assertTrue(BlackListToken.objects.filter(token=' JWT ' + existing_token).exists())
+
+    def test_cant_access_views_after_logout_with_the_blacklisted_token(self):
+        token_to_be_blacklisted = self.authenticate(self.user.email, BaseUserFactory.password)
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + token_to_be_blacklisted)
+
+        url = self.reverse('hack_fmi:api-logout')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 202)
+
+        # Try to access views with the same the blacklisted token
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + token_to_be_blacklisted)
+        response = self.client.get(self.reverse('hack_fmi:me'))
+        self.response_403(response)
+
+    def test_blacklist_both_tokens_after_having_refreshed_tokens(self):
+        """
+        After refresh of tokens and then logout, the newly refreshed token
+        and the one that is being refreshed must be blacklisted
+        """
+        existing_token = self.authenticate(self.user.email, BaseUserFactory.password)
+
+        refreshed_token = self.refresh_token(existing_token)
+
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + refreshed_token)
+
+        url = self.reverse('hack_fmi:api-logout')
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 202)
+        import ipdb; ipdb.set_trace()  # breakpoint 4d1b9d6e //
+
+        self.assertTrue(BlackListToken.objects.filter(token=' JWT ' + refreshed_token).exists())
+        self.assertTrue(BlackListToken.objects.filter(token=' JWT ' + existing_token).exists())
+
+    def test_unauthenticated_user_cant_logout(self):
+        url = self.reverse('hack_fmi:api-logout')
+        response = self.client.post(url)
+
+        self.response_401(response)
+        self.assertFalse(BlackListToken.objects.exists())
+
+    def test_user_with_blacklisted_token_cannot_logout(self):
+        blacklisted_token = self.get_blacklisted_token()
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + blacklisted_token)
+
+        url = self.reverse('hack_fmi:api-logout')
+        response = self.client.post(url)
+
+        self.response_403(response)
 
 
 class TestMeAPIView(TestCase):
