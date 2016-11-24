@@ -55,3 +55,8 @@ class CompetitorQuerySet(models.QuerySet):
 class InvitationQuerySet(models.QuerySet):
     def get_competitor_invitations_for_active_season(self, competitor):
         return self.filter(competitor=competitor).filter(team__season__is_active=True)
+
+
+class SeasonCompetitorInfoQuerySet(models.QuerySet):
+    def get_season_competitor_info_for_active_season(self):
+        return self.filter(season__is_active=True)

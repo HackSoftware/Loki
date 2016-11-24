@@ -1,6 +1,6 @@
 from django.db import models
 
-from .query import TeamMembershipQuerySet
+from .query import TeamMembershipQuerySet, SeasonCompetitorInfoQuerySet
 
 
 class TeamMembershipManager(models.Manager):
@@ -34,3 +34,12 @@ class TeamMembershipManager(models.Manager):
         if not tm:
             return False
         return tm.is_leader
+
+
+class SeasonCompetitorInfoManager(models.Manager):
+
+    def get_queryset(self):
+        return SeasonCompetitorInfoQuerySet(self.model, using=self._db)
+
+    def get_competitors_for_active_season(self):
+        return [sci.competitor for sci in self.get_queryset().get_season_competitor_info_for_active_season()]

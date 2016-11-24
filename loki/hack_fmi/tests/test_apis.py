@@ -19,7 +19,8 @@ from ..models import (TeamMembership, Competitor,
 from loki.seed.factories import (SkillFactory, HackFmiPartnerFactory, SeasonFactory,
                                  MentorFactory, RoomFactory, TeamFactory,
                                  CompetitorFactory, BaseUserFactory, TeamMembershipFactory,
-                                 StudentFactory, InvitationFactory, TeamMentorshipFactory)
+                                 StudentFactory, InvitationFactory, TeamMentorshipFactory,
+                                 SeasonCompetitorInfoFactory)
 
 from faker import Factory
 
@@ -1394,6 +1395,53 @@ class TestSeasonInfoAPIView(TestCase):
                 'looking_for_team': True}
         response = self.client.post(self.url, data=data)
         self.response_403(response)
+
+
+class TestAllCompetitorsAPIView(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.season = SeasonFactory(is_active=True)
+        self.team = TeamFactory(season=self.season)
+        self.competitor = CompetitorFactory()
+        self.competitor.is_active = True
+        self.competitor.set_password(BaseUserFactory.password)
+        self.competitor.save()
+        self.season_competitor_info = SeasonCompetitorInfoFactory(season=self.season,
+                                                                  competitor=self.competitor)
+        self.team_membership = TeamMembershipFactory(team=self.team,
+                                                     competitor=self.competitor,
+                                                     is_leader=True)
+
+        data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+
+        self.url = self.reverse("hack_fmi:all_competitors")
+
+    def test_get_season_competitor_info_for_all_competitors_in_this_season(self):
+        season_competitor_info1 = SeasonCompetitorInfoFactory(season=self.season)
+        season_competitor_info2 = SeasonCompetitorInfoFactory(season=self.season)
+        season_competitor_info3 = SeasonCompetitorInfoFactory(season=self.season)
+        season_competitor_info4 = SeasonCompetitorInfoFactory(season=self.season)
+
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        response = self.client.get(self.url)
+        self.response_200(response)
+        self.assertContains(response, self.competitor)
+        self.assertContains(response, season_competitor_info1.competitor)
+        self.assertContains(response, season_competitor_info2.competitor)
+        self.assertContains(response, season_competitor_info3.competitor)
+        self.assertContains(response, season_competitor_info4.competitor)
+
+    def test_cannot_get_season_competitor_info_for_competitors_in_other_season(self):
+        season_competitor_info = SeasonCompetitorInfoFactory()
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        response = self.client.get(self.url)
+        self.response_200(response)
+        self.assertContains(response, self.competitor)
+        self.assertNotContains(response, season_competitor_info.competitor)
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')

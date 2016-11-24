@@ -5,8 +5,9 @@ from ckeditor.fields import RichTextField
 from loki.base_app.models import BaseUser
 
 from .query import (TeamQuerySet, TeamMembershipQuerySet,
-                    TeamMentorshipQuerySet, CompetitorQuerySet, InvitationQuerySet)
-from .managers import TeamMembershipManager
+                    TeamMentorshipQuerySet, CompetitorQuerySet,
+                    InvitationQuerySet, SeasonCompetitorInfoQuerySet)
+from .managers import TeamMembershipManager, SeasonCompetitorInfoManager
 
 
 class Season(models.Model):
@@ -185,6 +186,8 @@ class SeasonCompetitorInfo(models.Model):
     competitor = models.ForeignKey(Competitor)
     season = models.ForeignKey(Season)
     looking_for_team = models.BooleanField(default=False)
+
+    objects = SeasonCompetitorInfoManager.from_queryset(SeasonCompetitorInfoQuerySet)()
 
 
 class BlackListToken(models.Model):

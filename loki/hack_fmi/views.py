@@ -7,7 +7,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework import mixins
 
 from .models import (Skill, Team, TeamMembership,
-                     Mentor, Season, TeamMentorship, BlackListToken)
+                     Mentor, Season, TeamMentorship,
+                     BlackListToken, SeasonCompetitorInfo, Competitor)
 from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           InvitationSerializer, MentorSerializer,
                           SeasonSerializer, PublicTeamSerializer,
@@ -102,17 +103,6 @@ class SkillListAPIView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     queryset = Skill.objects.all()
     serializer_class = SkillSerializer
-
-
-class AllCompetitorsAPIView(JwtApiAuthenticationMixin, generics.ListAPIView):
-    serializer_class = AllCompetitorsSerializer(many=True)
-
-    def get_permissions(self):
-        permission_classes = (IsTeamLeader, IsTeamMembershipInActiveSeason,
-                              CanInviteMoreMembersInTeam)
-        self.permission_classes += super().permission_classes + permission_classes
-
-        return [permission() for permission in self.permission_classes]
 
 
 class MentorListView(generics.ListAPIView):
@@ -331,8 +321,20 @@ class SeasonInfoAPIView(JwtApiAuthenticationMixin, generics.CreateAPIView):
     def get_permissions(self):
         permission_classes = (IsSeasonActive, IsCompetitorMemberOfTeamForActiveSeason)
         self.permission_classes += super().permission_classes + permission_classes
-
         return [permission() for permission in self.permission_classes]
+
+
+class AllCompetitorsAPIView(JwtApiAuthenticationMixin, generics.ListAPIView):
+    def get_permissions(self):
+        permission_classes = (IsTeamLeader, IsTeamMembershipInActiveSeason,
+                              CanInviteMoreMembersInTeam)
+        self.permission_classes += super().permission_classes + permission_classes
+        return [permission() for permission in self.permission_classes]
+
+    serializer_class = AllCompetitorsSerializer
+
+    def get_queryset(self):
+        return SeasonCompetitorInfo.objects.get_competitors_for_active_season()
 
 
 class JWTLogoutView(JwtApiAuthenticationMixin,
