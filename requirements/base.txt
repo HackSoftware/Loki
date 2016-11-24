@@ -42,3 +42,5 @@ django-environ==0.4.0
 django-anymail==0.4.2
 easy-thumbnails==2.3
 python-dateutil==2.5.3
+apscheduler==3.3.0
+tzlocal==1.3
