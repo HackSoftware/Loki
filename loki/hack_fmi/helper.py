@@ -38,7 +38,7 @@ def date_increase(days):
 
 
 def date_decrease(days):
-    new_date = get_date_with_timedelta(days=days)
+    new_date = get_date_with_timedelta(days=-days)
     result = new_date.strftime("%Y-%m-%d")
     return result
 
