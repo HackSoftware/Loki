@@ -104,13 +104,15 @@ class SkillListAPIView(generics.ListAPIView):
     serializer_class = SkillSerializer
 
 
-class AllCompetitorsAPIView(generics.ListAPIView):
-    permission_classes = (IsAuthenticated, IsTeamLeader,
-                          IsTeamMembershipInActiveSeason,
-                          CanInviteMoreMembersInTeam)
-    authentication_classes = (JSONWebTokenAuthentication,)
-
+class AllCompetitorsAPIView(JwtApiAuthenticationMixin, generics.ListAPIView):
     serializer_class = AllCompetitorsSerializer(many=True)
+
+    def get_permissions(self):
+        permission_classes = (IsTeamLeader, IsTeamMembershipInActiveSeason,
+                              CanInviteMoreMembersInTeam)
+        self.permission_classes += super().permission_classes + permission_classes
+
+        return [permission() for permission in self.permission_classes]
 
 
 class MentorListView(generics.ListAPIView):
