@@ -2,7 +2,7 @@ from rest_framework import permissions
 from datetime import date
 
 from .models import (Team, Competitor, TeamMembership,
-                     Season, TeamMentorship)
+                     Season, TeamMentorship, BlackListToken)
 
 
 class IsHackFMIUser(permissions.BasePermission):
@@ -31,11 +31,14 @@ class IsTeamLeader(permissions.BasePermission):
             team = Team.objects.get_team_by_id(id=request.data['team']).first()
             competitor = request.user.get_competitor()
             return TeamMembership.objects.is_competitor_leader_of_team(competitor=competitor, team=team)
+
         return True
 
     def has_object_permission(self, request, view, obj):
         if request.method != 'POST':
             return obj.team.get_leader() == request.user.get_competitor()
+
+        return True
 
 
 class IsMemberOfTeam(permissions.BasePermission):
@@ -238,7 +241,7 @@ class CanNotAcceptInvitationIfTeamLeader(permissions.BasePermission):
 
 class IsInvitedMemberCompetitor(permissions.BasePermission):
 
-    message = "Competitor with this email does not exists!!"
+    message = "Competitor with this email does not exist!"
 
     def has_permission(self, request, view):
         if request.method == "POST":
@@ -266,3 +269,13 @@ class IsCompetitorMemberOfTeamForActiveSeason(permissions.BasePermission):
             return not TeamMembership.objects.get_team_memberships_for_active_season(
                 competitor=competitor).exists()
         return True
+
+
+class IsJWTTokenBlackListed(permissions.BasePermission):
+
+    message = "You cannot login with that token anymore!"
+
+    def has_permission(self, request, view):
+        token = request.META.get('HTTP_AUTHORIZATION', False)
+
+        return not BlackListToken.objects.filter(token=token).exists()

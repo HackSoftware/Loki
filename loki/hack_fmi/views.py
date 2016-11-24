@@ -3,12 +3,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, viewsets
 from rest_framework.decorators import api_view
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework import mixins
-from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 from .models import (Skill, Team, TeamMembership,
-                     Mentor, Season, TeamMentorship)
+                     Mentor, Season, TeamMentorship, BlackListToken)
 from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           InvitationSerializer, MentorSerializer,
                           SeasonSerializer, PublicTeamSerializer,
@@ -35,17 +34,16 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsInvitedMemberCompetitor, IsSeasonActive,
                           IsCompetitorMemberOfTeamForActiveSeason)
 from .helper import send_team_delete_email, send_invitation, get_object_variable_or_none
-from .mixins import MeSerializerMixin
+from .mixins import MeSerializerMixin, JwtApiAuthenticationMixin
 
 from loki.base_app.helper import try_open
 
 import json
 
 
-class MeAPIView(MeSerializerMixin, generics.GenericAPIView):
-    authentication_classes = (JSONWebTokenAuthentication, )
-    # Check user is authenticated in IsHackFMIUser permission
-    permission_classes = (IsAuthenticated, )
+class MeAPIView(JwtApiAuthenticationMixin,
+                MeSerializerMixin,
+                generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         data = super().get(request, *args, **kwargs)
@@ -66,9 +64,9 @@ class MeAPIView(MeSerializerMixin, generics.GenericAPIView):
         return Response(data=data, status=status.HTTP_200_OK)
 
 
-class MeSeasonAPIView(MeSerializerMixin, generics.GenericAPIView):
-    authentication_classes = (JSONWebTokenAuthentication, )
-    permission_classes = (IsAuthenticated, )
+class MeSeasonAPIView(JwtApiAuthenticationMixin,
+                      MeSerializerMixin,
+                      generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         data = super().get(request, *args, **kwargs)
@@ -135,19 +133,27 @@ class PublicTeamView(generics.ListAPIView):
     queryset = Team.objects.filter(season__is_active=True)
 
 
-class TeamAPI(mixins.CreateModelMixin,
+class TeamAPI(JwtApiAuthenticationMixin,
+              mixins.CreateModelMixin,
               mixins.ListModelMixin,
               mixins.UpdateModelMixin,
               mixins.RetrieveModelMixin,
               viewsets.GenericViewSet):
-    permission_classes = (IsAuthenticated, IsHackFMIUser, IsTeamLeaderOrReadOnly,
-                          IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
-                          CantCreateTeamWithTeamNameThatAlreadyExists,
-                          TeamLiederCantCreateOtherTeam)
-    authentication_classes = (JSONWebTokenAuthentication,)
-
     serializer_class = TeamSerializer
     queryset = Team.objects.all()
+
+    """
+    Get away from overriding JwtApiAuthenticationMixin'permission classes
+    """
+
+    def get_permissions(self):
+        permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
+                              IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
+                              CantCreateTeamWithTeamNameThatAlreadyExists,
+                              TeamLiederCantCreateOtherTeam)
+        self.permission_classes += super().permission_classes + permission_classes
+
+        return [permission() for permission in self.permission_classes]
 
     def perform_create(self, serializer):
         season = Season.objects.get(is_active=True)
@@ -157,11 +163,15 @@ class TeamAPI(mixins.CreateModelMixin,
         team.save()
 
 
-class TeamMembershipAPI(generics.DestroyAPIView):
-    permission_classes = (IsAuthenticated, IsHackFMIUser, IsMemberOfTeam,
-                          IsTeamMembershipInActiveSeason,)
-    authentication_classes = (JSONWebTokenAuthentication, )
+class TeamMembershipAPI(JwtApiAuthenticationMixin,
+                        generics.DestroyAPIView):
     serializer_class = TeamMembershipSerializer
+
+    def get_permissions(self):
+        self.permission_classes += super().permission_classes + (IsHackFMIUser, IsMemberOfTeam,
+                                                                 IsTeamMembershipInActiveSeason,)
+
+        return [permission() for permission in self.permission_classes]
 
     def get_queryset(self):
         return TeamMembership.objects.all()
@@ -175,17 +185,22 @@ class TeamMembershipAPI(generics.DestroyAPIView):
         instance.delete()
 
 
-class TeamMentorshipAPI(mixins.CreateModelMixin,
+class TeamMentorshipAPI(JwtApiAuthenticationMixin,
+                        mixins.CreateModelMixin,
                         mixins.DestroyModelMixin,
                         generics.GenericAPIView):
 
-    permission_classes = (IsAuthenticated, IsHackFMIUser, IsTeamLeader,
-                          IsMentorDatePickUpToDate,
-                          CanAttachMoreMentorsToTeam)
-    authentication_classes = (JSONWebTokenAuthentication,)
-
     serializer_class = TeamMentorshipSerializer
     queryset = TeamMentorship.objects.all()
+
+    def get_permissions(self):
+        permission_classes = (IsHackFMIUser, IsTeamLeader,
+                              IsMentorDatePickUpToDate,
+                              CanAttachMoreMentorsToTeam)
+
+        self.permission_classes += super().permission_classes + permission_classes
+
+        return [permission() for permission in self.permission_classes]
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
@@ -194,9 +209,23 @@ class TeamMentorshipAPI(mixins.CreateModelMixin,
         return self.destroy(request, *args, **kwargs)
 
 
-class InvitationViewSet(viewsets.ModelViewSet):
-    authentication_classes = (JSONWebTokenAuthentication,)
+class InvitationViewSet(JwtApiAuthenticationMixin, viewsets.ModelViewSet):
     serializer_class = InvitationSerializer
+
+    list_permission_classes = (IsHackFMIUser,
+                               IsTeamleaderOrCantCreateIvitation,
+                               IsInvitedMemberCompetitor,
+                               IsInvitedMemberAlreadyInYourTeam,
+                               IsInvitedMemberAlreadyInOtherTeam,
+                               CanInviteMoreMembersInTeam)
+
+    detail_permission_classes = (IsHackFMIUser,
+                                 CanNotAccessWronglyDedicatedIvitation)
+
+    accept_permission_classes = (IsHackFMIUser,
+                                 CanNotAcceptInvitationIfTeamLeader,
+                                 IsInvitedUserInTeam,
+                                 CanNotAccessWronglyDedicatedIvitation)
 
     def get_queryset(self):
         return Invitation.objects.get_competitor_invitations_for_active_season(
@@ -220,7 +249,7 @@ class InvitationViewSet(viewsets.ModelViewSet):
         TeamMembership.objects.create(team=invitation.team,
                                       competitor=invitation.competitor)
         invitation.delete()
-        return Response("You have accepted this invitation!")
+        return Response("You have accepted this invitation!", status=status.HTTP_200_OK)
 
     @classmethod
     def get_urls(cls):
@@ -228,31 +257,19 @@ class InvitationViewSet(viewsets.ModelViewSet):
             'get': 'list',
             'post': 'create',
         },
-            permission_classes=[IsAuthenticated,
-                                IsHackFMIUser,
-                                IsTeamleaderOrCantCreateIvitation,
-                                IsInvitedMemberCompetitor,
-                                IsInvitedMemberAlreadyInYourTeam,
-                                IsInvitedMemberAlreadyInOtherTeam,
-                                CanInviteMoreMembersInTeam]
+            permission_classes=cls.permission_classes + cls.list_permission_classes
         )
 
         invitation_detail = cls.as_view({
             'delete': 'destroy',
         },
-            permission_classes=[IsAuthenticated,
-                                IsHackFMIUser,
-                                CanNotAccessWronglyDedicatedIvitation]
+            permission_classes=cls.permission_classes + cls.detail_permission_classes
         )
 
         invitation_accept = cls.as_view({
             'post': 'accept',
         },
-            permission_classes=[IsAuthenticated,
-                                IsHackFMIUser,
-                                CanNotAcceptInvitationIfTeamLeader,
-                                IsInvitedUserInTeam,
-                                CanNotAccessWronglyDedicatedIvitation]
+            permission_classes=cls.permission_classes + cls.accept_permission_classes
         )
 
         return locals()
@@ -283,9 +300,8 @@ def schedule_json(request):
     return Response(content, status=status.HTTP_200_OK)
 
 
-class OnBoardCompetitorAPI(APIView):
-    authentication_classes = (JSONWebTokenAuthentication, )
-    permission_classes = (IsAuthenticated, )
+class OnBoardCompetitorAPI(JwtApiAuthenticationMixin,
+                           APIView):
 
     def post(self, request, format=None):
         if not request.user.get_competitor():
@@ -300,16 +316,27 @@ class OnBoardCompetitorAPI(APIView):
         return Response({"custom_errors": ["User is already competitor!"]}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class TestApi(APIView):
-    permission_classes = (IsAuthenticated,)
-    authentication_classes = (JSONWebTokenAuthentication, )
+class TestApi(JwtApiAuthenticationMixin,
+              APIView):
 
     def get(self, request):
         return Response("Great, status 200", status=status.HTTP_200_OK)
 
 
-class SeasonInfoAPIView(generics.CreateAPIView):
-    permission_classes = (IsAuthenticated, IsSeasonActive,
-                          IsCompetitorMemberOfTeamForActiveSeason)
-    authentication_classes = (JSONWebTokenAuthentication, )
+class SeasonInfoAPIView(JwtApiAuthenticationMixin, generics.CreateAPIView):
     serializer_class = SeasonCompetitorInfoSerializer
+
+    def get_permissions(self):
+        permission_classes = (IsSeasonActive, IsCompetitorMemberOfTeamForActiveSeason)
+        self.permission_classes += super().permission_classes + permission_classes
+
+        return [permission() for permission in self.permission_classes]
+
+
+class JWTLogoutView(JwtApiAuthenticationMixin,
+                    APIView):
+
+    def post(self, request, *args, **kwargs):
+        token = request.META.get('HTTP_AUTHORIZATION')
+        BlackListToken.objects.create(token=token)
+        return Response(status=status.HTTP_201_CREATED)

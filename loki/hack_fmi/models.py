@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from ckeditor.fields import RichTextField
 from loki.base_app.models import BaseUser
@@ -184,3 +185,8 @@ class SeasonCompetitorInfo(models.Model):
     competitor = models.ForeignKey(Competitor)
     season = models.ForeignKey(Season)
     looking_for_team = models.BooleanField(default=False)
+
+
+class BlackListToken(models.Model):
+    token = models.TextField(unique=True)
+    created_at = models.DateTimeField(default=timezone.now)

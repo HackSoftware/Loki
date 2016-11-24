@@ -158,7 +158,7 @@ class SkillFactory(factory.DjangoModelFactory):
     class Meta:
         model = hack_fmi_models.Skill
 
-    name = factory.Sequence(lambda n: '{}{}'.format(faker.name(), n))
+    name = factory.Sequence(lambda n: '{}{}'.format(faker.text(max_nb_chars=25), n))
 
 
 class StudentFactory(BaseUserFactory):
@@ -242,7 +242,7 @@ class SeasonFactory(factory.DjangoModelFactory):
     # the pick up period must have started ==> date_decrease
     mentor_pick_start_date = date_decrease(20)
     mentor_pick_end_date = date_increase(20)
-    max_mentor_pick = faker.random_number(digits=1)
+    max_mentor_pick = faker.random_element(elements=('3', '4'))
     is_active = faker.boolean(chance_of_getting_true=0)
 
 
