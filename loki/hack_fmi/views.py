@@ -325,5 +325,6 @@ class JWTLogoutView(JwtApiAuthenticationMixin,
 class CustomJSONWebTokenAPIView(JwtApiAuthenticationMixin, RefreshJSONWebToken):
 
     def post(self, request, *args, **kwargs):
-        BlackListToken.objects.create(token=' JWT ' + request.data['token'])
+        token = request.META.get('HTTP_AUTHORIZATION')
+        BlackListToken.objects.create(token=token)
         return super().post(request, *args, **kwargs)

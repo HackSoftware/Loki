@@ -245,7 +245,7 @@ class TestRefreshJWTToken(TestCase):
         self.response_200(response)
 
 
-class JWTLogoutView(TestCase):
+class TestJWTLogoutView(TestCase):
     """
     On /logout the current token is being blackilisted and user must not
     be able to access any view with the same token.
@@ -330,8 +330,6 @@ class JWTLogoutView(TestCase):
         response = self.client.post(url)
 
         self.assertEqual(response.status_code, 202)
-        import ipdb; ipdb.set_trace()  # breakpoint 4d1b9d6e //
-
         self.assertTrue(BlackListToken.objects.filter(token=' JWT ' + refreshed_token).exists())
         self.assertTrue(BlackListToken.objects.filter(token=' JWT ' + existing_token).exists())
 
