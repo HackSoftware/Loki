@@ -114,7 +114,7 @@ class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
 
 
 class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
-    message = "You are a teamleader and cant register another team!"
+    message = "You are a teamleader and cannot register another team!"
 
     def has_permission(self, request, view):
         if request.method == "POST":
@@ -135,7 +135,7 @@ class IsTeamInActiveSeason(permissions.BasePermission):
 
 
 class IsTeamleaderOrCantCreateIvitation(permissions.BasePermission):
-    message = "Only cureent season team leaders can invite members to team"
+    message = "Only current season team leaders can invite members."
 
     def has_permission(self, request, view):
         if request.method == "POST":
@@ -150,7 +150,7 @@ class IsTeamleaderOrCantCreateIvitation(permissions.BasePermission):
 
 class IsInvitedMemberAlreadyInYourTeam(permissions.BasePermission):
 
-    message = "The member you are trying to add is already in your team!!"
+    message = "The member you are trying to add is already in your team!"
 
     def has_permission(self, request, view):
         if request.method == "POST":
@@ -169,8 +169,7 @@ class IsInvitedMemberAlreadyInYourTeam(permissions.BasePermission):
 
 class IsInvitedMemberAlreadyInOtherTeam(permissions.BasePermission):
 
-    message = '''This competitor have already been a member of any existing team.
-                 Please leave that team and then in order to accept the invitation!'''
+    message = "This competitor is already member of a team!"
 
     def has_permission(self, request, view):
         if request.method == "POST":
@@ -223,7 +222,7 @@ class CanNotAccessWronglyDedicatedIvitation(permissions.BasePermission):
 
 class IsInvitedUserInTeam(permissions.BasePermission):
 
-    message = "You have already been a member in another team!"
+    message = "You are already a member of another team!"
 
     def has_object_permission(self, request, view, obj):
         return not TeamMembership.objects.\
@@ -232,7 +231,7 @@ class IsInvitedUserInTeam(permissions.BasePermission):
 
 class CanNotAcceptInvitationIfTeamLeader(permissions.BasePermission):
 
-    message = "You are a leader of your team and cannot accept any invitations!"
+    message = "You are a leader of a team and cannot accept any invitations!"
 
     def has_object_permission(self, request, view, obj):
         competitor = request.user.get_competitor()
