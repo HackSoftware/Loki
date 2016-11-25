@@ -2,7 +2,7 @@ from rest_framework import permissions
 from datetime import date
 
 from .models import (Team, Competitor, TeamMembership,
-                     Season, TeamMentorship)
+                     Season, TeamMentorship, BlackListToken)
 
 
 class IsHackFMIUser(permissions.BasePermission):
@@ -240,9 +240,19 @@ class CanNotAcceptInvitationIfTeamLeader(permissions.BasePermission):
 
 class IsInvitedMemberCompetitor(permissions.BasePermission):
 
-    message = "Competitor with this email does not exist!!"
+    message = "Competitor with this email does not exist!"
 
     def has_permission(self, request, view):
         if request.method == "POST":
             return Competitor.objects.get_competitor_by_email(email=request.data['competitor_email']).exists()
         return True
+
+
+class IsJWTTokenBlackListed(permissions.BasePermission):
+
+    message = "Signature has expired."
+
+    def has_permission(self, request, view):
+        token = request.META.get('HTTP_AUTHORIZATION', False)
+
+        return not BlackListToken.objects.filter(token=token).exists()

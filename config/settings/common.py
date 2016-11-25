@@ -145,7 +145,9 @@ REST_FRAMEWORK = {
 
 # JWT Authorization
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': timedelta(seconds=3600),
+    'JWT_ALLOW_REFRESH': True,
+    # Set expiration time to 1 week.
+    'JWT_EXPIRATION_DELTA': timedelta(seconds=604800),
 }
 
 # # CELERY

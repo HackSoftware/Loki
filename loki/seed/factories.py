@@ -158,7 +158,7 @@ class SkillFactory(factory.DjangoModelFactory):
     class Meta:
         model = hack_fmi_models.Skill
 
-    name = factory.Sequence(lambda n: '{}{}'.format(faker.name(), n))
+    name = factory.Sequence(lambda n: '{}{}'.format(faker.text(max_nb_chars=25), n))
 
 
 class StudentFactory(BaseUserFactory):
