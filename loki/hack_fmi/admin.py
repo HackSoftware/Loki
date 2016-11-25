@@ -3,7 +3,7 @@ from adminsortable2.admin import SortableAdminMixin
 
 from .models import (Competitor, Skill, Team, TeamMembership,
                      Invitation, Mentor, Season, Room, Partner,
-                     TeamMentorship,)
+                     TeamMentorship, BlackListToken)
 
 
 @admin.register(Skill)
