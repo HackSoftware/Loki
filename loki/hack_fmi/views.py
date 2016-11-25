@@ -317,14 +317,18 @@ class JWTLogoutView(JwtApiAuthenticationMixin,
 
     def post(self, request, *args, **kwargs):
         token = request.META.get('HTTP_AUTHORIZATION')
+
+        if BlackListToken.objects.filter(token=token).exists():
+            return Response("Token is already blacklisted.", status=status.HTTP_400_BAD_REQUEST)
+
         BlackListToken.objects.create(token=token)
-        # Response requires data or message
-        return Response("The token is blacklisted!", status=status.HTTP_202_ACCEPTED)
+        return Response("Token has been blacklisted.", status=status.HTTP_202_ACCEPTED)
 
 
-class CustomJSONWebTokenAPIView(JwtApiAuthenticationMixin, RefreshJSONWebToken):
+class CustomRefreshJSONWebTokenAPIView(JwtApiAuthenticationMixin, RefreshJSONWebToken):
 
     def post(self, request, *args, **kwargs):
         token = request.META.get('HTTP_AUTHORIZATION')
         BlackListToken.objects.create(token=token)
+
         return super().post(request, *args, **kwargs)

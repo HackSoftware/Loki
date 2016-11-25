@@ -349,6 +349,16 @@ class TestJWTLogoutView(TestCase):
 
         self.response_403(response)
 
+    def test_user_can_not_logout_twice_with_the_same_token(self):
+        existing_token = self.authenticate(self.user.email, BaseUserFactory.password)
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + existing_token)
+
+        url = self.reverse('hack_fmi:api-logout')
+        self.client.post(url)
+        response = self.client.post(url)
+
+        self.response_403(response)
+
 
 class TestMeAPIView(TestCase):
     def setUp(self):

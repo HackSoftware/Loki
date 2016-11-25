@@ -6,7 +6,7 @@ from .views import (MeAPIView, SkillListAPIView, TeamAPI, InvitationViewSet,
                     MentorListView, SeasonView, PublicTeamView,
                     get_schedule, schedule_json, OnBoardCompetitorAPI, TeamMembershipAPI,
                     TeamMentorshipAPI, TestApi, MeSeasonAPIView, JWTLogoutView,
-                    CustomJSONWebTokenAPIView)
+                    CustomRefreshJSONWebTokenAPIView)
 from .auth import Login
 # from .signals import send_invitation
 
@@ -27,7 +27,7 @@ urlpatterns = [
     # check for JWT auth
     url(r'^api/jwt-test/$', TestApi.as_view(), name='test_api'),
 
-    url(r'^api/jwt-refresh/$', CustomJSONWebTokenAPIView.as_view(), name='api-refresh'),
+    url(r'^api/jwt-refresh/$', CustomRefreshJSONWebTokenAPIView.as_view(), name='api-refresh'),
 
     url(r'^api/jwt-logout/$', JWTLogoutView.as_view(), name='api-logout'),
 

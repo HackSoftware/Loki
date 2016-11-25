@@ -250,7 +250,7 @@ class IsInvitedMemberCompetitor(permissions.BasePermission):
 
 class IsJWTTokenBlackListed(permissions.BasePermission):
 
-    message = "You cannot login with that token anymore!"
+    message = "Signature has expired."
 
     def has_permission(self, request, view):
         token = request.META.get('HTTP_AUTHORIZATION', False)
