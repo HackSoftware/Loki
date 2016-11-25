@@ -1,9 +1,16 @@
+import time
+from django.core import mail
+from rest_framework import status
+from rest_framework.test import APIClient
+from rest_framework_jwt import utils
+
 from test_plus.test import TestCase
 
-from rest_framework.test import APIClient
 from loki.hack_fmi.models import Invitation, TeamMembership
-from django.core import mail
 from loki.seed import factories
+
+from loki.seed.factories import (BaseUserFactory,)
+
 from faker import Factory
 
 faker = Factory.create()
@@ -93,3 +100,67 @@ class TestInvitationViewSetIntegration(TestCase):
                                                    team=self.team).exists())
         self.assertTrue(TeamMembership.objects.filter(team=self.team,
                                                       competitor=self.invited_user).exists())
+
+
+class TestJWTIntegration(TestCase):
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = BaseUserFactory()
+        self.user.is_active = True
+        self.user.save()
+
+    def login(self, email, password):
+
+        data = {'email': email, 'password': password}
+        response = self.client.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.response_200(response)
+        token = response.data.get('token')
+        self.assertIsNotNone(token)
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + token)
+        return token
+
+    def authenticate(self):
+        return self.login(self.user.email, BaseUserFactory.password)
+
+    def refresh_token(self):
+        existing_token = self.authenticate()
+        data = {'token': existing_token}
+        """
+        The jwt hashing depends on timestamp at the exact moment.
+        Otherwise, it generates same tokens.
+        """
+        time.sleep(1)
+        response = self.client.post(self.reverse('hack_fmi:api-refresh'), data=data)
+        self.response_200(response)
+        new_token = response.data.get('token')
+        self.assertNotEqual(new_token, existing_token)
+        return {'existing_token': existing_token,
+                'new_token': new_token}
+
+    def test_cant_access_api_with_already_refreshed_token(self):
+        """
+        The token has just been refreshed, but it is still active, until it expires
+        """
+        tokens = self.refresh_token()
+
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + tokens['existing_token'])
+        response = self.client.get(self.reverse('hack_fmi:me'))
+        self.response_403(response)
+
+    def test_can_access_api_with_new_token(self):
+        tokens = self.refresh_token()
+
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + tokens['new_token'])
+        response = self.client.get(self.reverse('hack_fmi:me'))
+        self.response_200(response)
+
+    def logout(self):
+        existing_token = self.authenticate(self.user.email, BaseUserFactory.password)
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + existing_token)
+
+        url = self.reverse('hack_fmi:api-logout')
+        response = self.client.post(url)
+
+        self.assertEqual(response.status_code, 202)
+        return response
