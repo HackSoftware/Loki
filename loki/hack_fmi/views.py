@@ -19,8 +19,7 @@ from .serializers import (SkillSerializer, TeamSerializer, Invitation,
 from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
                           IsTeamLeader, IsSeasonDeadlineUpToDate,
-                          IsMentorDatePickUpToDate,
-                          IsTeamInActiveSeason, IsTeamleaderOrCantCreateIvitation,
+                          IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation,
                           IsInvitedMemberAlreadyInYourTeam,
                           IsInvitedMemberAlreadyInOtherTeam,
                           CanInviteMoreMembersInTeam,
@@ -137,7 +136,7 @@ class TeamAPI(JwtApiAuthenticationMixin,
 
     def get_permissions(self):
         permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
-                              IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
+                              IsSeasonDeadlineUpToDate,
                               CantCreateTeamWithTeamNameThatAlreadyExists,
                               TeamLiederCantCreateOtherTeam)
         self.permission_classes += super().permission_classes + permission_classes

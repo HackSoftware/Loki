@@ -127,13 +127,6 @@ class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
         return True
 
 
-class IsTeamInActiveSeason(permissions.BasePermission):
-    message = "This team is not in an active season!"
-
-    def has_object_permission(self, request, view, obj):
-        return obj.season.is_active is True
-
-
 class IsTeamleaderOrCantCreateIvitation(permissions.BasePermission):
     message = "Only current season team leaders can invite members."
 

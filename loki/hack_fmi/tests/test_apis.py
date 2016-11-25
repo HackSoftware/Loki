@@ -629,6 +629,17 @@ class TestTeamAPI(TestCase):
         self.token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
+    def test_api_returns_only_teams_for_current_season(self):
+        non_active_season = SeasonFactory(is_active=False)
+        non_active_team = TeamFactory(season=non_active_season)
+
+        self.assertTrue(Team.objects.filter(season__is_active=True).exists())
+        url = self.reverse('hack_fmi:team-list')
+        response = self.client.get(url)
+        self.response_200(response)
+        self.assertContains(response, self.team)
+        self.assertNotContains(response, non_active_team)
+
     def test_get_teams_returns_required_data_for_private_teams(self):
         response = self.client.get(self.reverse('hack_fmi:team-list'))
         self.response_200(response)
@@ -723,7 +734,7 @@ class TestTeamAPI(TestCase):
 
         url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
         response = self.client.patch(url, data)
-        self.response_403(response)
+        self.response_404(response)
 
     def test_leader_cannot_change_teams_in_non_active_seasons(self):
         self.active_season.is_active = False
@@ -739,7 +750,7 @@ class TestTeamAPI(TestCase):
 
         url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
         response = self.client.patch(url, data)
-        self.response_403(response)
+        self.response_404(response)
 
     def test_get_team_within_current_season_deadlines(self):
         url = self.reverse("hack_fmi:team-detail", pk=self.team.id)
