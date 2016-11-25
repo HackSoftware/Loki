@@ -42,4 +42,4 @@ class SeasonCompetitorInfoManager(models.Manager):
         return SeasonCompetitorInfoQuerySet(self.model, using=self._db)
 
     def get_competitors_for_active_season(self):
-        return [sci.competitor for sci in self.get_queryset().get_season_competitor_info_for_active_season()]
+        return [s.competitor for s in self.get_queryset().get_season_competitor_infos_for_active_season()]

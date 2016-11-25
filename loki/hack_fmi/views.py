@@ -8,7 +8,7 @@ from rest_framework import mixins
 
 from .models import (Skill, Team, TeamMembership,
                      Mentor, Season, TeamMentorship,
-                     BlackListToken, SeasonCompetitorInfo, Competitor)
+                     BlackListToken, SeasonCompetitorInfo)
 from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           InvitationSerializer, MentorSerializer,
                           SeasonSerializer, PublicTeamSerializer,
