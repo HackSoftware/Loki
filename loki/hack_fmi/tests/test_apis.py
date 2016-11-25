@@ -637,8 +637,7 @@ class TestTeamAPI(TestCase):
         url = self.reverse('hack_fmi:team-list')
         response = self.client.get(url)
         self.response_200(response)
-        self.assertContains(response, self.team)
-        self.assertNotContains(response, non_active_team)
+        self.assertEqual(len(response.data), 1)
 
     def test_get_teams_returns_required_data_for_private_teams(self):
         response = self.client.get(self.reverse('hack_fmi:team-list'))
