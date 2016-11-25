@@ -631,7 +631,7 @@ class TestTeamAPI(TestCase):
 
     def test_api_returns_only_teams_for_current_season(self):
         non_active_season = SeasonFactory(is_active=False)
-        non_active_team = TeamFactory(season=non_active_season)
+        TeamFactory(season=non_active_season)
 
         self.assertTrue(Team.objects.filter(season__is_active=True).exists())
         url = self.reverse('hack_fmi:team-list')
