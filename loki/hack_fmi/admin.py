@@ -75,3 +75,9 @@ class RoomAdmin(admin.ModelAdmin):
 @admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin):
     list_display = ('name',)
+
+
+@admin.register(BlackListToken)
+class BlackListTokenAdmin(admin.ModelAdmin):
+    list_display = ('token',
+                    'created_at')
