@@ -129,7 +129,7 @@ class TeamAPI(JwtApiAuthenticationMixin,
               mixins.RetrieveModelMixin,
               viewsets.GenericViewSet):
     serializer_class = TeamSerializer
-    queryset = Team.objects.all()
+    queryset = Team.objects.filter(season__is_active=True)
 
     """
     Get away from overriding JwtApiAuthenticationMixin'permission classes
