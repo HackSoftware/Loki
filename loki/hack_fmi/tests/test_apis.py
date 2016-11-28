@@ -1552,7 +1552,6 @@ class TestAllCompetitorsAPIView(TestCase):
 
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
-        import ipdb; ipdb.set_trace()
         response = self.client.get(self.url)
         self.response_200(response)
         self.assertContains(response, self.competitor)
