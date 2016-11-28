@@ -1485,7 +1485,7 @@ class TestSeasonInfoAPIView(TestCase):
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.token = response.data['token']
 
-        self.url = self.reverse("hack_fmi:season_info")
+        self.url = self.reverse("hack_fmi:season_competitor_info")
 
     def test_cannot_make_get_request(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)

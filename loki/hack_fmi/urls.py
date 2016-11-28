@@ -62,5 +62,5 @@ urlpatterns = [
     url(r'^api/schedule-json/', schedule_json, name="schedule_json"),
     url(r'^api/onboard-competitor/$', OnBoardCompetitorAPI.as_view(), name='onboard_competitor'),
     url(r'^api/competitors/$', CompetitorListAPIView.as_view(), name='competitors'),
-    url(r'^api/season-info/$', SeasonInfoAPIView.as_view(), name='season_info'),
+    url(r'^api/season-competitor-info/$', SeasonInfoAPIView.as_view(), name='season_competitor_info'),
 ] + router.urls
