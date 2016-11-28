@@ -5,6 +5,7 @@ from rest_framework import status, generics, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
 from rest_framework import mixins
+from rest_framework_jwt.views import RefreshJSONWebToken
 
 from .models import (Skill, Team, TeamMembership,
                      Mentor, Season, TeamMentorship,
@@ -21,8 +22,7 @@ from .serializers import (SkillSerializer, TeamSerializer, Invitation,
 from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
                           IsTeamLeader, IsSeasonDeadlineUpToDate,
-                          IsMentorDatePickUpToDate,
-                          IsTeamInActiveSeason, IsTeamleaderOrCantCreateIvitation,
+                          IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation,
                           IsInvitedMemberAlreadyInYourTeam,
                           IsInvitedMemberAlreadyInOtherTeam,
                           CanInviteMoreMembersInTeam,
@@ -132,7 +132,7 @@ class TeamAPI(JwtApiAuthenticationMixin,
               mixins.RetrieveModelMixin,
               viewsets.GenericViewSet):
     serializer_class = TeamSerializer
-    queryset = Team.objects.all()
+    queryset = Team.objects.filter(season__is_active=True)
 
     """
     Get away from overriding JwtApiAuthenticationMixin'permission classes
@@ -140,7 +140,7 @@ class TeamAPI(JwtApiAuthenticationMixin,
 
     def get_permissions(self):
         permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
-                              IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
+                              IsSeasonDeadlineUpToDate,
                               CantCreateTeamWithTeamNameThatAlreadyExists,
                               TeamLiederCantCreateOtherTeam)
         self.permission_classes += super().permission_classes + permission_classes
@@ -342,5 +342,18 @@ class JWTLogoutView(JwtApiAuthenticationMixin,
 
     def post(self, request, *args, **kwargs):
         token = request.META.get('HTTP_AUTHORIZATION')
+
+        if BlackListToken.objects.filter(token=token).exists():
+            return Response("Token is already blacklisted.", status=status.HTTP_400_BAD_REQUEST)
+
         BlackListToken.objects.create(token=token)
-        return Response(status=status.HTTP_201_CREATED)
+        return Response("Token has been blacklisted.", status=status.HTTP_202_ACCEPTED)
+
+
+class CustomRefreshJSONWebTokenAPIView(JwtApiAuthenticationMixin, RefreshJSONWebToken):
+
+    def post(self, request, *args, **kwargs):
+        token = request.META.get('HTTP_AUTHORIZATION')
+        BlackListToken.objects.create(token=token)
+
+        return super().post(request, *args, **kwargs)
