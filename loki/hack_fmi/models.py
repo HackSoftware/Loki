@@ -1,6 +1,8 @@
+import json
 from django.db import models
 from django.utils import timezone
 
+from channels import Group
 from ckeditor.fields import RichTextField
 from loki.base_app.models import BaseUser
 
@@ -179,6 +181,12 @@ class Invitation(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.team, self.competitor)
+
+    def save(self, *args, **kwargs):
+        print("rdrf")
+        Group("invitations").send({
+            "text": json.dumps({"id": self.id})
+        })
 
 
 class BlackListToken(models.Model):

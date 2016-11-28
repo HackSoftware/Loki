@@ -1,3 +1,4 @@
+import os
 # flake8: noqa
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 from easy_thumbnails.conf import Settings as thumbnail_settings
@@ -53,6 +54,7 @@ INSTALLED_APPS = (
     'anymail',
     'easy_thumbnails',
     'image_cropping',
+    'channels',
 
     'loki.hack_fmi.apps.HackFMIConfig',
     'loki.base_app.apps.BaseAppConfig',
@@ -258,3 +260,13 @@ EMAIL_TEMPLATES = {
 }
 
 LOGIN_URL = 'website:login'
+
+CHANNEL_LAYERS = {
+    "default": {
+        'BACKEND': 'asgiref.inmemory.ChannelLayer',
+        # "CONFIG": {
+        #     "hosts": [('redis', 6379)],
+        # },
+        "ROUTING": "config.routing.channel_routing",
+    },
+}
