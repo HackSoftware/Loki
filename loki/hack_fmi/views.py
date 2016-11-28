@@ -17,7 +17,7 @@ from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           SeasonCompetitorInfoSerializer,
                           TeamMembershipSerializer,
                           TeamMentorshipSerializer,
-                          AllCompetitorsSerializer,
+                          CompetitorListSerializer,
                           CustomTeamSerializer)
 from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
@@ -324,14 +324,14 @@ class SeasonInfoAPIView(JwtApiAuthenticationMixin, generics.CreateAPIView):
         return [permission() for permission in self.permission_classes]
 
 
-class AllCompetitorsAPIView(JwtApiAuthenticationMixin, generics.ListAPIView):
+class CompetitorListAPIView(JwtApiAuthenticationMixin, generics.ListAPIView):
     def get_permissions(self):
         permission_classes = (IsTeamLeader, IsTeamMembershipInActiveSeason,
                               CanInviteMoreMembersInTeam)
         self.permission_classes += super().permission_classes + permission_classes
         return [permission() for permission in self.permission_classes]
 
-    serializer_class = AllCompetitorsSerializer
+    serializer_class = CompetitorListSerializer
 
     def get_queryset(self):
         return SeasonCompetitorInfo.objects.get_competitors_for_active_season()

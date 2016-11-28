@@ -73,7 +73,7 @@ class CompetitorInTeamSerializer(serializers.ModelSerializer):
         )
 
 
-class AllCompetitorsSerializer(CompetitorInTeamSerializer):
+class CompetitorListSerializer(CompetitorInTeamSerializer):
 
     class Meta(CompetitorInTeamSerializer.Meta):
         model = Competitor

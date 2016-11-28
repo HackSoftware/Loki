@@ -1523,7 +1523,7 @@ class TestSeasonInfoAPIView(TestCase):
         self.response_403(response)
 
 
-class TestAllCompetitorsAPIView(TestCase):
+class TestCompetitorViews(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.season = SeasonFactory(is_active=True)
