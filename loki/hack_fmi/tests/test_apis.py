@@ -1523,7 +1523,7 @@ class TestSeasonInfoAPIView(TestCase):
         self.response_403(response)
 
 
-class TestCompetitorViews(TestCase):
+class TestCompetitorListAPI(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.season = SeasonFactory(is_active=True)
@@ -1542,7 +1542,7 @@ class TestCompetitorViews(TestCase):
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.token = response.data['token']
 
-        self.url = self.reverse("hack_fmi:all_competitors")
+        self.url = self.reverse("hack_fmi:competitors")
 
     def test_get_season_competitor_info_for_all_competitors_in_this_season(self):
         season_competitor_info1 = SeasonCompetitorInfoFactory(season=self.season)
