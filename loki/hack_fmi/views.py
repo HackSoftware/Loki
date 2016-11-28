@@ -99,7 +99,7 @@ class MeSeasonAPIView(JwtApiAuthenticationMixin,
         data["team"] = team_data
         data["team_membership_id"] = tm_id
 
-        season_competitor_info = SeasonCompetitorInfo.objects.filter(competitor=competitor).first()
+        season_competitor_info = SeasonCompetitorInfo.objects.get(competitor=competitor)
         if season_competitor_info.exists():
             looking_for_team = season_competitor_info.looking_for_team
 
