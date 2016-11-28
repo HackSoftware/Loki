@@ -189,6 +189,9 @@ class SeasonCompetitorInfo(models.Model):
 
     objects = SeasonCompetitorInfoManager.from_queryset(SeasonCompetitorInfoQuerySet)()
 
+    class Meta:
+        unique_together = ('competitor', 'season')
+
 
 class BlackListToken(models.Model):
     token = models.TextField(unique=True)
