@@ -247,7 +247,9 @@ class IsSeasonActive(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == 'POST':
-            return Season.objects.filter(id=request.data['season']).first().is_active
+            season = Season.objects.get(id=request.data['season'])
+            if season is not None:
+                return season.is_active
         return True
 
 
@@ -257,9 +259,10 @@ class IsCompetitorMemberOfTeamForActiveSeason(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == 'POST':
-            competitor = Competitor.objects.filter(id=request.data['competitor']).first()
-            return not TeamMembership.objects.get_team_memberships_for_active_season(
-                competitor=competitor).exists()
+            competitor = Competitor.objects.get(id=request.data['competitor'])
+            if competitor is not None:
+                return not TeamMembership.objects.get_team_memberships_for_active_season(
+                    competitor=competitor).exists()
         return True
 
 

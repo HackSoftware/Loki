@@ -1502,7 +1502,7 @@ class TestSeasonInfoAPIView(TestCase):
         response = self.client.post(self.url, data=data)
         self.response_403(response)
 
-    def test_save_model_after_post(self):
+    def test_post_is_successful(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
         data = {'competitor': self.competitor.id,
                 'season': self.season.id,
