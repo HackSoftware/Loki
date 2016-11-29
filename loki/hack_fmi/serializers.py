@@ -61,6 +61,13 @@ class CompetitorSerializer(serializers.ModelSerializer):
         return new_user
 
 
+class SkillSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Skill
+        fields = ('id', 'name')
+
+
 class CompetitorInTeamSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -74,10 +81,16 @@ class CompetitorInTeamSerializer(serializers.ModelSerializer):
 
 
 class CompetitorListSerializer(CompetitorInTeamSerializer):
+    known_skills_full = SkillSerializer(
+        many=True,
+        read_only=True,
+        source='known_skills',
+    )
 
     class Meta(CompetitorInTeamSerializer.Meta):
         model = Competitor
-        fields = CompetitorInTeamSerializer.Meta.fields + ('known_skills', 'other_skills')
+        fields = CompetitorInTeamSerializer.Meta.fields + ('known_skills_full',
+                                                           'other_skills')
 
 
 class CustomTeamSerializer(serializers.ModelSerializer):
@@ -98,13 +111,6 @@ class CustomTeamSerializer(serializers.ModelSerializer):
             'season',
             'leader_id'
         )
-
-
-class SkillSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Skill
-        fields = ('id', 'name')
 
 
 class PublicCompetiorSerializer(serializers.ModelSerializer):
