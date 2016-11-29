@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
 from rest_framework import mixins
 from rest_framework_jwt.views import RefreshJSONWebToken
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import (Skill, Team, TeamMembership,
                      Mentor, Season, TeamMentorship,
@@ -99,11 +100,14 @@ class MeSeasonAPIView(JwtApiAuthenticationMixin,
         data["team"] = team_data
         data["team_membership_id"] = tm_id
 
-        season_competitor_info = SeasonCompetitorInfo.objects.get(competitor=competitor)
-        if season_competitor_info:
-            looking_for_team = season_competitor_info.looking_for_team
+        try:
+            season_competitor_info = SeasonCompetitorInfo.objects.get(competitor=competitor)
+            if season_competitor_info:
+                looking_for_team = season_competitor_info.looking_for_team
 
-        data["looking_for_team"] = looking_for_team
+            data["looking_for_team"] = looking_for_team
+        except ObjectDoesNotExist:
+            looking_for_team = False
 
         return Response(data=data, status=status.HTTP_200_OK)
 
