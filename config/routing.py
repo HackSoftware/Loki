@@ -1,8 +1,8 @@
-from channels.routing import route
-from loki.hack_fmi.consumers import ws_connect, ws_disconnect
+from channels.routing import route_class
+from loki.hack_fmi import consumers
 
 
 channel_routing = [
-    route("websocket.connect", ws_connect, path=r'^'),
-    route("websocket.disconnect", ws_disconnect),
+    # ws://localhost:8000/invitations
+    route_class(consumers.InvitationServer, path=r'^/invitations')
 ]
