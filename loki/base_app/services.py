@@ -102,7 +102,10 @@ def send_activation_mail(request, user):
         'url': get_activation_url(user_token.token, request.GET.get('origin', None)),
         'full_name': user.full_name
     }
-    template_id = settings.EMAIL_TEMPLATES['user_registered']
+    if request.GET.get('origin') == "hackfmi":
+        template_id = settings.EMAIL_TEMPLATES['hackfmi_register']
+    else:
+        template_id = settings.EMAIL_TEMPLATES['user_registered']
 
     send_template_email(to_email, template_id, context)
 
