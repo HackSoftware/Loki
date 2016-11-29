@@ -182,12 +182,6 @@ class Invitation(models.Model):
     def __str__(self):
         return "{} {}".format(self.team, self.competitor)
 
-    def save(self, *args, **kwargs):
-        print("rdrf")
-        Group("invitations").send({
-            "text": json.dumps({"id": self.id})
-        })
-
 
 class BlackListToken(models.Model):
     token = models.TextField(unique=True)

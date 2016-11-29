@@ -5,7 +5,8 @@ from chnnels import Group
 from .models import Invitation
 
 
-# @receiver(post_save, sender=Invitation)
-# def send_message_to_group(sender, instance, **kwargs):
-#     print("erfre")
-#     Group("invitations").send({"text": "tuk sum"})
+@receiver(post_save, sender=Invitation)
+def send_message_to_group(sender, instance, **kwargs):
+    message = "New invitation was created."
+    Group("invitations").send({"message": message,
+                               "competitor_id": instance.competitor.id})
