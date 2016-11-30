@@ -9,6 +9,7 @@ from .consumers import InvitationConsumer
 
 @receiver(post_save, sender=Invitation)
 def send_message_to_group(sender, instance, **kwargs):
+    # TODO: Broadcast only when instance is created?
     msg = "New invitation was created."
     leader_name = instance.team.get_leader().full_name
     competitor_id = instance.competitor.id
