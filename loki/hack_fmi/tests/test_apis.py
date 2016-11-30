@@ -1400,11 +1400,10 @@ class TestTeamMentorshipAPI(TestCase):
 
         url = reverse('hack_fmi:team_mentorship')
         response = self.client.post(url, data)
-
         self.response_201(response)
         self.assertTrue(TeamMentorship.objects.filter(team=self.team, mentor=self.mentor).exists())
 
-    def test_assign_more_than_allowed_mentors_for_that_season(self):
+    def test_cant_assign_more_than_allowed_mentors_for_that_season(self):
         self.active_season.max_mentor_pick = 1
         self.active_season.save()
 
@@ -1422,7 +1421,7 @@ class TestTeamMentorshipAPI(TestCase):
         response = self.client.post(url, new_data)
         self.response_403(response)
 
-    def test_assign_mentor_before_mentor_pick_has_started(self):
+    def test_cant_assign_mentor_before_mentor_pick_has_started(self):
         self.active_season.mentor_pick_start_date = date_increase(20)
         self.active_season.mentor_pick_end_date = date_increase(20)
         self.active_season.save()
@@ -1434,7 +1433,7 @@ class TestTeamMentorshipAPI(TestCase):
         response = self.client.post(url, data)
         self.response_403(response)
 
-    def test_assign_mentor_after_mentor_pick_has_ended(self):
+    def test_cant_assign_mentor_after_mentor_pick_has_ended(self):
         self.active_season.mentor_pick_start_date = date_decrease(20)
         self.active_season.mentor_pick_end_date = date_decrease(20)
         self.active_season.save()
@@ -1463,6 +1462,16 @@ class TestTeamMentorshipAPI(TestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
         self.assertEqual(TeamMentorship.objects.filter(team=self.team, mentor=self.mentor).count(), 0)
+
+    def test_cannot_remove_mentor_that_is_not_mentor_of_team(self):
+        # Check get_bject_ot_404()
+        pass
+
+    def test_cannot_remove_mentor_that_is_from_leaders_team(self):
+        # Check whether the teammembership from url if of the team of the leader
+
+    def test_cannot_assing_mentor_that_is_already_assigned_to_a_team(self):
+        pass
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')

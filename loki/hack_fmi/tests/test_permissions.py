@@ -67,14 +67,14 @@ class IsTeamLeaderOrReadOnlyTest(TestCase):
 class IsTeamLeaderTest(TestCase):
     def setUp(self):
         self.permission = IsTeamLeader()
-        self.team = TeamFactory()
+        self.team = TeamFactory(season__is_active=True)
         self.competitor = CompetitorFactory()
         self.team_membership = TeamMembershipFactory(competitor=self.competitor,
                                                      team=self.team,
                                                      is_leader=False)
 
     def test_non_leader_can_not_send_post_request(self):
-        data = {'team': self.team.id}
+        data = {'team': self.team}
         request = make_mock_object(user=self.competitor, method='POST', data=data)
         self.assertFalse(self.permission.has_permission(request=request, view=None))
 
@@ -104,7 +104,7 @@ class IsTeamLeaderTest(TestCase):
     def test_leader_can_post(self):
         self.team_membership.is_leader = True
         self.team_membership.save()
-        data = {'team': self.team.id}
+        data = {'team': self.team}
 
         request = make_mock_object(user=self.competitor, method='POST', data=data)
         self.assertTrue(self.permission.has_permission(request=request, view=None))
