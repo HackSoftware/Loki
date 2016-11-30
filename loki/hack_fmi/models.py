@@ -1,8 +1,6 @@
-import json
 from django.db import models
 from django.utils import timezone
 
-from channels import Group
 from ckeditor.fields import RichTextField
 from loki.base_app.models import BaseUser
 
