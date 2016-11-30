@@ -174,9 +174,8 @@ class TeamMembershipAPI(JwtApiAuthenticationMixin,
 
 
 class TeamMentorshipAPI(JwtApiAuthenticationMixin,
-                        mixins.CreateModelMixin,
                         mixins.DestroyModelMixin,
-                        generics.GenericAPIView):
+                        generics.CreateAPIView):
 
     serializer_class = TeamMentorshipSerializer
     queryset = TeamMentorship.objects.all()
@@ -190,8 +189,11 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
 
         return [permission() for permission in self.permission_classes]
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+    def perform_create(self, serializer):
+        team = TeamMembership.objects.get_team_memberships_for_active_season(
+            competitor=self.request.user.get_competitor()).first().team
+
+        serializer.save(team=team)
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)

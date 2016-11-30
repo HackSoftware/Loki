@@ -170,6 +170,7 @@ class TeamMentorshipSerializer(serializers.ModelSerializer):
             'team',
             'mentor',
         )
+        read_only_fields = ('team',)
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -213,7 +214,7 @@ class TeamSerializer(serializers.ModelSerializer):
         )
 
 
-class InvitationTeamSerializer(serializers.ModelSerializer):
+class CustomTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = (
@@ -223,7 +224,7 @@ class InvitationTeamSerializer(serializers.ModelSerializer):
 
 
 class InvitationSerializer(serializers.ModelSerializer):
-    team = InvitationTeamSerializer(read_only=True)
+    team = CustomTeamSerializer(read_only=True)
     competitor_email = serializers.EmailField(required=True, write_only=True)
     competitor = CompetitorSerializer(required=False)
 

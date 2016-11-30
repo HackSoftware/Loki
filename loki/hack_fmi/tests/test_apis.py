@@ -1374,8 +1374,7 @@ class TestTeamMentorshipAPI(TestCase):
 
     def test_cannot_assign_mentor_if_you_are_not_hackfmi_user(self):
         self.client.credentials()
-        data = {'team': self.team.id,
-                'mentor': self.mentor.id,
+        data = {'mentor': self.mentor.id,
                 }
 
         url = reverse('hack_fmi:team_mentorship')
@@ -1387,8 +1386,7 @@ class TestTeamMentorshipAPI(TestCase):
         self.team_membership.is_leader = False
         self.team_membership.save()
 
-        data = {'team': self.team.id,
-                'mentor': self.mentor.id,
+        data = {'mentor': self.mentor.id,
                 }
 
         url = reverse('hack_fmi:team_mentorship')
@@ -1397,8 +1395,7 @@ class TestTeamMentorshipAPI(TestCase):
         self.response_403(response)
 
     def test_can_assign_mentor_if_leader_of_team(self):
-        data = {'team': self.team.id,
-                'mentor': self.mentor.id,
+        data = {'mentor': self.mentor.id,
                 }
 
         url = reverse('hack_fmi:team_mentorship')
@@ -1411,8 +1408,7 @@ class TestTeamMentorshipAPI(TestCase):
         self.active_season.max_mentor_pick = 1
         self.active_season.save()
 
-        data = {'team': self.team.id,
-                'mentor': self.mentor.id,
+        data = {'mentor': self.mentor.id,
                 }
 
         url = reverse('hack_fmi:team_mentorship')
@@ -1420,8 +1416,7 @@ class TestTeamMentorshipAPI(TestCase):
         self.response_201(response)
 
         new_mentor = MentorFactory(from_company=self.company)
-        new_data = {'team': self.team.id,
-                    'mentor': new_mentor.id,
+        new_data = {'mentor': new_mentor.id,
                     }
 
         response = self.client.post(url, new_data)
@@ -1432,8 +1427,7 @@ class TestTeamMentorshipAPI(TestCase):
         self.active_season.mentor_pick_end_date = date_increase(20)
         self.active_season.save()
 
-        data = {'team': self.team.id,
-                'mentor': self.mentor.id,
+        data = {'mentor': self.mentor.id,
                 }
 
         url = reverse('hack_fmi:team_mentorship')
@@ -1445,8 +1439,7 @@ class TestTeamMentorshipAPI(TestCase):
         self.active_season.mentor_pick_end_date = date_decrease(20)
         self.active_season.save()
 
-        data = {'team': self.team.id,
-                'mentor': self.mentor.id,
+        data = {'mentor': self.mentor.id,
                 }
 
         url = reverse('hack_fmi:team_mentorship')
