@@ -1,4 +1,5 @@
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 
 from loki.education.models import (Course, Task, Solution, Material, CheckIn,
                                    Student)
@@ -116,3 +117,14 @@ class TeacherTaskView(DashboardPermissionMixin,
     def get_queryset(self):
         course_id = self.kwargs.get("course")
         return Task.objects.filter(course=course_id)
+
+class CourseDashboardView(DashboardPermissionMixin,
+                          CannotSeeOthersCoursesDashboardsMixin,
+                          DetailView):
+    model = Course
+    pk_url_kwarg = 'course'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        return context
