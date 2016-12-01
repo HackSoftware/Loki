@@ -1539,19 +1539,33 @@ class TestCompetitorListAPI(TestCase):
 
         self.url = self.reverse("hack_fmi:competitors")
 
-    def test_get_season_competitor_info_for_all_competitors_in_this_season(self):
+    def test_get_competitors_in_this_season_that_are_looking_for_team(self):
         """
-        We create two competitor infos for the current season and
+        We create competitor info for the current season with looking_for_team=True
+        and assert that the list api returns both of the competitors.
+        """
+        sci1 = SeasonCompetitorInfoFactory(season=self.season, looking_for_team=True)
+        sci1.looking_for_team = True
+        sci1.save()
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        response = self.client.get(self.url)
+        self.response_200(response)
+        self.assertEqual(len(response.data), 1)
+
+    def test_dont_get_competitors_in_this_season_that_are_not_looking_for_team(self):
+        """
+        We create competitor info for the current season and
         assert that the list api returns both of the competitors.
+        SeasonCompetitorInfo sets looking_for_team to False by default.
         """
-        SeasonCompetitorInfoFactory(season=self.season)
         SeasonCompetitorInfoFactory(season=self.season)
 
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
         response = self.client.get(self.url)
         self.response_200(response)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data), 0)
 
     def test_cannot_get_season_competitor_info_for_competitors_in_other_season(self):
         """

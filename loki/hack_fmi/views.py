@@ -8,8 +8,8 @@ from rest_framework import mixins
 from rest_framework_jwt.views import RefreshJSONWebToken
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import (Skill, Team, TeamMembership,
-                     Mentor, Season, TeamMentorship,
+from .models import (Skill, Team, TeamMembership, TeamMentorship,
+                     Mentor, Season, Competitor,
                      BlackListToken, SeasonCompetitorInfo)
 from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           InvitationSerializer, MentorSerializer,
@@ -347,7 +347,8 @@ class CompetitorListAPIView(JwtApiAuthenticationMixin, generics.ListAPIView):
     serializer_class = CompetitorListSerializer
 
     def get_queryset(self):
-        return SeasonCompetitorInfo.objects.get_competitors_for_active_season()
+        return Competitor.objects.filter(seasoncompetitorinfo__season__is_active=True,
+                                         seasoncompetitorinfo__looking_for_team=True)
 
 
 class JWTLogoutView(JwtApiAuthenticationMixin,

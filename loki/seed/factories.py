@@ -497,7 +497,6 @@ class SeasonCompetitorInfoFactory(factory.DjangoModelFactory):
 
     season = factory.SubFactory(SeasonFactory)
     competitor = factory.SubFactory(CompetitorFactory)
-    looking_for_team = faker.boolean()
 
 
 class ApplicationInfoFactory(factory.DjangoModelFactory):
