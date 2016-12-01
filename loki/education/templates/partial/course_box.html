@@ -44,6 +44,11 @@
           <button class="btn btn-warning" id="materials-link">Материали</button>
         </a>
       {% endif %}
+      {% if user.get_teacher %}
+        <a href="{% url 'education:course-detail' course.id %}">
+          <button class="btn btn-warning" id="info-link">Обща информация</button>
+        </a>
+      {% endif %}
     </div>
 
   </div>

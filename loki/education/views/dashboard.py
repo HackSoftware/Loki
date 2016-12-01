@@ -5,7 +5,8 @@ from loki.education.models import (Course, Task, Solution, Material, CheckIn,
                                    Student)
 from ..mixins import (DashboardPermissionMixin,
                       CannotSeeOthersCoursesDashboardsMixin,
-                      CannotSeeCourseTaskListMixin)
+                      CannotSeeCourseTaskListMixin,
+                      CanSeeCourseInfoOnlyTeacher)
 from ..helper import (get_dates_for_weeks, task_solutions,
                       latest_solution_statuses, percentage_presence)
 
@@ -118,7 +119,7 @@ class TeacherTaskView(DashboardPermissionMixin,
         course_id = self.kwargs.get("course")
         return Task.objects.filter(course=course_id)
 
-class CourseDashboardView(DashboardPermissionMixin,
+class CourseDashboardView(CanSeeCourseInfoOnlyTeacher,
                           CannotSeeOthersCoursesDashboardsMixin,
                           DetailView):
     model = Course
