@@ -100,10 +100,13 @@ class MeSeasonAPIView(JwtApiAuthenticationMixin,
         try:
             season_competitor_info = SeasonCompetitorInfo.objects.get(competitor=competitor)
             looking_for_team = season_competitor_info.looking_for_team
+            season_competitor_info_id = season_competitor_info.id
         except ObjectDoesNotExist:
             looking_for_team = False
+            season_competitor_info_id = None
 
         data["looking_for_team"] = looking_for_team
+        data["season_competitor_info_id"] = season_competitor_info_id
 
         return Response(data=data, status=status.HTTP_200_OK)
 
