@@ -75,7 +75,6 @@ class MeSeasonAPIView(JwtApiAuthenticationMixin,
 
         team_data = None
         data["team"] = None
-        looking_for_team = False
 
         if not data['is_competitor']:
             return Response(data=data, status=status.HTTP_200_OK)
