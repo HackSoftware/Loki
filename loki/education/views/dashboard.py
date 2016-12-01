@@ -47,10 +47,10 @@ class CourseListView(DashboardPermissionMixin, ListView):
             return Course.objects.filter(courseassignment__user=self.request.user).order_by('-end_time')
 
 
-class CourseDashboardView(DashboardPermissionMixin,
-                          CannotSeeOthersCoursesDashboardsMixin,
-                          CannotSeeCourseTaskListMixin,
-                          ListView):
+class TaskDashboardView(DashboardPermissionMixin,
+                        CannotSeeOthersCoursesDashboardsMixin,
+                        CannotSeeCourseTaskListMixin,
+                        ListView):
     model = Task
 
     def get_context_data(self, **kwargs):

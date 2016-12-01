@@ -25,7 +25,7 @@
     <div class="col-sm-3 course-btns">
       {% if course.task_set.exists and course.is_active %}
         {% if user.get_student %}
-          <a href="{% url 'education:course_dashboard' course.id %}">
+          <a href="{% url 'education:task_dashboard' course.id %}">
             <button class="btn btn-warning">Предай задачи</button>
           </a>
         {% else %}

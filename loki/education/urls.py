@@ -22,13 +22,16 @@ urlpatterns = [
     url(r'^certificate/(?P<token>[\w|-]+)/$', old_api_views.certificate, name='certificate'),
     url(r'^dashboard/$', dashboard.CourseListView.as_view(), name='course_list'),
     url(r'^course/(?P<course>[0-9]+)/dashboard/$',
-        dashboard.CourseDashboardView.as_view(), name='course_dashboard'),
+        dashboard.TaskDashboardView.as_view(), name='task_dashboard'),
     url(r'^course/(?P<course>[0-9]+)/task/(?P<task>[0-9]+)/solutions/$',
         dashboard.SolutionView.as_view(), name='solution_view'),
     url(r'^course/(?P<course>[0-9]+)/materials/$',
         dashboard.MaterialView.as_view(), name='material_view'),
+    # Teacher views
     url(r'^course/(?P<course>[0-9]+)/students/$',
-        dashboard.StudentCourseView.as_view(), name='students_view'),
+    dashboard.StudentCourseView.as_view(), name='students_view'),
+    url(r'^teacher/course/(?P<course>[0-9]+)/$',
+        dashboard.CourseDashboardView.as_view(), name='course-detail'),
     url(r'^course/(?P<course>[0-9]+)/teacher-task-dashboard/$',
         dashboard.TeacherTaskView.as_view(), name='teacher_task_dashboard')
 ]
