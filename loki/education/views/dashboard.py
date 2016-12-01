@@ -99,7 +99,9 @@ class MaterialView(DashboardPermissionMixin,
         return Material.objects.filter(course=self.course).order_by("-week")
 
 
-class StudentCourseView(ListView):
+class StudentCourseView(CanSeeCourseInfoOnlyTeacher,
+                        CannotSeeOthersCoursesDashboardsMixin,
+                        ListView):
     model = Student
 
     def get_queryset(self):
