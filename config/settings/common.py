@@ -271,3 +271,5 @@ CHANNEL_LAYERS = {
         "ROUTING": "config.routing.channel_routing",
     },
 }
+
+INVITATION_GROUP_NAME = "Invitations-{id}"
