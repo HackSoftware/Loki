@@ -92,6 +92,27 @@ class CanAttachMoreMentorsToTeam(permissions.BasePermission):
         return True
 
 
+class CantAttachMentorThatIsAlreadyAttachedToTeam(permissions.BasePermission):
+    message = "This mentor is already assigned to team!"
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            return not TeamMentorship.objects.filter(mentor__id=request.data['mentor'], team__season__is_active=True)
+        return True
+
+
+class CantDeleteMentorNotFromLeaderTeam(permissions.BasePermission):
+    message = "The mentor you would like to delete is not attached to your team!"
+
+    def has_permission(self, request, view):
+        if request.method == 'DELETE':
+            leader_team = TeamMembership.objects.get_team_memberships_for_active_season(
+                competitor=request.user.get_competitor()).first().team
+            mentor_team = view.get_object().team
+            return leader_team == mentor_team
+        return True
+
+
 class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
     message = "A team with that name already exists!"
 

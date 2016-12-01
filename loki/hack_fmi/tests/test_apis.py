@@ -1421,6 +1421,28 @@ class TestTeamMentorshipAPI(TestCase):
         response = self.client.post(url, new_data)
         self.response_403(response)
 
+    def test_cannot_assing_mentor_that_is_already_assigned_to_a_team_in_current_season(self):
+        TeamMentorshipFactory(team=self.team, mentor=self.mentor)
+        self.assertTrue(self.team.season.is_active)
+        data = {'mentor': self.mentor.id,
+                }
+
+        url = reverse('hack_fmi:team_mentorship')
+        response = self.client.post(url, data)
+        self.response_403(response)
+
+    def test_can_assing_mentor_that_is_already_assigned_to_a_team_in_non_current_season(self):
+        other_team = TeamFactory()
+        self.assertFalse(other_team.season.is_active)
+        TeamMentorshipFactory(team=other_team, mentor=self.mentor)
+        self.assertFalse(TeamMentorship.objects.filter(mentor=self.mentor, team=self.team))
+        data = {'mentor': self.mentor.id,
+                }
+
+        url = reverse('hack_fmi:team_mentorship')
+        response = self.client.post(url, data)
+        self.response_201(response)
+
     def test_cant_assign_mentor_before_mentor_pick_has_started(self):
         self.active_season.mentor_pick_start_date = date_increase(20)
         self.active_season.mentor_pick_end_date = date_increase(20)
@@ -1463,15 +1485,26 @@ class TestTeamMentorshipAPI(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertEqual(TeamMentorship.objects.filter(team=self.team, mentor=self.mentor).count(), 0)
 
-    def test_cannot_remove_mentor_that_is_not_mentor_of_team(self):
-        # Check get_bject_ot_404()
-        pass
+    def test_cannot_remove_mentor_that_is_not_mentor_of_any_team(self):
+        # Check get_object_ot_404()
+        mentorship_pk = int(faker.random_element(elements=('1000', '20000')))
+        self.assertFalse(TeamMentorship.objects.filter(team__pk=mentorship_pk).exists())
+        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship_pk)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 404)
 
-    def test_cannot_remove_mentor_that_is_from_leaders_team(self):
-        # Check whether the teammembership from url if of the team of the leader
+    def test_cannot_remove_mentor_that_is_not_from_leaders_team(self):
+        # Check whether the teammentorship from url is attached to the team of the leader
+        other_team = TeamFactory(season=self.active_season)
+        other_competitor = CompetitorFactory()
+        TeamMembershipFactory(team=other_team, competitor=other_competitor, is_leader=True)
+        other_mentor = MentorFactory(from_company=self.company)
+        other_mentorship = TeamMentorshipFactory(team=other_team, mentor=other_mentor)
 
-    def test_cannot_assing_mentor_that_is_already_assigned_to_a_team(self):
-        pass
+        url = self.reverse('hack_fmi:team_mentorship', pk=other_mentorship.id)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 403)
+
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')

@@ -28,8 +28,8 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           CanNotAcceptInvitationIfTeamLeader,
                           CanAttachMoreMentorsToTeam,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
-                          TeamLiederCantCreateOtherTeam,
-                          IsInvitedMemberCompetitor)
+                          TeamLiederCantCreateOtherTeam, CantAttachMentorThatIsAlreadyAttachedToTeam,
+                          IsInvitedMemberCompetitor, CantDeleteMentorNotFromLeaderTeam)
 from .helper import send_team_delete_email, send_invitation, get_object_variable_or_none
 from .mixins import MeSerializerMixin, JwtApiAuthenticationMixin
 
@@ -183,7 +183,9 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
     def get_permissions(self):
         permission_classes = (IsHackFMIUser, IsTeamLeader,
                               IsMentorDatePickUpToDate,
-                              CanAttachMoreMentorsToTeam)
+                              CanAttachMoreMentorsToTeam,
+                              CantAttachMentorThatIsAlreadyAttachedToTeam,
+                              CantDeleteMentorNotFromLeaderTeam)
 
         self.permission_classes += super().permission_classes + permission_classes
 
