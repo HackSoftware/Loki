@@ -21,7 +21,10 @@ class InvitationConsumer(BaseConsumer):
 
     def receive(self, message, **kwargs):
         # auth
+        if not json.loads(message.get('text')).get('token'):
+            close_connection(message)
         token = json.loads(message.get('text'))['token']
+
         user_id = authenticate(token)
         print("userid", user_id)
         if not user_id:

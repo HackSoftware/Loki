@@ -1,39 +1,65 @@
-from channels import Group
+import json
+
+from django.conf import settings
+
+from test_plus.test import TestCase
+
+from channels import Group, Channel
 from channels.tests import ChannelTestCase
-from loki.seed.factories import InvitationFactory
+from loki.seed.factories import (InvitationFactory, BaseUserFactory, TeamFactory,
+                                 CompetitorFactory, TeamMembershipFactory)
 
-# auth
 
-
-class MyTests(ChannelTestCase):
+class TestInvitationConsumer(ChannelTestCase, TestCase):
     "On post save of Invitation object, we send a massive message to group 'Invitations'"
 
+    def get_valid_token(self):
+        self.user = BaseUserFactory()
+        self.user.is_active = True
+        self.user.save()
+        data = {'email': self.user.email, 'password': BaseUserFactory.password}
+        response = self.client.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+
+        self.response_200(response)
+        token = response.data.get('token')
+        self.assertIsNotNone(token)
+        return token
+
+    # Test signal works properly
     def test_server_group_send_message_to_client_on_post_save_of_invitation(self):
-        # Add test-channel to Invitation group
-        Group("Invitation").add("test-channel")
+        competitor = CompetitorFactory()
 
-        InvitationFactory()
+        # Add test-channel to Invitation example group
+        expected_group_name = settings.INVITATION_GROUP_NAME.format(id=competitor.id)
+        Group(expected_group_name).add("test-channel")
+
+        team = TeamFactory(season__is_active=True)
+        TeamMembershipFactory(team=team, competitor=competitor, is_leader=True)
+        InvitationFactory(team=team, competitor=competitor)
         # Get the message that is transferred into the channel
         result = self.get_next_message("test-channel")
-        self.assertEqual(result.get('text'), "New invitation was created.")
+        result = json.loads(result.get('text'))
+        self.assertEqual(result['message'], "New invitation was created.")
+        self.assertEqual(result['leader'], competitor.full_name)
 
-    def test_server_doesnt_send_message_to_client_if_the_group_is_not_called_invitaion(self):
-        # Add test-channel to Invitation group
-        Group("Fake").add("test-channel")
+    def test_connection_is_closed_when_token_is_not_sent(self):
+        # In receive message we expect to receive token field
+        Channel("connection").receive({"no_token": ""})
+        result = self.get_next_message("connection")
+        self.assertTrue(result.get('close'))
 
-        InvitationFactory()
-        # Get the message that is transferred into the channel
-        result = self.get_next_message("test-channel")
-        self.assertIsNone(result)
+    def test_non_authenticated_user_is_not_added_to_group(self):
+        # invalid_token = self.get_valid_token() + "invalid"
+        # # Open a channel connection called 'connection' and pass data to server
+        # Channel("connection").send({"token": invalid_token})
+        # expected_group_name = settings.INVITATION_GROUP_NAME.format(id=self.user.id)
 
-    def test_non_authenticated_user_cant_connect_to_server(self):
+        # result = self.get_next_message("connection")
         pass
 
-    def test_non_authenticated_user_is_not_added_to_group_Invitations(self):
-        pass
-
-    def test_autenticated_user_is_connected_to_group_invitation(self):
-        pass
-
-    def test_server_sends_back_message_to_all_authenticated_members_of_group_if_an_ivitation_is_made(self):
-        pass
+    def test_authenticated_user_is_added_to_group(self):
+        token = self.get_valid_token()
+        # Open a channel connection called 'connection' and pass data to server
+        Channel("connection").send({"token": token})
+        expected_group_name = settings.INVITATION_GROUP_NAME.format(id=self.user.id)
+        self.assertIsNotNone(Group(expected_group_name))
