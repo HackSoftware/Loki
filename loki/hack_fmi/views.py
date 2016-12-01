@@ -324,8 +324,11 @@ class TestApi(JwtApiAuthenticationMixin,
         return Response("Great, status 200", status=status.HTTP_200_OK)
 
 
-class SeasonInfoAPIView(JwtApiAuthenticationMixin, generics.CreateAPIView):
+class SeasonInfoAPI(JwtApiAuthenticationMixin,
+                    generics.CreateAPIView,
+                    generics.UpdateAPIView):
     serializer_class = SeasonCompetitorInfoSerializer
+    queryset = SeasonCompetitorInfo.objects.filter(season__is_active=True)
 
     def get_permissions(self):
         permission_classes = (IsSeasonActive, IsCompetitorMemberOfTeamForActiveSeason)
