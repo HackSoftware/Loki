@@ -1544,9 +1544,7 @@ class TestCompetitorListAPI(TestCase):
         We create competitor info for the current season with looking_for_team=True
         and assert that the list api returns both of the competitors.
         """
-        sci1 = SeasonCompetitorInfoFactory(season=self.season, looking_for_team=True)
-        sci1.looking_for_team = True
-        sci1.save()
+        SeasonCompetitorInfoFactory(season=self.season, looking_for_team=True)
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
         response = self.client.get(self.url)
