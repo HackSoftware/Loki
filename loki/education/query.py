@@ -34,3 +34,9 @@ class CourseQuerySet(models.QuerySet):
 
     def get_closed_courses(self):
         return self.filter(end_time__lte=timezone.now().date())
+
+class TaskQuerySet(models.QuerySet):
+
+    def get_tasks_for(self, course, gradable=False):
+        return self.filter(course=course,
+                           gradable=gradable)

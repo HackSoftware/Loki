@@ -10,7 +10,7 @@ from loki.base_app.models import BaseUser, City, Company
 from .validators import validate_mac
 from .exceptions import HasToBeRetested
 from .managers import SolutionManager
-from .query import CheckInQuerySet, CourseQuerySet
+from .query import (CheckInQuerySet, CourseQuerySet, TaskQuerySet)
 
 
 class StudentAndTeacherCommonModel(models.Model):
@@ -142,6 +142,8 @@ class Task(models.Model):
     name = models.CharField(max_length=128)
     week = models.SmallIntegerField(default=1)
     gradable = models.BooleanField(default=True)
+
+    objects = TaskQuerySet.as_manager()
 
     def __str__(self):
         return self.name
