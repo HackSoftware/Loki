@@ -7,4 +7,4 @@ class HackFMIConfig(AppConfig):
     verbose_name = 'Hack FMI'
 
     def ready(self):
-        import loki.hack_fmi.signals
+        import loki.hack_fmi.signals  # noqa
