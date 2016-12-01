@@ -142,3 +142,9 @@ def percentage_presence(user_dates, course):
     user_dates = [date for date in user_dates if date in lecture_dates]
 
     return "{0}%".format(int((len(user_dates) / len(lecture_dates)) * 100))
+
+def count_solutions_for_course(course):
+    return sum([task.solution_set.count() for task in course.task_set.all()])
+
+def count_passed_solutions(tasks):
+    return sum([Solution.objects.get_passed_solutions_for(task) for task in tasks])

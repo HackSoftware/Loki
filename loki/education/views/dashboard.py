@@ -126,5 +126,15 @@ class CourseDashboardView(DashboardPermissionMixin,
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['count_solutions'] = Solution.objects.filter(task__in=self.object.task_set.all()).count()
+
+        gradable_tasks = Task.objects.get_tasks_for(course=self.object, gradable=True)
+        context['gradable_tasks'] = gradable_tasks.count()
+        context['passed_solutions'] = Solution.objects.filter(task__in=gradable_tasks, status=2).count()
+        context['failed_solutions'] = Solution.objects.filter(task__in=gradable_tasks, status=3).count()
+
+        not_gradable_tasks = Task.objects.get_tasks_for(course=self.object)
+        context['not_gradable_tasks'] = not_gradable_tasks.count()
+        context['url_solutions'] = Solution.objects.filter(task__in=not_gradable_tasks).count()
 
         return context
