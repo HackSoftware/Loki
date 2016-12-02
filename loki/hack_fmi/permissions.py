@@ -242,15 +242,14 @@ class IsInvitedMemberCompetitor(permissions.BasePermission):
 
 
 class IsSeasonActive(permissions.BasePermission):
-
     message = "You cannot post data in nonactive season!"
 
     def has_permission(self, request, view):
-        if request.method == 'POST':
-            season = Season.objects.get(id=request.data['season'])
-            if season is not None:
-                return season.is_active
-        return True
+        season = Season.objects.filter(id=request.data['season'])
+        if season is not None:
+            return season.is_active
+
+        return False
 
 
 class IsCompetitorMemberOfTeamForActiveSeason(permissions.BasePermission):
@@ -258,12 +257,12 @@ class IsCompetitorMemberOfTeamForActiveSeason(permissions.BasePermission):
     message = "You are already member of team in this season!"
 
     def has_permission(self, request, view):
-        if request.method == 'POST':
-            competitor = Competitor.objects.get(id=request.data['competitor'])
-            if competitor is not None:
-                return not TeamMembership.objects.get_team_memberships_for_active_season(
-                    competitor=competitor).exists()
-        return True
+        competitor = Competitor.objects.filter(id=request.data['competitor'])
+        if competitor is not None:
+            return not TeamMembership.objects.get_team_memberships_for_active_season(
+                competitor=competitor).exists()
+
+        return False
 
 
 class IsJWTTokenBlackListed(permissions.BasePermission):
@@ -278,7 +277,7 @@ class IsJWTTokenBlackListed(permissions.BasePermission):
 
 class CantChangeOtherCompetitorsData(permissions.BasePermission):
 
-    message = "You cannot access this view."
+    message = "You cannot change other competitor's info."
 
     def has_object_permission(self, request, view, obj):
         return request.user.get_competitor() == obj.competitor

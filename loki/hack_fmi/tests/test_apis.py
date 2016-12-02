@@ -1517,7 +1517,7 @@ class TestSeasonInfoAPIViews(TestCase):
 
         self.response_403(response)
 
-    def test_cannot_post_with_competitor_that_has_team_in_the_curreent_season(self):
+    def test_cannot_post_with_competitor_that_has_team_in_the_current_season(self):
         team = TeamFactory(season=self.season)
         TeamMembershipFactory(competitor=self.competitor,
                               team=team)

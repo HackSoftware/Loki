@@ -343,13 +343,13 @@ class SeasonInfoAPI(JwtApiAuthenticationMixin,
 
 
 class CompetitorListAPIView(JwtApiAuthenticationMixin, generics.ListAPIView):
+    serializer_class = CompetitorListSerializer
+
     def get_permissions(self):
         permission_classes = (IsTeamLeader, IsTeamMembershipInActiveSeason,
                               CanInviteMoreMembersInTeam)
         self.permission_classes += super().permission_classes + permission_classes
         return [permission() for permission in self.permission_classes]
-
-    serializer_class = CompetitorListSerializer
 
     def get_queryset(self):
         return Competitor.objects.filter(seasoncompetitorinfo__season__is_active=True,
