@@ -314,9 +314,7 @@ class SeasonCompetitorInfoSerializer(serializers.ModelSerializer):
             'season',
             'looking_for_team'
         )
-        '''
-        You do not need to explicitly declare the field on the serializer.
-        '''
+
         extra_kwargs = {
             'competitor': {
                 'write_only': True
