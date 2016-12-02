@@ -36,7 +36,9 @@ from .permissions import (CanAttachMoreMentorsToTeam,
                           IsCompetitorMemberOfTeamForActiveSeason,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
                           IsInvitedMemberCompetitor, IsTeamLeaderOrReadOnly,
-                          IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation)
+                          IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation,
+                          CantAttachMentorThatIsAlreadyAttachedToTeam,
+                          CantDeleteMentorNotFromLeaderTeam)
 
 from .helper import send_team_delete_email, send_invitation, get_object_variable_or_none
 from .mixins import MeSerializerMixin, JwtApiAuthenticationMixin
@@ -192,9 +194,8 @@ class TeamMembershipAPI(JwtApiAuthenticationMixin,
 
 
 class TeamMentorshipAPI(JwtApiAuthenticationMixin,
-                        mixins.CreateModelMixin,
                         mixins.DestroyModelMixin,
-                        generics.GenericAPIView):
+                        generics.CreateAPIView):
 
     serializer_class = TeamMentorshipSerializer
     queryset = TeamMentorship.objects.all()
@@ -202,14 +203,19 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
     def get_permissions(self):
         permission_classes = (IsHackFMIUser, IsTeamLeader,
                               IsMentorDatePickUpToDate,
-                              CanAttachMoreMentorsToTeam)
+                              CanAttachMoreMentorsToTeam,
+                              CantAttachMentorThatIsAlreadyAttachedToTeam,
+                              CantDeleteMentorNotFromLeaderTeam)
 
         self.permission_classes += super().permission_classes + permission_classes
 
         return [permission() for permission in self.permission_classes]
 
-    def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+    def perform_create(self, serializer):
+        team = TeamMembership.objects.get_team_memberships_for_active_season(
+            competitor=self.request.user.get_competitor()).first().team
+
+        serializer.save(team=team)
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)

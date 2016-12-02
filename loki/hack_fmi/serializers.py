@@ -185,6 +185,7 @@ class TeamMentorshipSerializer(serializers.ModelSerializer):
             'team',
             'mentor',
         )
+        read_only_fields = ('team',)
 
 
 class TeamSerializer(serializers.ModelSerializer):
