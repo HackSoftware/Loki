@@ -1,8 +1,9 @@
 from test_plus.test import TestCase
 from loki.common.utils import make_mock_object
 from loki.seed.factories import (BaseUserFactory, CompetitorFactory, TeamFactory,
-                                 TeamMembershipFactory)
-from loki.hack_fmi.permissions import IsHackFMIUser, IsTeamLeaderOrReadOnly, IsTeamLeader
+                                 TeamMembershipFactory, SeasonCompetitorInfoFactory)
+from loki.hack_fmi.permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly, IsTeamLeader,
+                                       CantChangeOtherCompetitorsData)
 
 
 class HackFMIUserTest(TestCase):
@@ -108,3 +109,23 @@ class IsTeamLeaderTest(TestCase):
 
         request = make_mock_object(user=self.competitor, method='POST', data=data)
         self.assertTrue(self.permission.has_permission(request=request, view=None))
+
+
+class TestCantChangeOtherCompetitorsData(TestCase):
+    def setUp(self):
+        self.permission = CantChangeOtherCompetitorsData()
+        self.competitor = CompetitorFactory()
+        self.sci = SeasonCompetitorInfoFactory(competitor=self.competitor)
+
+    def test_competitor_can_change_his_season_competitor_info_data(self):
+        self.sci.looking_for_team = True
+        self.sci.refresh_from_db()
+
+        request = make_mock_object(user=self.competitor, method='PATCH')
+        self.assertTrue(self.permission.has_object_permission(request=request, view=None, obj=self.sci))
+
+    def test_competitor_cannot_change_other_season_competitor_info_data(self):
+        other_sci = SeasonCompetitorInfoFactory()
+
+        request = make_mock_object(user=self.competitor, method='PATCH')
+        self.assertFalse(self.permission.has_object_permission(request=request, view=None, obj=other_sci))

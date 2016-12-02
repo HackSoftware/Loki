@@ -6,30 +6,40 @@ from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
 from rest_framework import mixins
 from rest_framework_jwt.views import RefreshJSONWebToken
+from django.core.exceptions import ObjectDoesNotExist
 
-from .models import (Skill, Team, TeamMembership,
-                     Mentor, Season, TeamMentorship, BlackListToken)
+from .models import (Skill, Team, TeamMembership, TeamMentorship,
+                     Mentor, Season, Competitor,
+                     BlackListToken, SeasonCompetitorInfo)
 from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           InvitationSerializer, MentorSerializer,
                           SeasonSerializer, PublicTeamSerializer,
                           OnBoardingCompetitorSerializer,
+                          SeasonCompetitorInfoSerializer,
                           TeamMembershipSerializer,
                           TeamMentorshipSerializer,
+                          CompetitorListSerializer,
                           CustomTeamSerializer)
-from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
-                          IsMemberOfTeam, IsTeamMembershipInActiveSeason,
-                          IsTeamLeader, IsSeasonDeadlineUpToDate,
-                          IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation,
+
+from .permissions import (CanAttachMoreMentorsToTeam,
+                          CanInviteMoreMembersInTeam,
+                          IsHackFMIUser, IsMemberOfTeam,
+                          TeamLeaderCantCreateOtherTeam,
+                          CantChangeOtherCompetitorsData,
+                          IsTeamMembershipInActiveSeason,
                           IsInvitedMemberAlreadyInYourTeam,
                           IsInvitedMemberAlreadyInOtherTeam,
-                          CanInviteMoreMembersInTeam,
-                          CanNotAccessWronglyDedicatedIvitation,
-                          IsInvitedUserInTeam,
                           CanNotAcceptInvitationIfTeamLeader,
-                          CanAttachMoreMentorsToTeam,
+                          IsInvitedUserInTeam, IsSeasonActive,
+                          CanNotAccessWronglyDedicatedIvitation,
+                          IsTeamLeader, IsSeasonDeadlineUpToDate,
+                          IsCompetitorMemberOfTeamForActiveSeason,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
-                          TeamLiederCantCreateOtherTeam, CantAttachMentorThatIsAlreadyAttachedToTeam,
-                          IsInvitedMemberCompetitor, CantDeleteMentorNotFromLeaderTeam)
+                          IsInvitedMemberCompetitor, IsTeamLeaderOrReadOnly,
+                          IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation,
+                          CantAttachMentorThatIsAlreadyAttachedToTeam,
+                          CantDeleteMentorNotFromLeaderTeam)
+
 from .helper import send_team_delete_email, send_invitation, get_object_variable_or_none
 from .mixins import MeSerializerMixin, JwtApiAuthenticationMixin
 
@@ -92,6 +102,17 @@ class MeSeasonAPIView(JwtApiAuthenticationMixin,
         data["team"] = team_data
         data["team_membership_id"] = tm_id
 
+        try:
+            season_competitor_info = SeasonCompetitorInfo.objects.get(competitor=competitor)
+            looking_for_team = season_competitor_info.looking_for_team
+            season_competitor_info_id = season_competitor_info.id
+        except ObjectDoesNotExist:
+            looking_for_team = False
+            season_competitor_info_id = None
+
+        data["looking_for_team"] = looking_for_team
+        data["season_competitor_info_id"] = season_competitor_info_id
+
         return Response(data=data, status=status.HTTP_200_OK)
 
 
@@ -138,15 +159,14 @@ class TeamAPI(JwtApiAuthenticationMixin,
         permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                               IsSeasonDeadlineUpToDate,
                               CantCreateTeamWithTeamNameThatAlreadyExists,
-                              TeamLiederCantCreateOtherTeam)
+                              TeamLeaderCantCreateOtherTeam)
         self.permission_classes += super().permission_classes + permission_classes
 
         return [permission() for permission in self.permission_classes]
 
     def perform_create(self, serializer):
         season = Season.objects.get(is_active=True)
-        team = serializer.save()
-        team.season = season
+        team = serializer.save(season=season)
         team.add_member(self.request.user.get_competitor(), is_leader=True)
         team.save()
 
@@ -313,6 +333,33 @@ class TestApi(JwtApiAuthenticationMixin,
 
     def get(self, request):
         return Response("Great, status 200", status=status.HTTP_200_OK)
+
+
+class SeasonInfoAPI(JwtApiAuthenticationMixin,
+                    generics.CreateAPIView,
+                    generics.UpdateAPIView):
+    serializer_class = SeasonCompetitorInfoSerializer
+    queryset = SeasonCompetitorInfo.objects.filter(season__is_active=True)
+
+    def get_permissions(self):
+        permission_classes = (IsSeasonActive, IsCompetitorMemberOfTeamForActiveSeason,
+                              CantChangeOtherCompetitorsData)
+        self.permission_classes += super().permission_classes + permission_classes
+        return [permission() for permission in self.permission_classes]
+
+
+class CompetitorListAPIView(JwtApiAuthenticationMixin, generics.ListAPIView):
+    serializer_class = CompetitorListSerializer
+
+    def get_permissions(self):
+        permission_classes = (IsTeamLeader, IsTeamMembershipInActiveSeason,
+                              CanInviteMoreMembersInTeam)
+        self.permission_classes += super().permission_classes + permission_classes
+        return [permission() for permission in self.permission_classes]
+
+    def get_queryset(self):
+        return Competitor.objects.filter(seasoncompetitorinfo__season__is_active=True,
+                                         seasoncompetitorinfo__looking_for_team=True)
 
 
 class JWTLogoutView(JwtApiAuthenticationMixin,

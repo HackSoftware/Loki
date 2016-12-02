@@ -491,6 +491,14 @@ class InvitationFactory(factory.DjangoModelFactory):
     competitor = factory.SubFactory(CompetitorFactory)
 
 
+class SeasonCompetitorInfoFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = hack_fmi_models.SeasonCompetitorInfo
+
+    season = factory.SubFactory(SeasonFactory)
+    competitor = factory.SubFactory(CompetitorFactory)
+
+
 class ApplicationInfoFactory(factory.DjangoModelFactory):
     class Meta:
         model = application_models.ApplicationInfo
