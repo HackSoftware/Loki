@@ -1533,7 +1533,8 @@ class TestSeasonInfoAPIViews(TestCase):
         self.response_403(response)
 
     def test_patch_for_looking_for_team_works(self):
-        sci = SeasonCompetitorInfoFactory(season=self.season)
+        sci = SeasonCompetitorInfoFactory(season=self.season,
+                                          competitor=self.competitor)
 
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
         # Default value is False

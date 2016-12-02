@@ -113,7 +113,7 @@ class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
         return True
 
 
-class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
+class TeamLeaderCantCreateOtherTeam(permissions.BasePermission):
     message = "You are a teamleader and cannot register another team!"
 
     def has_permission(self, request, view):
@@ -274,3 +274,11 @@ class IsJWTTokenBlackListed(permissions.BasePermission):
         token = request.META.get('HTTP_AUTHORIZATION', False)
 
         return not BlackListToken.objects.filter(token=token).exists()
+
+
+class CantChangeOtherCompetitorsData(permissions.BasePermission):
+
+    message = "You cannot access this view."
+
+    def has_object_permission(self, request, view, obj):
+        return request.user.get_competitor() == obj.competitor

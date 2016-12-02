@@ -20,21 +20,24 @@ from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           TeamMentorshipSerializer,
                           CompetitorListSerializer,
                           CustomTeamSerializer)
-from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
-                          IsMemberOfTeam, IsTeamMembershipInActiveSeason,
-                          IsTeamLeader, IsSeasonDeadlineUpToDate,
-                          IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation,
+
+from .permissions import (CanAttachMoreMentorsToTeam,
+                          CanInviteMoreMembersInTeam,
+                          IsHackFMIUser, IsMemberOfTeam,
+                          TeamLeaderCantCreateOtherTeam,
+                          CantChangeOtherCompetitorsData,
+                          IsTeamMembershipInActiveSeason,
                           IsInvitedMemberAlreadyInYourTeam,
                           IsInvitedMemberAlreadyInOtherTeam,
-                          CanInviteMoreMembersInTeam,
-                          CanNotAccessWronglyDedicatedIvitation,
-                          IsInvitedUserInTeam,
                           CanNotAcceptInvitationIfTeamLeader,
-                          CanAttachMoreMentorsToTeam,
+                          IsInvitedUserInTeam, IsSeasonActive,
+                          CanNotAccessWronglyDedicatedIvitation,
+                          IsTeamLeader, IsSeasonDeadlineUpToDate,
+                          IsCompetitorMemberOfTeamForActiveSeason,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
-                          TeamLiederCantCreateOtherTeam,
-                          IsInvitedMemberCompetitor, IsSeasonActive,
-                          IsCompetitorMemberOfTeamForActiveSeason)
+                          IsInvitedMemberCompetitor, IsTeamLeaderOrReadOnly,
+                          IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation)
+
 from .helper import send_team_delete_email, send_invitation, get_object_variable_or_none
 from .mixins import MeSerializerMixin, JwtApiAuthenticationMixin
 
@@ -154,7 +157,7 @@ class TeamAPI(JwtApiAuthenticationMixin,
         permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                               IsSeasonDeadlineUpToDate,
                               CantCreateTeamWithTeamNameThatAlreadyExists,
-                              TeamLiederCantCreateOtherTeam)
+                              TeamLeaderCantCreateOtherTeam)
         self.permission_classes += super().permission_classes + permission_classes
 
         return [permission() for permission in self.permission_classes]
@@ -334,7 +337,8 @@ class SeasonInfoAPI(JwtApiAuthenticationMixin,
     queryset = SeasonCompetitorInfo.objects.filter(season__is_active=True)
 
     def get_permissions(self):
-        permission_classes = (IsSeasonActive, IsCompetitorMemberOfTeamForActiveSeason)
+        permission_classes = (IsSeasonActive, IsCompetitorMemberOfTeamForActiveSeason,
+                              CantChangeOtherCompetitorsData)
         self.permission_classes += super().permission_classes + permission_classes
         return [permission() for permission in self.permission_classes]
 
