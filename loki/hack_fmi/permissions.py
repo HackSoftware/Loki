@@ -113,7 +113,7 @@ class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
         return True
 
 
-class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
+class TeamLeaderCantCreateOtherTeam(permissions.BasePermission):
     message = "You are a teamleader and cannot register another team!"
 
     def has_permission(self, request, view):
@@ -241,6 +241,33 @@ class IsInvitedMemberCompetitor(permissions.BasePermission):
         return True
 
 
+class IsSeasonActive(permissions.BasePermission):
+    message = "You cannot post data in nonactive season!"
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            season = Season.objects.filter(id=request.data['season']).first()
+
+            if season is not None:
+                return season.is_active
+
+        return True
+
+
+class IsCompetitorMemberOfTeamForActiveSeason(permissions.BasePermission):
+    message = "You are already member of team in this season!"
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            competitor = Competitor.objects.filter(id=request.data['competitor']).first()
+
+            if competitor is not None:
+                return not TeamMembership.objects.get_team_memberships_for_active_season(
+                    competitor=competitor).exists()
+
+        return True
+
+
 class IsJWTTokenBlackListed(permissions.BasePermission):
 
     message = "Signature has expired."
@@ -249,3 +276,11 @@ class IsJWTTokenBlackListed(permissions.BasePermission):
         token = request.META.get('HTTP_AUTHORIZATION', False)
 
         return not BlackListToken.objects.filter(token=token).exists()
+
+
+class CantChangeOtherCompetitorsData(permissions.BasePermission):
+
+    message = "You cannot change other competitor's info."
+
+    def has_object_permission(self, request, view, obj):
+        return request.user.get_competitor() == obj.competitor

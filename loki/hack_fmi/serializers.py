@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from .models import Skill, Competitor, Team, TeamMembership, Season, Invitation, Mentor, TeamMentorship
+from .models import (Skill, Competitor, Team, TeamMembership,
+                     Season, Invitation, Mentor, TeamMentorship,
+                     SeasonCompetitorInfo)
 
 
 class TeamMembershipSerializer(serializers.ModelSerializer):
@@ -59,6 +61,13 @@ class CompetitorSerializer(serializers.ModelSerializer):
         return new_user
 
 
+class SkillSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Skill
+        fields = ('id', 'name')
+
+
 class CompetitorInTeamSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -69,6 +78,19 @@ class CompetitorInTeamSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
         )
+
+
+class CompetitorListSerializer(CompetitorInTeamSerializer):
+    known_skills_full = SkillSerializer(
+        many=True,
+        read_only=True,
+        source='known_skills',
+    )
+
+    class Meta(CompetitorInTeamSerializer.Meta):
+        model = Competitor
+        fields = CompetitorInTeamSerializer.Meta.fields + ('known_skills_full',
+                                                           'other_skills')
 
 
 class CustomTeamSerializer(serializers.ModelSerializer):
@@ -89,13 +111,6 @@ class CustomTeamSerializer(serializers.ModelSerializer):
             'season',
             'leader_id'
         )
-
-
-class SkillSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Skill
-        fields = ('id', 'name')
 
 
 class PublicCompetiorSerializer(serializers.ModelSerializer):
@@ -240,7 +255,7 @@ class InvitationSerializer(serializers.ModelSerializer):
         competitor = Competitor.objects.filter(email=data['competitor_email'])
 
         if Invitation.objects.filter(competitor=competitor).count() > 0:
-            raise serializers.ValidationError("You have already sent a an invitation for that user!")
+            raise serializers.ValidationError("You have already sent an invitation for that user!")
 
         competitor_email = data.pop('competitor_email')
         competitor = Competitor.objects.get(email=competitor_email)
@@ -279,6 +294,7 @@ class OnBoardingCompetitorSerializer(serializers.ModelSerializer):
         )
 
         fields = (
+            'id',
             'is_vegetarian',
             'shirt_size',
             'needs_work',
@@ -286,3 +302,24 @@ class OnBoardingCompetitorSerializer(serializers.ModelSerializer):
             'known_skills',
             'other_skills'
         )
+
+
+class SeasonCompetitorInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SeasonCompetitorInfo
+
+        fields = (
+            'competitor',
+            'season',
+            'looking_for_team'
+        )
+
+        extra_kwargs = {
+            'competitor': {
+                'write_only': True
+            },
+            'season': {
+                'write_only': True
+            }
+        }

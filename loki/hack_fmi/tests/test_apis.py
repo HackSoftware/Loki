@@ -19,7 +19,8 @@ from ..models import (TeamMembership, Competitor,
 from loki.seed.factories import (SkillFactory, HackFmiPartnerFactory, SeasonFactory,
                                  MentorFactory, RoomFactory, TeamFactory,
                                  CompetitorFactory, BaseUserFactory, TeamMembershipFactory,
-                                 StudentFactory, InvitationFactory, TeamMentorshipFactory)
+                                 StudentFactory, InvitationFactory, TeamMentorshipFactory,
+                                 SeasonCompetitorInfoFactory)
 
 from faker import Factory
 
@@ -857,7 +858,6 @@ class OnBoardCompetitorAPITest(TestCase):
 
         response = self.client.post(self.reverse('hack_fmi:onboard_competitor'), data=data)
         self.response_201(response)
-
         self.assertEquals(1, Competitor.objects.all().count())
 
     def test_onboarding_base_user_with_uncorrect_authorization_token(self):
@@ -1470,6 +1470,140 @@ class TestTeamMentorshipAPI(TestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 204)
         self.assertEqual(TeamMentorship.objects.filter(team=self.team, mentor=self.mentor).count(), 0)
+
+
+class TestSeasonInfoAPIViews(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.season = SeasonFactory(is_active=True)
+        self.competitor = CompetitorFactory()
+        self.competitor.is_active = True
+        self.competitor.set_password(BaseUserFactory.password)
+        self.competitor.save()
+
+        data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+
+        self.url = self.reverse("hack_fmi:season_competitor_info")
+
+    def test_get_request_is_not_allowed(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        response = self.client.get(self.url)
+
+        self.response_405(response)  # Method nto allowed
+
+    def test_post_is_successful(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        data = {'competitor': self.competitor.id,
+                'season': self.season.id,
+                'looking_for_team': True}
+
+        response = self.client.post(self.url, data=data)
+        self.response_201(response)
+
+    def test_cannot_post_data_for_non_active_season(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        self.season.is_active = False
+        self.season.save()
+
+        data = {'season': self.season.id,
+                'competitor': self.competitor.id,
+                'looking_for_team': True}
+
+        response = self.client.post(self.url, data=data)
+
+        self.response_403(response)
+
+    def test_cannot_post_with_competitor_that_has_team_in_the_current_season(self):
+        team = TeamFactory(season=self.season)
+        TeamMembershipFactory(competitor=self.competitor,
+                              team=team)
+
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        data = {'competitor': self.competitor.id,
+                'season': self.season.id,
+                'looking_for_team': True}
+
+        response = self.client.post(self.url, data=data)
+
+        self.response_403(response)
+
+    def test_patch_for_looking_for_team_works(self):
+        sci = SeasonCompetitorInfoFactory(season=self.season,
+                                          competitor=self.competitor)
+
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        # Default value is False
+        self.assertFalse(sci.looking_for_team)
+
+        data = {'looking_for_team': True}
+        url = self.reverse("hack_fmi:season_competitor_info_detail", pk=sci.id)
+
+        self.client.patch(url, data=data)
+        sci.refresh_from_db()
+
+        self.assertTrue(sci.looking_for_team)
+
+
+class TestCompetitorListAPI(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.season = SeasonFactory(is_active=True)
+        self.team = TeamFactory(season=self.season)
+        self.competitor = CompetitorFactory()
+        self.competitor.is_active = True
+        self.competitor.set_password(BaseUserFactory.password)
+        self.competitor.save()
+
+        data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+
+        self.url = self.reverse("hack_fmi:competitors")
+
+    def test_get_competitors_in_this_season_that_are_looking_for_team(self):
+        """
+        We create competitor info for the current season with looking_for_team=True
+        and assert that the list api returns both of the competitors.
+        """
+        SeasonCompetitorInfoFactory(season=self.season, looking_for_team=True)
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        response = self.client.get(self.url)
+        self.response_200(response)
+        self.assertEqual(len(response.data), 1)
+
+    def test_dont_get_competitors_in_this_season_that_are_not_looking_for_team(self):
+        """
+        We create competitor info for the current season and
+        assert that the list api returns both of the competitors.
+        SeasonCompetitorInfo sets looking_for_team to False by default.
+        """
+        SeasonCompetitorInfoFactory(season=self.season)
+
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        response = self.client.get(self.url)
+        self.response_200(response)
+        self.assertEqual(len(response.data), 0)
+
+    def test_cannot_get_season_competitor_info_for_competitors_in_other_season(self):
+        """
+        SeasonCompetitorInfoFactory creates season with another factory.
+        We assert this season is not the same as the one in the setUp func
+        and the competitor is not returned in the list api.
+        """
+        season_competitor_info = SeasonCompetitorInfoFactory()
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+        response = self.client.get(self.url)
+        self.response_200(response)
+        self.assertNotEqual(season_competitor_info.season, self.season)
+        self.assertEqual(len(response.data), 0)
 
 
 @unittest.skip('Skip until further implementation of Hackathon system')

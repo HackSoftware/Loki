@@ -5,8 +5,10 @@ from rest_framework import routers
 from .views import (MeAPIView, SkillListAPIView, TeamAPI, InvitationViewSet,
                     MentorListView, SeasonView, PublicTeamView,
                     get_schedule, schedule_json, OnBoardCompetitorAPI, TeamMembershipAPI,
-                    TeamMentorshipAPI, TestApi, MeSeasonAPIView, JWTLogoutView,
-                    CustomRefreshJSONWebTokenAPIView)
+                    TeamMentorshipAPI, TestApi, MeSeasonAPIView, CompetitorListAPIView,
+                    SeasonInfoAPI, JWTLogoutView, CustomRefreshJSONWebTokenAPIView)
+
+
 from .auth import Login
 # from .signals import send_invitation
 
@@ -21,6 +23,7 @@ invitation_urls = InvitationViewSet.get_urls()
 
 router = routers.SimpleRouter()
 router.register(r'api/teams', TeamAPI)
+
 
 urlpatterns = [
     url(r'^api/jwt-login/$', obtain_jwt_token, name='api-login'),
@@ -59,4 +62,7 @@ urlpatterns = [
     url(r'^api/schedule/', get_schedule, name="get_schedule"),
     url(r'^api/schedule-json/', schedule_json, name="schedule_json"),
     url(r'^api/onboard-competitor/$', OnBoardCompetitorAPI.as_view(), name='onboard_competitor'),
+    url(r'^api/competitors/$', CompetitorListAPIView.as_view(), name='competitors'),
+    url(r'^api/season-competitor-info/$', SeasonInfoAPI.as_view(), name='season_competitor_info'),
+    url(r'^api/season-competitor-info/(?P<pk>[0-9]+)/$', SeasonInfoAPI.as_view(), name='season_competitor_info_detail'),
 ] + router.urls
