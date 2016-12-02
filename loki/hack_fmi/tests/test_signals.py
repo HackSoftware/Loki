@@ -5,6 +5,8 @@ from loki.seed.factories import (SeasonFactory,
                                  CompetitorFactory, TeamMembershipFactory,
                                  SeasonCompetitorInfoFactory)
 
+from ..models import SeasonCompetitorInfo
+
 from faker import Factory
 
 faker = Factory.create()
@@ -25,3 +27,13 @@ class TestTeamMembershipSignal(TestCase):
                               is_leader=False)
         self.season_competitor_info.refresh_from_db()
         self.assertFalse(self.season_competitor_info.looking_for_team)
+
+
+class TestSeasonCompetitorInfosSignal(TestCase):
+    def test_season_competitor_info_is_created_when_new_active_season_is_added(self):
+        competitor = CompetitorFactory()
+        season = SeasonFactory(is_active=True)
+
+        season_competitor_infos_count = SeasonCompetitorInfo.objects.filter(competitor=competitor,
+                                                                            season=season).count()
+        self.assertEqual(1, season_competitor_infos_count)

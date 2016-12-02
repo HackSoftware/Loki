@@ -1,6 +1,6 @@
 [
 {
-    "pk": 1,
+    "pk": 1, 
     "fields": {
         "mentor_pick_start_date": "2015-04-23",
         "mentor_pick_end_date": "2015-04-25",
@@ -59,7 +59,7 @@
         "make_team_dead_line": "2016-03-18",
         "max_team_members_count": 6,
         "max_mentor_pick": 10,
-        "is_active": true,
+        "is_active": false,
         "sign_up_deadline": "2016-03-18",
         "name": "HackBulgaria Spring 2016 Hackathon",
         "front_page": "<p>Hackathon between Programming 101 Courses</p>\r\n",

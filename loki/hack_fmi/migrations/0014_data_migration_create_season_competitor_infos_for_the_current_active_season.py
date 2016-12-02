@@ -11,14 +11,19 @@ def create_season_competitor_infos_for_current_season(apps, schema_editor):
     SeasonCompetitorInfo = apps.get_model('hack_fmi', 'SeasonCompetitorInfo')
 
     competitors_without_sci = Competitor.objects.filter(seasoncompetitorinfo__isnull=True)
-    active_season = Season.objects.get(is_active=True)
-    season_competitor_infos = []
+    try:
+        active_season = Season.objects.get(is_active=True)
+        season_competitor_infos = []
 
-    for competitor in competitors_without_sci:
-        season_competitor_infos.append(SeasonCompetitorInfo(competitor=competitor,
-                                                            season=active_season))
+        for competitor in competitors_without_sci:
+            season_competitor_infos.append(SeasonCompetitorInfo(competitor=competitor,
+                                                                season=active_season))
 
-    SeasonCompetitorInfo.objects.bulk_create(season_competitor_infos)
+        SeasonCompetitorInfo.objects.bulk_create(season_competitor_infos)
+    except Season.DoesNotExist:
+        """
+        There is no active season at the moment.
+        """
 
 
 class Migration(migrations.Migration):

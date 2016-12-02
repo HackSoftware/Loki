@@ -70,11 +70,6 @@ class Competitor(BaseUser):
     objects = CompetitorQuerySet.as_manager()
 
 
-def active_season():
-    active = Season.objects.get(is_active=True)
-    return active.id
-
-
 class Room(models.Model):
     number = models.IntegerField()
     season = models.ForeignKey(Season)
@@ -120,7 +115,7 @@ class Team(models.Model):
     technologies = models.ManyToManyField('Skill', blank=True)
     idea_description = models.TextField()
     repository = models.URLField(blank=True)
-    season = models.ForeignKey('Season', default=active_season)
+    season = models.ForeignKey('Season')
     need_more_members = models.BooleanField(default=True)
     members_needed_desc = models.CharField(max_length=255, blank=True)
     room = models.ForeignKey('Room', null=True, blank=True)

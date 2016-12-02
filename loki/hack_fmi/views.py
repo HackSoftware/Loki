@@ -164,8 +164,7 @@ class TeamAPI(JwtApiAuthenticationMixin,
 
     def perform_create(self, serializer):
         season = Season.objects.get(is_active=True)
-        team = serializer.save()
-        team.season = season
+        team = serializer.save(season=season)
         team.add_member(self.request.user.get_competitor(), is_leader=True)
         team.save()
 
