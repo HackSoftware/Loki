@@ -4,7 +4,6 @@ from channels import Group
 from django.conf import settings
 from channels.generic.websockets import BaseConsumer
 
-
 from .helper import authenticate, close_connection
 
 
@@ -21,17 +20,26 @@ class InvitationConsumer(BaseConsumer):
 
     def receive(self, message, **kwargs):
         # auth
-        if not json.loads(message.get('text')).get('token'):
-            close_connection(message)
-        token = json.loads(message.get('text'))['token']
+        msg = message.get('text')
+        try:
+            payload = json.loads(msg)
+        except ValueError:
+            """
+            Invalid message was provided.
+            Valid json with key `token` is expected.
+            """
+            return close_connection(message)
+        token = payload.get('token')
 
-        user_id = authenticate(token)
-        print("userid", user_id)
-        if not user_id:
-            close_connection(message)
-        print("authenticated")
-        # add in group
-        self.add_to_group(message, user_id)
+        if token is None:
+            return close_connection(message)
+
+        # TODO: This uses the wrong jwt package.
+        # user_id = authenticate(token)
+        # if not user_id:
+        #     return close_connection(message)
+
+        # self.add_to_group(message, user_id)
 
     def add_to_group(self, message, user_id):
         # Add them to the right group
