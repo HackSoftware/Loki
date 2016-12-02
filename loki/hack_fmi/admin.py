@@ -3,7 +3,7 @@ from adminsortable2.admin import SortableAdminMixin
 
 from .models import (Competitor, Skill, Team, TeamMembership,
                      Invitation, Mentor, Season, Room, Partner,
-                     TeamMentorship, BlackListToken)
+                     TeamMentorship, BlackListToken, SeasonCompetitorInfo)
 
 
 @admin.register(Skill)
@@ -59,6 +59,11 @@ class RoomAdmin(admin.ModelAdmin):
 @admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin):
     list_display = ('id', 'name',)
+
+
+@admin.register(SeasonCompetitorInfo)
+class SeasonCompetitorInfoAdmin(admin.ModelAdmin):
+    list_display = ('id', 'competitor', 'season', 'looking_for_team')
 
 
 @admin.register(BlackListToken)

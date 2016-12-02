@@ -250,7 +250,8 @@ templates = {
     "application_completed_default": lambda **env_kwargs: env('APPLICATION_COMPLETED_DEFAULT', **env_kwargs),
     "hackfmi_team_deleted": lambda **env_kwargs: env('HACKFMI_TEAM_DELETED_TEMPLATE_ID', **env_kwargs),
     "interview_confirmation": lambda **env_kwargs: env('CONFIRM_INTERVIEW', **env_kwargs),
-    "send_invitation": lambda **env_kwargs: env('SEND_INVITATION', **env_kwargs)
+    "send_invitation": lambda **env_kwargs: env('SEND_INVITATION', **env_kwargs),
+    "hackfmi_register": lambda **env_kwargs: env('HACKFMI_REGISTER', **env_kwargs)
 }
 
 # Get all email templates from the env with default value ""
