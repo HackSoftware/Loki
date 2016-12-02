@@ -229,7 +229,7 @@ class TeamSerializer(serializers.ModelSerializer):
         )
 
 
-class CustomTeamSerializer(serializers.ModelSerializer):
+class InvitationTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = Team
         fields = (
@@ -239,7 +239,7 @@ class CustomTeamSerializer(serializers.ModelSerializer):
 
 
 class InvitationSerializer(serializers.ModelSerializer):
-    team = CustomTeamSerializer(read_only=True)
+    team = InvitationTeamSerializer(read_only=True)
     competitor_email = serializers.EmailField(required=True, write_only=True)
     competitor = CompetitorSerializer(required=False)
 

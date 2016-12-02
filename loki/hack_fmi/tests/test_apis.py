@@ -1506,7 +1506,6 @@ class TestTeamMentorshipAPI(TestCase):
         self.assertEqual(response.status_code, 403)
 
 
-
 class TestSeasonInfoAPIViews(TestCase):
     def setUp(self):
         self.client = APIClient()
