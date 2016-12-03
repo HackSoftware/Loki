@@ -217,10 +217,12 @@ class CanInviteMoreMembersInTeam(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == "POST":
-            user_team = TeamMembership.objects.get(competitor=request.user.get_competitor()).team
-            members_in_team = TeamMembership.objects.get_all_team_memberships_for_team(team=user_team).count()
+            team = TeamMembership.objects.get_team_memberships_for_active_season(
+                competitor=request.user.get_competitor()).first().team
+            # user_team = TeamMembership.objects.get(competitor=request.user.get_competitor()).team
+            members_in_team = TeamMembership.objects.get_all_team_memberships_for_team(team=team).count()
 
-            return members_in_team < user_team.season.max_team_members_count
+            return members_in_team < team.season.max_team_members_count
 
         """
         Return True if you just want to see all the invitations without creating a new invitation.
