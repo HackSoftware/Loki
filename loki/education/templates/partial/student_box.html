@@ -1,0 +1,23 @@
+{% load key %}
+{% load cropping thumbnail %}
+<div class="col-sm-12 student-box">
+  <div class="col-sm-2">
+    <img src="{% cropped_thumbnail student "cropping" %}" class="student-profile-photo" >
+  </div>
+  <div class="col-sm-10 student-information">
+    <div class="col-sm-10 student-information-text">
+      <h4 class="student-name">{{ student.first_name }} {{student.last_name}}</h4>
+      <hr/>
+      <b>Присъствие</b> </br>
+      <b>Предадени домашни</b> </br>
+      <b>Коментар</b> </br>
+      <textarea class="student-comment-from-teacher">
+      </textarea>
+    </div>
+    <div class="col-sm-2 students-course-btns">
+      <a href="">
+        <button class="btn btn-warning" id="tasks-link">Задачи</button>
+      </a>
+    </div>
+  </div>
+</div>
