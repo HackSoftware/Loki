@@ -364,6 +364,20 @@ $TabBorder: #C5C4C4;
 
     .course-students {
 
+      .course-name-div {
+        font-size: 18px;
+        margin-bottom: 5px;
+        a {
+          text-decoration: none;
+          color: #f7931e;
+        }
+
+        .course-name {
+          padding-left: 10px;
+          display: inline-block;
+        }
+      }
+
       .student-box {
         margin-bottom: 30px;
         padding-bottom: 10px;
@@ -380,8 +394,14 @@ $TabBorder: #C5C4C4;
 
 
         hr {
+          margin-top: -5px;
            width:100%;
            border-top: 1px solid #f8d5ac;
+        }
+
+        a {
+          text-decoration: none;
+          color: #f7931e;
         }
 
         .student-profile-photo {
@@ -393,6 +413,7 @@ $TabBorder: #C5C4C4;
         .student-comment-from-teacher {
           border: 1px solid #f8d5ac;
           width: 100%;
+          margin-bottom: 5px;
         }
 
         .students-course-btns {
@@ -1093,15 +1114,16 @@ $TabBorder: #C5C4C4;
 }
 
 .solutions-task-div, .material-course-div, .task-course-div {
-  padding-left: 3%;
+  padding-left: 20px;
   font-size: 18px;
+  margin-bottom: 5px;
   a {
     text-decoration: none;
     color: #f7931e;
   }
 
   #solutions-task-name ,#material-course-name, #task-course-name {
-    padding-left: 20px;
+    padding-left: 10px;
     display: inline-block;
   }
 }

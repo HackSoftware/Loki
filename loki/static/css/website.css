@@ -244,6 +244,15 @@ body {
 .container .generate-interviews-box {
   margin-top: 20px;
   font-size: 14px; }
+.container .course-students .course-name-div {
+  font-size: 18px;
+  margin-bottom: 5px; }
+  .container .course-students .course-name-div a {
+    text-decoration: none;
+    color: #f7931e; }
+  .container .course-students .course-name-div .course-name {
+    padding-left: 10px;
+    display: inline-block; }
 .container .course-students .student-box {
   margin-bottom: 30px;
   padding-bottom: 10px;
@@ -256,15 +265,20 @@ body {
   .container .course-students .student-box:hover {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 5px 5px rgba(0, 0, 0, 0.22); }
   .container .course-students .student-box hr {
+    margin-top: -5px;
     width: 100%;
     border-top: 1px solid #f8d5ac; }
+  .container .course-students .student-box a {
+    text-decoration: none;
+    color: #f7931e; }
   .container .course-students .student-box .student-profile-photo {
     width: 100%;
     margin-top: 10px;
     margin-bottom: 5px; }
   .container .course-students .student-box .student-comment-from-teacher {
     border: 1px solid #f8d5ac;
-    width: 100%; }
+    width: 100%;
+    margin-bottom: 5px; }
   .container .course-students .student-box .students-course-btns {
     margin-top: 20px; }
 
@@ -740,13 +754,14 @@ body {
   word-wrap: break-word; }
 
 .solutions-task-div, .material-course-div, .task-course-div {
-  padding-left: 3%;
-  font-size: 18px; }
+  padding-left: 20px;
+  font-size: 18px;
+  margin-bottom: 5px; }
   .solutions-task-div a, .material-course-div a, .task-course-div a {
     text-decoration: none;
     color: #f7931e; }
   .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .task-course-div #solutions-task-name, .task-course-div #material-course-name, .task-course-div #task-course-name {
-    padding-left: 20px;
+    padding-left: 10px;
     display: inline-block; }
 
 .solution-url-link {
