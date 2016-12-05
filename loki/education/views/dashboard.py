@@ -111,7 +111,6 @@ class StudentCourseView(CanSeeCourseInfoOnlyTeacher,
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['course'] = Course.objects.get(id=self.kwargs.get("course"))
-
         return context
 
 
