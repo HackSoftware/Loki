@@ -71,7 +71,6 @@ def authenticate(token):
     except jwt.DecodeError:
         msg = 'Error decoding signature.'
         raise AuthenticationFailed(msg)
-
     user_id = authenticate_credentials(payload)
 
     return user_id

@@ -1189,9 +1189,9 @@ class TestInvitationViewSet(TestCase):
 
     def test_cant_accept_invitation_if_not_authenticated(self):
         self.client.credentials()
-        inv = InvitationFactory()
+        invitation_id = faker.random_number(digits=1)
 
-        url = self.reverse('hack_fmi:invitation-accept', pk=inv.id)
+        url = self.reverse('hack_fmi:invitation-accept', pk=invitation_id)
         response = self.client.post(url)
 
         self.response_401(response)
@@ -1199,8 +1199,8 @@ class TestInvitationViewSet(TestCase):
     def test_cant_accept_invitation_if_not_hackfmi_user(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.non_competitor_token)
 
-        inv = InvitationFactory()
-        url = self.reverse('hack_fmi:invitation-accept', pk=inv.id)
+        invitation_id = faker.random_number(digits=1)
+        url = self.reverse('hack_fmi:invitation-accept', pk=invitation_id)
         response = self.client.post(url)
 
         self.response_403(response)
@@ -1310,9 +1310,9 @@ class TestInvitationViewSet(TestCase):
 
     def test_user_cannot_delete_invitation_if_not_hackfmi_user(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.non_competitor_token)
-        inv = InvitationFactory()
+        invitation_id = faker.random_number(digits=1)
 
-        url = self.reverse('hack_fmi:invitation-detail', pk=inv.id)
+        url = self.reverse('hack_fmi:invitation-detail', pk=invitation_id)
         response = self.client.delete(url)
 
         self.response_403(response)

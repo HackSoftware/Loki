@@ -1,6 +1,4 @@
 import json
-import time
-from datetime import timedelta
 
 from django.conf import settings
 
@@ -8,9 +6,9 @@ from test_plus.test import TestCase
 from channels import Group, Channel
 from channels.tests import ChannelTestCase
 
+from loki.hack_fmi.consumers import InvitationConsumer
 from loki.seed.factories import (InvitationFactory, BaseUserFactory, TeamFactory,
                                  CompetitorFactory, TeamMembershipFactory)
-from loki.hack_fmi.consumers import InvitationConsumer
 
 from faker import Factory
 
@@ -106,25 +104,3 @@ class TestInvitationConsumer(ChannelTestCase, TestCase):
         result = self.get_next_message(message.reply_channel.name, require=True)
 
         self.assertTrue(result.get('close'))
-
-    def test_connection_closed_when_signiture_has_expired(self):
-        settings.JWT_AUTH['JWT_EXPIRATION_DELTA'] = timedelta(seconds=60)
-
-        token = self.get_valid_token()
-        time.sleep(60)
-
-        channel_name = u"websocket.receive"
-        text = {"token": token}
-
-        Channel(channel_name).send({'text': json.dumps(text), "reply_channel": "angular_client"})
-
-        message = self.get_next_message(channel_name, require=True)
-        InvitationConsumer(message)
-
-        result = self.get_next_message(message.reply_channel.name, require=True)
-
-        self.assertTrue(result.get('close'))
-
-    def test_connection_closed_when_user_with_decoded_id_from_token_does_not_exist(self):
-        pass
-

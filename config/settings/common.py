@@ -1,4 +1,3 @@
-import os
 # flake8: noqa
 from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
 from easy_thumbnails.conf import Settings as thumbnail_settings
