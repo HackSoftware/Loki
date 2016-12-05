@@ -839,31 +839,38 @@ $TabBorder: #C5C4C4;
         .course-btns {
           margin-top: 20px;
 
-          #materials-link {
-            padding-left: 25px;
-            padding-right: 24px;
-          }
-
-          #students-link {
-            padding-left: 31px;
-            padding-right: 30px;
-          }
-
-          #tasks-link {
-            padding-left: 39px;
-            padding-right: 37px;
+          #materials-link, #students-link, #tasks-link, #info-link {
+            width: 70%;
           }
 
           a button {
             margin-top: 5px;
             text-align: center;
+            white-space: normal;
 
             @media screen and (max-width: 992px) {
-              margin-right: 5px;
-              margin-left: -5px;
+              margin-right: 5%;
+              margin-left: 15%;
             }
           }
 
+          @media screen and (max-width: 1200px) {
+            padding-left: 0px;
+            padding-right: 0px;
+            width: 30%;
+          }
+
+          @media screen and (max-width: 765px) {
+            margin-left: 20%;
+            margin-bottom: 10px;
+            width: 60%;
+          }
+        }
+
+        .course-information {
+            @media screen and (max-width: 1200px) {
+              width: 70%;
+            }
         }
 
     }

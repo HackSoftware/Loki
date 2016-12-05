@@ -585,22 +585,29 @@ body {
       display: inline-block; }
     .course-box .course-text .course-btns {
       margin-top: 20px; }
-      .course-box .course-text .course-btns #materials-link {
-        padding-left: 25px;
-        padding-right: 24px; }
-      .course-box .course-text .course-btns #students-link {
-        padding-left: 31px;
-        padding-right: 30px; }
-      .course-box .course-text .course-btns #tasks-link {
-        padding-left: 39px;
-        padding-right: 37px; }
+      .course-box .course-text .course-btns #materials-link, .course-box .course-text .course-btns #students-link, .course-box .course-text .course-btns #tasks-link, .course-box .course-text .course-btns #info-link {
+        width: 70%; }
       .course-box .course-text .course-btns a button {
         margin-top: 5px;
-        text-align: center; }
+        text-align: center;
+        white-space: normal; }
         @media screen and (max-width: 992px) {
           .course-box .course-text .course-btns a button {
-            margin-right: 5px;
-            margin-left: -5px; } }
+            margin-right: 5%;
+            margin-left: 15%; } }
+      @media screen and (max-width: 1200px) {
+        .course-box .course-text .course-btns {
+          padding-left: 0px;
+          padding-right: 0px;
+          width: 30%; } }
+      @media screen and (max-width: 765px) {
+        .course-box .course-text .course-btns {
+          margin-left: 20%;
+          margin-bottom: 10px;
+          width: 60%; } }
+    @media screen and (max-width: 1200px) {
+      .course-box .course-text .course-information {
+        width: 70%; } }
   .course-box .course-logo {
     width: 100%;
     padding: 15px; }
