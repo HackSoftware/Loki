@@ -14,7 +14,7 @@ from .helper import authenticate, close_connection
 
 class InvitationConsumer(BaseConsumer):
 
-    USER_ADDED_TO_GROUP_MESSAGE = "User added to group."
+    USER_ADDED_TO_GROUP_MESSAGE = json.dumps({'message': 'User added to group.'})
 
     method_mapping = {
         "websocket.connect": "connect",
