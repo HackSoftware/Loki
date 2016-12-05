@@ -51,6 +51,8 @@ class CourseAssignment(models.Model):
     user = models.ForeignKey('Student')
     student_presence = models.PositiveSmallIntegerField(blank=True, null=True)
     is_online = models.BooleanField(default=False)
+    teacher_comment = models.TextField(null=True, blank=True,
+                                           help_text='Коментар от учителя')
 
     class Meta:
         unique_together = ('user', 'course')
