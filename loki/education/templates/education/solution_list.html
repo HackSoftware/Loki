@@ -4,7 +4,7 @@
 {% autoescape off %}
 {% if object_list.exists %}
 <div class="solutions-task-div">
-  <a href="{% url 'education:course_dashboard' object_list.first.task.course.id %}">
+  <a href="{% url 'education:task_dashboard' object_list.first.task.course.id %}">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
   </a>
   <div id="solutions-task-name">
