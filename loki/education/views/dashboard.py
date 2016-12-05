@@ -108,6 +108,12 @@ class StudentCourseView(CanSeeCourseInfoOnlyTeacher,
         course_id = self.kwargs.get("course")
         return Student.objects.filter(courses__id__exact=course_id)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['course'] = Course.objects.get(id=self.kwargs.get("course"))
+
+        return context
+
 
 class TeacherTaskView(DashboardPermissionMixin,
                       ListView):

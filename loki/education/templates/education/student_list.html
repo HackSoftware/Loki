@@ -2,10 +2,14 @@
 
 {% block 'page-content' %}
 {% autoescape off %}
-{% if object_list.exists %}
-  {% for student in object_list %}
-    {{ student }}
-  {% endfor %}
-{% endif %}
+<div class="container">
+  <div class="course-students">
+  {% if object_list.exists %}
+    {% for student in object_list %}
+      {% include 'partial/student_box.html' with student=student course=course%}
+    {% endfor %}
+  {% endif %}
+  </div>
+</div>
 {% endautoescape %}
 {% endblock %}

@@ -244,6 +244,29 @@ body {
 .container .generate-interviews-box {
   margin-top: 20px;
   font-size: 14px; }
+.container .course-students .student-box {
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  background: white;
+  background: #fff;
+  display: inline-block;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+  .container .course-students .student-box:hover {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 5px 5px rgba(0, 0, 0, 0.22); }
+  .container .course-students .student-box hr {
+    width: 100%;
+    border-top: 1px solid #f8d5ac; }
+  .container .course-students .student-box .student-profile-photo {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 5px; }
+  .container .course-students .student-box .student-comment-from-teacher {
+    border: 1px solid #f8d5ac;
+    width: 100%; }
+  .container .course-students .student-box .students-course-btns {
+    margin-top: 20px; }
 
 .dropdown-menu {
   margin-top: 20px; }
