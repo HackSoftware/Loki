@@ -29,7 +29,7 @@ urlpatterns = [
         dashboard.MaterialView.as_view(), name='material_view'),
     # Teacher views
     url(r'^course/(?P<course>[0-9]+)/students/$',
-    dashboard.StudentCourseView.as_view(), name='students_view'),
+        dashboard.StudentCourseView.as_view(), name='students_view'),
     url(r'^teacher/course/(?P<course>[0-9]+)/$',
         dashboard.CourseDashboardView.as_view(), name='course-detail'),
     url(r'^course/(?P<course>[0-9]+)/teacher-task-dashboard/$',

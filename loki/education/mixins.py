@@ -51,6 +51,7 @@ class CannotSeeOthersCoursesDashboardsMixin(BaseUserPassesTestMixin):
         self.course = course
         return True and super().test_func()
 
+
 class CanSeeCourseInfoOnlyTeacher(BaseUserPassesTestMixin):
     raise_exception = True
     requires_login = False

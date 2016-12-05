@@ -127,6 +127,7 @@ class TeacherTaskView(DashboardPermissionMixin,
         course_id = self.kwargs.get("course")
         return Task.objects.filter(course=course_id)
 
+
 class CourseDashboardView(CanSeeCourseInfoOnlyTeacher,
                           CannotSeeOthersCoursesDashboardsMixin,
                           DetailView):
