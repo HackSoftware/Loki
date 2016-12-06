@@ -15,10 +15,10 @@ class Command(BaseCommand):
 
             if lectures:
                 for ca in course_assignments:
-                    student = ca.user
-                    all_student_checkins = CheckIn.objects.get_user_dates(user=student, course=course)
-                    student_dates = [ci for ci in all_student_checkins if ci in lectures]
+                    user = ca.user
+                    all_user_checkins = CheckIn.objects.get_user_dates(user=user, course=course)
+                    user_dates = [ci for ci in all_user_checkins if ci in lectures]
 
-                    percentage_presence = int((len(student_dates) / len(lectures)) * 100)
+                    percentage_presence = int((len(user_dates) / len(lectures)) * 100)
                     ca.student_presence = percentage_presence
                     ca.save()
