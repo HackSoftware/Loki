@@ -23,6 +23,9 @@
       <div class="active-tasks-container container-fluid">
           <table id="course-tasks-table" class="table table-hover table-striped " cellspacing="0">
             <thead>
+              {% if user.get_teacher %}
+                <caption class="student-name"><h4><b>Предадени задачи на {{ student.first_name }} {{ student.last_name }}</b></h4></caption>
+              {% endif %}
               <tr>
                 <th>Седмица</th>
                 <th>Задача</th>
@@ -65,7 +68,11 @@
                        {% endif %}
                      </td>
                      <td id="solution-task-id-{{task.id}}">
-                          <a class="task-solution-link" href="{% url 'education:solution_view' task.course.id task.id %}">
+                          {% if user.get_student and not user.get_teacher %}
+                            <a class="task-solution-link" href="{% url 'education:solution_view' task.course.id task.id %}">
+                          {% else %}
+                            <a class="task-solution-link" href="{% url 'education:student_solutions_dashboard' course.id student.id task.id %}">
+                          {% endif %}
                             {% if tasksolution|key:task.name %}
                               <button class="btn btn-warning" id="btn-tasks-link">Решения</button>
                             {% else %}

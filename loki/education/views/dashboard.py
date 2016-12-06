@@ -86,6 +86,12 @@ class SolutionView(DashboardPermissionMixin,
         task = Task.objects.get(id=self.kwargs.get("task"))
         return Solution.objects.filter(student=self.request.user, task=task).order_by("-created_at")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        course = self.kwargs.get('course')
+        context['course'] = Course.objects.get(id=course)
+        return context
+
 
 class MaterialView(DashboardPermissionMixin,
                    CannotSeeOthersCoursesDashboardsMixin,
@@ -161,10 +167,29 @@ class CourseStudentTaskView(CanSeeCourseInfoOnlyTeacher,
         context = super().get_context_data(**kwargs)
         course = self.kwargs.get('course')
         context['course'] = Course.objects.get(id=course)
+        context['student'] = Student.objects.get(id=self.kwargs.get('student'))
         solutions = Solution.objects.filter(student=self.kwargs.get('student')).filter(
                                             task__course__in=[course])
         context['tasksolution'] = task_solutions(solutions)
         tasks = Task.objects.filter(course=course)
         context['latest_solutions'] = latest_solution_statuses(self.kwargs.get('student'),
                                                                tasks)
+        return context
+
+
+class CourseStudentSolutionView(CanSeeCourseInfoOnlyTeacher,
+                                DashboardPermissionMixin,
+                                ListView):
+
+    model = Solution
+
+    def get_queryset(self):
+        task = Task.objects.get(id=self.kwargs.get("task"))
+        student = Student.objects.get(id=self.kwargs.get("student"))
+        return Solution.objects.filter(student=student, task=task).order_by("-created_at")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['course'] = Course.objects.get(id=self.kwargs.get('course'))
+        context['student'] = Student.objects.get(id=self.kwargs.get('student'))
         return context
