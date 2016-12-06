@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'anymail',
     'easy_thumbnails',
     'image_cropping',
+    'raven.contrib.django.raven_compat',  # used for sentry logging
 
     'loki.hack_fmi.apps.HackFMIConfig',
     'loki.base_app.apps.BaseAppConfig',
@@ -65,6 +66,10 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    # Used for sentry client setup. For more info check the docs:
+    # https://docs.sentry.io/clients/python/integrations/django/
+    'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',

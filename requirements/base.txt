@@ -32,6 +32,7 @@ PyJWT==1.3.0
 python-Levenshtein==0.12.0
 pytz==2015.7
 PyYAML==3.11
+raven==5.32.0
 requests==2.6.0
 six==1.9.0
 tablib==0.10.0
