@@ -5,7 +5,8 @@ from ckeditor.fields import RichTextField
 from loki.base_app.models import BaseUser
 
 from .query import (TeamQuerySet, TeamMembershipQuerySet,
-                    TeamMentorshipQuerySet, CompetitorQuerySet, InvitationQuerySet)
+                    TeamMentorshipQuerySet, CompetitorQuerySet,
+                    InvitationQuerySet)
 from .managers import TeamMembershipManager
 
 
@@ -69,11 +70,6 @@ class Competitor(BaseUser):
     objects = CompetitorQuerySet.as_manager()
 
 
-def active_season():
-    active = Season.objects.get(is_active=True)
-    return active.id
-
-
 class Room(models.Model):
     number = models.IntegerField()
     season = models.ForeignKey(Season)
@@ -119,11 +115,12 @@ class Team(models.Model):
     technologies = models.ManyToManyField('Skill', blank=True)
     idea_description = models.TextField()
     repository = models.URLField(blank=True)
-    season = models.ForeignKey('Season', default=active_season)
+    season = models.ForeignKey('Season')
     need_more_members = models.BooleanField(default=True)
     members_needed_desc = models.CharField(max_length=255, blank=True)
     room = models.ForeignKey('Room', null=True, blank=True)
     place = models.SmallIntegerField(blank=True, null=True)
+
     objects = TeamQuerySet.as_manager()
 
     def add_member(self, competitor, is_leader=False):
@@ -179,6 +176,15 @@ class Invitation(models.Model):
 
     def __str__(self):
         return "{} {}".format(self.team, self.competitor)
+
+
+class SeasonCompetitorInfo(models.Model):
+    competitor = models.ForeignKey(Competitor)
+    season = models.ForeignKey(Season)
+    looking_for_team = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('competitor', 'season')
 
 
 class BlackListToken(models.Model):

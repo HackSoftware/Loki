@@ -28,8 +28,9 @@ class IsTeamLeader(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == 'POST':
-            team = Team.objects.get_team_by_id(id=request.data['team']).first()
             competitor = request.user.get_competitor()
+            team = TeamMembership.objects.get_team_memberships_for_active_season(
+                competitor=competitor).first().team
             return TeamMembership.objects.is_competitor_leader_of_team(competitor=competitor, team=team)
 
         return True
@@ -71,9 +72,9 @@ class IsMentorDatePickUpToDate(permissions.BasePermission):
     def has_permission(self, request, view):
         if not request.data:
             return True
-
         today = date.today()
-        team = Team.objects.get(id=request.data['team'])
+        team = TeamMembership.objects.get_team_memberships_for_active_season(
+            competitor=request.user.get_competitor()).first().team
         return team.season.mentor_pick_start_date < today and team.season.mentor_pick_end_date > today
 
 
@@ -82,11 +83,33 @@ class CanAttachMoreMentorsToTeam(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == 'POST':
-            team = Team.objects.get_team_by_id(id=request.data['team']).first()
+            team = TeamMembership.objects.get_team_memberships_for_active_season(
+                competitor=request.user.get_competitor()).first().team
             max_mentors_pick = team.season.max_mentor_pick
             mentors_for_current_team = TeamMentorship.objects.get_all_team_mentorships_for_team(team=team).count()
             return max_mentors_pick > mentors_for_current_team
         # If request.method = 'DELETE'
+        return True
+
+
+class CantAttachMentorThatIsAlreadyAttachedToTeam(permissions.BasePermission):
+    message = "This mentor is already assigned to team!"
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            return not TeamMentorship.objects.filter(mentor__id=request.data['mentor'], team__season__is_active=True)
+        return True
+
+
+class CantDeleteMentorNotFromLeaderTeam(permissions.BasePermission):
+    message = "The mentor you would like to delete is not attached to your team!"
+
+    def has_permission(self, request, view):
+        if request.method == 'DELETE':
+            leader_team = TeamMembership.objects.get_team_memberships_for_active_season(
+                competitor=request.user.get_competitor()).first().team
+            mentor_team = view.get_object().team
+            return leader_team == mentor_team
         return True
 
 
@@ -113,7 +136,7 @@ class CantCreateTeamWithTeamNameThatAlreadyExists(permissions.BasePermission):
         return True
 
 
-class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
+class TeamLeaderCantCreateOtherTeam(permissions.BasePermission):
     message = "You are a teamleader and cannot register another team!"
 
     def has_permission(self, request, view):
@@ -194,10 +217,12 @@ class CanInviteMoreMembersInTeam(permissions.BasePermission):
 
     def has_permission(self, request, view):
         if request.method == "POST":
-            user_team = TeamMembership.objects.get(competitor=request.user.get_competitor()).team
-            members_in_team = TeamMembership.objects.get_all_team_memberships_for_team(team=user_team).count()
+            team = TeamMembership.objects.get_team_memberships_for_active_season(
+                competitor=request.user.get_competitor()).first().team
+            # user_team = TeamMembership.objects.get(competitor=request.user.get_competitor()).team
+            members_in_team = TeamMembership.objects.get_all_team_memberships_for_team(team=team).count()
 
-            return members_in_team < user_team.season.max_team_members_count
+            return members_in_team < team.season.max_team_members_count
 
         """
         Return True if you just want to see all the invitations without creating a new invitation.
@@ -241,6 +266,33 @@ class IsInvitedMemberCompetitor(permissions.BasePermission):
         return True
 
 
+class IsSeasonActive(permissions.BasePermission):
+    message = "You cannot post data in nonactive season!"
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            season = Season.objects.filter(id=request.data['season']).first()
+
+            if season is not None:
+                return season.is_active
+
+        return True
+
+
+class IsCompetitorMemberOfTeamForActiveSeason(permissions.BasePermission):
+    message = "You are already member of team in this season!"
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            competitor = Competitor.objects.filter(id=request.data['competitor']).first()
+
+            if competitor is not None:
+                return not TeamMembership.objects.get_team_memberships_for_active_season(
+                    competitor=competitor).exists()
+
+        return True
+
+
 class IsJWTTokenBlackListed(permissions.BasePermission):
 
     message = "Signature has expired."
@@ -249,3 +301,11 @@ class IsJWTTokenBlackListed(permissions.BasePermission):
         token = request.META.get('HTTP_AUTHORIZATION', False)
 
         return not BlackListToken.objects.filter(token=token).exists()
+
+
+class CantChangeOtherCompetitorsData(permissions.BasePermission):
+
+    message = "You cannot change other competitor's info."
+
+    def has_object_permission(self, request, view, obj):
+        return request.user.get_competitor() == obj.competitor
