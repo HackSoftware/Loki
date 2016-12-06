@@ -5,9 +5,15 @@
 {% block 'page-content' %}
 {% autoescape off %}
 <div class="task-course-div">
-  <a href="{% url 'education:course_list' %}">
-    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-  </a>
+  {% if user.get_student and not user.get_teacher %}
+    <a href="{% url 'education:course_list' %}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </a>
+  {% else %}
+    <a href="{% url 'education:students_view' course.id %}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </a>
+  {% endif %}
   <div id="task-course-name">
     {% if user.get_teacher %}
       <b>{{course.name}} - Студенти</b>
