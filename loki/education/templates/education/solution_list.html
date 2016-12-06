@@ -14,11 +14,19 @@
     </a>
   {% endif %}
   <div id="solutions-task-name">
-    <b>Предадени решения на задача:
-      <a href={{solution.task.description}} target="_blank">
-        {{object_list.first.task.name}}
-      </a>
-    </b>
+    {% if user.get_student and not user.get_teacher %}
+      <b>Предадени решения на задача:
+        <a href="{{ solution.task.description }}" target="_blank">
+          {{object_list.first.task.name}}
+        </a>
+      </b>
+    {% else %}
+      <b>Предадени решения на задача от {{ student.first_name}} {{ student.last_name }}:
+        <a href="{{ solution.task.description }}" target="_blank">
+          {{object_list.first.task.name}}
+        </a>
+      </b>
+    {% endif %}
   </div>
 </div>
 {% for solution in object_list %}
