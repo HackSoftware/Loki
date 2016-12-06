@@ -65,9 +65,10 @@ class CourseAssignmentAdmin(ImportExportActionModelAdmin):
         'user',
         'course',
         'group_time',
+        'student_presence',
         'cv',
         'is_attending',
-        'is_online'
+        'is_online',
     ]
 
     list_filter = ('course', 'group_time', 'is_attending', 'is_online')
