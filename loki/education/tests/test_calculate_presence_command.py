@@ -66,3 +66,38 @@ class CalculatePresenceTests(TestCase):
         call_command('calculate_presence')
 
         self.assertEqual(self.course_assignment.student_presence, 0)
+
+    def test_calculate_presence_when_student_have_checkins_for_course_lecture(self):
+        check_in1 = CheckInFactory(mac=self.student1.mac,
+                       user=self.student1)
+        check_in1.date = datetime.now().date() - timedelta(days=9)
+        check_in1.save()
+        check_in2 = CheckInFactory(mac=self.student1.mac,
+                       user=self.student1)
+        check_in2.date = datetime.now().date() - timedelta(days=7)
+        check_in2.save()
+
+        check_in3 = CheckInFactory(mac=self.student2.mac,
+                                   user=self.student2)
+        check_in3.date = datetime.now().date() - timedelta(days=5)
+        check_in3.save()
+        check_in4 = CheckInFactory(mac=self.student2.mac,
+                                   user=self.student2)
+        check_in4.date = datetime.now().date() - timedelta(days=3)
+        check_in4.save()
+        check_in5 = CheckInFactory(mac=self.student2.mac,
+                                   user=self.student2)
+        check_in5.date = datetime.now().date() - timedelta(days=7)
+        check_in5.save()
+
+        self.assertEqual(self.course_assignment.student_presence, 0)
+        self.assertEqual(4, Lecture.objects.filter(course=self.course).count())
+        self.assertEqual(2, CheckIn.objects.get_user_dates(user=self.student1, course=self.course).count())
+        self.assertEqual(3, CheckIn.objects.get_user_dates(user=self.student2, course=self.course).count())
+
+        call_command('calculate_presence')
+        self.course_assignment.refresh_from_db()
+        self.assertEqual(self.course_assignment.student_presence, 50)
+
+        self.course_assignment2.refresh_from_db()
+        self.assertEqual(self.course_assignment2.student_presence, 75)
