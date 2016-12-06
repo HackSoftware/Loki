@@ -4,7 +4,7 @@ from rest_framework.test import APIClient
 
 from test_plus.test import TestCase
 
-from loki.hack_fmi.models import Invitation, TeamMembership
+from loki.hack_fmi.models import Invitation, TeamMembership, BlackListToken
 from loki.seed import factories
 from loki.seed.factories import (BaseUserFactory,)
 
@@ -35,7 +35,7 @@ class TestInvitationViewSetIntegration(TestCase):
         self.invited_user = factories.CompetitorFactory(email=faker.email())
 
     def test_whole_flow_of_invitation(self):
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + self.token)
         """
         Competitors(not team leaders) can see the intivations they are dedicated to.
         If competitor is team leader, he can see the members in his team and has options for inviting.
@@ -69,7 +69,7 @@ class TestInvitationViewSetIntegration(TestCase):
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
 
         token = response.data['token']
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + token)
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
 
         invitation = Invitation.objects.filter(competitor=self.invited_user,
                                                team=self.team).first()
@@ -107,21 +107,21 @@ class TestJWTIntegration(TestCase):
         self.user.is_active = True
         self.user.save()
 
-    def login(self, email, password):
+    def login(self):
 
-        data = {'email': email, 'password': password}
+        data = {'email': self.user.email, 'password': BaseUserFactory.password}
         response = self.client.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.response_200(response)
         token = response.data.get('token')
         self.assertIsNotNone(token)
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + token)
         return token
 
     def authenticate(self):
-        return self.login(self.user.email, BaseUserFactory.password)
+        existing_token = self.login()
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + existing_token)
+        return existing_token
 
-    def refresh_token(self):
-        existing_token = self.authenticate()
+    def refresh_token(self, existing_token):
         data = {'token': existing_token}
         """
         The jwt hashing depends on timestamp at the exact moment.
@@ -135,29 +135,79 @@ class TestJWTIntegration(TestCase):
         return {'existing_token': existing_token,
                 'new_token': new_token}
 
-    def test_cant_access_api_with_already_refreshed_token(self):
-        """
-        The token has just been refreshed, but it is still active, until it expires
-        """
-        tokens = self.refresh_token()
-
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + tokens['existing_token'])
-        response = self.client.get(self.reverse('hack_fmi:me'))
-        self.response_403(response)
-
-    def test_can_access_api_with_new_token(self):
-        tokens = self.refresh_token()
-
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + tokens['new_token'])
-        response = self.client.get(self.reverse('hack_fmi:me'))
-        self.response_200(response)
-
     def logout(self):
-        existing_token = self.authenticate(self.user.email, BaseUserFactory.password)
-        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + existing_token)
-
         url = self.reverse('hack_fmi:api-logout')
         response = self.client.post(url)
 
         self.assertEqual(response.status_code, 202)
         return response
+
+    def test_cant_access_api_with_already_refreshed_token(self):
+        existing_token = self.authenticate()
+        """
+        The token has just been refreshed, but it is still active, until it expires
+        """
+        tokens = self.refresh_token(existing_token)
+
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + tokens['existing_token'])
+        response = self.client.get(self.reverse('hack_fmi:me'))
+        self.response_403(response)
+
+    def test_can_access_api_with_new_token_after_refresh(self):
+        existing_token = self.authenticate()
+        tokens = self.refresh_token(existing_token)
+
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + tokens['new_token'])
+        response = self.client.get(self.reverse('hack_fmi:me'))
+        self.response_200(response)
+
+    def test_cant_access_api_with_blacklisted_token_after_logout(self):
+        existing_token = self.login()
+
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + existing_token)
+
+        self.logout()
+
+        self.assertTrue(BlackListToken.objects.filter(token='JWT ' + existing_token).exists())
+
+        # Authenticate with the same blacklisted token
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + existing_token)
+
+        response = self.client.get(self.reverse('hack_fmi:me'))
+        self.response_403(response)
+
+    def test_refresh_immediately_after_login_does_not_blacklist_the_login_token(self):
+        """
+        The refresh token will be the same as login token if we refresh immediately after login.
+        Thats why in the CustomRefreshJSONWebTokenAPIView we check whether the newly refresh token is the same
+        as the previous token.
+        """
+        existing_token = self.authenticate()
+        data = {'token': existing_token}
+
+        response = self.client.post(self.reverse('hack_fmi:api-refresh'), data=data)
+        self.response_200(response)
+        new_token = response.data.get('token')
+
+        self.assertEqual(new_token, existing_token)
+        self.assertFalse(BlackListToken.objects.filter(token=existing_token).exists())
+
+    def test_can_access_apis_with_login_token_after_immediate_refresh_after_login(self):
+        """
+        After immediate refresh after login, the login token must not be blacklisted
+        as it is the same as the newly refreshed one.We must be able to access apis
+        with the login token.
+        """
+        existing_token = self.authenticate()
+        data = {'token': existing_token}
+
+        response = self.client.post(self.reverse('hack_fmi:api-refresh'), data=data)
+        self.response_200(response)
+
+        new_token = response.data.get('token')
+        self.assertEqual(new_token, existing_token)
+        self.assertFalse(BlackListToken.objects.filter(token=existing_token).exists())
+
+        response = self.client.get(self.reverse('hack_fmi:me'))
+
+        self.response_200(response)

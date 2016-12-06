@@ -148,6 +148,7 @@ JWT_AUTH = {
     'JWT_ALLOW_REFRESH': True,
     # Set expiration time to 1 week.
     'JWT_EXPIRATION_DELTA': timedelta(seconds=604800),
+    "JWT_AUTH_HEADER_PREFIX": "JWT",
 }
 
 # # CELERY

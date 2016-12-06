@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, viewsets
@@ -317,7 +318,6 @@ class JWTLogoutView(JwtApiAuthenticationMixin,
 
     def post(self, request, *args, **kwargs):
         token = request.META.get('HTTP_AUTHORIZATION')
-
         if BlackListToken.objects.filter(token=token).exists():
             return Response("Token is already blacklisted.", status=status.HTTP_400_BAD_REQUEST)
 
@@ -326,9 +326,24 @@ class JWTLogoutView(JwtApiAuthenticationMixin,
 
 
 class CustomRefreshJSONWebTokenAPIView(JwtApiAuthenticationMixin, RefreshJSONWebToken):
+    """
+    If we login and refresh immediately after that, the two tokens will be the same and
+    the loging token will be blacklisted and the user will not be able to login again.
+    So we have to check if the newly created refreshed token is not the same as the
+    previous login token.
+    """
 
     def post(self, request, *args, **kwargs):
-        token = request.META.get('HTTP_AUTHORIZATION')
-        BlackListToken.objects.create(token=token)
+        jwt_auth_header_prefix = settings.JWT_AUTH['JWT_AUTH_HEADER_PREFIX']
 
-        return super().post(request, *args, **kwargs)
+        header_token = request.META.get('HTTP_AUTHORIZATION')
+
+        token = header_token[len(jwt_auth_header_prefix):].strip()
+
+        response = super().post(request, *args, **kwargs)
+
+        refreshed_token = response.data.get('token')
+        if token != refreshed_token:
+            BlackListToken.objects.create(token=header_token)
+
+        return response
