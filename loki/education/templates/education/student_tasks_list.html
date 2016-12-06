@@ -1,0 +1,77 @@
+{% extends 'website/base.html' %}
+
+{% load key %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+<div class="task-course-div">
+  <a href="{% url 'education:students_view' course.id %}">
+    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+  </a>
+  <div id="task-course-name">
+    <b>{{course.name}} - Студенти</b>
+  </div>
+</div>
+{% if object_list.exists %}
+  <div class="container">
+    <hr/>
+    <section class="row">
+      <div class="active-tasks-container container-fluid">
+          <table id="course-tasks-table" class="table table-hover table-striped " cellspacing="0">
+            <thead>
+              <tr>
+                <th>Седмица</th>
+                <th>Задача</th>
+                <th>Статус на последното решение</th>
+                <th id="solution-task-label">Предадени решения</th>
+              </tr>
+            </thead>
+            <tbody id="tasks-body">
+              {% for task in object_list %}
+                {% if task.gradable and task.has_tests or not task.gradable %}
+                   <tr class="task-selected" id="task-{{task.id}}">
+                     <td class="task-week">{{ task.week }}</td>
+                     <td class="task-name">
+                       <a class="task-solution-link" href="{{task.description}}" target="_blank">
+                         <b>{{ task.name }}</b>
+                       </a>
+                     </td>
+                     <td class="last-solution-status">
+                       {% if tasksolution|key:task.name %}
+                        {% with status=latest_solutions|key:task.name %}
+                          {% if status == 'not_ok' %}
+                            <span class="fail-status-solution"><b>FAIL</b> </span>
+                          {% elif status == 'ok' %}
+                            <span class="pass-status-solution"><b>PASS</b> <span>
+                          {% else %}
+                            {{ status }}
+                          {% endif %}
+                         {% endwith%}
+                       {% else %}
+                         <img class="panda-sleeps" src="{{STATIC_URL}}website_images/panda-sleeps.png" />
+                       {% endif %}
+                     </td>
+                     <td id="solution-task-id-{{task.id}}">
+                          <a class="task-solution-link" href="{% url 'education:solution_view' task.course.id task.id %}">
+                            {% if tasksolution|key:task.name %}
+                              <button class="btn btn-warning" id="btn-tasks-link">Решения</button>
+                            {% else %}
+                          </a>
+                          <span class="no-solutions">
+                            Няма предадено решение
+                          <span>
+                        {% endif %}
+                      </td>
+                   </tr>
+                 {% endif %}
+             {% endfor %}
+            </tbody>
+          </table>
+      </div>
+    </section>
+
+  </div>
+{% endif %}
+
+{% endautoescape %}
+{% endblock %}

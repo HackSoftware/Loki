@@ -28,7 +28,7 @@
 
     </div>
     <div class="col-sm-2 students-course-btns">
-      <a href="">
+      <a href="{% url 'education:student_tasks_dashboard' course.id student.id %}">
         <button class="btn btn-warning" id="tasks-link">Задачи</button>
       </a>
     </div>

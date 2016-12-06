@@ -145,3 +145,27 @@ class CourseDashboardView(CanSeeCourseInfoOnlyTeacher,
         context['url_solutions'] = Solution.objects.filter(task__in=not_gradable_tasks).count()
 
         return context
+
+
+class CourseStudentTaskView(CanSeeCourseInfoOnlyTeacher,
+                            DashboardPermissionMixin,
+                            ListView):
+
+    model = Task
+    template_name = 'education/student_tasks_list.html'
+
+    def get_queryset(self):
+        course_id = self.kwargs.get('course')
+        return Task.objects.filter(course=course_id).order_by('-week')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        course = self.kwargs.get('course')
+        context['course'] = Course.objects.get(id=course)
+        solutions = Solution.objects.filter(student=self.kwargs.get('student')).filter(
+                                            task__course__in=[course])
+        context['tasksolution'] = task_solutions(solutions)
+        tasks = Task.objects.filter(course=course)
+        context['latest_solutions'] = latest_solution_statuses(self.kwargs.get('student'),
+                                                               tasks)
+        return context
