@@ -111,7 +111,8 @@ class StudentCourseView(CanSeeCourseInfoOnlyTeacher,
         return context
 
 
-class TeacherTaskView(DashboardPermissionMixin,
+class TeacherTaskView(CanSeeCourseInfoOnlyTeacher,
+                      DashboardPermissionMixin,
                       ListView):
     """
     Teacher View for creating, editing and deleting tasks

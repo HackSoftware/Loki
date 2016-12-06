@@ -341,7 +341,6 @@ $TabBorder: #C5C4C4;
         border: 2px solid #9D9898;
         width: 250px;
         height: 250px;
-        // border-radius: 125px;
     }
 
     #usernames{
@@ -371,6 +370,12 @@ $TabBorder: #C5C4C4;
           text-decoration: none;
           color: #f7931e;
         }
+        @media screen and (max-width: 388px) {
+          font-size: 15px;
+        }
+        @media screen and (max-width: 325px) {
+          font-size: 14px;
+        }
 
         .course-name {
           padding-left: 10px;
@@ -394,14 +399,19 @@ $TabBorder: #C5C4C4;
 
 
         hr {
-          margin-top: -5px;
-           width:100%;
-           border-top: 1px solid #f8d5ac;
+          width:100%;
+          border-top: 1px solid #f8d5ac;
         }
 
         a {
           text-decoration: none;
           color: #f7931e;
+        }
+
+        .lines {
+          margin-top: -5px;
+          width:100%;
+          border-top: 1px solid #f8d5ac;
         }
 
         .student-profile-photo {
@@ -418,6 +428,10 @@ $TabBorder: #C5C4C4;
 
         .students-course-btns {
           margin-top: 20px;
+        }
+
+        .student-social-links {
+          font-size: 2em;
         }
       }
     }
@@ -1070,7 +1084,7 @@ $TabBorder: #C5C4C4;
 
 }
 
-.task-name-container {
+.task-name-container, .material-name-container {
   background-color: #E1E1E1;
   height: 50px;
   margin-top: 10px;
@@ -1144,6 +1158,7 @@ $TabBorder: #C5C4C4;
 }
 
 .material-container {
+  margin-left: 6%;
   .course-presentation {
     color: #F7931E;
   }

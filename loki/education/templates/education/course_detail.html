@@ -2,28 +2,43 @@
 
 {% block 'page-content' %}
 {% autoescape off %}
-<div class="material-course-div">
-  <a href="{% url 'education:course_list' %}">
-    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-  </a>
-  <div id="material-course-name">
-    <b>{{object.name}}</b>
+<div class="container">
+  <div class="course-students">
+    <div class="course-name-div">
+      <a href="{% url 'education:course_list' %}">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      </a>
+      <div class="course-name"><b>{{object.name}}</b></div>
+    </div>
+    <div class="col-sm-12 student-box">
+      <div class="col-sm-2">
+        <img src="{{ MEDIA_URL }}{{ course.coursedescription.custom_logo }}" class="course-logo">
+      </div>
+      <div class="col-sm-10 student-information">
+        <div class="col-sm-10 student-information-text">
+          <h4>Преподавател: {{ user.first_name }} {{ user.last_name }}</h4>
+          <hr class="lines"/>
+          <b>Студенти:</b> {{ object.courseassignment_set.count }}</br>
+          <b>Задачи:</b> {{ object.task_set.count }}</br>
+          <b>Предадени решения в системата:</b> {{ count_solutions }} </br>
+          <hr/>
+          <b>Брой Gradable задачи:</b> {{ gradable_tasks }} </br>
+          <b>Общ брой верни решения:</b> {{ passed_solutions }} </br>
+          <b>Общ брой грешни решения:</b> {{ failed_solutions }} </br>
+          <hr/>
+          <b>Брой URL задачи:</b> {{ not_gradable_tasks }} </br>
+          <b>Общ брой предадени решения url задачи:</b> {{ url_solutions }}
+        </div>
+        <div class="col-sm-2 students-course-btns">
+          <a href="{% url 'education:students_view' course.id %}">
+            <button class="btn btn-warning" id="students-link">Студенти</button>
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
+    <div class="col-sm-12 course-box-footer ">
+    </div>
 </div>
-
-<p> Брой студенти: {{ object.courseassignment_set.count }} </p>
-<a href="{% url 'education:students_view' course.id %}">
-  <button class="btn btn-warning" id="students-link">Студенти</button>
-</a>
-<p> Брой задачи: {{ object.task_set.count }} </p>
-<p> Брой предадени решения в системата: {{ count_solutions }} </p>
-</b>
-<p> Gradable tasks: {{ gradable_tasks }} </p>
-<p> Брой верни решения: {{ passed_solutions }} </p>
-<p> Брой грешни решения: {{ failed_solutions }} </p>
-</b>
-<p> URL tasks: {{ not_gradable_tasks }} </p>
-<p> Брой предадени решения без тестване в grader: {{ url_solutions }}</p>
-
 {% endautoescape %}
 {% endblock %}
