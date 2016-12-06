@@ -29,6 +29,12 @@
           {% include "website/partial/course_box.html" with course=ca.course.course %}
         {% endfor %}
 
+        <h3>Текущи курсове:</h3>
+        {% for ca in active_courses %}
+          {% include "website/partial/course_box.html" with course=ca %}
+        {% endfor %}
+
+
         <h3>Архив на изминали курсове:</h3>
         {% for ca in closed_course_applications %}
           {% include "website/partial/course_box.html" with course=ca.course.course %}

@@ -22,7 +22,8 @@ class CheckInQuerySet(models.QuerySet):
 class CourseQuerySet(models.QuerySet):
 
     def get_active_courses(self):
-        return self.filter(end_time__gte=timezone.now().date())
+        return self.filter(start_time__lte=timezone.now().date(),
+                           end_time__gte=timezone.now().date())
 
     def get_closed_courses(self):
         return self.filter(end_time__lte=timezone.now().date())
