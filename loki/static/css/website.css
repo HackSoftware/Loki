@@ -732,6 +732,8 @@ body {
 .active-tasks-container .task-solution-link {
   text-decoration: none;
   color: #f7931e; }
+.active-tasks-container .student-name {
+  text-align: center; }
 
 .task-name-container, .material-name-container {
   background-color: #E1E1E1;
@@ -791,5 +793,8 @@ body {
   .material-container .material-description {
     width: 70%;
     word-break: break-all; }
+
+.solution-container {
+  margin-left: 6%; }
 
 /*# sourceMappingURL=website.css.map */

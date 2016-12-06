@@ -1082,6 +1082,10 @@ $TabBorder: #C5C4C4;
     color: #f7931e;
   }
 
+  .student-name {
+    text-align: center;
+  }
+
 }
 
 .task-name-container, .material-name-container {
@@ -1166,4 +1170,8 @@ $TabBorder: #C5C4C4;
     width: 70%;
     word-break: break-all;
   }
+}
+
+.solution-container {
+  margin-left: 6%;
 }
