@@ -152,7 +152,6 @@ class CourseStudentTaskView(CanSeeCourseInfoOnlyTeacher,
                             ListView):
 
     model = Task
-    template_name = 'education/student_tasks_list.html'
 
     def get_queryset(self):
         course_id = self.kwargs.get('course')

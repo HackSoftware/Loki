@@ -9,7 +9,11 @@
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
   </a>
   <div id="task-course-name">
-    <b>{{object_list.first.course.name}}</b>
+    {% if user.get_teacher %}
+      <b>{{course.name}} - Студенти</b>
+    {% else %}
+      <b>{{object_list.first.course.name}}</b>
+    {% endif %}
   </div>
 </div>
 {% if object_list.exists %}
@@ -22,7 +26,9 @@
               <tr>
                 <th>Седмица</th>
                 <th>Задача</th>
-                <th id="submit-task-label">Предай</th>
+                {% if user.get_student and not user.get_teacher %}
+                  <th id="submit-task-label">Предай</th>
+                {% endif %}
                 <th>Статус на последното решение</th>
                 <th id="solution-task-label">Предадени решения</th>
               </tr>
@@ -37,10 +43,12 @@
                          <b>{{ task.name }}</b>
                        </a>
                      </td>
-                     <td>
-                    <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}" data-toggle="modal" data-task-id="{{task.id}}" data-target="#task-modal-box-{{ task.id }}">Предай</button>
-                        {% include 'partial/modal.html' with task=task %}
-                     </td>
+                     {% if user.get_student and not user.get_teacher %}
+                       <td>
+                      <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}" data-toggle="modal" data-task-id="{{task.id}}" data-target="#task-modal-box-{{ task.id }}">Предай</button>
+                          {% include 'partial/modal.html' with task=task %}
+                       </td>
+                     {% endif %}
                      <td class="last-solution-status">
                        {% if tasksolution|key:task.name %}
                         {% with status=latest_solutions|key:task.name %}
