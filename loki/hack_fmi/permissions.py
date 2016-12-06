@@ -175,6 +175,7 @@ class IsInvitedMemberAlreadyInYourTeam(permissions.BasePermission):
             competitor = Competitor.objects.get_competitor_by_email(email=request.data['competitor_email'])
             return not TeamMembership.objects.\
                 get_all_team_memberships_for_competitor(competitor=competitor).\
+                filter(team__season__is_active=True).\
                 get_all_team_memberships_for_team(team=leader_team).exists()
 
         """
