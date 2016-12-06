@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from loki.education.models import Course, CheckIn
 
+
 class Command(BaseCommand):
     help = "Calculate presence"
 

@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 
 from loki.seed.factories import (BaseUserFactory, CourseFactory, CourseAssignmentFactory,
                                  LectureFactory, CheckInFactory, StudentFactory)
-from loki.base_app.models import BaseUser
 from loki.education.models import Lecture, CheckIn
 
 
@@ -26,7 +25,7 @@ class CalculatePresenceTests(TestCase):
         self.course_assignment = CourseAssignmentFactory(course=self.course,
                                                          user=self.student1)
         self.course_assignment2 = CourseAssignmentFactory(course=self.course,
-                                                         user=self.student2)
+                                                          user=self.student2)
 
         LectureFactory(course=self.course,
                        date=datetime.now().date() - timedelta(days=9))
@@ -51,11 +50,11 @@ class CalculatePresenceTests(TestCase):
 
     def test_calculate_presence_when_student_have_checkins_for_other_dates(self):
         check_in1 = CheckInFactory(mac=self.student1.mac,
-                       user=self.student1)
+                                   user=self.student1)
         check_in1.date = datetime.now().date() - timedelta(days=8)
         check_in1.save()
         check_in2 = CheckInFactory(mac=self.student1.mac,
-                       user=self.student1)
+                                   user=self.student1)
         check_in2.date = datetime.now().date() - timedelta(days=6)
         check_in2.save()
 
@@ -69,11 +68,11 @@ class CalculatePresenceTests(TestCase):
 
     def test_calculate_presence_when_student_have_checkins_for_course_lecture(self):
         check_in1 = CheckInFactory(mac=self.student1.mac,
-                       user=self.student1)
+                                   user=self.student1)
         check_in1.date = datetime.now().date() - timedelta(days=9)
         check_in1.save()
         check_in2 = CheckInFactory(mac=self.student1.mac,
-                       user=self.student1)
+                                   user=self.student1)
         check_in2.date = datetime.now().date() - timedelta(days=7)
         check_in2.save()
 
