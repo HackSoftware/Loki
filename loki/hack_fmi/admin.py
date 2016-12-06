@@ -13,6 +13,8 @@ class SkillAdmin(admin.ModelAdmin):
 
 @admin.register(Competitor)
 class CompetitorAdmin(admin.ModelAdmin):
+    earch_fields = ('first_name', 'last_name', 'email')
+
     list_display = ('first_name',
                     'last_name',
                     'email',
@@ -21,6 +23,8 @@ class CompetitorAdmin(admin.ModelAdmin):
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
+    earch_fields = ('name', )
+
     list_display = ('name',
                     'idea_description',
                     'room',
@@ -35,6 +39,8 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(TeamMembership)
 class TeamMembershipAdmin(admin.ModelAdmin):
+    search_fields = ('competitor__email', )
+
     list_display = ('competitor',
                     'team',
                     'is_leader')
