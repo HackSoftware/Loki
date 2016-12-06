@@ -387,7 +387,7 @@ $TabBorder: #C5C4C4;
         margin-bottom: 30px;
         padding-bottom: 10px;
         background: white;
-        background: #fff;
+        background: #f6f6f6;;
         display: inline-block;
         position: relative;
         box-shadow: 0 8px 8px rgba(0,0,0,0.12), 0 8px 8px rgba(0,0,0,0.24);
@@ -421,6 +421,7 @@ $TabBorder: #C5C4C4;
         }
 
         .student-comment-from-teacher {
+          background-color: #f6f6f6;
           border: 1px solid #f8d5ac;
           width: 100%;
           margin-bottom: 5px;
