@@ -1,0 +1,21 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+<div class="container">
+  <div class="course-students">
+    <div class="course-name-div">
+      <a href="{% url 'education:course_list' %}">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      </a>
+      <div class="course-name"><b>{{course.name}}</b></div>
+    </div>
+    {% if object_list.exists %}
+      {% for ca in object_list %}
+        {% include 'partial/student_box.html' with student=ca.user course=ca.course ca=ca%}
+      {% endfor %}
+    {% endif %}
+  </div>
+</div>
+{% endautoescape %}
+{% endblock %}
