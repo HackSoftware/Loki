@@ -19,6 +19,7 @@ class CheckInQuerySet(models.QuerySet):
                            date__lte=course.end_time).values_list(
                                               'date', flat=True)
 
+
 class CourseQuerySet(models.QuerySet):
 
     def get_active_courses(self):

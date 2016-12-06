@@ -6,10 +6,14 @@
   <div class="col-sm-10 student-information">
     <div class="col-sm-10 student-information-text">
       <h4 class="student-name">{{ student.first_name }} {{student.last_name}}</h4>
-      <hr/>
+      <hr class="lines"/>
+      <b>Email:</b> {{ student.email }} </br>
+      {% if student.github_account %}
+        <i class="student-social-links fa fa-github fa-3x"></i>
+        <a href="{{ student.github_account }}" target="_blank">{{ student.github_account }}</a> </br>
+      {% endif %}
       <b>Присъствие</b> </br>
       <b>Предадени домашни</b> </br>
-      {{course}}
       {% for ca in student.courseassignment_set.all %}
         {% if ca.course == course %}
           <b>Коментар</b> </br>
