@@ -11,8 +11,8 @@
       <div class="course-name"><b>{{course.name}}</b></div>
     </div>
     {% if object_list.exists %}
-      {% for student in object_list %}
-        {% include 'partial/student_box.html' with student=student course=course%}
+      {% for ca in object_list %}
+        {% include 'partial/student_box.html' with student=ca.user course=ca.course ca=ca%}
       {% endfor %}
     {% endif %}
   </div>

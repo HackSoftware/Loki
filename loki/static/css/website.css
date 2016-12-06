@@ -266,10 +266,10 @@ body {
   background: #fff;
   display: inline-block;
   position: relative;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
   .container .course-students .student-box:hover {
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.25), 0 5px 5px rgba(0, 0, 0, 0.22); }
+    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.25), 0 15px 15px rgba(0, 0, 0, 0.22); }
   .container .course-students .student-box hr {
     width: 100%;
     border-top: 1px solid #f8d5ac; }

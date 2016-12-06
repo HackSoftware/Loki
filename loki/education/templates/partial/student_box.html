@@ -12,19 +12,14 @@
         <i class="student-social-links fa fa-github fa-3x"></i>
         <a href="{{ student.github_account }}" target="_blank">{{ student.github_account }}</a> </br>
       {% endif %}
-      <b>Присъствие</b> </br>
-      <b>Предадени домашни</b> </br>
-      {% for ca in student.courseassignment_set.all %}
-        {% if ca.course == course %}
-          <b>Коментар</b> </br>
-          <textarea class="student-comment-from-teacher">
-            {% if ca.teacher_comment %}
-              {{ ca.teacher_comment }}
-            {% endif%}
-          </textarea>
-          <button type="submit" class="btn btn-warning" id="submit-comment">Запази</button>
+      <b>Присъствие:</b> {{ ca.student_presence }}%</br>
+      <b>Коментар</b> </br>
+      <textarea class="student-comment-from-teacher">
+        {% if ca.teacher_comment %}
+          {{ ca.teacher_comment }}
         {% endif %}
-      {% endfor %}
+      </textarea>
+      <button type="submit" class="btn btn-warning" id="submit-comment">Запази</button>
 
     </div>
     <div class="col-sm-2 students-course-btns">

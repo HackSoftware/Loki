@@ -2,7 +2,7 @@ from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
 from loki.education.models import (Course, Task, Solution, Material, CheckIn,
-                                   Student)
+                                   Student, CourseAssignment)
 from ..mixins import (DashboardPermissionMixin,
                       CannotSeeOthersCoursesDashboardsMixin,
                       CannotSeeCourseTaskListMixin,
@@ -105,11 +105,11 @@ class MaterialView(DashboardPermissionMixin,
 class StudentCourseView(CanSeeCourseInfoOnlyTeacher,
                         CannotSeeOthersCoursesDashboardsMixin,
                         ListView):
-    model = Student
+    model = CourseAssignment
 
     def get_queryset(self):
         course_id = self.kwargs.get("course")
-        return Student.objects.filter(courses__id__exact=course_id)
+        return CourseAssignment.objects.filter(course__id=course_id)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
