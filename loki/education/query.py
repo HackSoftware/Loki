@@ -12,20 +12,12 @@ class SolutionQuerySet(models.QuerySet):
 
 class CheckInQuerySet(models.QuerySet):
 
-    def get_student_dates(self, student, course):
-        user = BaseUser.objects.get(id=student.baseuser_ptr_id)
+    def get_user_dates(self, user, course):
+        user = BaseUser.objects.get(id=user.baseuser_ptr_id)
         return self.filter(user=user,
                            date__gte=course.start_time,
                            date__lte=course.end_time).values_list(
                                               'date', flat=True)
-
-    def get_teacher_dates(self, teacher, course):
-        mac = teacher.mac
-        return self.filter(mac=mac,
-                           date__gte=course.start_time,
-                           date__lte=course.end_time).values_list(
-                                              'date', flat=True)
-
 
 class CourseQuerySet(models.QuerySet):
 

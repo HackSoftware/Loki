@@ -30,10 +30,7 @@ class CourseListView(DashboardPermissionMixin, ListView):
             course_presence[course] = {}
             course_presence[course]['weeks'] = list(get_dates_for_weeks(course).keys())
             course_presence[course]['dates_for_weeks'] = get_dates_for_weeks(course)
-            if user.get_student():
-                course_presence[course]['user_dates'] = CheckIn.objects.get_student_dates(user, course)
-            else:
-                course_presence[course]['user_dates'] = CheckIn.objects.get_teacher_dates(user, course)
+            course_presence[course]['user_dates'] = CheckIn.objects.get_user_dates(user, course)
 
             user_dates = course_presence[course]['user_dates']
             course_presence[course]['percentage_presence'] = percentage_presence(user_dates, course)
