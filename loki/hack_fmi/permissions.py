@@ -171,10 +171,10 @@ class IsInvitedMemberAlreadyInYourTeam(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
             leader_team = TeamMembership.objects.\
-                get_all_team_memberships_for_competitor(competitor=request.user.get_competitor()).first().team
+                get_team_memberships_for_active_season(competitor=request.user.get_competitor()).first().team
             competitor = Competitor.objects.get_competitor_by_email(email=request.data['competitor_email'])
             return not TeamMembership.objects.\
-                get_all_team_memberships_for_competitor(competitor=competitor).\
+                get_team_memberships_for_active_season(competitor=competitor).\
                 get_all_team_memberships_for_team(team=leader_team).exists()
 
         """
@@ -190,7 +190,7 @@ class IsInvitedMemberAlreadyInOtherTeam(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
             competitor = Competitor.objects.get_competitor_by_email(email=request.data['competitor_email'])
-            return TeamMembership.objects.get_all_team_memberships_for_competitor(competitor=competitor).count() == 0
+            return TeamMembership.objects.get_team_memberships_for_active_season(competitor=competitor).count() == 0
 
         """
         Return True if you just want to see all the invitations without creating a new invitation.
