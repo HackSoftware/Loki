@@ -176,7 +176,6 @@ class IsInvitedMemberAlreadyInYourTeam(permissions.BasePermission):
             return not TeamMembership.objects.\
                 get_team_memberships_for_active_season(competitor=competitor).\
                 get_all_team_memberships_for_team(team=leader_team).exists()
-
         """
         Return True if you just want to see all the invitations without creating a new invitation.
         """
