@@ -4,7 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from .models import SuccessVideo, SuccessStoryPerson, Snippet, CourseDescription
+from .models import SuccessVideo, SuccessStoryPerson, Snippet, Course, CourseDescription
 from .forms import (RegisterForm, LoginForm, BaseEditForm, StudentEditForm,
                     TeacherEditForm)
 from .decorators import anonymous_required
@@ -50,7 +50,9 @@ class AboutView(TemplateView):
 def courses(request):
     snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
     opened_course_applications = ApplicationInfo.objects.get_open_for_apply()
-    closed_course_applications = ApplicationInfo.objects.get_ordered_closed_application_infos()
+    active_courses = Course.objects.get_active_courses()
+    closed_courses_without_cd = Course.objects.get_closed_courses().filter(
+                                coursedescription__isnull=False).order_by('-start_time')
     return render(request, "website/courses.html", locals())
 
 

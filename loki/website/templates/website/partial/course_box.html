@@ -5,9 +5,8 @@
   <div class="col-sm-9 course-text">
     <h3 id="course-name">{{ course.name }}</h3>
     <p>
-      {{ course.coursedescription.list_courses_text }} 
+      {{ course.coursedescription.list_courses_text }}
     </p>
-    
     <a href="{% url 'website:course_details' course.coursedescription.url %}">
       <button class="btn btn-hack-info">Научете повече</button>
     </a>
@@ -24,7 +23,7 @@
     {% else %}
       {% if course.video_channel or course.git_repository %}
         {% if course.video_channel %}
-        <div class="col-sm-6"> 
+        <div class="col-sm-6">
           Материали и задачи:
           <a href="{{ course.git_repository }}" target="_blank">GitHub</a>
         </div>

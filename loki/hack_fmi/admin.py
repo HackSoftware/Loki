@@ -13,12 +13,23 @@ class SkillAdmin(admin.ModelAdmin):
 
 @admin.register(Competitor)
 class CompetitorAdmin(admin.ModelAdmin):
-    list_display = ('id', 'first_name', 'last_name', 'email', 'shirt_size')
+    search_fields = ('first_name', 'last_name', 'email')
+
+    list_display = ('first_name',
+                    'last_name',
+                    'email',
+                    'shirt_size')
 
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'idea_description', 'room', 'season', 'get_members')
+    search_fields = ('name', )
+
+    list_display = ('name',
+                    'idea_description',
+                    'room',
+                    'season',
+                    'get_members')
 
     list_filter = ('season',)
 
@@ -28,7 +39,11 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(TeamMembership)
 class TeamMembershipAdmin(admin.ModelAdmin):
-    list_display = ('id', 'competitor', 'team', 'is_leader')
+    search_fields = ('competitor__email', )
+
+    list_display = ('competitor',
+                    'team',
+                    'is_leader')
 
 
 @admin.register(TeamMentorship)
