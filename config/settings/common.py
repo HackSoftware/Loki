@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'anymail',
     'easy_thumbnails',
     'image_cropping',
+    'channels',
     'raven.contrib.django.raven_compat',  # used for sentry logging
 
     'loki.hack_fmi.apps.HackFMIConfig',
