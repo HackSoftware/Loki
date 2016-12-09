@@ -12,7 +12,9 @@
         <i class="student-social-links fa fa-github fa-3x"></i>
         <a href="{{ student.github_account }}" target="_blank">{{ student.github_account }}</a> </br>
       {% endif %}
-      <b>Присъствие:</b> {{ ca.student_presence }}%</br>
+      {% if ca.student_presence %}
+        <b>Присъствие:</b> {{ ca.student_presence }}%</br>
+      {% endif %}
       <b>Коментар</b> </br>
       <textarea class="student-comment-from-teacher">
         {% if ca.teacher_comment %}
