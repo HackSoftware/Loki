@@ -1057,7 +1057,6 @@ $TabBorder: #C5C4C4;
 
 .active-tasks-container {
 
-
   #submit-task-box {
     margin-left: 43%;
   }
@@ -1085,6 +1084,23 @@ $TabBorder: #C5C4C4;
 
   .student-name {
     text-align: center;
+  }
+
+  .teacher-table {
+    text-align: center;
+    th {
+      text-align: center;
+    }
+
+    .gradable-checked {
+      color: #4ba74b;
+      font-size: 18px;
+    }
+
+    .gradable-unchecked {
+      color: #d12c2c;
+      font-size: 18px;
+    }
   }
 
 }

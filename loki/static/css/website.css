@@ -735,6 +735,16 @@ body {
   color: #f7931e; }
 .active-tasks-container .student-name {
   text-align: center; }
+.active-tasks-container .teacher-table {
+  text-align: center; }
+  .active-tasks-container .teacher-table th {
+    text-align: center; }
+  .active-tasks-container .teacher-table .gradable-checked {
+    color: #4ba74b;
+    font-size: 18px; }
+  .active-tasks-container .teacher-table .gradable-unchecked {
+    color: #d12c2c;
+    font-size: 18px; }
 
 .task-name-container, .material-name-container {
   background-color: #E1E1E1;
