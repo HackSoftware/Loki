@@ -1421,15 +1421,30 @@ class TestTeamMentorshipAPI(TestCase):
         response = self.client.post(url, new_data)
         self.response_403(response)
 
-    def test_cannot_assing_mentor_that_is_already_assigned_to_a_team_in_current_season(self):
+    def test_can_assign_mentor_to_another_team_in_current_season(self):
         TeamMentorshipFactory(team=self.team, mentor=self.mentor)
-        self.assertTrue(self.team.season.is_active)
-        data = {'mentor': self.mentor.id,
-                }
+
+        self.assertEquals(TeamMentorship.objects.filter(mentor=self.mentor).count(), 1)
+
+        other_competitor = CompetitorFactory()
+        other_competitor.is_active = True
+        other_competitor.set_password(CompetitorFactory.password)
+        other_competitor.save()
+        other_team = TeamFactory(season__is_active=True)
+        TeamMembershipFactory(competitor=other_competitor, team=other_team, is_leader=True)
+
+        # Authenticate other_competitor
+        data = {'email': other_competitor.email, 'password': CompetitorFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
         url = reverse('hack_fmi:team_mentorship')
+        data = {'mentor': self.mentor.id,
+                }
         response = self.client.post(url, data)
-        self.response_403(response)
+        self.response_201(response)
+        self.assertEquals(TeamMentorship.objects.filter(mentor=self.mentor).count(), 2)
 
     def test_can_assing_mentor_that_is_already_assigned_to_a_team_in_non_current_season(self):
         other_team = TeamFactory()
