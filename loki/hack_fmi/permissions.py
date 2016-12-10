@@ -27,7 +27,8 @@ class IsTeamLeader(permissions.BasePermission):
     message = "You are not a leader of this team!"
 
     def has_permission(self, request, view):
-        if request.method == 'POST':
+        if request.method == 'POST' or request.method == 'DELETE':
+
             competitor = request.user.get_competitor()
             team = TeamMembership.objects.get_team_memberships_for_active_season(
                 competitor=competitor).first().team
@@ -67,7 +68,7 @@ class IsSeasonDeadlineUpToDate(permissions.BasePermission):
 
 
 class IsMentorDatePickUpToDate(permissions.BasePermission):
-    message = "You cannot choose a mentor in this season's period!"
+    message = "Mentors pick period hasn't started yet or is over."
 
     def has_permission(self, request, view):
         if not request.data:
@@ -75,11 +76,11 @@ class IsMentorDatePickUpToDate(permissions.BasePermission):
         today = date.today()
         team = TeamMembership.objects.get_team_memberships_for_active_season(
             competitor=request.user.get_competitor()).first().team
-        return team.season.mentor_pick_start_date < today and team.season.mentor_pick_end_date > today
+        return team.season.mentor_pick_start_date <= today and team.season.mentor_pick_end_date >= today
 
 
 class CanAttachMoreMentorsToTeam(permissions.BasePermission):
-    message = "This team cannot attach other mentors!"
+    message = "You've reached the max limit of mentors for you team."
 
     def has_permission(self, request, view):
         if request.method == 'POST':
@@ -101,15 +102,15 @@ class CantAttachMentorThatIsAlreadyAttachedToTeam(permissions.BasePermission):
         return True
 
 
-class CantDeleteMentorNotFromLeaderTeam(permissions.BasePermission):
-    message = "The mentor you would like to delete is not attached to your team!"
+class MentorIsAlreadySelectedByThisTeamLeader(permissions.BasePermission):
+    message = "You already selected this mentor."
 
     def has_permission(self, request, view):
-        if request.method == 'DELETE':
-            leader_team = TeamMembership.objects.get_team_memberships_for_active_season(
+        if request.method == 'POST':
+            team = TeamMembership.objects.get_team_memberships_for_active_season(
                 competitor=request.user.get_competitor()).first().team
-            mentor_team = view.get_object().team
-            return leader_team == mentor_team
+            return not TeamMentorship.objects.filter(mentor__id=request.data['mentor'],
+                                                     team__season__is_active=True, team=team)
         return True
 
 

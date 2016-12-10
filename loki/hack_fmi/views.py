@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import ParseError
 from rest_framework import mixins
 from rest_framework_jwt.views import RefreshJSONWebToken
 from django.core.exceptions import ObjectDoesNotExist
@@ -37,8 +38,8 @@ from .permissions import (CanAttachMoreMentorsToTeam,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
                           IsInvitedMemberCompetitor, IsTeamLeaderOrReadOnly,
                           IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation,
-                          CantAttachMentorThatIsAlreadyAttachedToTeam,
-                          CantDeleteMentorNotFromLeaderTeam)
+                          MentorIsAlreadySelectedByThisTeamLeader,
+                          )
 
 from .helper import send_team_delete_email, send_invitation, get_object_variable_or_none
 from .mixins import MeSerializerMixin, JwtApiAuthenticationMixin
@@ -80,6 +81,7 @@ class MeSeasonAPIView(JwtApiAuthenticationMixin,
 
         team_data = None
         data["team"] = None
+        data["mentors"] = None
 
         if not data['is_competitor']:
             return Response(data=data, status=status.HTTP_200_OK)
@@ -98,6 +100,9 @@ class MeSeasonAPIView(JwtApiAuthenticationMixin,
             tm_id = get_object_variable_or_none(
                 queryset=TeamMembership.objects.filter(team=team, competitor=competitor),
                 variable="id")
+
+            mentors = [tm.mentor.id for tm in TeamMentorship.objects.filter(team=team).all()]
+            data["mentors"] = mentors
 
         data["team"] = team_data
         data["team_membership_id"] = tm_id
@@ -204,8 +209,7 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
         permission_classes = (IsHackFMIUser, IsTeamLeader,
                               IsMentorDatePickUpToDate,
                               CanAttachMoreMentorsToTeam,
-                              CantAttachMentorThatIsAlreadyAttachedToTeam,
-                              CantDeleteMentorNotFromLeaderTeam)
+                              MentorIsAlreadySelectedByThisTeamLeader)
 
         self.permission_classes += super().permission_classes + permission_classes
 
@@ -216,6 +220,18 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
             competitor=self.request.user.get_competitor()).first().team
 
         serializer.save(team=team)
+
+    def get_object(self):
+        competitor = self.request.user.get_competitor()
+        team = TeamMembership.objects.get_team_memberships_for_active_season(
+            competitor=competitor).first().team
+        mentor = get_object_or_404(Mentor, id=self.kwargs['mentor_pk'])
+        teammentor_ship = TeamMentorship.objects.filter(team=team, mentor=mentor)
+
+        if not teammentor_ship.exists():
+            raise ParseError(detail="You can't delete non-selected mentor.")
+
+        return teammentor_ship.first()
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
@@ -252,6 +268,10 @@ class InvitationViewSet(JwtApiAuthenticationMixin, viewsets.ModelViewSet):
         # Request user is the leader of the team and he has exactly one TeamMembership.
         team = TeamMembership.objects.get_team_memberships_for_active_season(
             competitor=self.request.user.get_competitor()).first().team
+
+        competitor = serializer.validated_data.get('competitor')
+        if Invitation.objects.filter(competitor=competitor, team=team).exists():
+            raise ParseError(detail="You have already sent an invitation for that user.")
 
         invitation = serializer.save(team=team)
         send_invitation(invitation)

@@ -503,6 +503,8 @@ class TestMeAPIView(TestCase):
 class TestMeSeasonAPIView(TestCase):
     def setUp(self):
         self.client = APIClient()
+        self.company = HackFmiPartnerFactory()
+
         self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season, room=self.room)
@@ -513,6 +515,10 @@ class TestMeSeasonAPIView(TestCase):
         self.team_membership = TeamMembershipFactory(competitor=self.competitor,
                                                      team=self.team,
                                                      is_leader=True)
+        self.mentor1 = MentorFactory(from_company=self.company)
+        self.mentor2 = MentorFactory(from_company=self.company)
+        TeamMentorshipFactory(mentor=self.mentor1, team=self.team)
+        TeamMentorshipFactory(mentor=self.mentor2, team=self.team)
 
         data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
@@ -530,6 +536,7 @@ class TestMeSeasonAPIView(TestCase):
         key_equals = [True for k in ['is_competitor',
                                      'competitor_info',
                                      'team',
+                                     'mentors'
                                      'team_membership_id'] if k in response.data.keys()]
         self.assertTrue(all(key_equals))
 
@@ -571,6 +578,7 @@ class TestMeSeasonAPIView(TestCase):
         self.assertIsNone(response.data['team'])
         self.assertIsNone(response.data['competitor_info'])
         self.assertFalse(response.data['is_competitor'])
+        self.assertIsNone(response.data['mentors'])
 
     def test_cannot_see_teams_when_competitor_not_in_any_team_for_given_season(self):
         # 'team' and 'teammembership_id' fields must be empty
@@ -582,6 +590,7 @@ class TestMeSeasonAPIView(TestCase):
         response = self.client.get(url)
         self.response_200(response)
         self.assertIsNone(response.data['team'])
+        self.assertIsNone(response.data['mentors'])
         self.assertIsNone(response.data['team_membership_id'])
         self.assertIsNotNone(response.data['competitor_info'])
         self.assertTrue(response.data['is_competitor'])
@@ -596,6 +605,8 @@ class TestMeSeasonAPIView(TestCase):
         self.assertIsNotNone(response.data['competitor_info'])
         self.assertTrue(response.data['is_competitor'])
 
+        self.assertEquals(response.data['mentors'], [self.mentor1.id, self.mentor2.id])
+
     def test_cant_get_teams_for_season_if_there_are_no_teams_in_that_season(self):
         season = SeasonFactory()
         self.assertFalse(Team.objects.filter(season__pk=season.id).exists())
@@ -605,6 +616,7 @@ class TestMeSeasonAPIView(TestCase):
         self.response_200(response)
 
         self.assertIsNone(response.data['team'])
+        self.assertIsNone(response.data['mentors'])
         self.assertIsNone(response.data['team_membership_id'])
         self.assertIsNotNone(response.data['competitor_info'])
         self.assertTrue(response.data['is_competitor'])
@@ -1421,15 +1433,30 @@ class TestTeamMentorshipAPI(TestCase):
         response = self.client.post(url, new_data)
         self.response_403(response)
 
-    def test_cannot_assing_mentor_that_is_already_assigned_to_a_team_in_current_season(self):
+    def test_can_assign_mentor_to_another_team_in_current_season(self):
         TeamMentorshipFactory(team=self.team, mentor=self.mentor)
-        self.assertTrue(self.team.season.is_active)
-        data = {'mentor': self.mentor.id,
-                }
+
+        self.assertEquals(TeamMentorship.objects.filter(mentor=self.mentor).count(), 1)
+
+        other_competitor = CompetitorFactory()
+        other_competitor.is_active = True
+        other_competitor.set_password(CompetitorFactory.password)
+        other_competitor.save()
+        other_team = TeamFactory(season__is_active=True)
+        TeamMembershipFactory(competitor=other_competitor, team=other_team, is_leader=True)
+
+        # Authenticate other_competitor
+        data = {'email': other_competitor.email, 'password': CompetitorFactory.password}
+        response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
+        self.token = response.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
         url = reverse('hack_fmi:team_mentorship')
+        data = {'mentor': self.mentor.id,
+                }
         response = self.client.post(url, data)
-        self.response_403(response)
+        self.response_201(response)
+        self.assertEquals(TeamMentorship.objects.filter(mentor=self.mentor).count(), 2)
 
     def test_can_assing_mentor_that_is_already_assigned_to_a_team_in_non_current_season(self):
         other_team = TeamFactory()
@@ -1468,42 +1495,36 @@ class TestTeamMentorshipAPI(TestCase):
         self.response_403(response)
 
     def test_cannot_remove_mentor_from_team_if_not_teamleader(self):
-        mentorship = TeamMentorshipFactory(team=self.team, mentor=self.mentor)
-
         self.team_membership.is_leader = False
         self.team_membership.save()
-        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship.id)
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=self.mentor.id)
         response = self.client.delete(url)
         self.response_403(response)
-        self.assertIsNotNone(mentorship)
 
     def test_can_remove_mentor_from_team_if_teamleader(self):
-        mentorship = TeamMentorshipFactory(team=self.team, mentor=self.mentor)
+        TeamMentorshipFactory(team=self.team, mentor=self.mentor)
 
-        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship.id)
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=self.mentor.id)
         response = self.client.delete(url)
+
         self.assertEqual(response.status_code, 204)
         self.assertEqual(TeamMentorship.objects.filter(team=self.team, mentor=self.mentor).count(), 0)
 
-    def test_cannot_remove_mentor_that_is_not_mentor_of_any_team(self):
+    def test_cannot_remove_teammentorship_with_non_existing_mentorpk(self):
         # Check get_object_ot_404()
-        mentorship_pk = int(faker.random_element(elements=('1000', '20000')))
-        self.assertFalse(TeamMentorship.objects.filter(team__pk=mentorship_pk).exists())
-        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship_pk)
+        mentor_pk = int(faker.random_element(elements=('1000', '20000')))
+        self.assertFalse(TeamMentorship.objects.filter(mentor__pk=mentor_pk).exists())
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=mentor_pk)
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_cannot_remove_mentor_that_is_not_from_leaders_team(self):
-        # Check whether the teammentorship from url is attached to the team of the leader
-        other_team = TeamFactory(season=self.active_season)
-        other_competitor = CompetitorFactory()
-        TeamMembershipFactory(team=other_team, competitor=other_competitor, is_leader=True)
-        other_mentor = MentorFactory(from_company=self.company)
-        other_mentorship = TeamMentorshipFactory(team=other_team, mentor=other_mentor)
-
-        url = self.reverse('hack_fmi:team_mentorship', pk=other_mentorship.id)
+    def test_cannot_remove_non_existing_teammentoship(self):
+        self.assertFalse(TeamMentorship.objects.filter(mentor__pk=self.mentor.id,
+                                                       team=self.team.id).exists())
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=self.mentor.id)
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, 403)
+
+        self.assertEqual(response.status_code, 400)
 
 
 class TestSeasonInfoAPIViews(TestCase):

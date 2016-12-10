@@ -45,7 +45,7 @@ urlpatterns = [
 
     url(r'^api/team-membership/(?P<pk>[0-9]+)/$', TeamMembershipAPI.as_view(), name='team_membership'),
 
-    url(r'^api/team-mentorship/(?P<pk>[0-9]+)?', TeamMentorshipAPI.as_view(), name='team_mentorship'),
+    url(r'^api/team-mentorship/(?P<mentor_pk>[0-9]+)?', TeamMentorshipAPI.as_view(), name='team_mentorship'),
 
     url(r'^api/invitation/$', invitation_urls['invitation_list'], name='invitation-list'),
     url(r'^api/invitation/(?P<pk>[0-9]+)/$', invitation_urls['invitation_detail'], name='invitation-detail'),
