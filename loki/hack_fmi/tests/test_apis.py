@@ -1122,26 +1122,43 @@ class TestInvitationViewSet(TestCase):
         self.assertFalse(Invitation.objects.exists())
         self.assertEqual(len(mail.outbox), 0)
 
-    def test_cant_send_invitation_twice_to_same_competitor(self):
+    def test_cant_send_invitation_twice_to_same_competitor_in_one_team(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.sender_token)
 
         InvitationFactory(team=self.sender_team,
                           competitor=self.receiver)
 
-        self.assertEquals(Invitation.objects.filter(competitor=self.receiver).count(), 1)
+        self.assertEqual(Invitation.objects.filter(competitor=self.receiver,
+                                                   team=self.sender_team).count(), 1)
 
         url = self.reverse('hack_fmi:invitation-list')
         data = {'competitor_email': self.receiver.email}
         response = self.client.post(url, data)
 
-        '''
-        Status code here is 400 because there is a ValidationError raised in
-        InvitationSerializer.validate() and the data doesn't actually go to
-        the permissions.
-        '''
         self.assertEqual(response.status_code, 400)
-        self.assertEquals(Invitation.objects.filter(competitor=self.receiver).count(), 1)
+        self.assertEqual(Invitation.objects.filter(competitor=self.receiver,
+                                                   team=self.sender_team).count(), 1)
         self.assertEqual(len(mail.outbox), 0)
+
+    def test_can_send_invitation_twice_to_one_competitor_from_different_teams(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.sender_token)
+
+        other_team = TeamFactory(season=self.season)
+        InvitationFactory(competitor=self.receiver,
+                          team=other_team)
+
+        self.assertEquals(Invitation.objects.filter(competitor=self.receiver,
+                                                    team=other_team).count(), 1)
+
+        url = self.reverse('hack_fmi:invitation-list')
+        data = {'competitor_email': self.receiver.email}
+        response = self.client.post(url, data)
+
+        self.response_201(response)
+        self.assertTrue(Invitation.objects.filter(competitor=self.receiver,
+                                                  team=self.sender_team).exists())
+        self.assertEqual(Invitation.objects.filter(competitor=self.receiver).count(), 2)
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_cant_send_invitation_when_team_is_full(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.sender_token)
