@@ -27,7 +27,8 @@ class IsTeamLeader(permissions.BasePermission):
     message = "You are not a leader of this team!"
 
     def has_permission(self, request, view):
-        if request.method == 'POST':
+        if request.method == 'POST' or request.method == 'DELETE':
+
             competitor = request.user.get_competitor()
             team = TeamMembership.objects.get_team_memberships_for_active_season(
                 competitor=competitor).first().team
@@ -109,19 +110,7 @@ class MentorIsAlreadySelectedByThisTeamLeader(permissions.BasePermission):
             team = TeamMembership.objects.get_team_memberships_for_active_season(
                 competitor=request.user.get_competitor()).first().team
             return not TeamMentorship.objects.filter(mentor__id=request.data['mentor'],
-                                                     steam__season__is_active=True, team=team)
-        return True
-
-
-class CantDeleteMentorNotFromLeaderTeam(permissions.BasePermission):
-    message = "The mentor you would like to delete is not attached to your team!"
-
-    def has_permission(self, request, view):
-        if request.method == 'DELETE':
-            leader_team = TeamMembership.objects.get_team_memberships_for_active_season(
-                competitor=request.user.get_competitor()).first().team
-            mentor_team = view.get_object().team
-            return leader_team == mentor_team
+                                                     team__season__is_active=True, team=team)
         return True
 
 

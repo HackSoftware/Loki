@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
+from rest_framework.exceptions import ParseError
 from rest_framework import mixins
 from rest_framework_jwt.views import RefreshJSONWebToken
 from django.core.exceptions import ObjectDoesNotExist
@@ -38,7 +39,7 @@ from .permissions import (CanAttachMoreMentorsToTeam,
                           IsInvitedMemberCompetitor, IsTeamLeaderOrReadOnly,
                           IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation,
                           MentorIsAlreadySelectedByThisTeamLeader,
-                          CantDeleteMentorNotFromLeaderTeam)
+                          )
 
 from .helper import send_team_delete_email, send_invitation, get_object_variable_or_none
 from .mixins import MeSerializerMixin, JwtApiAuthenticationMixin
@@ -204,7 +205,6 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
         permission_classes = (IsHackFMIUser, IsTeamLeader,
                               IsMentorDatePickUpToDate,
                               CanAttachMoreMentorsToTeam,
-                              CantDeleteMentorNotFromLeaderTeam,
                               MentorIsAlreadySelectedByThisTeamLeader)
 
         self.permission_classes += super().permission_classes + permission_classes
@@ -225,8 +225,7 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
         teammentor_ship = TeamMentorship.objects.filter(team=team, mentor=mentor)
 
         if not teammentor_ship.exists():
-            return Response("You can't delete non-selected mentor.",
-                            status=status.HTTP_400_BAD_REQUEST)
+            raise ParseError(detail="You can't delete non-selected mentor.")
 
         return teammentor_ship.first()
 

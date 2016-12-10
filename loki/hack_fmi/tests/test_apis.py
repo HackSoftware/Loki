@@ -1483,42 +1483,36 @@ class TestTeamMentorshipAPI(TestCase):
         self.response_403(response)
 
     def test_cannot_remove_mentor_from_team_if_not_teamleader(self):
-        mentorship = TeamMentorshipFactory(team=self.team, mentor=self.mentor)
-
         self.team_membership.is_leader = False
         self.team_membership.save()
-        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship.id)
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=self.mentor.id)
         response = self.client.delete(url)
         self.response_403(response)
-        self.assertIsNotNone(mentorship)
 
     def test_can_remove_mentor_from_team_if_teamleader(self):
-        mentorship = TeamMentorshipFactory(team=self.team, mentor=self.mentor)
+        TeamMentorshipFactory(team=self.team, mentor=self.mentor)
 
-        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship.id)
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=self.mentor.id)
         response = self.client.delete(url)
+
         self.assertEqual(response.status_code, 204)
         self.assertEqual(TeamMentorship.objects.filter(team=self.team, mentor=self.mentor).count(), 0)
 
-    def test_cannot_remove_mentor_that_is_not_mentor_of_any_team(self):
+    def test_cannot_remove_teammentorship_with_non_existing_mentorpk(self):
         # Check get_object_ot_404()
-        mentorship_pk = int(faker.random_element(elements=('1000', '20000')))
-        self.assertFalse(TeamMentorship.objects.filter(team__pk=mentorship_pk).exists())
-        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship_pk)
+        mentor_pk = int(faker.random_element(elements=('1000', '20000')))
+        self.assertFalse(TeamMentorship.objects.filter(mentor__pk=mentor_pk).exists())
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=mentor_pk)
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_cannot_remove_mentor_that_is_not_from_leaders_team(self):
-        # Check whether the teammentorship from url is attached to the team of the leader
-        other_team = TeamFactory(season=self.active_season)
-        other_competitor = CompetitorFactory()
-        TeamMembershipFactory(team=other_team, competitor=other_competitor, is_leader=True)
-        other_mentor = MentorFactory(from_company=self.company)
-        other_mentorship = TeamMentorshipFactory(team=other_team, mentor=other_mentor)
-
-        url = self.reverse('hack_fmi:team_mentorship', pk=other_mentorship.id)
+    def test_cannot_remove_non_existing_teammentoship(self):
+        self.assertFalse(TeamMentorship.objects.filter(mentor__pk=self.mentor.id,
+                                                       team=self.team.id).exists())
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=self.mentor.id)
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, 403)
+
+        self.assertEqual(response.status_code, 400)
 
 
 class TestSeasonInfoAPIViews(TestCase):
