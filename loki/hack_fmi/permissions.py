@@ -75,7 +75,7 @@ class IsMentorDatePickUpToDate(permissions.BasePermission):
         today = date.today()
         team = TeamMembership.objects.get_team_memberships_for_active_season(
             competitor=request.user.get_competitor()).first().team
-        return team.season.mentor_pick_start_date < today and team.season.mentor_pick_end_date > today
+        return team.season.mentor_pick_start_date <= today and team.season.mentor_pick_end_date >= today
 
 
 class CanAttachMoreMentorsToTeam(permissions.BasePermission):
