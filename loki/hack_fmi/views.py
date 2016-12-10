@@ -20,7 +20,8 @@ from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           TeamMembershipSerializer,
                           TeamMentorshipSerializer,
                           CompetitorListSerializer,
-                          CustomTeamSerializer)
+                          CustomTeamSerializer,
+                          MentorForTeamSerializer)
 
 from .permissions import (CanAttachMoreMentorsToTeam,
                           CanInviteMoreMembersInTeam,
@@ -196,6 +197,24 @@ class TeamMembershipAPI(JwtApiAuthenticationMixin,
             send_team_delete_email(team)
             team.delete()
         instance.delete()
+
+
+class MentorsForTeamListAPI(JwtApiAuthenticationMixin, generics.ListAPIView):
+    serializer_class = MentorForTeamSerializer
+
+    def get_permissions(self):
+        permission_classes = (IsHackFMIUser)
+
+        self.permission_classes += super().permission_classes + permission_classes
+
+        return [permission() for permission in self.permission_classes]
+
+    def get_queryset(self):
+        competitor = self.request.user.get_competitor()
+        team = TeamMembership.objects.get_team_memberships_for_active_season(
+            competitor=competitor).first().team
+
+        return Mentor.objects.filter(teammentorship__team=team)
 
 
 class TeamMentorshipAPI(JwtApiAuthenticationMixin,

@@ -135,6 +135,13 @@ class MentorSerializer(serializers.ModelSerializer):
         )
 
 
+class MentorForTeamSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Mentor
+        fields = ('id', )
+
+
 class SeasonSerializer(serializers.ModelSerializer):
 
     class Meta:
