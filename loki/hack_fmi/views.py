@@ -203,7 +203,7 @@ class MentorsForTeamListAPI(JwtApiAuthenticationMixin, generics.ListAPIView):
     serializer_class = MentorForTeamSerializer
 
     def get_permissions(self):
-        permission_classes = (IsHackFMIUser)
+        permission_classes = (IsHackFMIUser, )
 
         self.permission_classes += super().permission_classes + permission_classes
 
