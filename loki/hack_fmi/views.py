@@ -269,6 +269,10 @@ class InvitationViewSet(JwtApiAuthenticationMixin, viewsets.ModelViewSet):
         team = TeamMembership.objects.get_team_memberships_for_active_season(
             competitor=self.request.user.get_competitor()).first().team
 
+        competitor = serializer.validated_data.get('competitor')
+        if Invitation.objects.filter(competitor=competitor, team=team).exists():
+            raise ParseError(detail="You have already sent an invitation for that user.")
+
         invitation = serializer.save(team=team)
         send_invitation(invitation)
 
