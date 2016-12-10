@@ -101,6 +101,17 @@ class CantAttachMentorThatIsAlreadyAttachedToTeam(permissions.BasePermission):
         return True
 
 
+class MentorIsAlreadySelectedByThisTeamLeader(permissions.BasePermission):
+    message = "You already selected this mentor."
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            team = TeamMembership.objects.get_team_memberships_for_active_season(
+                competitor=request.user.get_competitor()).first().team
+            return not TeamMentorship.objects.filter(mentor__id=request.data['mentor'], team__season__is_active=True, team=team)
+        return True
+
+
 class CantDeleteMentorNotFromLeaderTeam(permissions.BasePermission):
     message = "The mentor you would like to delete is not attached to your team!"
 

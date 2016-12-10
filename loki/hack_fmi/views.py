@@ -37,6 +37,7 @@ from .permissions import (CanAttachMoreMentorsToTeam,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
                           IsInvitedMemberCompetitor, IsTeamLeaderOrReadOnly,
                           IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation,
+                          MentorIsAlreadySelectedByThisTeamLeader,
                           CantAttachMentorThatIsAlreadyAttachedToTeam,
                           CantDeleteMentorNotFromLeaderTeam)
 
@@ -204,8 +205,8 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
         permission_classes = (IsHackFMIUser, IsTeamLeader,
                               IsMentorDatePickUpToDate,
                               CanAttachMoreMentorsToTeam,
-                              CantAttachMentorThatIsAlreadyAttachedToTeam,
-                              CantDeleteMentorNotFromLeaderTeam)
+                              CantDeleteMentorNotFromLeaderTeam,
+                              MentorIsAlreadySelectedByThisTeamLeader)
 
         self.permission_classes += super().permission_classes + permission_classes
 
