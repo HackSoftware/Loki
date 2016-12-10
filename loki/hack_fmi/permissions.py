@@ -67,7 +67,7 @@ class IsSeasonDeadlineUpToDate(permissions.BasePermission):
 
 
 class IsMentorDatePickUpToDate(permissions.BasePermission):
-    message = "You cannot choose a mentor in this season's period!"
+    message = "Mentors pick period hasn't started yet or is over."
 
     def has_permission(self, request, view):
         if not request.data:
