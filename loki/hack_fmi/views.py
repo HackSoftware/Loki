@@ -81,6 +81,7 @@ class MeSeasonAPIView(JwtApiAuthenticationMixin,
 
         team_data = None
         data["team"] = None
+        data["mentors"] = None
 
         if not data['is_competitor']:
             return Response(data=data, status=status.HTTP_200_OK)
@@ -99,6 +100,9 @@ class MeSeasonAPIView(JwtApiAuthenticationMixin,
             tm_id = get_object_variable_or_none(
                 queryset=TeamMembership.objects.filter(team=team, competitor=competitor),
                 variable="id")
+
+            mentors = [tm.mentor.id for tm in TeamMentorship.objects.filter(team=team).all()]
+            data["mentors"] = mentors
 
         data["team"] = team_data
         data["team_membership_id"] = tm_id
