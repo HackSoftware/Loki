@@ -38,7 +38,6 @@ from .permissions import (CanAttachMoreMentorsToTeam,
                           IsInvitedMemberCompetitor, IsTeamLeaderOrReadOnly,
                           IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation,
                           MentorIsAlreadySelectedByThisTeamLeader,
-                          CantAttachMentorThatIsAlreadyAttachedToTeam,
                           CantDeleteMentorNotFromLeaderTeam)
 
 from .helper import send_team_delete_email, send_invitation, get_object_variable_or_none
@@ -217,6 +216,19 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
             competitor=self.request.user.get_competitor()).first().team
 
         serializer.save(team=team)
+
+    def get_object(self):
+        competitor = self.request.user.get_competitor()
+        team = TeamMembership.objects.get_team_memberships_for_active_season(
+            competitor=competitor).first().team
+        mentor = get_object_or_404(Mentor, id=self.kwargs['mentor_pk'])
+        teammentor_ship = TeamMentorship.objects.filter(team=team, mentor=mentor)
+
+        if not teammentor_ship.exists():
+            return Response("You can't delete non-selected mentor.",
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        return teammentor_ship.first()
 
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)

@@ -79,7 +79,7 @@ class IsMentorDatePickUpToDate(permissions.BasePermission):
 
 
 class CanAttachMoreMentorsToTeam(permissions.BasePermission):
-    message = "This team cannot attach other mentors!"
+    message = "You've reached the max limit of mentors for you team."
 
     def has_permission(self, request, view):
         if request.method == 'POST':
@@ -108,7 +108,8 @@ class MentorIsAlreadySelectedByThisTeamLeader(permissions.BasePermission):
         if request.method == 'POST':
             team = TeamMembership.objects.get_team_memberships_for_active_season(
                 competitor=request.user.get_competitor()).first().team
-            return not TeamMentorship.objects.filter(mentor__id=request.data['mentor'], team__season__is_active=True, team=team)
+            return not TeamMentorship.objects.filter(mentor__id=request.data['mentor'],
+                                                     steam__season__is_active=True, team=team)
         return True
 
 
