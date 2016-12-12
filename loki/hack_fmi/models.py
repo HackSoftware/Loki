@@ -119,6 +119,7 @@ class Team(models.Model):
     need_more_members = models.BooleanField(default=True)
     members_needed_desc = models.CharField(max_length=255, blank=True)
     room = models.ForeignKey('Room', null=True, blank=True)
+    updated_room = models.CharField(max_length=100, null=True, blank=True)
     place = models.SmallIntegerField(blank=True, null=True)
 
     objects = TeamQuerySet.as_manager()
