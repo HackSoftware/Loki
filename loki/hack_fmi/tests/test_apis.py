@@ -1143,7 +1143,12 @@ class TestInvitationViewSet(TestCase):
     def test_can_send_invitation_twice_to_one_competitor_from_different_teams(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.sender_token)
 
+        team_leader = CompetitorFactory()
+        team_leader.is_active = True
+        team_leader.save()
+
         other_team = TeamFactory(season=self.season)
+        TeamMembershipFactory(team=other_team, competitor=team_leader, is_leader=True)
         InvitationFactory(competitor=self.receiver,
                           team=other_team)
 
@@ -1218,9 +1223,9 @@ class TestInvitationViewSet(TestCase):
 
     def test_cant_accept_invitation_if_not_authenticated(self):
         self.client.credentials()
-        inv = InvitationFactory()
+        invitation_id = faker.random_number(digits=1)
 
-        url = self.reverse('hack_fmi:invitation-accept', pk=inv.id)
+        url = self.reverse('hack_fmi:invitation-accept', pk=invitation_id)
         response = self.client.post(url)
 
         self.response_401(response)
@@ -1228,8 +1233,8 @@ class TestInvitationViewSet(TestCase):
     def test_cant_accept_invitation_if_not_hackfmi_user(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.non_competitor_token)
 
-        inv = InvitationFactory()
-        url = self.reverse('hack_fmi:invitation-accept', pk=inv.id)
+        invitation_id = faker.random_number(digits=1)
+        url = self.reverse('hack_fmi:invitation-accept', pk=invitation_id)
         response = self.client.post(url)
 
         self.response_403(response)
@@ -1339,9 +1344,9 @@ class TestInvitationViewSet(TestCase):
 
     def test_user_cannot_delete_invitation_if_not_hackfmi_user(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.non_competitor_token)
-        inv = InvitationFactory()
+        invitation_id = faker.random_number(digits=1)
 
-        url = self.reverse('hack_fmi:invitation-detail', pk=inv.id)
+        url = self.reverse('hack_fmi:invitation-detail', pk=invitation_id)
         response = self.client.delete(url)
 
         self.response_403(response)
