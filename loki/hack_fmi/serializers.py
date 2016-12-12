@@ -123,7 +123,29 @@ class PublicCompetiorSerializer(serializers.ModelSerializer):
         )
 
 
+class TeamWithRoomSerializer(serializers.ModelSerializer):
+    room = serializers.SerializerMethodField()
+
+    def get_room(self, obj):
+        return obj.room.number
+
+    class Meta:
+        model = Team
+        fields = (
+            'id',
+            'name',
+            'room',
+            'updated_room'
+        )
+
+
 class MentorSerializer(serializers.ModelSerializer):
+    teams = serializers.SerializerMethodField()
+
+    def get_teams(self, obj):
+        mentor_teams = obj.team_set.all()
+        serializer = TeamWithRoomSerializer(mentor_teams, many=True)
+        return serializer.data
 
     class Meta:
         model = Mentor
@@ -132,6 +154,7 @@ class MentorSerializer(serializers.ModelSerializer):
             'name',
             'description',
             'picture',
+            'teams',
         )
 
 
