@@ -17,17 +17,11 @@ class InvitationConsumer(BaseConsumer):
     USER_ADDED_TO_GROUP_MESSAGE = json.dumps({'message': 'User added to group.'})
 
     method_mapping = {
-        "websocket.connect": "connect",
-        "websocket.disconnect": "disconnect",
         "websocket.receive": "receive",
     }
 
-    def connect(self, message, **kwargs):
-        print("connect")
-
     def receive(self, message, **kwargs):
         # auth
-        print("receive")
         msg = message.get('text')
         try:
             """
@@ -52,7 +46,3 @@ class InvitationConsumer(BaseConsumer):
         group_name = settings.INVITATION_GROUP_NAME.format(id=user_id)
         Group(group_name).add(message.reply_channel)
         message.reply_channel.send({'text': self.USER_ADDED_TO_GROUP_MESSAGE})
-        print(group_name + " group created")
-
-    def disconnect(self, message, **kwargs):
-        print("disconnect")
