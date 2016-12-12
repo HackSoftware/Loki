@@ -1143,7 +1143,12 @@ class TestInvitationViewSet(TestCase):
     def test_can_send_invitation_twice_to_one_competitor_from_different_teams(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.sender_token)
 
+        team_leader = CompetitorFactory()
+        team_leader.is_active = True
+        team_leader.save()
+
         other_team = TeamFactory(season=self.season)
+        TeamMembershipFactory(team=other_team, competitor=team_leader, is_leader=True)
         InvitationFactory(competitor=self.receiver,
                           team=other_team)
 
