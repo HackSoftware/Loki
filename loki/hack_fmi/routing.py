@@ -4,5 +4,5 @@ from .consumers import InvitationConsumer
 
 
 hackfmi_routing = [
-    route_class(InvitationConsumer, path=r'^/invitations')
+    route_class(InvitationConsumer, path=r'^/ws/invitations')
 ]
