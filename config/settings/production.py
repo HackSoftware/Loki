@@ -104,3 +104,13 @@ RAVEN_CONFIG = {
     'CELERY_LOGLEVEL': env.int('DJANGO_SENTRY_LOG_LEVEL', logging.INFO),
     'DSN': SENTRY_DSN
 }
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgi_redis.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [(env('REDIS_HOST', default='localhost'), env('REDIS_PORT', default='6379'))],
+        },
+        "ROUTING": "config.routing.channel_routing",
+    },
+}
