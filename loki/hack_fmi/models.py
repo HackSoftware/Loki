@@ -149,6 +149,9 @@ class TeamMentorship(models.Model):
 
     objects = TeamMentorshipQuerySet.as_manager()
 
+    class Meta:
+        unique_together = ('mentor', 'team')
+
     def clean(self):
         """
         TODO: Take in mind the season max_mentor_count
