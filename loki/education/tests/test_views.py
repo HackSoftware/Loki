@@ -14,7 +14,7 @@ class CourseListViewTests(TestCase):
         self.baseuser.save()
 
     def test_not_access_course_list_without_login(self):
-        response = self.get('interview_system:generate_interviews')
+        response = self.get('education:course_list')
         self.assertEquals(response.status_code, 302)
 
     def test_baseuser_not_access_courselist(self):
