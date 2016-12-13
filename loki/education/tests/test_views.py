@@ -29,6 +29,39 @@ class CourseListViewTests(TestCase):
             response = self.get('education:course_list')
             self.assertEqual(response.status_code, 200)
 
+    def test_teacher_can_access_courselist(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+
+        with self.login(username=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:course_list')
+            self.assertEqual(response.status_code, 200)
+
+    def test_student_can_see_only_courses_for_which_have_courseassignments(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+
+        course = CourseFactory()
+        course2 = CourseFactory()
+        CourseAssignmentFactory(course=course,
+                                user=student)
+
+        with self.login(username=student.email, password=BaseUserFactory.password):
+            response = self.get('education:course_list')
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(course, response.context['course_list'])
+            self.assertNotIn(course2, response.context['course_list'])
+
+    def test_teacher_can_see_only_courses_for_which_is_teacher(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        course = CourseFactory()
+        teacher.teached_courses = [course]
+        course2 = CourseFactory()
+
+        with self.login(username=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:course_list')
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(course, response.context['course_list'])
+            self.assertNotIn(course2, response.context['course_list'])
+
 
 class TaskViewTests(TestCase):
 
