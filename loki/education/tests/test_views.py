@@ -151,11 +151,12 @@ class SolutionViewTests(TestCase):
             self.assertEqual(response.status_code, 403)
 
     def test_student_can_access_solution_list_if_has_solutions(self):
-        SolutionFactory(task=self.task, student=self.student)
+        solution = SolutionFactory(task=self.task, student=self.student)
         with self.login(email=self.student.email, password=BaseUserFactory.password):
             response = self.get('education:solution_view', course=self.course.id,
                                 task=self.task.id)
             self.assertEqual(response.status_code, 200)
+            self.assertIn(solution, response.context['object_list'])
 
     def test_baseuser_cannot_access_solution_list_if_has_solutions(self):
         SolutionFactory(task=self.task, student=self.student)
@@ -164,9 +165,10 @@ class SolutionViewTests(TestCase):
                                 task=self.task.id)
             self.assertEqual(response.status_code, 403)
 
-    def test_teacher_cannot_access_solution_list(self):
+    def test_teacher_cannot_access_student_solution_list(self):
         teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
         SolutionFactory(task=self.task, student=self.student)
+
         with self.login(email=teacher.email, password=BaseUserFactory.password):
             response = self.get('education:solution_view', course=self.course.id,
                                 task=self.task.id)
