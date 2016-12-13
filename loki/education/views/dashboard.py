@@ -154,7 +154,7 @@ class CourseDashboardView(CanSeeCourseInfoOnlyTeacher,
 
 
 class CourseStudentTaskView(CanSeeCourseInfoOnlyTeacher,
-                            DashboardPermissionMixin,
+                            CannotSeeOthersCoursesDashboardsMixin,
                             ListView):
 
     model = Task
