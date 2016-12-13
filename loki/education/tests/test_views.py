@@ -82,27 +82,9 @@ class TaskViewTests(TestCase):
         response = self.get('education:task_dashboard', course=self.course.id)
         self.assertEquals(response.status_code, 302)
 
-    def test_student_access_task_list(self):
-        with self.login(email=self.student.email, password=BaseUserFactory.password):
-            response = self.get('education:task_dashboard', course=self.course.id)
-            self.assertEqual(response.status_code, 200)
-
     def test_baseuser_cannot_access_task_list(self):
         with self.login(email=self.baseuser.email, password=BaseUserFactory.password):
             response = self.get('education:task_dashboard', course=self.course.id)
-            self.assertEqual(response.status_code, 403)
-
-    def test_student_cannot_access_task_list_of_course_without_tasks(self):
-        course2 = CourseFactory()
-        CourseAssignmentFactory(course=course2, user=self.student)
-        with self.login(email=self.student.email, password=BaseUserFactory.password):
-            response = self.get('education:task_dashboard', course=course2.id)
-            self.assertEqual(response.status_code, 404)
-
-    def test_baseuser_cannot_access_task_list_of_course_without_tasks(self):
-        course2 = CourseFactory()
-        with self.login(email=self.baseuser.email, password=BaseUserFactory.password):
-            response = self.get('education:task_dashboard', course=course2.id)
             self.assertEqual(response.status_code, 403)
 
     def test_teacher_cannot_access_task_list(self):
@@ -111,12 +93,29 @@ class TaskViewTests(TestCase):
             response = self.get('education:task_dashboard', course=self.course.id)
             self.assertEqual(response.status_code, 403)
 
-    def test_teacher_cannot_access_task_list_if_no_tasks(self):
-        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+    def test_student_access_task_list(self):
+        with self.login(email=self.student.email, password=BaseUserFactory.password):
+            response = self.get('education:task_dashboard', course=self.course.id)
+            self.assertEqual(response.status_code, 200)
+
+    def test_student_cannot_access_task_list_of_course_without_tasks(self):
         course2 = CourseFactory()
-        with self.login(email=teacher.email, password=BaseUserFactory.password):
+        CourseAssignmentFactory(course=course2, user=self.student)
+        with self.login(email=self.student.email, password=BaseUserFactory.password):
             response = self.get('education:task_dashboard', course=course2.id)
-            self.assertEqual(response.status_code, 403)
+            self.assertEqual(response.status_code, 404)
+
+    def test_student_see_only_tasks_for_his_course(self):
+        task2 = TaskFactory(course=self.course)
+        course2 = CourseFactory()
+        task_for_course2 = TaskFactory(course=course2)
+
+        with self.login(email=self.student.email, password=BaseUserFactory.password):
+            response = self.get('education:task_dashboard', course=self.course.id)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(self.task, response.context['object_list'])
+            self.assertIn(task2, response.context['object_list'])
+            self.assertNotIn(task_for_course2, response.context['object_list'])
 
 
 class SolutionViewTests(TestCase):
