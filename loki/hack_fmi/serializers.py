@@ -222,7 +222,7 @@ class TeamSerializer(serializers.ModelSerializer):
     members = CompetitorInTeamSerializer(many=True, read_only=True)
     leader_id = serializers.SerializerMethodField()
     leader_email = serializers.SerializerMethodField()
-    room = serializers.StringRelatedField()
+    room = serializers.StringRelatedField(read_only=True)
 
     def get_leader_id(self, obj):
         leader_membership = TeamMembership.objects.get_team_membership_of_leader(team=obj)
@@ -255,6 +255,7 @@ class TeamSerializer(serializers.ModelSerializer):
             'need_more_members',
             'members_needed_desc',
             'room',
+            'updated_room',
             'place',
         )
 
