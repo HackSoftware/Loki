@@ -140,7 +140,10 @@ class Team(models.Model):
         if self.updated_room:
             return self.updated_room
 
-        return str(self.room)
+        if self.room:
+            return str(self.room)
+
+        return None
 
     def __str__(self):
         return self.name

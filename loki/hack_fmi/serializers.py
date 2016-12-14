@@ -124,7 +124,7 @@ class PublicCompetiorSerializer(serializers.ModelSerializer):
 
 
 class TeamWithRoomSerializer(serializers.ModelSerializer):
-    room = serializers.ReadOnlyField(source='get_room')
+    room = serializers.ReadOnlyField(source='get_room', allow_null=True)
 
     class Meta:
         model = Team
