@@ -244,7 +244,7 @@ class MaterialViewTests(TestCase):
         self.course_assignment = CourseAssignmentFactory(course=self.course,
                                                          user=self.student)
 
-    def test_no_access_to_solution_list_without_login(self):
+    def test_no_access_to_material_list_without_login(self):
         week = WeekFactory()
         LectureFactory(week=week, course=self.course)
         MaterialFactory(week=week, course=self.course)
@@ -258,6 +258,15 @@ class MaterialViewTests(TestCase):
         with self.login(email=self.student.email, password=BaseUserFactory.password):
             response = self.get('education:material_view', course=self.course.id)
             self.assertEqual(response.status_code, 200)
+
+    def test_student_cannot_access_other_courses_materials(self):
+        course2 = CourseFactory()
+        week = WeekFactory()
+        LectureFactory(week=week, course=course2)
+        MaterialFactory(week=week, course=course2)
+        with self.login(email=self.student.email, password=BaseUserFactory.password):
+            response = self.get('education:material_view', course=course2.id)
+            self.assertEqual(response.status_code, 403)
 
     def test_baseuser_cannot_access_course_materials(self):
         week = WeekFactory()
