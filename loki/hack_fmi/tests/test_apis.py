@@ -90,8 +90,7 @@ class TestMentorListAPIView(TestCase):
 
         # response.data is list of mentors
         self.assertEqual(response.data[0]['teams'][0]['name'], team.name)
-        self.assertEqual(response.data[0]['teams'][0]['room'], team.room.number)
-        self.assertIsNone(response.data[0]['teams'][0]['updated_room'])
+        self.assertEqual(response.data[0]['teams'][0]['room'], str(team.room.number))
 
     def test_check_several_teams_are_serialized_for_public_mentor(self):
         mentor1 = MentorFactory(from_company=self.company)
@@ -118,13 +117,14 @@ class TestMentorListAPIView(TestCase):
         team = TeamFactory(season=self.active_season)
         TeamMentorshipFactory(mentor=mentor1, team=team)
         team.updated_room = faker.random_number(digits=2)
+        team.save()
         team.refresh_from_db()
 
         response = self.client.get(self.url)
 
         self.response_200(response)
 
-        self.assertEqual(response.data[0]['teams'][0]['updated_room'], team.updated_room)
+        self.assertEqual(response.data[0]['teams'][0]['room'], team.updated_room)
 
 
 class TestSeasonView(TestCase):
