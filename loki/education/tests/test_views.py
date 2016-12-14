@@ -378,3 +378,104 @@ class StudentCourseViewTests(TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn(self.course_assignment, response.context['object_list'])
             self.assertNotIn(course_assignment_for_baseuser3, response.context['object_list'])
+
+class CourseDashboardViewTests(TestCase):
+
+    def setUp(self):
+        self.baseuser = BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.save()
+        self.teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+
+        self.baseuser2 = BaseUserFactory()
+        self.baseuser2.is_active = True
+        self.baseuser2.save()
+        self.student = BaseUser.objects.promote_to_student(self.baseuser2)
+        self.course = CourseFactory()
+        self.course_assignment = CourseAssignmentFactory(course=self.course,
+                                                         user=self.student)
+        self.task = TaskFactory(course=self.course, gradable=True)
+
+    def test_not_access_course_detail_without_login(self):
+        response = self.get('education:course-detail', course=self.course.id,)
+        self.assertEquals(response.status_code, 302)
+
+    def test_baseuser_cannot_access_course_detail(self):
+        with self.login(username=self.baseuser.email, password=BaseUserFactory.password):
+            response = self.get('education:course-detail', course=self.course.id)
+            self.assertEqual(response.status_code, 403)
+
+    def test_student_cannot_access_course_detail(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+
+        with self.login(username=student.email, password=BaseUserFactory.password):
+            response = self.get('education:course-detail', course=self.course.id)
+            self.assertEqual(response.status_code, 403)
+
+    def test_teacher_cannot_access_course_detail_if_he_is_not_teacher(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+
+        with self.login(username=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:course-detail', course=self.course.id)
+            self.assertEqual(response.status_code, 403)
+
+    def test_teacher_can_access_course_detail_if_he_is_teacher(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
+
+        with self.login(username=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:course-detail', course=self.course.id)
+            self.assertEqual(response.status_code, 200)
+
+    def test_teacher_can_see_only_his_course(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
+        course2 = CourseFactory()
+
+        with self.login(username=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:course-detail', course=course2.id)
+            self.assertEqual(response.status_code, 403)
+
+    def test_check_count_gradable_and_notgradable_tasks(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
+
+        solution1 = SolutionFactory(task=self.task,
+                                    student=self.student)
+        TaskFactory(course=self.course, gradable=False)
+
+        with self.login(username=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:course-detail', course=self.course.id)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(1, response.context['not_gradable_tasks'])
+            self.assertEqual(1, response.context['gradable_tasks'])
+            self.assertEqual(1, response.context['count_solutions'])
+
+    def test_check_count_gradable_and_notgradable_solutions(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
+
+        solution1 = SolutionFactory(task=self.task,
+                                    student=self.student)
+        solution1.status = 3
+        solution1.save()
+
+        solution2 = SolutionFactory(task=self.task,
+                                    student=self.student)
+        solution2.status = 2
+        solution2.save()
+
+        url_task = TaskFactory(course=self.course, gradable=False)
+        SolutionFactory(task=url_task,
+                        student=self.student)
+
+        with self.login(username=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:course-detail', course=self.course.id)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(1, response.context['not_gradable_tasks'])
+            self.assertEqual(1, response.context['gradable_tasks'])
+            self.assertEqual(3, response.context['count_solutions'])
+            self.assertEqual(1, response.context['not_gradable_tasks'])
+            self.assertEqual(1, response.context['passed_solutions'])
+            self.assertEqual(1, response.context['url_solutions'])
+            self.assertEqual(1, response.context['failed_solutions'])
