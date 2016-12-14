@@ -119,6 +119,7 @@ class Team(models.Model):
     need_more_members = models.BooleanField(default=True)
     members_needed_desc = models.CharField(max_length=255, blank=True)
     room = models.ForeignKey('Room', null=True, blank=True)
+    updated_room = models.CharField(max_length=100, null=True, blank=True)
     place = models.SmallIntegerField(blank=True, null=True)
 
     objects = TeamQuerySet.as_manager()
@@ -135,6 +136,15 @@ class Team(models.Model):
             if membership.is_leader:
                 return membership.competitor
 
+    def get_room(self):
+        if self.updated_room:
+            return self.updated_room
+
+        if self.room:
+            return str(self.room)
+
+        return None
+
     def __str__(self):
         return self.name
 
@@ -147,6 +157,9 @@ class TeamMentorship(models.Model):
     team = models.ForeignKey(Team)
 
     objects = TeamMentorshipQuerySet.as_manager()
+
+    class Meta:
+        unique_together = ('mentor', 'team')
 
     def clean(self):
         """

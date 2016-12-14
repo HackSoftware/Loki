@@ -59,11 +59,12 @@ class TestMentorListAPIView(TestCase):
         mentor2 = MentorFactory(from_company=self.company)
         self.active_season.mentor_set.add(mentor)
         self.active_season.mentor_set.add(mentor2)
-        self.active_season.save()
+
+        self.active_season.refresh_from_db()
 
         mentor3 = MentorFactory(from_company=self.company)
         self.non_active_season.mentor_set.add(mentor3)
-        self.non_active_season.save()
+        self.non_active_season.refresh_from_db()
 
         response = self.client.get(self.url)
         mentors_for_current_season = self.active_season.mentor_set.count()
@@ -73,6 +74,57 @@ class TestMentorListAPIView(TestCase):
         self.assertContains(response, mentor.name)
         self.assertContains(response, mentor2.name)
         self.assertNotContains(response, mentor3.name)
+
+    def test_get_team_and_room_for_public_mentor(self):
+        mentor = MentorFactory(from_company=self.company)
+        self.active_season.mentor_set.add(mentor)
+
+        self.active_season.refresh_from_db()
+
+        team = TeamFactory(season=self.active_season)
+        TeamMentorshipFactory(mentor=mentor, team=team)
+
+        response = self.client.get(self.url)
+
+        self.response_200(response)
+
+        # response.data is list of mentors
+        self.assertEqual(response.data[0]['teams'][0]['name'], team.name)
+        self.assertEqual(response.data[0]['teams'][0]['room'], str(team.room.number))
+
+    def test_check_several_teams_are_serialized_for_public_mentor(self):
+        mentor1 = MentorFactory(from_company=self.company)
+        self.active_season.mentor_set.add(mentor1)
+
+        self.active_season.refresh_from_db()
+
+        team = TeamFactory(season=self.active_season)
+        team2 = TeamFactory(season=self.active_season)
+        TeamMentorshipFactory(mentor=mentor1, team=team)
+        TeamMentorshipFactory(mentor=mentor1, team=team2)
+
+        response = self.client.get(self.url)
+
+        self.response_200(response)
+        # response.data is list of mentors
+        self.assertEqual(len(response.data[0]['teams']), 2)
+
+    def test_data_for_updated_room_is_serialized(self):
+        mentor1 = MentorFactory(from_company=self.company)
+        self.active_season.mentor_set.add(mentor1)
+        self.active_season.refresh_from_db()
+
+        team = TeamFactory(season=self.active_season)
+        TeamMentorshipFactory(mentor=mentor1, team=team)
+        team.updated_room = faker.random_number(digits=2)
+        team.save()
+        team.refresh_from_db()
+
+        response = self.client.get(self.url)
+
+        self.response_200(response)
+
+        self.assertEqual(response.data[0]['teams'][0]['room'], team.updated_room)
 
 
 class TestSeasonView(TestCase):
@@ -641,6 +693,18 @@ class TestTeamAPI(TestCase):
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+    def test_tealeader_updates_room(self):
+        updated_room = faker.random_number(digits=2)
+        data = {'updated_room': updated_room}
+
+        self.team_membership.is_leader = True
+        self.team_membership.save()
+
+        url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
+        response = self.client.patch(url, data)
+        self.assertEqual(response.data['room'], str(self.room.number))
+        self.assertEqual(response.data['updated_room'], str(updated_room))
 
     def test_api_returns_only_teams_for_current_season(self):
         non_active_season = SeasonFactory(is_active=False)

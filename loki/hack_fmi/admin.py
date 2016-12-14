@@ -28,6 +28,7 @@ class TeamAdmin(admin.ModelAdmin):
     list_display = ('name',
                     'idea_description',
                     'room',
+                    'updated_room',
                     'season',
                     'get_members')
 
