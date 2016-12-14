@@ -124,10 +124,7 @@ class PublicCompetiorSerializer(serializers.ModelSerializer):
 
 
 class TeamWithRoomSerializer(serializers.ModelSerializer):
-    room = serializers.SerializerMethodField()
-
-    def get_room(self, obj):
-        return obj.room.number
+    room = serializers.ReadOnlyField(source='get_room')
 
     class Meta:
         model = Team
@@ -135,7 +132,6 @@ class TeamWithRoomSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'room',
-            'updated_room'
         )
 
 

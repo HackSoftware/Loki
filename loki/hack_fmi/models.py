@@ -136,6 +136,12 @@ class Team(models.Model):
             if membership.is_leader:
                 return membership.competitor
 
+    def get_room(self):
+        if self.updated_room:
+            return self.updated_room
+
+        return self.room
+
     def __str__(self):
         return self.name
 
