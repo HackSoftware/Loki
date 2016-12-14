@@ -321,3 +321,60 @@ class MaterialViewTests(TestCase):
         with self.login(email=teacher.email, password=BaseUserFactory.password):
             response = self.get('education:material_view', course=course2.id)
             self.assertEqual(response.status_code, 403)
+
+
+class StudentCourseViewTests(TestCase):
+
+    def setUp(self):
+        self.baseuser = BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.save()
+        self.baseuser2 = BaseUserFactory()
+        self.baseuser2.is_active = True
+        self.baseuser2.save()
+        self.student = BaseUser.objects.promote_to_student(self.baseuser2)
+        self.course = CourseFactory()
+        self.course_assignment = CourseAssignmentFactory(course=self.course,
+                                                         user=self.student)
+
+    def test_cannot_access_student_list_if_no_login(self):
+        response = self.get('education:students_view', course=self.course.id)
+        self.assertEquals(response.status_code, 302)
+
+    def test_student_cannot_access_student_list(self):
+        with self.login(email=self.student.email, password=BaseUserFactory.password):
+
+            response = self.get('education:students_view', course=self.course.id)
+            self.assertEquals(response.status_code, 403)
+
+    def test_teacher_can_access_student_list(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:students_view', course=self.course.id)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(self.course_assignment, response.context['object_list'])
+
+    def test_teacher_cannot_access_student_list_if_not_teached_it(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:students_view', course=self.course.id)
+            self.assertEqual(response.status_code, 403)
+
+    def test_teacher_can_see_student_list_only_for_his_course(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
+
+        baseuser3 = BaseUserFactory()
+        baseuser3.is_active = True
+        baseuser3.save()
+        student = BaseUser.objects.promote_to_student(baseuser3)
+        course2 = CourseFactory()
+        course_assignment_for_baseuser3 = CourseAssignmentFactory(course=course2,
+                                                                  user=student)
+
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:students_view', course=self.course.id)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(self.course_assignment, response.context['object_list'])
+            self.assertNotIn(course_assignment_for_baseuser3, response.context['object_list'])
