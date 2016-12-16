@@ -59,11 +59,12 @@ class TestMentorListAPIView(TestCase):
         mentor2 = MentorFactory(from_company=self.company)
         self.active_season.mentor_set.add(mentor)
         self.active_season.mentor_set.add(mentor2)
-        self.active_season.save()
+
+        self.active_season.refresh_from_db()
 
         mentor3 = MentorFactory(from_company=self.company)
         self.non_active_season.mentor_set.add(mentor3)
-        self.non_active_season.save()
+        self.non_active_season.refresh_from_db()
 
         response = self.client.get(self.url)
         mentors_for_current_season = self.active_season.mentor_set.count()
@@ -73,6 +74,57 @@ class TestMentorListAPIView(TestCase):
         self.assertContains(response, mentor.name)
         self.assertContains(response, mentor2.name)
         self.assertNotContains(response, mentor3.name)
+
+    def test_get_team_and_room_for_public_mentor(self):
+        mentor = MentorFactory(from_company=self.company)
+        self.active_season.mentor_set.add(mentor)
+
+        self.active_season.refresh_from_db()
+
+        team = TeamFactory(season=self.active_season)
+        TeamMentorshipFactory(mentor=mentor, team=team)
+
+        response = self.client.get(self.url)
+
+        self.response_200(response)
+
+        # response.data is list of mentors
+        self.assertEqual(response.data[0]['teams'][0]['name'], team.name)
+        self.assertEqual(response.data[0]['teams'][0]['room'], str(team.room.number))
+
+    def test_check_several_teams_are_serialized_for_public_mentor(self):
+        mentor1 = MentorFactory(from_company=self.company)
+        self.active_season.mentor_set.add(mentor1)
+
+        self.active_season.refresh_from_db()
+
+        team = TeamFactory(season=self.active_season)
+        team2 = TeamFactory(season=self.active_season)
+        TeamMentorshipFactory(mentor=mentor1, team=team)
+        TeamMentorshipFactory(mentor=mentor1, team=team2)
+
+        response = self.client.get(self.url)
+
+        self.response_200(response)
+        # response.data is list of mentors
+        self.assertEqual(len(response.data[0]['teams']), 2)
+
+    def test_data_for_updated_room_is_serialized(self):
+        mentor1 = MentorFactory(from_company=self.company)
+        self.active_season.mentor_set.add(mentor1)
+        self.active_season.refresh_from_db()
+
+        team = TeamFactory(season=self.active_season)
+        TeamMentorshipFactory(mentor=mentor1, team=team)
+        team.updated_room = faker.random_number(digits=2)
+        team.save()
+        team.refresh_from_db()
+
+        response = self.client.get(self.url)
+
+        self.response_200(response)
+
+        self.assertEqual(response.data[0]['teams'][0]['room'], team.updated_room)
 
 
 class TestSeasonView(TestCase):
@@ -503,6 +555,8 @@ class TestMeAPIView(TestCase):
 class TestMeSeasonAPIView(TestCase):
     def setUp(self):
         self.client = APIClient()
+        self.company = HackFmiPartnerFactory()
+
         self.active_season = SeasonFactory(is_active=True)
         self.room = RoomFactory(season=self.active_season)
         self.team = TeamFactory(season=self.active_season, room=self.room)
@@ -513,6 +567,10 @@ class TestMeSeasonAPIView(TestCase):
         self.team_membership = TeamMembershipFactory(competitor=self.competitor,
                                                      team=self.team,
                                                      is_leader=True)
+        self.mentor1 = MentorFactory(from_company=self.company)
+        self.mentor2 = MentorFactory(from_company=self.company)
+        TeamMentorshipFactory(mentor=self.mentor1, team=self.team)
+        TeamMentorshipFactory(mentor=self.mentor2, team=self.team)
 
         data = {'email': self.competitor.email, 'password': BaseUserFactory.password}
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
@@ -530,6 +588,7 @@ class TestMeSeasonAPIView(TestCase):
         key_equals = [True for k in ['is_competitor',
                                      'competitor_info',
                                      'team',
+                                     'mentors'
                                      'team_membership_id'] if k in response.data.keys()]
         self.assertTrue(all(key_equals))
 
@@ -571,6 +630,7 @@ class TestMeSeasonAPIView(TestCase):
         self.assertIsNone(response.data['team'])
         self.assertIsNone(response.data['competitor_info'])
         self.assertFalse(response.data['is_competitor'])
+        self.assertIsNone(response.data['mentors'])
 
     def test_cannot_see_teams_when_competitor_not_in_any_team_for_given_season(self):
         # 'team' and 'teammembership_id' fields must be empty
@@ -582,6 +642,7 @@ class TestMeSeasonAPIView(TestCase):
         response = self.client.get(url)
         self.response_200(response)
         self.assertIsNone(response.data['team'])
+        self.assertIsNone(response.data['mentors'])
         self.assertIsNone(response.data['team_membership_id'])
         self.assertIsNotNone(response.data['competitor_info'])
         self.assertTrue(response.data['is_competitor'])
@@ -596,6 +657,8 @@ class TestMeSeasonAPIView(TestCase):
         self.assertIsNotNone(response.data['competitor_info'])
         self.assertTrue(response.data['is_competitor'])
 
+        self.assertEquals(response.data['mentors'], [self.mentor1.id, self.mentor2.id])
+
     def test_cant_get_teams_for_season_if_there_are_no_teams_in_that_season(self):
         season = SeasonFactory()
         self.assertFalse(Team.objects.filter(season__pk=season.id).exists())
@@ -605,6 +668,7 @@ class TestMeSeasonAPIView(TestCase):
         self.response_200(response)
 
         self.assertIsNone(response.data['team'])
+        self.assertIsNone(response.data['mentors'])
         self.assertIsNone(response.data['team_membership_id'])
         self.assertIsNotNone(response.data['competitor_info'])
         self.assertTrue(response.data['is_competitor'])
@@ -629,6 +693,18 @@ class TestTeamAPI(TestCase):
         response = self.post(self.reverse('hack_fmi:api-login'), data=data, format='json')
         self.token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
+
+    def test_tealeader_updates_room(self):
+        updated_room = faker.random_number(digits=2)
+        data = {'updated_room': updated_room}
+
+        self.team_membership.is_leader = True
+        self.team_membership.save()
+
+        url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
+        response = self.client.patch(url, data)
+        self.assertEqual(response.data['room'], str(self.room.number))
+        self.assertEqual(response.data['updated_room'], str(updated_room))
 
     def test_api_returns_only_teams_for_current_season(self):
         non_active_season = SeasonFactory(is_active=False)
@@ -1110,26 +1186,48 @@ class TestInvitationViewSet(TestCase):
         self.assertFalse(Invitation.objects.exists())
         self.assertEqual(len(mail.outbox), 0)
 
-    def test_cant_send_invitation_twice_to_same_competitor(self):
+    def test_cant_send_invitation_twice_to_same_competitor_in_one_team(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.sender_token)
 
         InvitationFactory(team=self.sender_team,
                           competitor=self.receiver)
 
-        self.assertEquals(Invitation.objects.filter(competitor=self.receiver).count(), 1)
+        self.assertEqual(Invitation.objects.filter(competitor=self.receiver,
+                                                   team=self.sender_team).count(), 1)
 
         url = self.reverse('hack_fmi:invitation-list')
         data = {'competitor_email': self.receiver.email}
         response = self.client.post(url, data)
 
-        '''
-        Status code here is 400 because there is a ValidationError raised in
-        InvitationSerializer.validate() and the data doesn't actually go to
-        the permissions.
-        '''
         self.assertEqual(response.status_code, 400)
-        self.assertEquals(Invitation.objects.filter(competitor=self.receiver).count(), 1)
+        self.assertEqual(Invitation.objects.filter(competitor=self.receiver,
+                                                   team=self.sender_team).count(), 1)
         self.assertEqual(len(mail.outbox), 0)
+
+    def test_can_send_invitation_twice_to_one_competitor_from_different_teams(self):
+        self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.sender_token)
+
+        team_leader = CompetitorFactory()
+        team_leader.is_active = True
+        team_leader.save()
+
+        other_team = TeamFactory(season=self.season)
+        TeamMembershipFactory(team=other_team, competitor=team_leader, is_leader=True)
+        InvitationFactory(competitor=self.receiver,
+                          team=other_team)
+
+        self.assertEquals(Invitation.objects.filter(competitor=self.receiver,
+                                                    team=other_team).count(), 1)
+
+        url = self.reverse('hack_fmi:invitation-list')
+        data = {'competitor_email': self.receiver.email}
+        response = self.client.post(url, data)
+
+        self.response_201(response)
+        self.assertTrue(Invitation.objects.filter(competitor=self.receiver,
+                                                  team=self.sender_team).exists())
+        self.assertEqual(Invitation.objects.filter(competitor=self.receiver).count(), 2)
+        self.assertEqual(len(mail.outbox), 1)
 
     def test_cant_send_invitation_when_team_is_full(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.sender_token)
@@ -1189,9 +1287,9 @@ class TestInvitationViewSet(TestCase):
 
     def test_cant_accept_invitation_if_not_authenticated(self):
         self.client.credentials()
-        inv = InvitationFactory()
+        invitation_id = faker.random_number(digits=1)
 
-        url = self.reverse('hack_fmi:invitation-accept', pk=inv.id)
+        url = self.reverse('hack_fmi:invitation-accept', pk=invitation_id)
         response = self.client.post(url)
 
         self.response_401(response)
@@ -1199,8 +1297,8 @@ class TestInvitationViewSet(TestCase):
     def test_cant_accept_invitation_if_not_hackfmi_user(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.non_competitor_token)
 
-        inv = InvitationFactory()
-        url = self.reverse('hack_fmi:invitation-accept', pk=inv.id)
+        invitation_id = faker.random_number(digits=1)
+        url = self.reverse('hack_fmi:invitation-accept', pk=invitation_id)
         response = self.client.post(url)
 
         self.response_403(response)
@@ -1310,9 +1408,9 @@ class TestInvitationViewSet(TestCase):
 
     def test_user_cannot_delete_invitation_if_not_hackfmi_user(self):
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.non_competitor_token)
-        inv = InvitationFactory()
+        invitation_id = faker.random_number(digits=1)
 
-        url = self.reverse('hack_fmi:invitation-detail', pk=inv.id)
+        url = self.reverse('hack_fmi:invitation-detail', pk=invitation_id)
         response = self.client.delete(url)
 
         self.response_403(response)
@@ -1483,42 +1581,36 @@ class TestTeamMentorshipAPI(TestCase):
         self.response_403(response)
 
     def test_cannot_remove_mentor_from_team_if_not_teamleader(self):
-        mentorship = TeamMentorshipFactory(team=self.team, mentor=self.mentor)
-
         self.team_membership.is_leader = False
         self.team_membership.save()
-        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship.id)
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=self.mentor.id)
         response = self.client.delete(url)
         self.response_403(response)
-        self.assertIsNotNone(mentorship)
 
     def test_can_remove_mentor_from_team_if_teamleader(self):
-        mentorship = TeamMentorshipFactory(team=self.team, mentor=self.mentor)
+        TeamMentorshipFactory(team=self.team, mentor=self.mentor)
 
-        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship.id)
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=self.mentor.id)
         response = self.client.delete(url)
+
         self.assertEqual(response.status_code, 204)
         self.assertEqual(TeamMentorship.objects.filter(team=self.team, mentor=self.mentor).count(), 0)
 
-    def test_cannot_remove_mentor_that_is_not_mentor_of_any_team(self):
+    def test_cannot_remove_teammentorship_with_non_existing_mentorpk(self):
         # Check get_object_ot_404()
-        mentorship_pk = int(faker.random_element(elements=('1000', '20000')))
-        self.assertFalse(TeamMentorship.objects.filter(team__pk=mentorship_pk).exists())
-        url = self.reverse('hack_fmi:team_mentorship', pk=mentorship_pk)
+        mentor_pk = int(faker.random_element(elements=('1000', '20000')))
+        self.assertFalse(TeamMentorship.objects.filter(mentor__pk=mentor_pk).exists())
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=mentor_pk)
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 404)
 
-    def test_cannot_remove_mentor_that_is_not_from_leaders_team(self):
-        # Check whether the teammentorship from url is attached to the team of the leader
-        other_team = TeamFactory(season=self.active_season)
-        other_competitor = CompetitorFactory()
-        TeamMembershipFactory(team=other_team, competitor=other_competitor, is_leader=True)
-        other_mentor = MentorFactory(from_company=self.company)
-        other_mentorship = TeamMentorshipFactory(team=other_team, mentor=other_mentor)
-
-        url = self.reverse('hack_fmi:team_mentorship', pk=other_mentorship.id)
+    def test_cannot_remove_non_existing_teammentoship(self):
+        self.assertFalse(TeamMentorship.objects.filter(mentor__pk=self.mentor.id,
+                                                       team=self.team.id).exists())
+        url = self.reverse('hack_fmi:team_mentorship', mentor_pk=self.mentor.id)
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, 403)
+
+        self.assertEqual(response.status_code, 400)
 
 
 class TestSeasonInfoAPIViews(TestCase):

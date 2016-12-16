@@ -2,10 +2,11 @@
 from __future__ import unicode_literals
 
 from django.db import migrations
-from loki.hack_fmi.models import TeamMentorship, Team
 
 
 def move_m2m_data_to_team_mentorship_model(apps, schema_editor):
+    Team = apps.get_model('hack_fmi', 'Team')
+    TeamMentorship = apps.get_model('hack_fmi', 'TeamMentorship')
     teams = Team.objects.all()
     for team in teams:
         for mentor in team.mentors.all():

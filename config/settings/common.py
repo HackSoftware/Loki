@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'anymail',
     'easy_thumbnails',
     'image_cropping',
+    'channels',
     'raven.contrib.django.raven_compat',  # used for sentry logging
 
     'loki.hack_fmi.apps.HackFMIConfig',
@@ -264,3 +265,12 @@ EMAIL_TEMPLATES = {
 }
 
 LOGIN_URL = 'website:login'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "config.routing.channel_routing",
+    },
+}
+
+INVITATION_GROUP_NAME = "Invitations-{id}"
