@@ -279,7 +279,7 @@ class TeamFactory(factory.DjangoModelFactory):
     class Meta:
         model = hack_fmi_models.Team
 
-    name = factory.Sequence(lambda _: faker.word())
+    name = factory.Sequence(lambda n: faker.word() + str(n))
     mentors = factory.RelatedFactory(MentorFactory)
     technologies = factory.RelatedFactory(SkillFactory)
     idea_description = faker.text()
