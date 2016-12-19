@@ -79,7 +79,7 @@ class Room(models.Model):
         return len(self.team_set.all())
 
     def is_full(self):
-        return len(self.team_set.all()) >= self.capacity
+        return self.team_set.count() >= self.capacity
 
     def __str__(self):
         return str(self.number)
