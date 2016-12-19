@@ -703,7 +703,7 @@ class TestTeamAPI(TestCase):
 
         url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
         response = self.client.patch(url, data)
-        self.assertEqual(response.data['room'], updated_room)
+        self.assertEqual(response.data['room'], str(updated_room))
 
     def test_api_returns_only_teams_for_current_season(self):
         non_active_season = SeasonFactory(is_active=False)
