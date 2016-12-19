@@ -162,13 +162,11 @@ class TeamAPI(JwtApiAuthenticationMixin,
     """
 
     def get_permissions(self):
-        permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
-                              IsSeasonDeadlineUpToDate,
-                              CantCreateTeamWithTeamNameThatAlreadyExists,
-                              TeamLeaderCantCreateOtherTeam)
-        self.permission_classes += super().permission_classes + permission_classes
-
-        return [permission() for permission in self.permission_classes]
+        permission_classes = [IsHackFMIUser(), IsTeamLeaderOrReadOnly(),
+                              IsSeasonDeadlineUpToDate(),
+                              CantCreateTeamWithTeamNameThatAlreadyExists(),
+                              TeamLeaderCantCreateOtherTeam()]
+        return super().get_permissions() + permission_classes
 
     def perform_create(self, serializer):
         season = Season.objects.get(is_active=True)
@@ -182,10 +180,8 @@ class TeamMembershipAPI(JwtApiAuthenticationMixin,
     serializer_class = TeamMembershipSerializer
 
     def get_permissions(self):
-        self.permission_classes += super().permission_classes + (IsHackFMIUser, IsMemberOfTeam,
-                                                                 IsTeamMembershipInActiveSeason,)
-
-        return [permission() for permission in self.permission_classes]
+        return super().get_permissions() + [IsHackFMIUser(), IsMemberOfTeam(),
+                                            IsTeamMembershipInActiveSeason()]
 
     def get_queryset(self):
         return TeamMembership.objects.all()
@@ -203,11 +199,7 @@ class MentorsForTeamListAPI(JwtApiAuthenticationMixin, generics.ListAPIView):
     serializer_class = MentorForTeamSerializer
 
     def get_permissions(self):
-        permission_classes = (IsHackFMIUser, )
-
-        self.permission_classes += super().permission_classes + permission_classes
-
-        return [permission() for permission in self.permission_classes]
+        return super().get_permissions() + [IsHackFMIUser(), ]
 
     def get_queryset(self):
         competitor = self.request.user.get_competitor()
@@ -225,14 +217,12 @@ class TeamMentorshipAPI(JwtApiAuthenticationMixin,
     queryset = TeamMentorship.objects.all()
 
     def get_permissions(self):
-        permission_classes = (IsHackFMIUser, IsTeamLeader,
-                              IsMentorDatePickUpToDate,
-                              CanAttachMoreMentorsToTeam,
-                              MentorIsAlreadySelectedByThisTeamLeader)
+        permission_classes = [IsHackFMIUser(), IsTeamLeader(),
+                              IsMentorDatePickUpToDate(),
+                              CanAttachMoreMentorsToTeam(),
+                              MentorIsAlreadySelectedByThisTeamLeader()]
 
-        self.permission_classes += super().permission_classes + permission_classes
-
-        return [permission() for permission in self.permission_classes]
+        return super().get_permissions() + permission_classes
 
     def perform_create(self, serializer):
         team = TeamMembership.objects.get_team_memberships_for_active_season(
@@ -381,20 +371,18 @@ class SeasonInfoAPI(JwtApiAuthenticationMixin,
     queryset = SeasonCompetitorInfo.objects.filter(season__is_active=True)
 
     def get_permissions(self):
-        permission_classes = (IsSeasonActive, IsCompetitorMemberOfTeamForActiveSeason,
-                              CantChangeOtherCompetitorsData)
-        self.permission_classes += super().permission_classes + permission_classes
-        return [permission() for permission in self.permission_classes]
+        permission_classes = [IsSeasonActive(), IsCompetitorMemberOfTeamForActiveSeason(),
+                              CantChangeOtherCompetitorsData()]
+        return super().get_permissions() + permission_classes
 
 
 class CompetitorListAPIView(JwtApiAuthenticationMixin, generics.ListAPIView):
     serializer_class = CompetitorListSerializer
 
     def get_permissions(self):
-        permission_classes = (IsTeamLeader, IsTeamMembershipInActiveSeason,
-                              CanInviteMoreMembersInTeam)
-        self.permission_classes += super().permission_classes + permission_classes
-        return [permission() for permission in self.permission_classes]
+        permission_classes = [IsTeamLeader(), IsTeamMembershipInActiveSeason(),
+                              CanInviteMoreMembersInTeam()]
+        return super().get_permissions() + permission_classes
 
     def get_queryset(self):
         return Competitor.objects.filter(seasoncompetitorinfo__season__is_active=True,

@@ -694,7 +694,7 @@ class TestTeamAPI(TestCase):
         self.token = response.data['token']
         self.client.credentials(HTTP_AUTHORIZATION=' JWT ' + self.token)
 
-    def test_tealeader_updates_room(self):
+    def test_teamleader_updates_room(self):
         updated_room = faker.random_number(digits=2)
         data = {'updated_room': updated_room}
 
@@ -703,8 +703,7 @@ class TestTeamAPI(TestCase):
 
         url = self.reverse('hack_fmi:team-detail', pk=self.team.id)
         response = self.client.patch(url, data)
-        self.assertEqual(response.data['room'], str(self.room.number))
-        self.assertEqual(response.data['updated_room'], str(updated_room))
+        self.assertEqual(response.data['room'], str(updated_room))
 
     def test_api_returns_only_teams_for_current_season(self):
         non_active_season = SeasonFactory(is_active=False)
