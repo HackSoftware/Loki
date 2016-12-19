@@ -53,26 +53,25 @@ class FillRoomsCommandTest(TestCase):
         self.room3 = RoomFactory(season=self.active_season, capacity=4)
 
     def test_fill_empty_rooms_if_all_rooms_were_empty(self):
-        teams = [TeamFactory(season=self.active_season, room=None) for _ in range(self.teams_count)]
+        [TeamFactory(season=self.active_season, room=None) for _ in range(self.teams_count)]
         self.assertEqual(0, Team.objects.filter(season=self.active_season, room__isnull=False).count())
         call_command('fillrooms')
         self.assertEqual(self.teams_count, Team.objects.filter(season=self.active_season,
                                                                room__isnull=False).count())
 
     def test_fill_teams_in_rooms_if_team_capacity_less_than_team_count(self):
-        self.room2.capacity=2
+        self.room2.capacity = 2
         self.room2.save()
-        self.room3.capacity=1
+        self.room3.capacity = 1
         self.room3.save()
 
-        teams = [TeamFactory(season=self.active_season, room=None) for _ in range(self.teams_count)]
+        [TeamFactory(season=self.active_season, room=None) for _ in range(self.teams_count)]
         self.assertEqual(0, Team.objects.filter(season=self.active_season, room__isnull=False).count())
         call_command('fillrooms')
         self.assertEqual(self.teams_count, Team.objects.filter(season=self.active_season,
                                                                room__isnull=False).count())
         self.assertFalse(Team.objects.filter(season=self.active_season,
                                              room__isnull=True).exists())
-
 
     def test_fill_empty_rooms_if_full_rooms_exist(self):
         TeamFactory(season=self.active_season, room=self.room1)
