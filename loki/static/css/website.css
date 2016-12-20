@@ -288,7 +288,10 @@ body {
     background-color: #f6f6f6;
     border: 1px solid #f8d5ac;
     width: 100%;
-    margin-bottom: 5px; }
+    height: 100px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    border-radius: 5px; }
   .container .course-students .student-box .students-course-btns {
     margin-top: 20px; }
   .container .course-students .student-box .student-social-links {
