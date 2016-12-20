@@ -211,7 +211,6 @@ class CourseStudentTaskViewTests(TestCase):
             response = self.get('education:student_tasks_dashboard', course=self.course.id, student=faker.random_int())
             self.assertEqual(response.status_code, 403)
 
-
     def test_student_access_task_list(self):
         with self.login(email=self.student.email, password=BaseUserFactory.password):
             response = self.get('education:student_tasks_dashboard', course=self.course.id, student=self.student.id)
@@ -229,6 +228,7 @@ class CourseStudentTaskViewTests(TestCase):
             response = self.get('education:student_tasks_dashboard', course=self.course.id, student=self.student.id)
             self.assertEqual(response.status_code, 200)
             self.assertIn(self.task, response.context['object_list'])
+
 
 class MaterialViewTests(TestCase):
 
@@ -379,6 +379,7 @@ class StudentCourseViewTests(TestCase):
             self.assertIn(self.course_assignment, response.context['object_list'])
             self.assertNotIn(course_assignment_for_baseuser3, response.context['object_list'])
 
+
 class CourseDashboardViewTests(TestCase):
 
     def setUp(self):
@@ -440,8 +441,8 @@ class CourseDashboardViewTests(TestCase):
         teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
         teacher.teached_courses = [self.course]
 
-        solution1 = SolutionFactory(task=self.task,
-                                    student=self.student)
+        SolutionFactory(task=self.task,
+                        student=self.student)
         TaskFactory(course=self.course, gradable=False)
 
         with self.login(username=teacher.email, password=BaseUserFactory.password):
