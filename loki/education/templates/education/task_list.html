@@ -54,8 +54,8 @@
                      </td>
                      {% if user.get_student and not user.get_teacher %}
                        <td>
-                      <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}" data-toggle="modal" data-task-id="{{task.id}}" data-target="#task-modal-box-{{ task.id }}">Предай</button>
-                          {% include 'partial/modal.html' with task=task %}
+                         <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}" data-toggle="modal" data-task-id="{{task.id}}" data-target="#task-modal-box-{{ task.id }}">Предай</button>
+                         {% include 'partial/modal.html' with task=task %}
                        </td>
                      {% endif %}
                      <td class="last-solution-status">

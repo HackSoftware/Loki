@@ -1,8 +1,11 @@
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView
 
+from django.core.urlresolvers import reverse
 from loki.education.models import (Course, Task, Solution, Material, CheckIn,
                                    Student, CourseAssignment)
+from loki.education.forms import StudentNoteForm
 from ..mixins import (DashboardPermissionMixin,
                       CannotSeeOthersCoursesDashboardsMixin,
                       CannotSeeCourseTaskListMixin,
@@ -193,3 +196,19 @@ class CourseStudentSolutionView(CanSeeCourseInfoOnlyTeacher,
         context['course'] = Course.objects.get(id=self.kwargs.get('course'))
         context['student'] = Student.objects.get(id=self.kwargs.get('student'))
         return context
+
+
+class TeacherStudentNoteView(CanSeeCourseInfoOnlyTeacher,
+                             DashboardPermissionMixin,
+                             CreateView):
+
+    template_name = 'partial/student_note.html'
+    form_class = StudentNoteForm
+
+    def get_success_url(self):
+        return reverse('education:students_view',
+                       kwargs={'course': self.kwargs.get('course')})
+
+    def post(self, request, *args, **kwargs):
+
+        return super().get(request, *args, **kwargs)
