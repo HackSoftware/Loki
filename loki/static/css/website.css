@@ -276,6 +276,18 @@ body {
   .container .course-students .student-box a {
     text-decoration: none;
     color: #f7931e; }
+  .container .course-students .student-box .student-box-footer {
+    background: #E1E1E1;
+    padding: 10px;
+    margin-top: 5px;
+    position: relative; }
+  .container .course-students .student-box .student-notes-table {
+    display: none;
+    width: 80%; }
+  .container .course-students .student-box .student-note-footer {
+    background-color: #E1E1E1; }
+    .container .course-students .student-box .student-note-footer .student-note {
+      cursor: pointer; }
   .container .course-students .student-box .lines {
     margin-top: -5px;
     width: 100%;

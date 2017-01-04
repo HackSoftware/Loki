@@ -408,6 +408,27 @@ $TabBorder: #C5C4C4;
           color: #f7931e;
         }
 
+        .student-box-footer {
+          background: #E1E1E1;
+          padding: 10px;
+          margin-top: 5px;
+          position: relative;
+
+        }
+        .student-notes-table {
+          display: none;
+          width: 80%;
+        }
+
+      .student-note-footer {
+        background-color: #E1E1E1;
+
+        .student-note {
+          cursor: pointer;
+        }
+      }
+
+
         .lines {
           margin-top: -5px;
           width:100%;
@@ -986,7 +1007,7 @@ $TabBorder: #C5C4C4;
 
     .hidden-toggle {
       display: none;
-      width: 80%
+      width: 80%;
     }
 
     .course-box-footer {
