@@ -38,6 +38,6 @@ urlpatterns = [
         dashboard.CourseStudentTaskView.as_view(), name='student_tasks_dashboard'),
     url(r'^course/(?P<course>[0-9]+)/(?P<student>[0-9]+)/tasks/(?P<task>[0-9]+)/$',
         dashboard.CourseStudentSolutionView.as_view(), name='student_solutions_dashboard'),
-    url(r'^course/(?P<course>[0-9]+)/(?P<ca>[0-9]+)/$',
-        dashboard.TeacherStudentNoteView.as_view(), name='teacher_student_note')
+    url(r'^student-note-create/(?P<course>[0-9]+)/$',
+        dashboard.StudentNoteCreate.as_view(), name='student-note-create')
 ]

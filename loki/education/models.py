@@ -57,6 +57,11 @@ class CourseAssignment(models.Model):
     class Meta:
         unique_together = ('user', 'course')
 
+    def __str__(self):
+        return "{} {} - {}".format(self.user.first_name,
+                                   self.user.last_name,
+                                   self.course)
+
 
 class Course(models.Model):
     name = models.CharField(blank=False, max_length=64, unique=True)

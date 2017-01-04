@@ -17,7 +17,7 @@
       {% endif %}
       <b>Бележки</b>
       <button class="btn btn-warning submit-dialog-btn" data-task-name="{{student}}" data-toggle="modal" data-student-id="{{student.id}}" data-target="#student-note-{{ student.id }}">Предай</button>
-      {% include 'partial/student_note.html' with ca=ca.id author=user course=ca.course %}
+      {% include 'education/studentnote_form.html' with ca=ca.id author=user course=ca.course %}
     </div>
     <div class="col-sm-2 students-course-btns">
       <a href="{% url 'education:student_tasks_dashboard' course.id student.id %}">
