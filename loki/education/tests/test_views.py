@@ -4,6 +4,7 @@ from loki.seed.factories import (BaseUserFactory, CourseFactory, TaskFactory,
                                  CourseAssignmentFactory, SolutionFactory,
                                  MaterialFactory, WeekFactory, LectureFactory)
 from loki.base_app.models import BaseUser
+from loki.education.models import StudentNote
 
 from faker import Factory
 faker = Factory.create()
@@ -480,3 +481,46 @@ class CourseDashboardViewTests(TestCase):
             self.assertEqual(1, response.context['passed_solutions'])
             self.assertEqual(1, response.context['url_solutions'])
             self.assertEqual(1, response.context['failed_solutions'])
+
+class CreateStudentNoteTest(TestCase):
+
+    def setUp(self):
+        self.baseuser = BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.save()
+        self.baseuser2 = BaseUserFactory()
+        self.baseuser2.is_active = True
+        self.baseuser2.save()
+        self.student = BaseUser.objects.promote_to_student(self.baseuser2)
+        self.course = CourseFactory()
+        self.course_assignment = CourseAssignmentFactory(course=self.course,
+                                                         user=self.student)
+
+    def test_cannot_create_student_notes_if_no_login(self):
+        response = self.post('education:student-note-create', course=self.course.id)
+        self.assertEquals(response.status_code, 302)
+
+    def test_student_cannot_create_student_notes(self):
+        with self.login(email=self.student.email, password=BaseUserFactory.password):
+
+            response = self.post('education:student-note-create', course=self.course.id)
+            self.assertEquals(response.status_code, 403)
+
+    def test_base_cannot_create_student_notes(self):
+        with self.login(email=self.baseuser.email, password=BaseUserFactory.password):
+
+            response = self.post('education:student-note-create', course=self.course.id)
+            self.assertEquals(response.status_code, 403)
+
+    def test_teacher_can_create_student_notes(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
+
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            data = {'text': faker.text(),
+                    'assignment': self.course_assignment.id}
+            response = self.post('education:student-note-create', course=self.course.id, data=data, follow=True)
+            self.assertEquals(response.status_code, 200)
+
+        self.assertEqual(1, StudentNote.objects.filter(assignment=self.course_assignment).count())
+        self.assertEqual(teacher, StudentNote.objects.filter(assignment=self.course_assignment).first().author)
