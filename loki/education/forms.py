@@ -28,12 +28,3 @@ class FixJsonFieldDisplayInInheritedClassAdminForm(forms.ModelForm):
 
         if isinstance(decoded, str):
             self.initial['extra_options'] = json.loads(self.initial['extra_options'])
-
-
-class StudentNoteForm(forms.ModelForm):
-    text = forms.CharField(widget=forms.Textarea)
-
-    class Meta:
-        model = StudentNote
-
-        fields = ('text', )

@@ -20,7 +20,7 @@
         <button class="btn btn-warning submit-dialog-btn" data-task-name="{{student}}"
                 data-toggle="modal" data-student-id="{{student.id}}"
                 data-target="#student-note-{{ student.id }}">Създай бележка</button>
-        {% include 'education/studentnote_form.html' with ca=ca.id author=user course=ca.course %}
+        {% include 'partial/student_note_modal.html' with ca=ca.id author=user course=ca.course %}
       </div>
       <div class="student-notes">
         {% if ca.studentnote_set.exists %}
