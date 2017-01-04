@@ -126,25 +126,4 @@ $(document).ready(function(){
       (this).value = (this).value.trim();
   });
 
-  $(".student-note").click(function(e){
-    e.preventDefault();
-    var text = $(this).parents(".modal-content").find("textarea.message-text").val();
-    var ca_id = $(this).closest(".submit-solution").attr("value");
-    var course_id =
-    var csrftoken = Cookies.get('csrftoken');
-    $.ajax({
-      url: '/education/course/course_id/ca/',
-      type: "POST",
-      dataType: "json",
-      data: {
-        text: text,
-        ca_id: ca_id
-      },
-      headers: {"X-CSRFToken": csrftoken},
-      success: function(data) {
-
-      }
-    });
-  });
-
 });
