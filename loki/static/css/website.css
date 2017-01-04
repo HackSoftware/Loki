@@ -296,6 +296,19 @@ body {
     margin-top: 20px; }
   .container .course-students .student-box .student-social-links {
     font-size: 2em; }
+  .container .course-students .student-box .student-notes {
+    margin-top: 1%; }
+    .container .course-students .student-box .student-notes .note {
+      margin-top: 3px;
+      border: 2px solid  #f8d5ac; }
+      .container .course-students .student-box .student-notes .note .note-author-title, .container .course-students .student-box .student-notes .note .note-text-title {
+        font-weight: bold;
+        text-align: center; }
+      .container .course-students .student-box .student-notes .note .note-author, .container .course-students .student-box .student-notes .note .note-author-title, .container .course-students .student-box .student-notes .note .note-date {
+        text-align: center; }
+      .container .course-students .student-box .student-notes .note .note-text {
+        border-left: 2px solid  #f8d5ac;
+        border-right: 2px solid  #f8d5ac; }
 
 .dropdown-menu {
   margin-top: 20px; }

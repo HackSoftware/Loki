@@ -437,6 +437,28 @@ $TabBorder: #C5C4C4;
         .student-social-links {
           font-size: 2em;
         }
+
+        .student-notes {
+          margin-top: 1%;
+
+          .note {
+            margin-top: 3px;
+            border: 2px solid  #f8d5ac;
+
+            .note-author-title, .note-text-title {
+              font-weight: bold;
+              text-align: center;
+            }
+            .note-author, .note-author-title, .note-date {
+              text-align: center;
+            }
+            .note-text {
+              border-left: 2px solid  #f8d5ac;
+              border-right: 2px solid  #f8d5ac;
+            }
+          }
+        }
+
       }
     }
 
