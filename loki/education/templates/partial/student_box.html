@@ -16,33 +16,30 @@
         <b>Присъствие:</b> {{ ca.student_presence }}%</br>
       {% endif %}
       <div class="row">
-        <div class="col-sm-3"><b>Бележки от преподаватели</b></div>
-        <button class="btn btn-warning submit-dialog-btn" data-task-name="{{student}}"
-                data-toggle="modal" data-student-id="{{student.id}}"
-                data-target="#student-note-{{ student.id }}">Създай бележка</button>
-        {% include 'partial/student_note_modal.html' with ca=ca.id author=user course=ca.course %}
+        <div class="col-sm-6"><b>Бележки от преподаватели</b>
+          <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
+        </div>
+
       </div>
-      <div class="student-notes">
-        {% if ca.studentnote_set.exists %}
-          <div class="note row">
-            <div class="note-author-title col-sm-3">Преподавател</div>
-            <div class="note-text-title col-sm-6">Бележка</div>
-            <div class="note-text-title col-sm-3">Дата</div>
-          </div>
-          {% for note in ca.studentnote_set.all %}
-          <div class="note row">
-            <div class="note-author col-sm-3">{{ note.author.first_name }} {{ note.author.last_name }}</div>
-            <div class="note-text col-sm-6">{{ note.text }}</div>
-            <div class="note-date col-sm-3">{{ note.post_time| date:'d-m-Y' }}</div>
-          </div>
-          {% endfor %}
-        {% endif %}
-      </div>
+
     </div>
     <div class="col-sm-2 students-course-btns">
+      <button class="btn btn-warning submit-dialog-btn" data-task-name="{{student}}"
+              data-toggle="modal" data-student-id="{{student.id}}"
+              data-target="#student-note-{{ student.id }}">Създай бележка</button>
+      {% include 'partial/student_note_modal.html' with ca=ca.id author=user course=ca.course %}
       <a href="{% url 'education:student_tasks_dashboard' course.id student.id %}">
         <button class="btn btn-warning" id="tasks-link">Задачи</button>
       </a>
     </div>
+  </div>
+  <div class="col-sm-12 student-box-footer check-in-footer">
+          <div class="col-sm-12 student-note">
+          <b>Бележки от преподаватели</b>
+          <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
+        </div>
+          <div class="student-notes-table hidden-toggle col-sm-12">
+                {% include 'partial/student_notes.html' with ca=ca %}
+          </div>
   </div>
 </div>
