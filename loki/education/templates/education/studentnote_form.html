@@ -10,7 +10,7 @@
       <div class="modal-body">
         <form id="student-note-create" action="{% url 'education:student-note-create' course.id %}" method="POST">
           {% csrf_token %}
-          <textarea name="text" class="message-text"></textarea>
+          <textarea name="text" class="form-control message-text"></textarea>
           <input type="hidden" name="assignment" value="{{ ca }}">
         </form>
       </div>
