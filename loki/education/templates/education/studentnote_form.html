@@ -8,15 +8,15 @@
         <h4 class="modal-title" id="myModalLabel"><b>Бележка за студент {{ student }}</b></h4>
       </div>
       <div class="modal-body">
-        <form action="{% url 'education:student-note-create' course.id %}" method="POST">
+        <form id="student-note-create" action="{% url 'education:student-note-create' course.id %}" method="POST">
           {% csrf_token %}
-          <textarea name="text" rows="8" cols="40"></textarea>
+          <textarea name="text" class="message-text"></textarea>
           <input type="hidden" name="assignment" value="{{ ca }}">
-          <button type="submit" class="btn btn-warning student-note" >Запази</button>
         </form>
       </div>
       <div class="modal-footer">
         {% csrf_token %}
+        <button type="submit" class="btn btn-warning student-note" form="student-note-create">Запази</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
       </div>
     </div>
