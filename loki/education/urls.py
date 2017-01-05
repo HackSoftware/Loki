@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from loki.education.views import old_api_views, dashboard
+from loki.education.views import old_api_views, dashboard, student_dashboard, teacher_dashboard
 
 
 urlpatterns = [
@@ -20,24 +20,26 @@ urlpatterns = [
     url(r'^api/student-solutions/$', old_api_views.StudentSolutionsList.as_view(), name='student_solutions'),
     url(r'^certificate/(?P<pk>[0-9]+)/$', old_api_views.certificate_old, name='certificate_old'),
     url(r'^certificate/(?P<token>[\w|-]+)/$', old_api_views.certificate, name='certificate'),
+    # Common views for Teacher Dashboard and Student Dashboard
     url(r'^dashboard/$', dashboard.CourseListView.as_view(), name='course_list'),
-    url(r'^course/(?P<course>[0-9]+)/dashboard/$',
-        dashboard.TaskDashboardView.as_view(), name='task_dashboard'),
-    url(r'^course/(?P<course>[0-9]+)/task/(?P<task>[0-9]+)/solutions/$',
-        dashboard.SolutionView.as_view(), name='solution_view'),
     url(r'^course/(?P<course>[0-9]+)/materials/$',
-        dashboard.MaterialView.as_view(), name='material_view'),
+        dashboard.MaterialListView.as_view(), name='material_view'),
+    # Student views
+    url(r'^course/(?P<course>[0-9]+)/dashboard/$',
+        student_dashboard.TaskListView.as_view(), name='task_dashboard'),
+    url(r'^course/(?P<course>[0-9]+)/task/(?P<task>[0-9]+)/solutions/$',
+        student_dashboard.SolutionListView.as_view(), name='solution_view'),
     # Teacher views
     url(r'^course/(?P<course>[0-9]+)/students/$',
-        dashboard.StudentCourseView.as_view(), name='students_view'),
+        teacher_dashboard.StudentListView.as_view(), name='students_view'),
     url(r'^teacher/course/(?P<course>[0-9]+)/$',
-        dashboard.CourseDashboardView.as_view(), name='course-detail'),
+        teacher_dashboard.CourseDetailView.as_view(), name='course-detail'),
     url(r'^course/(?P<course>[0-9]+)/teacher-task-dashboard/$',
-        dashboard.TeacherTaskView.as_view(), name='teacher_task_dashboard'),
+        teacher_dashboard.TaskListView.as_view(), name='teacher_task_dashboard'),
     url(r'^course/(?P<course>[0-9]+)/(?P<student>[0-9]+)/tasks/$',
-        dashboard.CourseStudentTaskView.as_view(), name='student_tasks_dashboard'),
+        teacher_dashboard.StudentTaskListView.as_view(), name='student_tasks_dashboard'),
     url(r'^course/(?P<course>[0-9]+)/(?P<student>[0-9]+)/tasks/(?P<task>[0-9]+)/$',
-        dashboard.CourseStudentSolutionView.as_view(), name='student_solutions_dashboard'),
+        teacher_dashboard.StudentSolutionListView.as_view(), name='student_solutions_dashboard'),
     url(r'^student-note-create/(?P<course>[0-9]+)/$',
-        dashboard.StudentNoteCreate.as_view(), name='student-note-create')
+        teacher_dashboard.StudentNoteCreateView.as_view(), name='student-note-create')
 ]
