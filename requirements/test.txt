@@ -4,10 +4,9 @@
 coverage==4.0.3
 flake8==2.5.4
 django-test-plus==1.0.13
-factory_boy==2.7.0
+factory_boy==2.8.1
 
 # pytest
 pytest-django==2.9.1
 pytest-sugar==0.7.1
 pytest-cov==2.4.0
-
