@@ -1,15 +1,11 @@
 <div class="student-notes">
   {% if ca.studentnote_set.exists %}
-    <div class="note row">
-      <div class="note-author-title col-sm-3">Преподавател</div>
-      <div class="note-text-title col-sm-6">Бележка</div>
-      <div class="note-text-title col-sm-3">Дата</div>
-    </div>
     {% for note in ca.studentnote_set.all %}
-    <div class="note row">
-      <div class="note-author col-sm-3">{{ note.author.first_name }} {{ note.author.last_name }}</div>
-      <div class="note-text col-sm-6">{{ note.text }}</div>
-      <div class="note-date col-sm-3">{{ note.post_time| date:'d-m-Y' }}</div>
+    <div class="note">
+        <b class="note-author">{{ note.author.first_name }} {{ note.author.last_name }}</b>
+        <span class="note-text">{{ note.text }}</span>
+        <div class="note-date">{{ note.post_time| date:'d-m-Y' }}
+        </div>
     </div>
     {% endfor %}
   {% endif %}

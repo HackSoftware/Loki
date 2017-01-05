@@ -277,17 +277,12 @@ body {
     text-decoration: none;
     color: #f7931e; }
   .container .course-students .student-box .student-box-footer {
-    background: #E1E1E1;
-    padding: 10px;
     margin-top: 5px;
     position: relative; }
   .container .course-students .student-box .student-notes-table {
-    display: none;
-    width: 80%; }
-  .container .course-students .student-box .student-note-footer {
-    background-color: #E1E1E1; }
-    .container .course-students .student-box .student-note-footer .student-note {
-      cursor: pointer; }
+    display: none; }
+  .container .course-students .student-box .student-note-footer .student-note {
+    cursor: pointer; }
   .container .course-students .student-box .lines {
     margin-top: -5px;
     width: 100%;
@@ -306,21 +301,47 @@ body {
     border-radius: 5px; }
   .container .course-students .student-box .students-course-btns {
     margin-top: 20px; }
+    .container .course-students .student-box .students-course-btns #note-link, .container .course-students .student-box .students-course-btns #tasks-link {
+      width: 70%;
+      margin-top: 5px;
+      text-align: center;
+      white-space: normal; }
+      @media screen and (max-width: 992px) {
+        .container .course-students .student-box .students-course-btns #note-link, .container .course-students .student-box .students-course-btns #tasks-link {
+          margin-right: 5%;
+          margin-left: 15%; } }
+    @media screen and (max-width: 1200px) {
+      .container .course-students .student-box .students-course-btns {
+        padding-left: 0px;
+        padding-right: 0px;
+        width: 30%; } }
+    @media screen and (max-width: 765px) {
+      .container .course-students .student-box .students-course-btns {
+        margin-left: 20%;
+        margin-bottom: 10px;
+        width: 60%; } }
   .container .course-students .student-box .student-social-links {
     font-size: 2em; }
   .container .course-students .student-box .student-notes {
     margin-top: 1%; }
     .container .course-students .student-box .student-notes .note {
-      margin-top: 3px;
-      border: 2px solid  #f8d5ac; }
-      .container .course-students .student-box .student-notes .note .note-author-title, .container .course-students .student-box .student-notes .note .note-text-title {
-        font-weight: bold;
-        text-align: center; }
-      .container .course-students .student-box .student-notes .note .note-author, .container .course-students .student-box .student-notes .note .note-author-title, .container .course-students .student-box .student-notes .note .note-date {
-        text-align: center; }
-      .container .course-students .student-box .student-notes .note .note-text {
-        border-left: 2px solid  #f8d5ac;
-        border-right: 2px solid  #f8d5ac; }
+      margin-top: 5px;
+      margin-bottom: 10px;
+      position: relative;
+      background-color: #EAEAEA;
+      padding: 5px;
+      border-radius: 0px 8px 8px 8px; }
+      .container .course-students .student-box .student-notes .note .note-author {
+        background-color: #ffd8ab;
+        padding: 3px;
+        border-radius: 0px 10px 10px 10px;
+        margin-right: 10px;
+        margin-bottom: 10px; }
+      .container .course-students .student-box .student-notes .note .note-date {
+        position: absolute;
+        right: 10px;
+        bottom: 5px;
+        font-size: 10px; }
 
 .dropdown-menu {
   margin-top: 20px; }

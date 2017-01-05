@@ -409,24 +409,19 @@ $TabBorder: #C5C4C4;
         }
 
         .student-box-footer {
-          background: #E1E1E1;
-          padding: 10px;
           margin-top: 5px;
           position: relative;
 
         }
         .student-notes-table {
           display: none;
-          width: 80%;
         }
 
-      .student-note-footer {
-        background-color: #E1E1E1;
-
-        .student-note {
-          cursor: pointer;
+        .student-note-footer {
+          .student-note {
+            cursor: pointer;
+          }
         }
-      }
 
 
         .lines {
@@ -452,7 +447,31 @@ $TabBorder: #C5C4C4;
         }
 
         .students-course-btns {
-          margin-top: 20px;
+            margin-top: 20px;
+
+            #note-link, #tasks-link {
+              width: 70%;
+              margin-top: 5px;
+              text-align: center;
+              white-space: normal;
+
+              @media screen and (max-width: 992px) {
+                margin-right: 5%;
+                margin-left: 15%;
+              }
+            }
+
+            @media screen and (max-width: 1200px) {
+              padding-left: 0px;
+              padding-right: 0px;
+              width: 30%;
+            }
+
+            @media screen and (max-width: 765px) {
+              margin-left: 20%;
+              margin-bottom: 10px;
+              width: 60%;
+            }
         }
 
         .student-social-links {
@@ -463,23 +482,29 @@ $TabBorder: #C5C4C4;
           margin-top: 1%;
 
           .note {
-            margin-top: 3px;
-            border: 2px solid  #f8d5ac;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            position: relative;
+            background-color: #EAEAEA;;
+            padding: 5px;
+            border-radius: 0px 8px 8px 8px;
 
-            .note-author-title, .note-text-title {
-              font-weight: bold;
-              text-align: center;
+            .note-author {
+              background-color: #ffd8ab;
+              padding: 3px;
+              border-radius: 0px 10px 10px 10px;
+              margin-right: 10px;
+              margin-bottom: 10px;
             }
-            .note-author, .note-author-title, .note-date {
-              text-align: center;
-            }
-            .note-text {
-              border-left: 2px solid  #f8d5ac;
-              border-right: 2px solid  #f8d5ac;
+
+            .note-date {
+              position: absolute;
+              right: 10px;
+              bottom: 5px;
+              font-size: 10px;
             }
           }
         }
-
       }
     }
 
