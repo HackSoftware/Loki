@@ -98,15 +98,15 @@ def read_binary_file(path):
 
 
 def get_dates_for_weeks(course):
-    lectures = course.lecture_set.filter(week__isnull=False).values('week', 'date')
     week_dates = {}
+    lecture_set = course.lecture_set.filter(week__isnull=False).all()
 
-    for lecture in lectures:
-        week = lecture['week']
-        if week not in week_dates:
-            week_dates[week] = [lecture['date']]
+    for l in lecture_set:
+        week_number = l.week.number
+        if week_number not in week_dates:
+            week_dates[week_number] = [l.date]
         else:
-            week_dates[week].append(lecture['date'])
+            week_dates[week_number].append(l.date)
 
     return week_dates
 
