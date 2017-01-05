@@ -4,7 +4,7 @@
 {% autoescape off %}
 {% if object_list.exists %}
 <div class="material-course-div">
-  <a href="{% url 'education:course_list' %}">
+  <a href="{% url 'education:course-list' %}">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
   </a>
   <div id="material-course-name">
@@ -30,7 +30,7 @@
 {% endfor %}
 {% else %}
 <div class="material-course-div">
-  <a href="{% url 'education:course_list' %}">
+  <a href="{% url 'education:course-list' %}">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
   </a>
   <div id="material-course-name">

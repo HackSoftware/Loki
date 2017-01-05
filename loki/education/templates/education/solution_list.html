@@ -5,11 +5,11 @@
 {% if object_list.exists %}
 <div class="solutions-task-div">
   {% if user.get_student and not user.get_teacher %}
-    <a href="{% url 'education:task_dashboard' course.id %}">
+    <a href="{% url 'education:task-list' course.id %}">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </a>
   {% else %}
-    <a href="{% url 'education:student_tasks_dashboard' course.id student.id %}">
+    <a href="{% url 'education:student-task-list' course.id student.id %}">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </a>
   {% endif %}
@@ -67,7 +67,7 @@
 {% endfor %}
 {% else %}
 <div class="solutions-task-div">
-  <a href="{% url 'education:course_list' %}">
+  <a href="{% url 'education:course-list' %}">
     <i class="fa fa-arrow-left" aria-hidden="true"></i>
   </a>
   <div id="solutions-task-name">

@@ -6,11 +6,11 @@
 {% autoescape off %}
 <div class="task-course-div">
   {% if user.get_student and not user.get_teacher %}
-    <a href="{% url 'education:course_list' %}">
+    <a href="{% url 'education:course-list' %}">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </a>
   {% else %}
-    <a href="{% url 'education:students_view' course.id %}">
+    <a href="{% url 'education:student-list' course.id %}">
       <i class="fa fa-arrow-left" aria-hidden="true"></i>
     </a>
   {% endif %}
@@ -75,9 +75,9 @@
                      </td>
                      <td id="solution-task-id-{{task.id}}">
                           {% if user.get_student and not user.get_teacher %}
-                            <a class="task-solution-link" href="{% url 'education:solution_view' task.course.id task.id %}">
+                            <a class="task-solution-link" href="{% url 'education:solution-list' task.course.id task.id %}">
                           {% else %}
-                            <a class="task-solution-link" href="{% url 'education:student_solutions_dashboard' course.id student.id task.id %}">
+                            <a class="task-solution-link" href="{% url 'education:student-solution-list' course.id student.id task.id %}">
                           {% endif %}
                             {% if tasksolution|key:task.name %}
                               <button class="btn btn-warning" id="btn-tasks-link">Решения</button>

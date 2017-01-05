@@ -34,7 +34,7 @@
                 data-target="#student-note-{{ student.id }}">Нова бележка</button>
         {% include 'partial/student_note_modal.html' with ca=ca.id author=user course=ca.course %}
       {% endif %}
-      <a href="{% url 'education:student_tasks_dashboard' course.id student.id %}">
+      <a href="{% url 'education:student-task-list' course.id student.id %}">
         <button class="btn btn-warning" id="tasks-link">Задачи</button>
       </a>
     </div>

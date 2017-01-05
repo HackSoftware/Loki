@@ -5,7 +5,7 @@
 <div class="container">
   <div class="course-students">
     <div class="course-name-div">
-      <a href="{% url 'education:course_list' %}">
+      <a href="{% url 'education:course-list' %}">
         <i class="fa fa-arrow-left" aria-hidden="true"></i>
       </a>
       <div class="course-name"><b>{{object.name}}</b></div>
@@ -30,7 +30,7 @@
           <b>Общ брой предадени решения url задачи:</b> {{ url_solutions }}
         </div>
         <div class="col-sm-2 students-course-btns">
-          <a href="{% url 'education:students_view' course.id %}">
+          <a href="{% url 'education:student-list' course.id %}">
             <button class="btn btn-warning" id="students-link">Студенти</button>
           </a>
         </div>

@@ -104,7 +104,7 @@
                     {% endif %}
 
                     {% if user.student.courseassignment_set.exists or user.get_teacher %}
-                      <li><a href="{% url 'education:course_list' %}">Моите курсове</a></li>
+                      <li><a href="{% url 'education:course-list' %}">Моите курсове</a></li>
                     {% endif %}
                       <li><a href="{% url 'website:logout' %}">Изход</a></li>
                   </ul>

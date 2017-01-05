@@ -112,7 +112,7 @@ class StudentNoteCreateView(CanSeeCourseInfoOnlyTeacher,
     fields = ['assignment', 'text']
 
     def get_success_url(self):
-        return reverse('education:students_view',
+        return reverse('education:student-list',
                        kwargs={'course': self.kwargs.get('course')})
 
     def form_valid(self, form):

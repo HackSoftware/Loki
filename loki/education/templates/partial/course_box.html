@@ -25,22 +25,22 @@
     <div class="col-sm-3 course-btns">
       {% if course.task_set.exists and course.is_active %}
         {% if user.get_student %}
-          <a href="{% url 'education:task_dashboard' course.id %}">
+          <a href="{% url 'education:task-list' course.id %}">
             <button class="btn btn-warning">Предай задачи</button>
           </a>
         {% else %}
-          <a href="{% url 'education:teacher_task_dashboard' course.id %}">
+          <a href="{% url 'education:teacher-task-list' course.id %}">
             <button class="btn btn-warning" id="tasks-link">Задачи</button>
           </a>
         {% endif %}
       {% endif %}
       {% if user.get_teacher and course.student_set.exists %}
-        <a href="{% url 'education:students_view' course.id %}">
+        <a href="{% url 'education:student-list' course.id %}">
           <button class="btn btn-warning" id="students-link">Студенти</button>
         </a>
       {% endif %}
       {% if course.material_set.exists and course.is_active %}
-        <a href="{% url 'education:material_view' course.id %}">
+        <a href="{% url 'education:material-list' course.id %}">
           <button class="btn btn-warning" id="materials-link">Материали</button>
         </a>
       {% endif %}
