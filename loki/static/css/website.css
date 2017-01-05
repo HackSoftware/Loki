@@ -628,13 +628,15 @@ body {
       opacity: 1; }
   .row-profile #user-name {
     font-size: 20px; }
-  .row-profile #profile-socials {
+  .row-profile .profile-socials {
     font-size: 2em; }
   .row-profile .interviews {
     max-width: 80%;
     margin-left: 25px; }
     .row-profile .interviews img {
       width: 25px; }
+  .row-profile .profile-github-account {
+    text-decoration: none; }
 
 #edit-app {
   margin-top: 10px; }

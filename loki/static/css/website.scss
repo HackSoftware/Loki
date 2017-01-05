@@ -903,7 +903,7 @@ $TabBorder: #C5C4C4;
     font-size: 20px;
   }
 
-  #profile-socials {
+  .profile-socials {
     font-size: 2em;
   }
 
@@ -914,6 +914,9 @@ $TabBorder: #C5C4C4;
     img {
       width: 25px;
     }
+  }
+  .profile-github-account {
+    text-decoration: none;
   }
 
 }
