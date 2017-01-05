@@ -53,6 +53,8 @@ INSTALLED_APPS = (
     'anymail',
     'easy_thumbnails',
     'image_cropping',
+    'channels',
+    'raven.contrib.django.raven_compat',  # used for sentry logging
 
     'loki.hack_fmi.apps.HackFMIConfig',
     'loki.base_app.apps.BaseAppConfig',
@@ -65,6 +67,10 @@ INSTALLED_APPS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    # Used for sentry client setup. For more info check the docs:
+    # https://docs.sentry.io/clients/python/integrations/django/
+    'raven.contrib.django.raven_compat.middleware.SentryResponseErrorIdMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -137,11 +143,18 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',),
     'UPLOADED_FILES_USE_URL': False,
 }
 
+# JWT Authorization
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    # Set expiration time to 1 week.
+    'JWT_EXPIRATION_DELTA': timedelta(seconds=604800),
+}
 
 # # CELERY
 # INSTALLED_APPS += ('loki.celery.CeleryConfig',
@@ -221,7 +234,7 @@ THUMBNAIL_PROCESSORS = (
 
 # EMAIL CONFIGURATION
 # ------------------------------------------------------------------------------
-EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 DJANGO_DEFAULT_FROM_EMAIL = env('DJANGO_DEFAULT_FROM_EMAIL', default="HackBulgaria <team@hackbulgaria.com>")
 
@@ -240,7 +253,9 @@ templates = {
     "password_reset": lambda **env_kwargs: env('PASSWORD_RESET_TEMPLATE_ID', **env_kwargs),
     "application_completed_default": lambda **env_kwargs: env('APPLICATION_COMPLETED_DEFAULT', **env_kwargs),
     "hackfmi_team_deleted": lambda **env_kwargs: env('HACKFMI_TEAM_DELETED_TEMPLATE_ID', **env_kwargs),
-    "interview_confirmation": lambda **env_kwargs: env('CONFIRM_INTERVIEW', **env_kwargs)
+    "interview_confirmation": lambda **env_kwargs: env('CONFIRM_INTERVIEW', **env_kwargs),
+    "send_invitation": lambda **env_kwargs: env('SEND_INVITATION', **env_kwargs),
+    "hackfmi_register": lambda **env_kwargs: env('HACKFMI_REGISTER', **env_kwargs)
 }
 
 # Get all email templates from the env with default value ""
@@ -250,3 +265,12 @@ EMAIL_TEMPLATES = {
 }
 
 LOGIN_URL = 'website:login'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "config.routing.channel_routing",
+    },
+}
+
+INVITATION_GROUP_NAME = "Invitations-{id}"

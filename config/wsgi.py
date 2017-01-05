@@ -12,3 +12,8 @@ import os
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
 
 application = get_wsgi_application()
+
+# catch errors for Sentry even at the fundamental level of the Django application
+if os.environ.get('DJANGO_SETTINGS_MODULE') == 'config.settings.production':
+    from raven.contrib.django.raven_compat.middleware.wsgi import Sentry
+    application = Sentry(application)

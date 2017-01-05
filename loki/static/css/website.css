@@ -226,6 +226,8 @@ body {
 #moderate-competiton-card {
   background-color: #56CB00; }
 
+.container a {
+  color: #ec971f; }
 .container section:nth-of-type(2n + 1) div.cards {
   float: left; }
 .container section:nth-of-type(2n + 1) div.text-card {
@@ -326,16 +328,17 @@ body {
     margin-top: 1%; }
     .container .course-students .student-box .student-notes .note {
       margin-top: 5px;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
       position: relative;
-      background-color: #EAEAEA;
+      background-color: #E6EAED;
       padding: 5px;
+      padding-bottom: 10px;
       border-radius: 0px 8px 8px 8px; }
       .container .course-students .student-box .student-notes .note .note-author {
-        background-color: #ffd8ab;
-        padding: 3px;
+        background-color: #ffc583;
+        padding: 1px 3px 1px 3px;
         border-radius: 0px 10px 10px 10px;
-        margin-right: 10px;
+        margin-right: 5px;
         margin-bottom: 10px; }
       .container .course-students .student-box .student-notes .note .note-date {
         position: absolute;

@@ -31,7 +31,7 @@
 </div>
 {% for solution in object_list %}
   <div class="task-name-container"><b>Решение</b>
-    <div class="solution-created-at"><b>Предадена на: {{ solution.created_at }}</b></div>
+    <div class="solution-created-at"><b>Предадена на: {{ solution.created_at|date:"d F Y, H:i" }}</b></div>
   </div>
   <div class="solution-container">
     <h5><b>Резултат:</b>

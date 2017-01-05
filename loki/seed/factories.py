@@ -10,7 +10,7 @@ from loki.website import models as website_models
 from loki.applications import models as application_models
 from loki.interview_system import models as interview_models
 
-
+from loki.hack_fmi.helper import date_increase, date_decrease
 faker = Factory.create()
 
 
@@ -151,14 +151,14 @@ class BaseUserPasswordResetTokenFactory(factory.DjangoModelFactory):
         model = base_app_models.BaseUserPasswordResetToken
 
     user = factory.SubFactory(BaseUserFactory)
-    token = factory.Sequence(lambda n: '{}{}'.format(faker.word(), n))
+    token = factory.Sequence(lambda n: '{}{}'.format(faker.text(max_nb_chars=20), n))
 
 
 class SkillFactory(factory.DjangoModelFactory):
     class Meta:
         model = hack_fmi_models.Skill
 
-    name = factory.Sequence(lambda n: '{}{}'.format(faker.name(), n))
+    name = factory.Sequence(lambda n: '{}{}'.format(faker.text(max_nb_chars=25), n))
 
 
 class StudentFactory(BaseUserFactory):
@@ -233,13 +233,16 @@ class SeasonFactory(factory.DjangoModelFactory):
     name = factory.Sequence(lambda n: "season{}".format(n))
     topic = faker.word()
     front_page = faker.paragraph()
-    min_team_members_count = faker.random_number(digits=1)
-    max_team_members_count = faker.random_number(digits=1)
+    min_team_members_count = int(faker.random_element(elements=('1', '2')))
+    max_team_members_count = int(faker.random_element(elements=('7', '8')))
     sign_up_deadline = faker.date()
-    make_team_dead_line = faker.date()
-    mentor_pick_start_date = faker.date()
-    mentor_pick_end_date = faker.date()
-    max_mentor_pick = faker.random_number(digits=1)
+    # Increase with 20 days form date.today()
+    make_team_dead_line = date_increase(10)
+    # In order to be able to pick up mentor in date.today(),
+    # the pick up period must have started ==> date_decrease
+    mentor_pick_start_date = date_decrease(20)
+    mentor_pick_end_date = date_increase(20)
+    max_mentor_pick = faker.random_element(elements=('3', '4'))
     is_active = faker.boolean(chance_of_getting_true=0)
 
 
@@ -255,7 +258,7 @@ class RoomFactory(factory.DjangoModelFactory):
     class Meta:
         model = hack_fmi_models.Room
 
-    number = faker.random_number()
+    number = factory.Sequence(lambda n: n)
     season = factory.SubFactory(SeasonFactory)
     capacity = faker.random_number(digits=1)
 
@@ -276,7 +279,7 @@ class TeamFactory(factory.DjangoModelFactory):
     class Meta:
         model = hack_fmi_models.Team
 
-    name = faker.name()
+    name = factory.Sequence(lambda n: faker.word() + str(n))
     mentors = factory.RelatedFactory(MentorFactory)
     technologies = factory.RelatedFactory(SkillFactory)
     idea_description = faker.text()
@@ -284,7 +287,6 @@ class TeamFactory(factory.DjangoModelFactory):
     season = factory.SubFactory(SeasonFactory)
     need_more_members = faker.boolean()
     room = factory.SubFactory(RoomFactory)
-    picture = factory.django.ImageField()
     place = faker.random_number(digits=1)
 
 
@@ -486,6 +488,14 @@ class InvitationFactory(factory.DjangoModelFactory):
         model = hack_fmi_models.Invitation
 
     team = factory.SubFactory(TeamFactory)
+    competitor = factory.SubFactory(CompetitorFactory)
+
+
+class SeasonCompetitorInfoFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = hack_fmi_models.SeasonCompetitorInfo
+
+    season = factory.SubFactory(SeasonFactory)
     competitor = factory.SubFactory(CompetitorFactory)
 
 

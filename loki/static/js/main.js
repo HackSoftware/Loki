@@ -31,7 +31,9 @@ $(document).ready(function(){
     form.submit();
   })
 
-  $(".submit-solution").click(function(e){
+  $(".submit-solution, .submit-url").click(function(e){
+    var el = $(this);
+    el.attr("disabled","disabled");
     e.preventDefault();
     var code = $(this).parents(".modal-content").find("textarea.message-text").val();
     var task_id = $(this).closest(".submit-solution").attr("value");
@@ -46,6 +48,7 @@ $(document).ready(function(){
       },
       headers: {"X-CSRFToken": csrftoken},
       success: function(data) {
+        el.removeAttr("disabled");
         $("#task-modal-box-" + task_id).modal('hide');
         var solution = data;
         $("#task-" + task_id).find('.last-solution-status').html('<img class="panda-loading-gif" src="/static/website_images/panda-loading.gif" />');

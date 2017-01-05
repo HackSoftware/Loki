@@ -12,8 +12,9 @@
   </div>
 </div>
 {% for material in object_list %}
-  <div class="material-name-container"><b> {{ material.title }}</b>
-    <div class="dates-week"> <b> Седмица {{ material.week.number }} ({{ material.week.lecture_set.last.date }} - {{ material.week.lecture_set.first.date}}) </b>
+  <div class="task-name-container"><b>  Седмица {{ material.week.number }} - {{ material.title }}</b>
+    <div class="dates-week">
+      <b>{% for lecture in material.week.lecture_set.all %} {{ lecture.date }} {% endfor %} </b>
     </div>
   </div>
   <div class="material-container">

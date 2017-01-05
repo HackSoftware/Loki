@@ -115,7 +115,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='team',
             name='season',
-            field=models.ForeignKey(to='hack_fmi.Season', default=loki.hack_fmi.models.active_season),
+            field=models.ForeignKey(to='hack_fmi.Season'),
         ),
         migrations.AddField(
             model_name='team',

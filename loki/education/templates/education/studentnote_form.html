@@ -1,31 +1,5 @@
-<<<<<<< HEAD
-<div class="modal fade"  id="student-note-{{ student.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title" id="myModalLabel"><b>Бележка за студент {{ student }}</b></h4>
-      </div>
-      <form id="student-note-create" action="{% url 'education:student-note-create' course.id %}" method="POST">
-        <div class="modal-body">
-            {% csrf_token %}
-            <textarea name="text" class="form-control message-text"></textarea>
-            <input type="hidden" name="assignment" value="{{ ca }}">
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-warning student-note">Запази</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-=======
 <form action="" method="POST">
   {% csrf_token %}
   {{ form }}
   <button type="submit" class="btn btn-warning student-note" >Запази</button>
 </form>
->>>>>>> 63ea8e4ab7eefc441fb584da7635bc0babc5c432

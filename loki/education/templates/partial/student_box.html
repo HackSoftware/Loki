@@ -28,15 +28,15 @@
       {% endif %}
     </div>
     <div class="col-sm-2 students-course-btns">
+      <a href="{% url 'education:student-task-list' course.id student.id %}">
+        <button class="btn btn-warning" id="tasks-link">Задачи</button>
+      </a>
       {% if ca.course.is_active %}
         <button id="note-link" class="btn btn-warning submit-dialog-btn" data-task-name="{{student}}"
                 data-toggle="modal" data-student-id="{{student.id}}"
                 data-target="#student-note-{{ student.id }}">Нова бележка</button>
         {% include 'partial/student_note_modal.html' with ca=ca.id author=user course=ca.course %}
       {% endif %}
-      <a href="{% url 'education:student-task-list' course.id student.id %}">
-        <button class="btn btn-warning" id="tasks-link">Задачи</button>
-      </a>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
 # config valid only for current version of Capistrano
-lock '3.6.1'
+lock '3.7.0'
 
 set :application, 'loki'
 set :repo_url, 'https://github.com/HackSoftware/Loki.git'
@@ -63,6 +63,8 @@ namespace :deploy do
     on roles(:all) do |h|
       execute "sudo restart loki || sudo start loki"
       execute "sudo restart celery || sudo start celery"
+      execute "sudo restart websocket || sudo start websocket"
+      execute "sudo restart dophne || sudo start dophne"
     end
   end
 
