@@ -1,7 +1,6 @@
 import json
 
 from django import forms
-from loki.education.models import StudentNote
 
 
 class FixJsonFieldDisplayInInheritedClassAdminForm(forms.ModelForm):

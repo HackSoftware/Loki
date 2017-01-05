@@ -134,6 +134,9 @@ class StudentNote(models.Model):
     class Meta:
         ordering = ('post_time',)
 
+    def __str__(self):
+        return "{}".format(self.assignment.user)
+
 
 class ProgrammingLanguage(models.Model):
     name = models.CharField(max_length=110)

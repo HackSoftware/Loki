@@ -482,6 +482,7 @@ class CourseDashboardViewTests(TestCase):
             self.assertEqual(1, response.context['url_solutions'])
             self.assertEqual(1, response.context['failed_solutions'])
 
+
 class CreateStudentNoteTest(TestCase):
 
     def setUp(self):
