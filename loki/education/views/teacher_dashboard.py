@@ -5,10 +5,10 @@ from django.views.generic.edit import CreateView
 from django.core.urlresolvers import reverse
 from loki.education.models import (Course, Task, Solution, Student,
                                    CourseAssignment, StudentNote)
-from ..mixins import (DashboardPermissionMixin,
+from loki.education.mixins import (DashboardPermissionMixin,
                       CannotSeeOthersCoursesDashboardsMixin,
                       CanSeeCourseInfoOnlyTeacher)
-from ..helper import task_solutions, latest_solution_statuses
+from loki.education.helper import task_solutions, latest_solution_statuses
 
 
 class StudentListView(CanSeeCourseInfoOnlyTeacher,

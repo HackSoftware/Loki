@@ -1,9 +1,9 @@
 from django.views.generic.list import ListView
 from loki.education.models import Course, Task, Solution
-from ..mixins import (DashboardPermissionMixin,
+from loki.education.mixins import (DashboardPermissionMixin,
                       CannotSeeOthersCoursesDashboardsMixin,
                       CannotSeeCourseTaskListMixin)
-from ..helper import task_solutions, latest_solution_statuses
+from loki.education.helper import task_solutions, latest_solution_statuses
 
 
 class TaskListView(DashboardPermissionMixin,
