@@ -1040,7 +1040,7 @@ $TabBorder: #C5C4C4;
     }
 
     .course-box-footer {
-      background: #E1E1E1;;
+      background: #EAEAEA;
       padding: 10px;
       margin-top: 5px;
       position: relative;
@@ -1050,7 +1050,7 @@ $TabBorder: #C5C4C4;
       }
 
       .check-in-table {
-        background-color: white;
+        background-color: #EAEAEA;
         margin-top: 10px;
         padding-left: 0px;
         padding-right: 0px;
@@ -1066,11 +1066,15 @@ $TabBorder: #C5C4C4;
         .future-date {
           background-color: rgba(128, 128, 128, 0.07);
         }
+
+        .checkins-table {
+          margin-bottom: 0px;
+        }
       }
     }
 
     .check-in-footer {
-      background-color: #E1E1E1;
+      background-color: #EAEAEA;
     }
 }
 
