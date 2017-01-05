@@ -34,8 +34,8 @@
             <p><b>Дни в седмицата: </b> {{ course_days }}</p>
             <p><b>Програма на курса: </b> <a href="{{ cd.course.git_repository }}" target="_blank">{{ cd.course.git_repository }}</a> </p>
             {% if cd.price %}
-            <p><b>Цена: </b>{{ cd.price }} с ДДС</p>
-            {% endif %} 
+            <p><b>Цена: </b>{{ cd.price }}лв с ДДС</p>
+            {% endif %}
             <p><b>Адрес: </b><a href="{{ cd.address }}" target="_blank">Залата се намира тук</a></p>
             <div id="details-apply-button">
               {% with course=cd.course application_info=cd.applicationinfo %}
