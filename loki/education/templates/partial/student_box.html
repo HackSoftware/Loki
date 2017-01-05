@@ -15,6 +15,7 @@
       {% if ca.student_presence %}
         <b>Присъствие:</b> {{ ca.student_presence }}%</br>
       {% endif %}
+      {% if ca.studentnote_set.exists %}
       <div class="student-box-footer student-note-footer">
         <div class="student-note">
           <b>Бележки от преподаватели</b>
@@ -24,6 +25,7 @@
           </div>
         </div>
       </div>
+      {% endif %}
     </div>
     <div class="col-sm-2 students-course-btns">
       <button id="note-link" class="btn btn-warning submit-dialog-btn" data-task-name="{{student}}"
