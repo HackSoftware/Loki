@@ -38,11 +38,14 @@ class StudentAdmin(ImportExportActionModelAdmin):
 class StudentNoteAdmin(admin.ModelAdmin):
     list_display = [
         'assignment',
-        'author',
+        'get_author',
         'post_time',
     ]
 
     list_display_links = ['assignment']
+
+    def get_author(self, obj):
+        return "{} {}".format(obj.author.first_name, obj.author.last_name)
 
 
 @admin.register(Teacher)

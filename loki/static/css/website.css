@@ -833,7 +833,7 @@ body {
   .solutions-task-div a, .material-course-div a, .task-course-div a {
     text-decoration: none;
     color: #f7931e; }
-  .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .task-course-div #solutions-task-name, .task-course-div #material-course-name, .task-course-div #task-course-name {
+  .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .solutions-task-div .course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .material-course-div .course-name, .task-course-div #solutions-task-name, .task-course-div #material-course-name, .task-course-div #task-course-name, .task-course-div .course-name {
     padding-left: 10px;
     display: inline-block; }
 
@@ -855,6 +855,7 @@ body {
     word-break: break-all; }
 
 .solution-container {
-  margin-left: 6%; }
+  margin-left: 6%;
+  margin-right: 5%; }
 
 /*# sourceMappingURL=website.css.map */

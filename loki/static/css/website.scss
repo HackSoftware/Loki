@@ -1228,7 +1228,7 @@ $TabBorder: #C5C4C4;
     color: #f7931e;
   }
 
-  #solutions-task-name ,#material-course-name, #task-course-name {
+  #solutions-task-name ,#material-course-name, #task-course-name, .course-name {
     padding-left: 10px;
     display: inline-block;
   }
@@ -1262,4 +1262,5 @@ $TabBorder: #C5C4C4;
 
 .solution-container {
   margin-left: 6%;
+  margin-right: 5%;
 }
