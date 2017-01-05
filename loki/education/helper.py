@@ -129,7 +129,7 @@ def latest_solution_statuses(user, tasks):
     latest_solutions = {}
     for task in tasks:
         task_name = task.name
-        solution = Solution.objects.get_latest_solution(user, task)
+        solution = Solution.objects.get_solutions_for(user, task).last()
         if solution:
             latest_solutions[task_name] = solution.get_status_display()
     return latest_solutions

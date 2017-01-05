@@ -9,8 +9,8 @@ from loki.base_app.models import BaseUser, City, Company
 
 from .validators import validate_mac
 from .exceptions import HasToBeRetested
-from .managers import SolutionManager
-from .query import (CheckInQuerySet, CourseQuerySet, TaskQuerySet)
+from .query import (CheckInQuerySet, CourseQuerySet, TaskQuerySet,
+                    SolutionQuerySet)
 
 
 class StudentAndTeacherCommonModel(models.Model):
@@ -290,10 +290,7 @@ class Solution(models.Model):
             status = Solution.STATUS_CHOICE[Solution.MISSING][1]
         return status
 
-    def get_assignment(self):
-        return CourseAssignment.objects.get(user=self.student, course=self.task.course)
-
-    objects = SolutionManager()
+    objects = SolutionQuerySet.as_manager()
 
 
 class GraderRequest(models.Model):

@@ -6,8 +6,8 @@ from loki.base_app.models import BaseUser
 
 class SolutionQuerySet(models.QuerySet):
 
-    def get_latest_solution(self, user, task):
-        return self.filter(student=user, task=task).last()
+    def get_solutions_for(self, user, task):
+        return self.filter(student=user, task=task)
 
 
 class CheckInQuerySet(models.QuerySet):
