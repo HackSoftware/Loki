@@ -114,20 +114,4 @@ $(document).ready(function(){
     $("#submit-solution-form").submit();
   });
 
-  function autosize(textarea) {
-    $(textarea).height(60); // temporarily shrink textarea so that scrollHeight returns content height when content does not fill textarea
-    $(textarea).height($(textarea).prop("scrollHeight"));
-  }
-
-  // auto resize comment textarea on typing
-  $(".student-comment-from-teacher").keyup(function(e) {
-    autosize(this);
-  });
-
-  // auto resize comment textarea on load
-  $(".student-comment-from-teacher").each(function () {
-      autosize(this);
-      (this).value = (this).value.trim();
-  });
-
 });
