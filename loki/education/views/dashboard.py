@@ -1,9 +1,9 @@
 from django.views.generic.list import ListView
 
 from loki.education.models import Course, Material, CheckIn
-from ..mixins import (DashboardPermissionMixin,
-                      CannotSeeOthersCoursesDashboardsMixin)
-from ..helper import get_dates_for_weeks, percentage_presence
+from loki.education.mixins import (DashboardPermissionMixin,
+                                   CannotSeeOthersCoursesDashboardsMixin)
+from loki.education.helper import get_dates_for_weeks, percentage_presence
 
 
 class CourseListView(DashboardPermissionMixin,
