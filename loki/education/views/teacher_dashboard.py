@@ -7,8 +7,7 @@ from loki.education.models import (Course, Task, Solution, Student,
                                    CourseAssignment, StudentNote)
 from loki.education.mixins import (DashboardPermissionMixin,
                                    CannotSeeOthersCoursesDashboardsMixin,
-                                   IsTeacherMixin,
-                                   CannotSeeOthersSolutionsMixin)
+                                   IsTeacherMixin)
 from loki.education.helper import task_solutions, latest_solution_statuses
 
 
