@@ -98,13 +98,13 @@ class StudentSolutionListView(DashboardPermissionMixin,
 
     def get_queryset(self):
         task = Task.objects.get(id=self.kwargs.get("task"))
-        student = Student.objects.get(id=self.kwargs.get("student"))
-        return Solution.objects.filter(student=student, task=task).order_by("-created_at")
+        self.student = Student.objects.get(id=self.kwargs.get('student'))
+        return Solution.objects.filter(student=self.student, task=task).order_by("-created_at")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['course'] = Course.objects.get(id=self.kwargs.get('course'))
-        context['student'] = Student.objects.get(id=self.kwargs.get('student'))
+        context['student'] = self.student
         return context
 
 
