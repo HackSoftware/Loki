@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404
 from rest_framework.authentication import SessionAuthentication
 
-from loki.education.models import Course, CourseAssignment, Solution
+from loki.education.models import Course, CourseAssignment, Teacher
 from .permissions import IsStudent
 
 
@@ -23,6 +23,7 @@ class DashboardPermissionMixin(BaseUserPassesTestMixin):
             return False
 
         if not (self.request.user.get_student() or
+                self.request.user.get_teacher() or
                 self.request.user.is_superuser):
             return False
 
@@ -41,20 +42,19 @@ class CannotSeeOthersCoursesDashboardsMixin(BaseUserPassesTestMixin):
         course_id = self.kwargs.get('course')
         course = get_object_or_404(Course, pk=course_id)
         qs = CourseAssignment.objects.filter(user=self.request.user, course=course)
+        teacher = Teacher.objects.filter(id=self.request.user.id,
+                                         teached_courses__id__exact=course.id)
 
-        if not qs.exists():
+        if not qs.exists() and not teacher.exists():
             return False
 
         self.course = course
         return True and super().test_func()
 
 
-class CannotSeeOthersSolutionsMixin(BaseUserPassesTestMixin):
+class IsTeacherMixin(BaseUserPassesTestMixin):
     def test_func(self):
-        solution_id = self.kwargs.get('solution')
-        qs = Solution.objects.filter(id=solution_id, student=self.request.user)
-
-        if not qs.exists():
+        if not self.request.user.get_teacher():
             return False
 
         return True and super().test_func()

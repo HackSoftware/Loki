@@ -9,8 +9,8 @@ from loki.base_app.models import BaseUser, City, Company
 
 from .validators import validate_mac
 from .exceptions import HasToBeRetested
-from .managers import SolutionManager
-from .query import CheckInQuerySet, CourseQuerySet
+from .query import (CheckInQuerySet, CourseQuerySet, TaskQuerySet,
+                    SolutionQuerySet)
 
 
 class StudentAndTeacherCommonModel(models.Model):
@@ -55,6 +55,11 @@ class CourseAssignment(models.Model):
     class Meta:
         unique_together = ('user', 'course')
 
+    def __str__(self):
+        return "{} {} - {}".format(self.user.first_name,
+                                   self.user.last_name,
+                                   self.course)
+
 
 class Course(models.Model):
     name = models.CharField(blank=False, max_length=64, unique=True)
@@ -92,13 +97,13 @@ class Course(models.Model):
 
 class CheckIn(models.Model):
     mac = models.CharField(max_length=17)
-    student = models.ForeignKey('Student', null=True, blank=True)
+    user = models.ForeignKey(BaseUser, null=True, blank=True, related_name='checkins')
     date = models.DateField(auto_now_add=True)
 
     objects = CheckInQuerySet.as_manager()
 
     class Meta:
-        unique_together = (('student', 'date'), ('mac', 'date'))
+        unique_together = (('user', 'date'), ('mac', 'date'))
 
 
 class Week(models.Model):
@@ -127,6 +132,9 @@ class StudentNote(models.Model):
     class Meta:
         ordering = ('post_time',)
 
+    def __str__(self):
+        return "{}".format(self.assignment.user)
+
 
 class ProgrammingLanguage(models.Model):
     name = models.CharField(max_length=110)
@@ -142,6 +150,8 @@ class Task(models.Model):
     name = models.CharField(max_length=128)
     week = models.SmallIntegerField(default=1)
     gradable = models.BooleanField(default=True)
+
+    objects = TaskQuerySet.as_manager()
 
     def __str__(self):
         return self.name
@@ -278,10 +288,7 @@ class Solution(models.Model):
             status = Solution.STATUS_CHOICE[Solution.MISSING][1]
         return status
 
-    def get_assignment(self):
-        return CourseAssignment.objects.get(user=self.student, course=self.task.course)
-
-    objects = SolutionManager()
+    objects = SolutionQuerySet.as_manager()
 
 
 class GraderRequest(models.Model):

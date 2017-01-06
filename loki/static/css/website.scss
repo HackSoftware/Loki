@@ -326,6 +326,10 @@ $TabBorder: #C5C4C4;
 }
 
 .container {
+    a {
+      color: #ec971f;
+    }
+
     section {
         &:nth-of-type(2n + 1) {
             div.cards {
@@ -341,7 +345,6 @@ $TabBorder: #C5C4C4;
         border: 2px solid #9D9898;
         width: 250px;
         height: 250px;
-        // border-radius: 125px;
     }
 
     #usernames{
@@ -360,6 +363,153 @@ $TabBorder: #C5C4C4;
     .generate-interviews-box {
       margin-top: 20px;
       font-size: 14px;
+    }
+
+    .course-students {
+
+      .course-name-div {
+        font-size: 18px;
+        margin-bottom: 5px;
+        a {
+          text-decoration: none;
+          color: #f7931e;
+        }
+        @media screen and (max-width: 388px) {
+          font-size: 15px;
+        }
+        @media screen and (max-width: 325px) {
+          font-size: 14px;
+        }
+
+        .course-name {
+          padding-left: 10px;
+          display: inline-block;
+        }
+      }
+
+      .student-box {
+        margin-bottom: 30px;
+        padding-bottom: 10px;
+        background: white;
+        background: #f6f6f6;;
+        display: inline-block;
+        position: relative;
+        box-shadow: 0 8px 8px rgba(0,0,0,0.12), 0 8px 8px rgba(0,0,0,0.24);
+        transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+
+        &:hover {
+          box-shadow: 0 15px 15px rgba(0,0,0,0.25), 0 15px 15px rgba(0,0,0,0.22);
+        }
+
+
+        hr {
+          width:100%;
+          border-top: 1px solid #f8d5ac;
+        }
+
+        a {
+          text-decoration: none;
+          color: #f7931e;
+        }
+
+        .student-box-footer {
+          margin-top: 5px;
+          position: relative;
+
+        }
+        .student-notes-table {
+          display: none;
+        }
+
+        .student-note-footer {
+          .student-note {
+            cursor: pointer;
+          }
+        }
+
+        .lines {
+          margin-top: -5px;
+          width:100%;
+          border-top: 1px solid #f8d5ac;
+        }
+
+        .student-profile-photo {
+          width: 100%;
+          margin-top: 10px;
+          margin-bottom: 5px;
+        }
+
+        .student-comment-from-teacher {
+          background-color: #f6f6f6;
+          border: 1px solid #f8d5ac;
+          width: 100%;
+          height: 100px;
+          margin-bottom: 5px;
+          overflow:hidden;
+          border-radius: 5px;
+        }
+
+        .students-course-btns {
+            margin-top: 20px;
+
+            #note-link, #tasks-link {
+              width: 70%;
+              margin-top: 5px;
+              text-align: center;
+              white-space: normal;
+
+              @media screen and (max-width: 992px) {
+                margin-right: 5%;
+                margin-left: 15%;
+              }
+            }
+
+            @media screen and (max-width: 1200px) {
+              padding-left: 0px;
+              padding-right: 0px;
+              width: 30%;
+            }
+
+            @media screen and (max-width: 765px) {
+              margin-left: 20%;
+              margin-bottom: 10px;
+              width: 60%;
+            }
+        }
+
+        .student-social-links {
+          font-size: 2em;
+        }
+
+        .student-notes {
+          margin-top: 1%;
+
+          .note {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            position: relative;
+            background-color: #E6EAED;
+            padding: 5px;
+            padding-bottom: 10px;
+            border-radius: 0px 8px 8px 8px;
+
+            .note-author {
+              background-color: #ffc583;
+              padding: 1px 3px 1px 3px;
+              border-radius: 0px 10px 10px 10px;
+              margin-right: 5px;
+              margin-bottom: 10px;
+            }
+
+            .note-date {
+              position: absolute;
+              right: 10px;
+              bottom: 5px;
+              font-size: 10px;
+            }
+          }
+        }
+      }
     }
 
 }
@@ -753,7 +903,7 @@ $TabBorder: #C5C4C4;
     font-size: 20px;
   }
 
-  #profile-socials {
+  .profile-socials {
     font-size: 2em;
   }
 
@@ -764,6 +914,9 @@ $TabBorder: #C5C4C4;
     img {
       width: 25px;
     }
+  }
+  .profile-github-account {
+    text-decoration: none;
   }
 
 }
@@ -839,21 +992,38 @@ $TabBorder: #C5C4C4;
         .course-btns {
           margin-top: 20px;
 
-          #materials-link {
-            padding-left: 25px;
-            padding-right: 24px;
+          #materials-link, #students-link, #tasks-link, #info-link {
+            width: 70%;
           }
 
           a button {
             margin-top: 5px;
             text-align: center;
+            white-space: normal;
 
             @media screen and (max-width: 992px) {
-              margin-right: 5px;
-              margin-left: -5px;
+              margin-right: 5%;
+              margin-left: 15%;
             }
           }
 
+          @media screen and (max-width: 1200px) {
+            padding-left: 0px;
+            padding-right: 0px;
+            width: 30%;
+          }
+
+          @media screen and (max-width: 765px) {
+            margin-left: 20%;
+            margin-bottom: 10px;
+            width: 60%;
+          }
+        }
+
+        .course-information {
+            @media screen and (max-width: 1200px) {
+              width: 70%;
+            }
         }
 
     }
@@ -869,11 +1039,11 @@ $TabBorder: #C5C4C4;
 
     .hidden-toggle {
       display: none;
-      width: 80%
+      width: 80%;
     }
 
     .course-box-footer {
-      background: #E1E1E1;;
+      background: #EAEAEA;
       padding: 10px;
       margin-top: 5px;
       position: relative;
@@ -883,7 +1053,7 @@ $TabBorder: #C5C4C4;
       }
 
       .check-in-table {
-        background-color: white;
+        background-color: #EAEAEA;
         margin-top: 10px;
         padding-left: 0px;
         padding-right: 0px;
@@ -899,11 +1069,15 @@ $TabBorder: #C5C4C4;
         .future-date {
           background-color: rgba(128, 128, 128, 0.07);
         }
+
+        .checkins-table {
+          margin-bottom: 0px;
+        }
       }
     }
 
     .check-in-footer {
-      background-color: #E1E1E1;
+      background-color: #EAEAEA;
     }
 }
 
@@ -965,7 +1139,6 @@ $TabBorder: #C5C4C4;
 
 .active-tasks-container {
 
-
   #submit-task-box {
     margin-left: 43%;
   }
@@ -991,9 +1164,30 @@ $TabBorder: #C5C4C4;
     color: #f7931e;
   }
 
+  .student-name {
+    text-align: center;
+  }
+
+  .teacher-table {
+    text-align: center;
+    th {
+      text-align: center;
+    }
+
+    .gradable-checked {
+      color: #4ba74b;
+      font-size: 18px;
+    }
+
+    .gradable-unchecked {
+      color: #d12c2c;
+      font-size: 18px;
+    }
+  }
+
 }
 
-.task-name-container {
+.task-name-container, .material-name-container {
   background-color: #E1E1E1;
   height: 50px;
   margin-top: 10px;
@@ -1037,15 +1231,16 @@ $TabBorder: #C5C4C4;
 }
 
 .solutions-task-div, .material-course-div, .task-course-div {
-  padding-left: 3%;
+  padding-left: 20px;
   font-size: 18px;
+  margin-bottom: 5px;
   a {
     text-decoration: none;
     color: #f7931e;
   }
 
-  #solutions-task-name ,#material-course-name, #task-course-name {
-    padding-left: 20px;
+  #solutions-task-name ,#material-course-name, #task-course-name, .course-name {
+    padding-left: 10px;
     display: inline-block;
   }
 }
@@ -1066,6 +1261,7 @@ $TabBorder: #C5C4C4;
 }
 
 .material-container {
+  margin-left: 6%;
   .course-presentation {
     color: #F7931E;
   }
@@ -1073,4 +1269,9 @@ $TabBorder: #C5C4C4;
     width: 70%;
     word-break: break-all;
   }
+}
+
+.solution-container {
+  margin-left: 6%;
+  margin-right: 5%;
 }

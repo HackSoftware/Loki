@@ -109,6 +109,10 @@ $(document).ready(function(){
     $(this).closest('.course-box').find('.check-in-table').toggle();
   });
 
+  $(".student-note").click(function(){
+    $(this).closest('.student-box').find('.student-notes-table').toggle();
+  });
+
   $("#submit-url-solution").click(function() {
     $("#submit-solution-form").submit();
   });

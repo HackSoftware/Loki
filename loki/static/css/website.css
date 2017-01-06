@@ -226,6 +226,8 @@ body {
 #moderate-competiton-card {
   background-color: #56CB00; }
 
+.container a {
+  color: #ec971f; }
 .container section:nth-of-type(2n + 1) div.cards {
   float: left; }
 .container section:nth-of-type(2n + 1) div.text-card {
@@ -244,6 +246,105 @@ body {
 .container .generate-interviews-box {
   margin-top: 20px;
   font-size: 14px; }
+.container .course-students .course-name-div {
+  font-size: 18px;
+  margin-bottom: 5px; }
+  .container .course-students .course-name-div a {
+    text-decoration: none;
+    color: #f7931e; }
+  @media screen and (max-width: 388px) {
+    .container .course-students .course-name-div {
+      font-size: 15px; } }
+  @media screen and (max-width: 325px) {
+    .container .course-students .course-name-div {
+      font-size: 14px; } }
+  .container .course-students .course-name-div .course-name {
+    padding-left: 10px;
+    display: inline-block; }
+.container .course-students .student-box {
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  background: white;
+  background: #f6f6f6;
+  display: inline-block;
+  position: relative;
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+  .container .course-students .student-box:hover {
+    box-shadow: 0 15px 15px rgba(0, 0, 0, 0.25), 0 15px 15px rgba(0, 0, 0, 0.22); }
+  .container .course-students .student-box hr {
+    width: 100%;
+    border-top: 1px solid #f8d5ac; }
+  .container .course-students .student-box a {
+    text-decoration: none;
+    color: #f7931e; }
+  .container .course-students .student-box .student-box-footer {
+    margin-top: 5px;
+    position: relative; }
+  .container .course-students .student-box .student-notes-table {
+    display: none; }
+  .container .course-students .student-box .student-note-footer .student-note {
+    cursor: pointer; }
+  .container .course-students .student-box .lines {
+    margin-top: -5px;
+    width: 100%;
+    border-top: 1px solid #f8d5ac; }
+  .container .course-students .student-box .student-profile-photo {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 5px; }
+  .container .course-students .student-box .student-comment-from-teacher {
+    background-color: #f6f6f6;
+    border: 1px solid #f8d5ac;
+    width: 100%;
+    height: 100px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    border-radius: 5px; }
+  .container .course-students .student-box .students-course-btns {
+    margin-top: 20px; }
+    .container .course-students .student-box .students-course-btns #note-link, .container .course-students .student-box .students-course-btns #tasks-link {
+      width: 70%;
+      margin-top: 5px;
+      text-align: center;
+      white-space: normal; }
+      @media screen and (max-width: 992px) {
+        .container .course-students .student-box .students-course-btns #note-link, .container .course-students .student-box .students-course-btns #tasks-link {
+          margin-right: 5%;
+          margin-left: 15%; } }
+    @media screen and (max-width: 1200px) {
+      .container .course-students .student-box .students-course-btns {
+        padding-left: 0px;
+        padding-right: 0px;
+        width: 30%; } }
+    @media screen and (max-width: 765px) {
+      .container .course-students .student-box .students-course-btns {
+        margin-left: 20%;
+        margin-bottom: 10px;
+        width: 60%; } }
+  .container .course-students .student-box .student-social-links {
+    font-size: 2em; }
+  .container .course-students .student-box .student-notes {
+    margin-top: 1%; }
+    .container .course-students .student-box .student-notes .note {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      position: relative;
+      background-color: #E6EAED;
+      padding: 5px;
+      padding-bottom: 10px;
+      border-radius: 0px 8px 8px 8px; }
+      .container .course-students .student-box .student-notes .note .note-author {
+        background-color: #ffc583;
+        padding: 1px 3px 1px 3px;
+        border-radius: 0px 10px 10px 10px;
+        margin-right: 5px;
+        margin-bottom: 10px; }
+      .container .course-students .student-box .student-notes .note .note-date {
+        position: absolute;
+        right: 10px;
+        bottom: 5px;
+        font-size: 10px; }
 
 .dropdown-menu {
   margin-top: 20px; }
@@ -527,13 +628,15 @@ body {
       opacity: 1; }
   .row-profile #user-name {
     font-size: 20px; }
-  .row-profile #profile-socials {
+  .row-profile .profile-socials {
     font-size: 2em; }
   .row-profile .interviews {
     max-width: 80%;
     margin-left: 25px; }
     .row-profile .interviews img {
       width: 25px; }
+  .row-profile .profile-github-account {
+    text-decoration: none; }
 
 #edit-app {
   margin-top: 10px; }
@@ -585,16 +688,29 @@ body {
       display: inline-block; }
     .course-box .course-text .course-btns {
       margin-top: 20px; }
-      .course-box .course-text .course-btns #materials-link {
-        padding-left: 25px;
-        padding-right: 24px; }
+      .course-box .course-text .course-btns #materials-link, .course-box .course-text .course-btns #students-link, .course-box .course-text .course-btns #tasks-link, .course-box .course-text .course-btns #info-link {
+        width: 70%; }
       .course-box .course-text .course-btns a button {
         margin-top: 5px;
-        text-align: center; }
+        text-align: center;
+        white-space: normal; }
         @media screen and (max-width: 992px) {
           .course-box .course-text .course-btns a button {
-            margin-right: 5px;
-            margin-left: -5px; } }
+            margin-right: 5%;
+            margin-left: 15%; } }
+      @media screen and (max-width: 1200px) {
+        .course-box .course-text .course-btns {
+          padding-left: 0px;
+          padding-right: 0px;
+          width: 30%; } }
+      @media screen and (max-width: 765px) {
+        .course-box .course-text .course-btns {
+          margin-left: 20%;
+          margin-bottom: 10px;
+          width: 60%; } }
+    @media screen and (max-width: 1200px) {
+      .course-box .course-text .course-information {
+        width: 70%; } }
   .course-box .course-logo {
     width: 100%;
     padding: 15px; }
@@ -605,14 +721,14 @@ body {
     display: none;
     width: 80%; }
   .course-box .course-box-footer {
-    background: #E1E1E1;
+    background: #EAEAEA;
     padding: 10px;
     margin-top: 5px;
     position: relative; }
     .course-box .course-box-footer .check-in {
       cursor: pointer; }
     .course-box .course-box-footer .check-in-table {
-      background-color: white;
+      background-color: #EAEAEA;
       margin-top: 10px;
       padding-left: 0px;
       padding-right: 0px; }
@@ -622,8 +738,10 @@ body {
         background-color: rgba(130, 203, 130, 0.75); }
       .course-box .course-box-footer .check-in-table .future-date {
         background-color: rgba(128, 128, 128, 0.07); }
+      .course-box .course-box-footer .check-in-table .checkins-table {
+        margin-bottom: 0px; }
   .course-box .check-in-footer {
-    background-color: #E1E1E1; }
+    background-color: #EAEAEA; }
 
 .apply-form h1 {
   padding-bottom: 30px; }
@@ -671,8 +789,20 @@ body {
 .active-tasks-container .task-solution-link {
   text-decoration: none;
   color: #f7931e; }
+.active-tasks-container .student-name {
+  text-align: center; }
+.active-tasks-container .teacher-table {
+  text-align: center; }
+  .active-tasks-container .teacher-table th {
+    text-align: center; }
+  .active-tasks-container .teacher-table .gradable-checked {
+    color: #4ba74b;
+    font-size: 18px; }
+  .active-tasks-container .teacher-table .gradable-unchecked {
+    color: #d12c2c;
+    font-size: 18px; }
 
-.task-name-container {
+.task-name-container, .material-name-container {
   background-color: #E1E1E1;
   height: 50px;
   margin-top: 10px;
@@ -682,12 +812,12 @@ body {
   padding-bottom: 15px;
   font-size: 18px; }
   @media screen and (max-width: 622px) {
-    .task-name-container {
+    .task-name-container, .material-name-container {
       height: 70px; } }
   @media screen and (max-width: 360px) {
-    .task-name-container {
+    .task-name-container, .material-name-container {
       height: 80px; } }
-  .task-name-container .solution-created-at, .task-name-container .dates-week {
+  .task-name-container .solution-created-at, .task-name-container .dates-week, .material-name-container .solution-created-at, .material-name-container .dates-week {
     float: right;
     padding-right: 5%;
     display: inline-block;
@@ -704,13 +834,14 @@ body {
   word-wrap: break-word; }
 
 .solutions-task-div, .material-course-div, .task-course-div {
-  padding-left: 3%;
-  font-size: 18px; }
+  padding-left: 20px;
+  font-size: 18px;
+  margin-bottom: 5px; }
   .solutions-task-div a, .material-course-div a, .task-course-div a {
     text-decoration: none;
     color: #f7931e; }
-  .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .task-course-div #solutions-task-name, .task-course-div #material-course-name, .task-course-div #task-course-name {
-    padding-left: 20px;
+  .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .solutions-task-div .course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .material-course-div .course-name, .task-course-div #solutions-task-name, .task-course-div #material-course-name, .task-course-div #task-course-name, .task-course-div .course-name {
+    padding-left: 10px;
     display: inline-block; }
 
 .solution-url-link {
@@ -722,10 +853,16 @@ body {
 .modal-body .submit-url {
   margin-top: 5px; }
 
-.material-container .course-presentation {
-  color: #F7931E; }
-.material-container .material-description {
-  width: 70%;
-  word-break: break-all; }
+.material-container {
+  margin-left: 6%; }
+  .material-container .course-presentation {
+    color: #F7931E; }
+  .material-container .material-description {
+    width: 70%;
+    word-break: break-all; }
+
+.solution-container {
+  margin-left: 6%;
+  margin-right: 5%; }
 
 /*# sourceMappingURL=website.css.map */

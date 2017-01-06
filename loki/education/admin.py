@@ -38,11 +38,14 @@ class StudentAdmin(ImportExportActionModelAdmin):
 class StudentNoteAdmin(admin.ModelAdmin):
     list_display = [
         'assignment',
-        'author',
+        'get_author',
         'post_time',
     ]
 
     list_display_links = ['assignment']
+
+    def get_author(self, obj):
+        return "{} {}".format(obj.author.first_name, obj.author.last_name)
 
 
 @admin.register(Teacher)
@@ -65,9 +68,10 @@ class CourseAssignmentAdmin(ImportExportActionModelAdmin):
         'user',
         'course',
         'group_time',
+        'student_presence',
         'cv',
         'is_attending',
-        'is_online'
+        'is_online',
     ]
 
     list_filter = ('course', 'group_time', 'is_attending', 'is_online')
@@ -99,9 +103,9 @@ class CheckInAdmin(admin.ModelAdmin):
     list_display = [
         'date',
         'mac',
-        'student'
+        'user'
     ]
-    search_fields = ['mac', 'student__email']
+    search_fields = ['mac', 'user__email']
 
 
 class WorkingAtAdmin(ImportExportActionModelAdmin):

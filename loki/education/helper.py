@@ -24,11 +24,11 @@ def crop_image(x1, y1, x2, y2, path):
     return settings.MEDIA_URL + 'avatar/' + 'cropped_' + path[2:]
 
 
-def check_macs_for_student(student, mac):
+def check_macs_for_student(user, mac):
     check_ins = CheckIn.objects.filter(mac__iexact=mac)
     for check_in in check_ins:
-        if not check_in.student and check_in.mac.lower() == mac.lower():
-            check_in.student = student
+        if not check_in.user and check_in.mac.lower() == mac.lower():
+            check_in.user = user
             check_in.save()
 
 
@@ -98,15 +98,15 @@ def read_binary_file(path):
 
 
 def get_dates_for_weeks(course):
-    lectures = course.lecture_set.filter(week__isnull=False).values('week', 'date')
     week_dates = {}
+    lecture_set = course.lecture_set.filter(week__isnull=False).all()
 
-    for lecture in lectures:
-        week = lecture['week']
-        if week not in week_dates:
-            week_dates[week] = [lecture['date']]
+    for l in lecture_set:
+        week_number = l.week.number
+        if week_number not in week_dates:
+            week_dates[week_number] = [l.date]
         else:
-            week_dates[week].append(lecture['date'])
+            week_dates[week_number].append(l.date)
 
     return week_dates
 
@@ -129,16 +129,16 @@ def latest_solution_statuses(user, tasks):
     latest_solutions = {}
     for task in tasks:
         task_name = task.name
-        solution = Solution.objects.get_latest_solution(user, task)
+        solution = Solution.objects.get_solutions_for(user, task).last()
         if solution:
             latest_solutions[task_name] = solution.get_status_display()
     return latest_solutions
 
 
-def percentage_presence(student_dates, course):
+def percentage_presence(user_dates, course):
     lecture_dates = Lecture.objects.filter(course=course,
                                            date__lte=timezone.now().date()).values_list(
                                            'date', flat=True)
-    student_dates = [date for date in student_dates if date in lecture_dates]
+    user_dates = [date for date in user_dates if date in lecture_dates]
 
-    return "{0}%".format(int((len(student_dates) / len(lecture_dates)) * 100))
+    return "{0}%".format(int((len(user_dates) / len(lecture_dates)) * 100))

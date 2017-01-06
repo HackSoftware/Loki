@@ -17,16 +17,14 @@ from rest_framework.response import Response
 
 from loki.base_app.models import City, Company
 
-from ..permissions import IsStudent, IsTeacher, IsTeacherForCA
-from ..models import (CheckIn, Student, Lecture, Course, CourseAssignment, WorkingAt,
-                      Task, Solution, Certificate)
+from ..permissions import IsTeacher, IsTeacherForCA
+from ..models import (CheckIn, Student, Lecture, CourseAssignment, WorkingAt,
+                      Task, Solution, Certificate, Teacher)
 
-from ..serializers import (UpdateStudentSerializer, StudentNameSerializer,
-                           LectureSerializer, CheckInSerializer, CourseSerializer, FullCASerializer,
-                           SolutionSerializer, CourseAssignmentSerializer, WorkingAtSerializer,
+from ..serializers import (LectureSerializer, CourseSerializer, FullCASerializer,
+                           SolutionSerializer, WorkingAtSerializer,
                            CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer,
                            SolutionStatusSerializer)
-from ..helper import (check_macs_for_student, mac_is_used_by_another_student)
 from ..tasks import submit_solution
 from ..mixins import SolutionApiAuthenticationPermissionMixin
 
@@ -40,12 +38,18 @@ def set_check_in(request):
     if settings.CHECKIN_TOKEN != token:
         return HttpResponse(status=511)
 
-    student = Student.objects.filter(mac__iexact=mac).first()
-    if not student:
-        student = None
     try:
-        check_in = CheckIn(mac=mac, student=student)
-        check_in.save()
+        student = Student.objects.filter(mac__iexact=mac).first()
+        teacher = Teacher.objects.filter(mac__iexact=mac).first()
+        if student:
+            student_check = CheckIn.objects.create(mac=mac, user=student)
+            student_check.save()
+        if teacher:
+            teacher_check = CheckIn.objects.create(mac=mac, user=teacher)
+            teacher_check.save()
+        if not student and not teacher:
+            anonymous_user_check = CheckIn.objects.create(mac=mac, user=None)
+            anonymous_user_check.save()
     except IntegrityError:
         return HttpResponse(status=418)
 
@@ -59,21 +63,6 @@ class GetLectures(mixins.ListModelMixin, generics.GenericAPIView):
     def get_queryset(self, request):
         course_id = self.request.GET.get('course_id')
         return Lecture.objects.filter(course_id=course_id)
-
-
-@api_view(['GET'])
-@permission_classes((IsAuthenticated,))
-def get_check_ins(request):
-    student_id = request.GET.get('student_id')
-    course_id = request.GET.get('course_id')
-    course = Course.objects.get(id=course_id)
-    start_time = course.start_time
-    end_time = course.end_time
-    check_ins = CheckIn.objects.filter(student_id=student_id,
-                                       date__gte=start_time,
-                                       date__lte=end_time)
-    serializer = CheckInSerializer(check_ins, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -100,32 +89,6 @@ class OnBoardStudent(APIView):
             return Response(status=status.HTTP_200_OK)
 
 
-# TODO: Refactor mac checks
-@api_view(['PATCH'])
-@permission_classes((IsStudent,))
-def student_update(request):
-    student = request.user.get_student()
-    if 'mac' in request.data:
-        if mac_is_used_by_another_student(student, request.data['mac']):
-            error = {"error": "Този мак в вече зает"}
-            return Response(error, status=400)
-        check_macs_for_student(student, request.data['mac'])
-    serializer = UpdateStudentSerializer(student, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=400)
-
-
-@api_view(['GET'])
-@permission_classes((IsStudent,))
-def get_students_for_course(request):
-    course_id = request.GET.get('course_id')
-    students = get_object_or_404(Course, id=course_id).student_set
-    serializer = StudentNameSerializer(students, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 class CourseAssignmentAPI(generics.ListAPIView):
     model = CourseAssignment
     serializer_class = FullCASerializer
@@ -143,17 +106,6 @@ class StudentNoteAPI(generics.CreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user.get_teacher())
-
-
-@api_view(['PATCH'])
-@permission_classes((IsTeacher,))
-def drop_student(request):
-    cas = get_object_or_404(CourseAssignment, id=request.data['ca_id'])
-    serializer = CourseAssignmentSerializer(cas, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST', 'PATCH'])

@@ -10,4 +10,3 @@ factory_boy==2.8.1
 pytest-django==2.9.1
 pytest-sugar==0.7.1
 pytest-cov==2.4.0
-

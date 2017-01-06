@@ -25,13 +25,13 @@
         </tr>
         {% if user.github_account %}
         <tr>
-          <td><i id="profile-socials" class="fa fa-github fa-3x"></i></td>
-          <td><a href={{user.github_account}} target="_blank">{{user.github_account}}</a></td>
+          <td><i class="profile-socials fa fa-github fa-3x"></i></td>
+          <td><a class="profile-github-account" href={{user.github_account}} target="_blank">{{user.github_account}}</a></td>
         </tr>
         {% endif %}
         {% if user.get_student %}
         <tr>
-          <td><i id="profile-socials" class="fa fa-skype"></i></td>
+          <td><i class="profile-socials fa fa-skype"></i></td>
           <td>{{student.skype}}</td>
         </tr>
         <tr>

@@ -9,7 +9,8 @@ from image_cropping import ImageCroppingMixin
 
 @admin.register(BaseUser)
 class BaseUserAdmin(ImageCroppingMixin, admin.ModelAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'studies_at', 'works_at')
+    list_display = ('email', 'first_name', 'last_name',
+                    'studies_at', 'works_at', 'is_active')
 
     list_filter = ('is_active',)
     search_fields = ['email', 'first_name', 'last_name', 'studies_at', 'works_at']

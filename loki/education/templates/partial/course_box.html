@@ -4,7 +4,7 @@
     <img src="{{ MEDIA_URL }}{{ course.coursedescription.custom_logo }}" class="course-logo" >
   </div>
   <div class="col-sm-9 course-text">
-    <div class="col-sm-9">
+    <div class="col-sm-9 course-information">
       <h3 class="course-name-tasks-link" id="course-name">{{ course.name }}</h3>
       <div>
          <b>Начало на курса:</b> {{ course.start_time }} <br>
@@ -24,13 +24,29 @@
     </div>
     <div class="col-sm-3 course-btns">
       {% if course.task_set.exists and course.is_active %}
-        <a href="{% url 'education:course_dashboard' course.id %}">
-          <button class="btn btn-warning">Предай задачи</button>
+        {% if user.get_student %}
+          <a href="{% url 'education:task-list' course.id %}">
+            <button class="btn btn-warning">Предай задачи</button>
+          </a>
+        {% else %}
+          <a href="{% url 'education:teacher-task-list' course.id %}">
+            <button class="btn btn-warning" id="tasks-link">Задачи</button>
+          </a>
+        {% endif %}
+      {% endif %}
+      {% if user.get_teacher and course.student_set.exists %}
+        <a href="{% url 'education:student-list' course.id %}">
+          <button class="btn btn-warning" id="students-link">Студенти</button>
         </a>
       {% endif %}
       {% if course.material_set.exists and course.is_active %}
-        <a href="{% url 'education:material_view' course.id %}">
+        <a href="{% url 'education:material-list' course.id %}">
           <button class="btn btn-warning" id="materials-link">Материали</button>
+        </a>
+      {% endif %}
+      {% if user.get_teacher %}
+        <a href="{% url 'education:course-detail' course.id %}">
+          <button class="btn btn-warning" id="info-link">Обща информация</button>
         </a>
       {% endif %}
     </div>
@@ -47,16 +63,16 @@
       </div>
       <div class="check-in-table hidden-toggle col-sm-12 col-sm-offset-1">
         {% with course_data=course_presence|key:course %}
-          {% with dates_for_weeks=course_data|key:"dates_for_weeks" student_dates=course_data|key:"student_dates" weeks=course_data|key:"weeks"%}
-            {% include 'partial/table_presence.html' with dates_for_weeks=dates_for_weeks student_dates=student_dates weeks=weeks %}
+          {% with dates_for_weeks=course_data|key:"dates_for_weeks" user_dates=course_data|key:"user_dates" weeks=course_data|key:"weeks"%}
+            {% include 'partial/table_presence.html' with dates_for_weeks=dates_for_weeks user_dates=user_dates weeks=weeks %}
           {% endwith %}
         {% endwith %}
       </div>
-    {% elif not course.is_active and course.lecture_set.exists %}
-      {% with course_data=course_presence|key:course %}
-        <b> Присъствал си на {{ course_data|key:"percentage_presence" }} от курса :)</b>
-      {% endwith %}
-    {% elif course.is_active and not course.lecture_set.exists %}
+      {% elif not course.is_active and course.lecture_set.exists %}
+        {% with course_data=course_presence|key:course %}
+          <b> Присъствал си на {{ course_data|key:"percentage_presence" }} от курса :)</b>
+        {% endwith %}
+      {% elif course.is_active and not course.lecture_set.exists %}
       <div class="col-sm-12 check-in">
           <b>Все още няма насрочени занятия за този курс :)</b>
       </div>

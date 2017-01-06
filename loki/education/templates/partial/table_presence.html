@@ -1,5 +1,5 @@
 {% load key check_date %}
-<table class="table table-hover table-striped " cellspacing="0">
+<table class="table table-hover checkins-table" cellspacing="0">
   <thead>
     <tr>
     </tr>
@@ -9,7 +9,7 @@
       <tr>
         <td><b>Седмица {{week}}</b></td>
         {% for lecture in dates_for_weeks|key:week %}
-          {% if lecture in student_dates %}
+          {% if lecture in user_dates %}
             <td class="check-in-date"><b>{{ lecture }} </b></td>
           {% elif lecture|is_date_in_future %}
             <td class="future-date"><b>{{ lecture }} </b></td>

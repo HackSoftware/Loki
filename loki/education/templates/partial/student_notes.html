@@ -1,0 +1,12 @@
+<div class="student-notes">
+  {% if ca.studentnote_set.exists %}
+    {% for note in ca.studentnote_set.all %}
+    <div class="note">
+        <b class="note-author">{{ note.author.first_name }} {{ note.author.last_name }}</b>
+        <span class="note-text">{{ note.text }}</span>
+        <div class="note-date">{{ note.post_time| date:'d-m-Y' }}
+        </div>
+    </div>
+    {% endfor %}
+  {% endif %}
+</div>

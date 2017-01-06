@@ -17,7 +17,11 @@
 
   <div class="col-sm-12 course-box-footer">
     {% if course.coursedescription.applicationinfo.apply_is_active %}
-      <div class="col-sm-4">Кандидатстване до: {{ course.coursedescription.applicationinfo.end_date|date:"d F Y" }}</div>
+      {% if course.coursedescription.paid_course %}
+        <div class="col-sm-4">Записване до: {{ course.coursedescription.applicationinfo.end_date|date:"d F Y" }}</div>
+      {% else %}
+        <div class="col-sm-4">Кандидатстване до: {{ course.coursedescription.applicationinfo.end_date|date:"d F Y" }}</div>
+      {% endif %}
       <div class="col-sm-4">Начало на курса: {{ course.start_time }}</div>
       <div class="col-sm-4">Продължителност: {{ course.duration_in_weeks }} седмици</div>
     {% else %}

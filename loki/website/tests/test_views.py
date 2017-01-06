@@ -8,7 +8,7 @@ from faker import Factory
 from loki.seed import factories
 from loki.base_app.models import GeneralPartner
 from loki.base_app.models import BaseUser
-from loki.education.models import Student, CheckIn
+from loki.education.models import Student, CheckIn, Teacher
 
 faker = Factory.create()
 
@@ -273,10 +273,10 @@ class TestWebsite(TestCase):
         self.assertEqual(data['mac'], Student.objects.get(email=student.email).mac)
 
     def test_check_ins_for_edit_student_profile(self):
-        check_in = factories.CheckInFactory(student=None)
+        check_in = factories.CheckInFactory(user=None)
         mac = check_in.mac
-
         student = BaseUser.objects.promote_to_student(self.baseuser)
+
         with self.login(email=student.email,
                         password=factories.BaseUserFactory.password):
 
@@ -285,4 +285,21 @@ class TestWebsite(TestCase):
             self.response_200(response)
 
         self.assertEqual(mac, Student.objects.get(email=student.email).mac)
-        self.assertEqual(student, CheckIn.objects.filter(mac__iexact=mac).first().student)
+        self.assertEqual(student.baseuser_ptr_id,
+                         CheckIn.objects.filter(mac__iexact=mac).first().user.id)
+
+    def test_check_ins_for_edit_teacher_profile(self):
+        check_in = factories.CheckInFactory(user=None)
+        mac = check_in.mac
+
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        with self.login(email=teacher.email,
+                        password=factories.BaseUserFactory.password):
+
+            data = {'mac': mac}
+            response = self.post('website:profile_edit_teacher', data=data)
+            self.response_200(response)
+
+        self.assertEqual(mac, Teacher.objects.get(email=teacher.email).mac)
+        self.assertEqual(teacher.baseuser_ptr_id,
+                         CheckIn.objects.filter(mac__iexact=mac).first().user.id)

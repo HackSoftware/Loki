@@ -5,11 +5,21 @@
 {% block 'page-content' %}
 {% autoescape off %}
 <div class="task-course-div">
-  <a href="{% url 'education:course_list' %}">
-    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-  </a>
-  <div id="task-course-name">
-    <b>{{object_list.first.course.name}}</b>
+  {% if user.get_student and not user.get_teacher %}
+    <a href="{% url 'education:course-list' %}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </a>
+  {% else %}
+    <a href="{% url 'education:student-list' course.id %}">
+      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </a>
+  {% endif %}
+  <div class="course-name">
+    {% if user.get_teacher %}
+      <b>{{course.name}} - Студенти</b>
+    {% else %}
+      <b>{{object_list.first.course.name}}</b>
+    {% endif %}
   </div>
 </div>
 {% if object_list.exists %}
@@ -19,10 +29,15 @@
       <div class="active-tasks-container container-fluid">
           <table id="course-tasks-table" class="table table-hover table-striped " cellspacing="0">
             <thead>
+              {% if user.get_teacher %}
+                <caption class="student-name"><h4><b>Предадени задачи на {{ student.first_name }} {{ student.last_name }}</b></h4></caption>
+              {% endif %}
               <tr>
                 <th>Седмица</th>
                 <th>Задача</th>
-                <th id="submit-task-label">Предай</th>
+                {% if user.get_student and not user.get_teacher %}
+                  <th id="submit-task-label">Предай</th>
+                {% endif %}
                 <th>Статус на последното решение</th>
                 <th id="solution-task-label">Предадени решения</th>
               </tr>
@@ -33,14 +48,16 @@
                    <tr class="task-selected" id="task-{{task.id}}">
                      <td class="task-week">{{ task.week }}</td>
                      <td class="task-name">
-                       <a class="task-solution-link" href={{task.description}} target="_blank">
+                       <a class="task-solution-link" href="{{task.description}}" target="_blank">
                          <b>{{ task.name }}</b>
                        </a>
                      </td>
-                     <td>
-                    <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}" data-toggle="modal" data-task-id="{{task.id}}" data-target="#task-modal-box-{{ task.id }}">Предай</button>
-                        {% include 'partial/modal.html' with task=task %}
-                     </td>
+                     {% if user.get_student and not user.get_teacher %}
+                       <td>
+                         <button class="btn btn-warning submit-dialog-btn" data-task-name="{{task}}" data-toggle="modal" data-task-id="{{task.id}}" data-target="#task-modal-box-{{ task.id }}">Предай</button>
+                         {% include 'partial/modal.html' with task=task %}
+                       </td>
+                     {% endif %}
                      <td class="last-solution-status">
                        {% if tasksolution|key:task.name %}
                         {% with status=latest_solutions|key:task.name %}
@@ -57,7 +74,11 @@
                        {% endif %}
                      </td>
                      <td id="solution-task-id-{{task.id}}">
-                          <a class="task-solution-link" href="{% url 'education:solution_view' task.course.id task.id %}">
+                          {% if user.get_student and not user.get_teacher %}
+                            <a class="task-solution-link" href="{% url 'education:solution-list' task.course.id task.id %}">
+                          {% else %}
+                            <a class="task-solution-link" href="{% url 'education:student-solution-list' course.id student.id task.id %}">
+                          {% endif %}
                             {% if tasksolution|key:task.name %}
                               <button class="btn btn-warning" id="btn-tasks-link">Решения</button>
                             {% else %}

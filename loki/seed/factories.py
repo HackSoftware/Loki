@@ -194,7 +194,7 @@ class CourseAssignmentFactory(factory.DjangoModelFactory):
     favourite_partners = factory.RelatedFactory(PartnerFactory)
     group_time = int(faker.random_element(elements=('1', '2')))
     is_attending = faker.boolean()
-    student_presence = faker.random_number(digits=1)
+    student_presence = 0
     is_online = faker.boolean()
 
 
@@ -330,7 +330,7 @@ class CheckInFactory(factory.DjangoModelFactory):
         model = education_models.CheckIn
 
     mac = factory.Sequence(lambda n: 'd0:00:ad:{0}{0}:d8:e9'.format(n))
-    student = factory.SubFactory(StudentFactory)
+    user = factory.SubFactory(BaseUserFactory)
     date = faker.date()
 
 
