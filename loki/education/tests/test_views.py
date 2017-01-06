@@ -67,7 +67,7 @@ class CourseListViewTests(TestCase):
             self.assertNotIn(course2, response.context['course_list'])
 
 
-class TaskViewTests(TestCase):
+class TaskListViewTests(TestCase):
 
     def setUp(self):
         self.baseuser = BaseUserFactory()
@@ -122,7 +122,7 @@ class TaskViewTests(TestCase):
             self.assertNotIn(task_for_course2, response.context['object_list'])
 
 
-class SolutionViewTests(TestCase):
+class SolutionListViewTests(TestCase):
 
     def setUp(self):
         self.baseuser = BaseUserFactory()
@@ -186,7 +186,7 @@ class SolutionViewTests(TestCase):
             self.assertEqual(response.status_code, 403)
 
 
-class CourseStudentTaskViewTests(TestCase):
+class TeacherTaskListViewTests(TestCase):
 
     def setUp(self):
         self.baseuser = BaseUserFactory()
@@ -217,7 +217,7 @@ class CourseStudentTaskViewTests(TestCase):
             response = self.get('education:student-task-list', course=self.course.id, student=self.student.id)
             self.assertEqual(response.status_code, 403)
 
-    def test_teacher_cannot_access_course_student_task_list_if_he_dont_teach_it(self):
+    def test_teacher_cannot_access_course_student_task_list_if_he_doesnt_teach_it(self):
         with self.login(email=self.teacher.email, password=BaseUserFactory.password):
             response = self.get('education:student-task-list', course=self.course.id, student=self.student.id)
             self.assertEqual(response.status_code, 403)
@@ -231,7 +231,7 @@ class CourseStudentTaskViewTests(TestCase):
             self.assertIn(self.task, response.context['object_list'])
 
 
-class MaterialViewTests(TestCase):
+class MaterialListViewTests(TestCase):
 
     def setUp(self):
         self.baseuser = BaseUserFactory()
@@ -324,7 +324,7 @@ class MaterialViewTests(TestCase):
             self.assertEqual(response.status_code, 403)
 
 
-class StudentCourseViewTests(TestCase):
+class StudentListViewTests(TestCase):
 
     def setUp(self):
         self.baseuser = BaseUserFactory()
@@ -381,7 +381,7 @@ class StudentCourseViewTests(TestCase):
             self.assertNotIn(course_assignment_for_baseuser3, response.context['object_list'])
 
 
-class CourseDashboardViewTests(TestCase):
+class CourseDetailViewTests(TestCase):
 
     def setUp(self):
         self.baseuser = BaseUserFactory()
@@ -483,7 +483,7 @@ class CourseDashboardViewTests(TestCase):
             self.assertEqual(1, response.context['failed_solutions'])
 
 
-class CreateStudentNoteTest(TestCase):
+class CreateStudentNoteTests(TestCase):
 
     def setUp(self):
         self.baseuser = BaseUserFactory()

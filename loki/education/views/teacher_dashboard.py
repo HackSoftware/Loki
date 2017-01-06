@@ -6,12 +6,14 @@ from django.core.urlresolvers import reverse
 from loki.education.models import (Course, Task, Solution, Student,
                                    CourseAssignment, StudentNote)
 from loki.education.mixins import (DashboardPermissionMixin,
-                      CannotSeeOthersCoursesDashboardsMixin,
-                      CanSeeCourseInfoOnlyTeacher)
+                                   CannotSeeOthersCoursesDashboardsMixin,
+                                   IsTeacherMixin,
+                                   CannotSeeOthersSolutionsMixin)
 from loki.education.helper import task_solutions, latest_solution_statuses
 
 
-class StudentListView(CanSeeCourseInfoOnlyTeacher,
+class StudentListView(DashboardPermissionMixin,
+                      IsTeacherMixin,
                       CannotSeeOthersCoursesDashboardsMixin,
                       ListView):
     """
@@ -29,8 +31,8 @@ class StudentListView(CanSeeCourseInfoOnlyTeacher,
         return context
 
 
-class TaskListView(CanSeeCourseInfoOnlyTeacher,
-                   DashboardPermissionMixin,
+class TaskListView(DashboardPermissionMixin,
+                   IsTeacherMixin,
                    ListView):
     model = Task
     template_name = 'education/teacher_task_list.html'
@@ -40,7 +42,8 @@ class TaskListView(CanSeeCourseInfoOnlyTeacher,
         return Task.objects.filter(course=course_id)
 
 
-class CourseDetailView(CanSeeCourseInfoOnlyTeacher,
+class CourseDetailView(DashboardPermissionMixin,
+                       IsTeacherMixin,
                        CannotSeeOthersCoursesDashboardsMixin,
                        DetailView):
     model = Course
@@ -62,7 +65,8 @@ class CourseDetailView(CanSeeCourseInfoOnlyTeacher,
         return context
 
 
-class StudentTaskListView(CanSeeCourseInfoOnlyTeacher,
+class StudentTaskListView(DashboardPermissionMixin,
+                          IsTeacherMixin,
                           CannotSeeOthersCoursesDashboardsMixin,
                           ListView):
 
@@ -86,8 +90,9 @@ class StudentTaskListView(CanSeeCourseInfoOnlyTeacher,
         return context
 
 
-class StudentSolutionListView(CanSeeCourseInfoOnlyTeacher,
-                              DashboardPermissionMixin,
+class StudentSolutionListView(DashboardPermissionMixin,
+                              IsTeacherMixin,
+                              CannotSeeOthersCoursesDashboardsMixin,
                               ListView):
 
     model = Solution
@@ -104,8 +109,8 @@ class StudentSolutionListView(CanSeeCourseInfoOnlyTeacher,
         return context
 
 
-class StudentNoteCreateView(CanSeeCourseInfoOnlyTeacher,
-                            DashboardPermissionMixin,
+class StudentNoteCreateView(DashboardPermissionMixin,
+                            IsTeacherMixin,
                             CreateView):
 
     model = StudentNote

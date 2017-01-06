@@ -52,34 +52,9 @@ class CannotSeeOthersCoursesDashboardsMixin(BaseUserPassesTestMixin):
         return True and super().test_func()
 
 
-class CanSeeCourseInfoOnlyTeacher(BaseUserPassesTestMixin):
-    raise_exception = True
-    requires_login = False
-
+class IsTeacherMixin(BaseUserPassesTestMixin):
     def test_func(self):
-        if not self.request.user.is_authenticated():
-            self.requires_login = True
-            return False
-
         if not self.request.user.get_teacher():
-            return False
-
-        return True and super().test_func()
-
-    def handle_no_permission(self):
-        if self.requires_login:
-            return redirect_to_login(
-                self.request.get_full_path(), self.get_login_url(), self.get_redirect_field_name())
-
-        return super().handle_no_permission()
-
-
-class CannotSeeOthersSolutionsMixin(BaseUserPassesTestMixin):
-    def test_func(self):
-        solution_id = self.kwargs.get('solution')
-        qs = Solution.objects.filter(id=solution_id, student=self.request.user)
-
-        if not qs.exists():
             return False
 
         return True and super().test_func()
