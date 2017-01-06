@@ -232,7 +232,7 @@ class TeacherTaskListViewTests(TestCase):
 
     def test_teacher_can_see_student_task_only_course_if_he_teaches_it(self):
         course2 = CourseFactory()
-        task2 = TaskFactory(course=course2)
+        TaskFactory(course=course2)
         self.teacher.teached_courses = [self.course]
 
         with self.login(email=self.teacher.email, password=BaseUserFactory.password):
@@ -270,22 +270,26 @@ class TeacherSolutionListViewTests(TestCase):
         self.task2 = TaskFactory(course=self.course)
 
     def test_no_access_to_solution_list_without_login(self):
-        response = self.get('education:student-solution-list', course=self.course.id, student=self.student.id, task=self.task.id)
+        response = self.get('education:student-solution-list', course=self.course.id,
+                            student=self.student.id, task=self.task.id)
         self.assertEquals(response.status_code, 302)
 
     def test_baseuser_cannot_access_solution_list(self):
         with self.login(email=self.baseuser.email, password=BaseUserFactory.password):
-            response = self.get('education:student-solution-list', course=self.course.id, student=self.student.id, task=self.task.id)
+            response = self.get('education:student-solution-list', course=self.course.id,
+                                student=self.student.id, task=self.task.id)
             self.assertEqual(response.status_code, 403)
 
     def test_student_cannot_access_solution_list(self):
         with self.login(email=self.student.email, password=BaseUserFactory.password):
-            response = self.get('education:student-solution-list', course=self.course.id, student=self.student.id, task=self.task.id)
+            response = self.get('education:student-solution-list', course=self.course.id,
+                                student=self.student.id, task=self.task.id)
             self.assertEqual(response.status_code, 403)
 
     def test_teacher_cannot_access_course_student_solution_list_if_he_doesnt_teach_it(self):
         with self.login(email=self.teacher.email, password=BaseUserFactory.password):
-            response = self.get('education:student-solution-list', course=self.course.id, student=self.student.id, task=self.task.id)
+            response = self.get('education:student-solution-list', course=self.course.id,
+                                student=self.student.id, task=self.task.id)
             self.assertEqual(response.status_code, 403)
 
     def test_teacher_can_access_course_student_solution_list_if_he_teach_it(self):
@@ -294,9 +298,9 @@ class TeacherSolutionListViewTests(TestCase):
         solution2 = SolutionFactory(task=self.task, student=self.student)
         solution3 = SolutionFactory(task=self.task)
 
-
         with self.login(email=self.teacher.email, password=BaseUserFactory.password):
-            response = self.get('education:student-solution-list', course=self.course.id, student=self.student.id, task=self.task.id)
+            response = self.get('education:student-solution-list', course=self.course.id,
+                                student=self.student.id, task=self.task.id)
             self.assertEqual(response.status_code, 200)
             self.assertIn(solution, response.context['object_list'])
             self.assertIn(solution, response.context['solution_list'])
@@ -304,8 +308,6 @@ class TeacherSolutionListViewTests(TestCase):
             self.assertIn(solution2, response.context['solution_list'])
             self.assertNotIn(solution3, response.context['object_list'])
             self.assertNotIn(solution3, response.context['solution_list'])
-
-
 
 
 class MaterialListViewTests(TestCase):

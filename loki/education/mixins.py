@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.http import Http404
 from rest_framework.authentication import SessionAuthentication
 
-from loki.education.models import Course, CourseAssignment, Solution, Teacher
+from loki.education.models import Course, CourseAssignment, Teacher
 from .permissions import IsStudent
 
 

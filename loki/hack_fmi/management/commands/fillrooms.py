@@ -1,7 +1,7 @@
-from django.core.management.base import BaseCommand, CommandError
-from loki.hack_fmi.models import Room, Team, Season
+from django.core.management.base import BaseCommand
+from loki.hack_fmi.models import Room, Team
 
-#
+
 class Command(BaseCommand):
     help = 'distributes the teams in rooms'
 
@@ -11,7 +11,6 @@ class Command(BaseCommand):
         # nonfull_rooms = Room.objects.filter(id__in=nonfull_rooms_ids)
 
         teams_without_room = Team.objects.filter(season__is_active=True, room__isnull=True)
-
 
         free_capacity = sum([room.capacity for room in all_rooms if not room.is_full()])
 
