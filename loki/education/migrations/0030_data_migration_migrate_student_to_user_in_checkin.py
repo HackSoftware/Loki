@@ -24,6 +24,7 @@ def migrate_student_to_baseuser(apps, schema_editor):
                 does not match both teacher and student mac addresses, checkin
                 user shall stay empty.
                 """
+                pass
         checkin.save()
 
 
