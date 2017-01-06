@@ -51,8 +51,8 @@ class CourseListViewTests(TestCase):
         with self.login(username=student.email, password=BaseUserFactory.password):
             response = self.get('education:course-list')
             self.assertEqual(response.status_code, 200)
-            self.assertIn(course, response.context['course_list'])
-            self.assertNotIn(course2, response.context['course_list'])
+            self.assertIn(course, response.context['object_list'])
+            self.assertNotIn(course2, response.context['object_list'])
 
     def test_teacher_can_see_only_courses_for_which_is_teacher(self):
         teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
@@ -63,8 +63,8 @@ class CourseListViewTests(TestCase):
         with self.login(username=teacher.email, password=BaseUserFactory.password):
             response = self.get('education:course-list')
             self.assertEqual(response.status_code, 200)
-            self.assertIn(course, response.context['course_list'])
-            self.assertNotIn(course2, response.context['course_list'])
+            self.assertIn(course, response.context['object_list'])
+            self.assertNotIn(course2, response.context['object_list'])
 
 
 class TaskListViewTests(TestCase):
@@ -238,6 +238,17 @@ class TeacherTaskListViewTests(TestCase):
         with self.login(email=self.teacher.email, password=BaseUserFactory.password):
             response = self.get('education:student-task-list', course=course2.id, student=self.student.id)
             self.assertEqual(response.status_code, 403)
+
+    def test_teacher_can_see_student_task_list_only_if_he_teaches_course(self):
+        course2 = CourseFactory()
+        task2 = TaskFactory(course=course2)
+        self.teacher.teached_courses = [self.course]
+
+        with self.login(email=self.teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:student-task-list', course=self.course.id, student=self.student.id)
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(self.task, response.context['object_list'])
+            self.assertNotIn(task2, response.context['object_list'])
 
 
 class TeacherSolutionListViewTests(TestCase):
