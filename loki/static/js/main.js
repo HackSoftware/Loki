@@ -31,7 +31,7 @@ $(document).ready(function(){
     form.submit();
   })
 
-  $(".submit-solution, .submit-url").click(function(e){
+  $(".submit-solution").click(function(e){
     var el = $(this);
     el.attr("disabled","disabled");
     e.preventDefault();
@@ -112,9 +112,4 @@ $(document).ready(function(){
   $(".student-note").click(function(){
     $(this).closest('.student-box').find('.student-notes-table').toggle();
   });
-
-  $("#submit-url-solution").click(function() {
-    $("#submit-solution-form").submit();
-  });
-
 });

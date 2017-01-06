@@ -7,28 +7,27 @@
         </button>
         <h4 class="modal-title" id="myModalLabel"><b>{{ task.name}}</b></h4>
       </div>
-      <div class="modal-body">
-        {% if task.gradable %}
-          <label for="message-text" class="form-control-label">Решение на задача:</label>
-          <textarea class="form-control message-text" name="code"></textarea>
-        {% else %}
-          <label for="message-text-2" class="form-control-label">Линк към решение на задача:</label>
-          <form id="submit-solution-form" method="POST" action="">
-            {% csrf_token %}
-            <input class="form-control" id="message-text-2" name="url"></input>
+      <form id="submit-solution-form" method="POST" action="">
+        <div class="modal-body">
+          {% if task.gradable %}
+            <label for="message-text" class="form-control-label">Решение на задача:</label>
+            <textarea class="form-control message-text" name="code"></textarea>
+          {% else %}
+            <label for="message-text-2" class="form-control-label">Линк към решение на задача:</label>
+            <input class="form-control" type="url" id="message-text-2" name="url"></input>
             <input type="hidden" name="task" value="{{ task.id }}">
-          </form>
-        {% endif %}
-      </div>
-      <div class="modal-footer">
-        {% csrf_token %}
-        {% if task.gradable %}
-          <button type="submit" class="btn btn-warning submit-solution" value="{{ task.id }}">Предай задача</button>
-        {% else %}
-          <button type="submit" class="btn btn-warning submit-url" id="submit-url-solution">Предай Задача</button>
-        {% endif %}
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
-      </div>
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          {% csrf_token %}
+          {% if task.gradable %}
+            <button type="submit" class="btn btn-warning submit-solution" value="{{ task.id }}">Предай задача</button>
+          {% else %}
+            <button type="submit" class="btn btn-warning" id="submit-url-solution"2>Предай Задача</button>
+          {% endif %}
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>
