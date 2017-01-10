@@ -21,13 +21,15 @@
       </div>
     </section>
 
-    <hr />
 
     <section class="row">
       <div class="active-courses-container container-fluid">
-        {% for ca in opened_course_applications %}
-          {% include "website/partial/course_box.html" with course=ca.course.course %}
-        {% endfor %}
+        {% if opened_course_applications %}
+          <h3>Курсове отворени за кандидастване:</h3>
+          {% for ca in opened_course_applications %}
+            {% include "website/partial/course_box.html" with course=ca.course.course %}
+          {% endfor %}
+        {% endif %}
 
         <h3>Текущи курсове:</h3>
         {% for course in active_courses %}

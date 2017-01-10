@@ -4,24 +4,24 @@
 {% autoescape off %}
   <div class="container">
     {% if t_courses.exists %}
-    {% if t_courses.get_active_courses.exists %}
-      <section class="row">
-        <div class="active-courses-container container-fluid">
-          <h3>Преподавателски активни курсове </h3>
-          {% if user.get_teacher %}
-          {% for course in t_courses %}
-            {% if course.is_active %}
-              {% include "partial/teacher_course_box.html" with course=course %}
+      {% if t_courses.get_active_courses.exists %}
+        <section class="row">
+          <div class="active-courses-container container-fluid">
+            <h3>Преподавателски активни курсове </h3>
+            {% if user.get_teacher %}
+            {% for course in t_courses %}
+              {% if course.is_active %}
+                {% include "partial/teacher_course_box.html" with course=course %}
+              {% endif %}
+            {% endfor %}
             {% endif %}
-          {% endfor %}
-          {% endif %}
-        </div>
-      </section>
+          </div>
+        </section>
       {% endif %}
       {% if t_courses.get_closed_courses.exists %}
         <section class="row">
           <div class="active-courses-container container-fluid">
-            <h3>Преподавателски архив на изминали курсове </h3>
+            <h3>Архив на изминали преподавателски курсове </h3>
             {% if user.get_teacher %}
             {% for course in t_courses %}
               {% if not course.is_active %}
@@ -31,32 +31,34 @@
             {% endif %}
           </div>
         </section>
-        {% endif %}
+      {% endif %}
     {% endif %}
+
     {% if user.get_teacher and user.get_student %}
-    <section class="row">
-      <img id="panda-divider" src="{{STATIC_URL}}website_images/panda_bulbblink.gif" />
-    </section>
-    {% endif %}
-    {% if st_courses.exists %}
-    {% if st_courses.get_active_courses.exists %}
       <section class="row">
-        <div class="active-courses-container container-fluid">
-          <h3>Студентски активни курсове </h3>
-          {% if user.get_student %}
-          {% for course in st_courses %}
-            {% if course.is_active %}
-              {% include "partial/student_course_box.html" with course=course %}
-            {% endif %}
-          {% endfor %}
-          {% endif %}
-        </div>
+        <img id="panda-divider" src="{{STATIC_URL}}website_images/panda_bulbblink.gif" />
       </section>
+    {% endif %}
+
+    {% if st_courses.exists %}
+      {% if st_courses.get_active_courses.exists %}
+        <section class="row">
+          <div class="active-courses-container container-fluid">
+            <h3>Студентски активни курсове </h3>
+            {% if user.get_student %}
+            {% for course in st_courses %}
+              {% if course.is_active %}
+                {% include "partial/student_course_box.html" with course=course %}
+              {% endif %}
+            {% endfor %}
+            {% endif %}
+          </div>
+        </section>
       {% endif %}
       {% if st_courses.get_closed_courses.exists %}
         <section class="row">
           <div class="active-courses-container container-fluid">
-            <h3>Студентски архив на изминали курсове </h3>
+            <h3>Архив на изминали студентски курсове </h3>
             {% if user.get_student %}
             {% for course in st_courses %}
               {% if not course.is_active %}
@@ -66,7 +68,7 @@
             {% endif %}
           </div>
         </section>
-        {% endif %}
+      {% endif %}
     {% endif %}
   </div>
 {% endautoescape %}
