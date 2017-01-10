@@ -345,6 +345,9 @@ body {
         right: 10px;
         bottom: 5px;
         font-size: 10px; }
+.container #panda-divider {
+  margin-left: 40%;
+  margin-top: -70px; }
 
 .dropdown-menu {
   margin-top: 20px; }
