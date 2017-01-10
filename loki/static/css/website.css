@@ -348,6 +348,9 @@ body {
 .container #panda-divider {
   margin-left: 40%;
   margin-top: -70px; }
+  @media screen and (max-width: 450px) {
+    .container #panda-divider {
+      margin-left: 25%; } }
 
 .dropdown-menu {
   margin-top: 20px; }

@@ -6,14 +6,8 @@
     {% if t_courses.exists %}
     {% if t_courses.get_active_courses.exists %}
       <section class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          {{ snippets.courses_first_header.text }}
-          <h3>Преподавателски активни курсове </h3>
-        </div>
-      </section>
-
-      <section class="row">
         <div class="active-courses-container container-fluid">
+          <h3>Преподавателски активни курсове </h3>
           {% if user.get_teacher %}
           {% for course in t_courses %}
             {% if course.is_active %}
@@ -26,14 +20,8 @@
       {% endif %}
       {% if t_courses.get_closed_courses.exists %}
         <section class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12">
-            {{ snippets.courses_first_header.text }}
-            <h3>Преподавателски архив на изминали курсове </h3>
-          </div>
-        </section>
-
-        <section class="row">
           <div class="active-courses-container container-fluid">
+            <h3>Преподавателски архив на изминали курсове </h3>
             {% if user.get_teacher %}
             {% for course in t_courses %}
               {% if not course.is_active %}
@@ -53,14 +41,8 @@
     {% if st_courses.exists %}
     {% if st_courses.get_active_courses.exists %}
       <section class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12">
-          {{ snippets.courses_first_header.text }}
-          <h3>Студентски активни курсове </h3>
-        </div>
-      </section>
-
-      <section class="row">
         <div class="active-courses-container container-fluid">
+          <h3>Студентски активни курсове </h3>
           {% if user.get_student %}
           {% for course in st_courses %}
             {% if course.is_active %}
@@ -73,14 +55,8 @@
       {% endif %}
       {% if st_courses.get_closed_courses.exists %}
         <section class="row">
-          <div class="col-lg-12 col-md-12 col-sm-12">
-            {{ snippets.courses_first_header.text }}
-            <h3>Студентски архив на изминали курсове </h3>
-          </div>
-        </section>
-
-        <section class="row">
           <div class="active-courses-container container-fluid">
+            <h3>Студентски архив на изминали курсове </h3>
             {% if user.get_student %}
             {% for course in st_courses %}
               {% if not course.is_active %}
