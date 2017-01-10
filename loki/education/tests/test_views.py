@@ -51,8 +51,8 @@ class CourseListViewTests(TestCase):
         with self.login(username=student.email, password=BaseUserFactory.password):
             response = self.get('education:course-list')
             self.assertEqual(response.status_code, 200)
-            self.assertIn(course, response.context['object_list'])
-            self.assertNotIn(course2, response.context['object_list'])
+            self.assertIn(course, response.context['st_courses'])
+            self.assertNotIn(course2, response.context['st_courses'])
 
     def test_teacher_can_see_only_courses_for_which_is_teacher(self):
         teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
@@ -63,8 +63,8 @@ class CourseListViewTests(TestCase):
         with self.login(username=teacher.email, password=BaseUserFactory.password):
             response = self.get('education:course-list')
             self.assertEqual(response.status_code, 200)
-            self.assertIn(course, response.context['object_list'])
-            self.assertNotIn(course2, response.context['object_list'])
+            self.assertIn(course, response.context['t_courses'])
+            self.assertNotIn(course2, response.context['t_courses'])
 
 
 class TaskListViewTests(TestCase):
