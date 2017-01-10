@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class ApplicationsConfig(AppConfig):
-    name = 'applications'
+class ApplicationConfig(AppConfig):
+    name = 'loki.applications'

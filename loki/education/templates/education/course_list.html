@@ -9,11 +9,11 @@
           <div class="active-courses-container container-fluid">
             <h3>Преподавателски активни курсове </h3>
             {% if user.get_teacher %}
-            {% for course in t_courses %}
-              {% if course.is_active %}
-                {% include "partial/teacher_course_box.html" with course=course %}
-              {% endif %}
-            {% endfor %}
+              {% for course in t_courses %}
+                {% if course.is_active %}
+                  {% include "partial/teacher_course_box.html" with course=course %}
+                {% endif %}
+              {% endfor %}
             {% endif %}
           </div>
         </section>
@@ -23,11 +23,11 @@
           <div class="active-courses-container container-fluid">
             <h3>Архив на изминали преподавателски курсове </h3>
             {% if user.get_teacher %}
-            {% for course in t_courses %}
-              {% if not course.is_active %}
-                {% include "partial/teacher_course_box.html" with course=course %}
-              {% endif %}
-            {% endfor %}
+              {% for course in t_courses %}
+                {% if not course.is_active %}
+                  {% include "partial/teacher_course_box.html" with course=course %}
+                {% endif %}
+              {% endfor %}
             {% endif %}
           </div>
         </section>
@@ -46,11 +46,11 @@
           <div class="active-courses-container container-fluid">
             <h3>Студентски активни курсове </h3>
             {% if user.get_student %}
-            {% for course in st_courses %}
-              {% if course.is_active %}
-                {% include "partial/student_course_box.html" with course=course %}
-              {% endif %}
-            {% endfor %}
+              {% for course in st_courses %}
+                {% if course.is_active %}
+                  {% include "partial/student_course_box.html" with course=course %}
+                {% endif %}
+              {% endfor %}
             {% endif %}
           </div>
         </section>
@@ -60,11 +60,11 @@
           <div class="active-courses-container container-fluid">
             <h3>Архив на изминали студентски курсове </h3>
             {% if user.get_student %}
-            {% for course in st_courses %}
-              {% if not course.is_active %}
-                {% include "partial/student_course_box.html" with course=course %}
-              {% endif %}
-            {% endfor %}
+              {% for course in st_courses %}
+                {% if not course.is_active %}
+                  {% include "partial/student_course_box.html" with course=course %}
+                {% endif %}
+              {% endfor %}
             {% endif %}
           </div>
         </section>

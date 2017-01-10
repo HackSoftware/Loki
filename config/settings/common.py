@@ -58,10 +58,10 @@ INSTALLED_APPS = (
 
     'loki.hack_fmi.apps.HackFMIConfig',
     'loki.base_app.apps.BaseAppConfig',
-    'loki.education',
-    'loki.status',
-    'loki.website',
-    'loki.applications',
+    'loki.education.apps.EducationConfig',
+    'loki.status.apps.StatusConfig',
+    'loki.website.apps.WebsiteConfig',
+    'loki.applications.apps.ApplicationConfig',
     'loki.emails.apps.EmailsConfig',
     'loki.interview_system.apps.InterviewSystemConfig',
 )
