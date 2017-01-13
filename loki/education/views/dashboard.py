@@ -1,9 +1,9 @@
 from django.views.generic.list import ListView
 
-from loki.education.models import Course, Material, CheckIn
+from loki.education.models import Course, Material
 from loki.education.mixins import (DashboardPermissionMixin,
                                    CannotSeeOthersCoursesDashboardsMixin)
-from loki.education.helper import get_dates_for_weeks, percentage_presence
+from loki.education.services import get_course_presence
 
 
 class CourseListView(DashboardPermissionMixin,
@@ -24,13 +24,7 @@ class CourseListView(DashboardPermissionMixin,
             if not course.lecture_set.exists():
                 continue
             course_presence[course] = {}
-            course_presence[course]['weeks'] = list(get_dates_for_weeks(course).keys())
-            course_presence[course]['dates_for_weeks'] = get_dates_for_weeks(course)
-            course_presence[course]['user_dates'] = CheckIn.objects.get_user_dates(user, course)
-
-            user_dates = course_presence[course]['user_dates']
-            course_presence[course]['percentage_presence'] = percentage_presence(user_dates, course)
-
+            course_presence[course] = get_course_presence(course, user)
         context['course_presence'] = course_presence
 
         return context
