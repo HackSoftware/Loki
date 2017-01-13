@@ -190,6 +190,7 @@ GRADER_API_SECRET = env('GRADER_API_SECRET', default='')
 
 POLLING_SLEEP_TIME = env.int('POLLING_SLEEP_TIME', default=1)  # seconds
 
+CELERY_TIMEZONE = 'Europe/Sofia'
 CELERYBEAT_SCHEDULE = {
     'retest-solutions-on-test-change': {
         'task': 'loki.education.tasks.check_for_retests',
@@ -197,12 +198,9 @@ CELERYBEAT_SCHEDULE = {
     },
     'calculate-presence-every-day': {
         'task': 'loki.education.tasks.execute_calculate_presense_command',
-        'schedule': crontab(hour='17, 19', day_of_week='mon-fri'),
+        'schedule': crontab(minute=45, hour=19, day_of_week='mon-fri'),
     }
 }
-
-CELERY_TIMEZONE = 'UTC'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
