@@ -51,12 +51,13 @@ class StudentDetailView(DashboardPermissionMixin,
         context['count_solutions'] = context['passed_solutions'] + context['failed_solutions'] + context['url_solutions']
 
         course_presence = {}
-        course_presence['weeks'] = list(get_dates_for_weeks(course).keys())
-        course_presence['dates_for_weeks'] = get_dates_for_weeks(course)
-        course_presence['user_dates'] = CheckIn.objects.get_user_dates(student, course)
+        if course.lecture_set.exists():
+            course_presence['weeks'] = list(get_dates_for_weeks(course).keys())
+            course_presence['dates_for_weeks'] = get_dates_for_weeks(course)
+            course_presence['user_dates'] = CheckIn.objects.get_user_dates(student, course)
 
-        user_dates = course_presence['user_dates']
-        course_presence['percentage_presence'] = percentage_presence(user_dates, course)
+            user_dates = course_presence['user_dates']
+            course_presence['percentage_presence'] = percentage_presence(user_dates, course)
 
         context['course_presence'] = course_presence
 
