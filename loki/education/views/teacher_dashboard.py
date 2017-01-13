@@ -12,6 +12,7 @@ from loki.education.helper import task_solutions, latest_solution_statuses
 from loki.education.helper import get_dates_for_weeks, percentage_presence
 from loki.education.models import CheckIn
 
+
 class StudentListView(DashboardPermissionMixin,
                       IsTeacherMixin,
                       CannotSeeOthersCoursesDashboardsMixin,
@@ -29,6 +30,7 @@ class StudentListView(DashboardPermissionMixin,
         context = super().get_context_data(**kwargs)
         context['course'] = Course.objects.get(id=self.kwargs.get("course"))
         return context
+
 
 class StudentDetailView(DashboardPermissionMixin,
                         IsTeacherMixin,
@@ -48,7 +50,7 @@ class StudentDetailView(DashboardPermissionMixin,
         context['passed_solutions'] = Solution.objects.filter(student=student, task__in=tasks, status=2).count()
         context['failed_solutions'] = Solution.objects.filter(student=student, task__in=tasks, status=3).count()
         context['url_solutions'] = Solution.objects.filter(student=student, task__in=url_tasks).count()
-        context['count_solutions'] = context['passed_solutions'] + context['failed_solutions'] + context['url_solutions']
+        context['count_solutions'] = context['passed_solutions'] + context['failed_solutions'] + context['url_solutions']  # noqa
 
         course_presence = {}
         if course.lecture_set.exists():
@@ -62,7 +64,6 @@ class StudentDetailView(DashboardPermissionMixin,
         context['course_presence'] = course_presence
 
         return context
-
 
 
 class TaskListView(DashboardPermissionMixin,

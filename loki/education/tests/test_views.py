@@ -620,7 +620,7 @@ class StudentDetailView(TestCase):
         self.student.mac = "22:44:55:66:77"
         self.course = CourseFactory()
         self.ca = CourseAssignmentFactory(course=self.course,
-                                         user=self.student)
+                                          user=self.student)
         self.task = TaskFactory(course=self.course, gradable=True)
 
     def test_cannot_access_student_list_if_no_login(self):
@@ -676,7 +676,6 @@ class StudentDetailView(TestCase):
                                    user=self.student)
         check_in2.date = datetime.now().date() - timedelta(days=7)
         check_in2.save()
-
 
         with self.login(email=teacher.email, password=BaseUserFactory.password):
             response = self.get('education:student-detail', course=self.course.id, student=self.ca.id)
