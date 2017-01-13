@@ -55,7 +55,7 @@ class StudentDetailView(DashboardPermissionMixin,
         context['url_solutions'] = Solution.objects.filter(student=student, task__in=url_tasks).count()
         context['count_solutions'] = context['passed_solutions'] + context['failed_solutions'] + context['url_solutions']  # noqa
 
-        context['course_presence'] = get_course_presence(course, student)
+        context['course_presence'] = get_course_presence(course=course, user=student)
 
         return context
 

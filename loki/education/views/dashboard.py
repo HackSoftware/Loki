@@ -23,7 +23,7 @@ class CourseListView(DashboardPermissionMixin,
         for course in self.get_queryset():
             if not course.lecture_set.exists():
                 continue
-            course_presence[course] = get_course_presence(course, user)
+            course_presence[course] = get_course_presence(course=course, user=user)
         context['course_presence'] = course_presence
 
         return context
