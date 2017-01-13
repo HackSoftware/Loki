@@ -133,4 +133,4 @@ def retest_solution(solution_id):
 
 @app.task
 def execute_calculate_presense_command():
-    call_command('python manage.py calculate_presence')
+    call_command('calculate_presence')

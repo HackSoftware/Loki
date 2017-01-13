@@ -197,7 +197,7 @@ CELERYBEAT_SCHEDULE = {
     },
     'calculate-presence-every-day': {
         'task': 'loki.education.tasks.execute_calculate_presense_command',
-        'schedule': crontab(hour='19', day_of_week='0-4'),
+        'schedule': crontab(hour='17, 19', day_of_week='mon-fri'),
     }
 }
 
