@@ -4,7 +4,7 @@ import json
 import requests
 import time
 
-
+from django.core.management import call_command
 from django.conf import settings
 from loki.celery import app
 
@@ -129,3 +129,8 @@ def retest_solution(solution_id):
     solution = Solution.objects.get(id=solution_id)
     solution.status = Solution.SUBMITED
     submit_solution.delay(solution.id)
+
+
+@app.task
+def execute_calculate_presense_command():
+    call_command('calculate_presence')
