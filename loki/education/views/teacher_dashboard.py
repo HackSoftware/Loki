@@ -9,7 +9,8 @@ from loki.education.mixins import (DashboardPermissionMixin,
                                    CannotSeeOthersCoursesDashboardsMixin,
                                    IsTeacherMixin)
 from loki.education.helper import task_solutions, latest_solution_statuses
-
+from loki.education.helper import get_dates_for_weeks, percentage_presence
+from loki.education.models import CheckIn
 
 class StudentListView(DashboardPermissionMixin,
                       IsTeacherMixin,
@@ -28,6 +29,39 @@ class StudentListView(DashboardPermissionMixin,
         context = super().get_context_data(**kwargs)
         context['course'] = Course.objects.get(id=self.kwargs.get("course"))
         return context
+
+class StudentDetailView(DashboardPermissionMixin,
+                        IsTeacherMixin,
+                        CannotSeeOthersCoursesDashboardsMixin,
+                        DetailView):
+
+    model = CourseAssignment
+    pk_url_kwarg = 'student'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        course = Course.objects.get(id=self.kwargs.get("course"))
+        tasks = Task.objects.filter(course=course, gradable=True)
+        url_tasks = Task.objects.filter(course=course, gradable=False)
+
+        student = Student.objects.get(id=self.object.user.id)
+        context['passed_solutions'] = Solution.objects.filter(student=student, task__in=tasks, status=2).count()
+        context['failed_solutions'] = Solution.objects.filter(student=student, task__in=tasks, status=3).count()
+        context['url_solutions'] = Solution.objects.filter(student=student, task__in=url_tasks).count()
+        context['count_solutions'] = context['passed_solutions'] + context['failed_solutions'] + context['url_solutions']
+
+        course_presence = {}
+        course_presence['weeks'] = list(get_dates_for_weeks(course).keys())
+        course_presence['dates_for_weeks'] = get_dates_for_weeks(course)
+        course_presence['user_dates'] = CheckIn.objects.get_user_dates(student, course)
+
+        user_dates = course_presence['user_dates']
+        course_presence['percentage_presence'] = percentage_presence(user_dates, course)
+
+        context['course_presence'] = course_presence
+
+        return context
+
 
 
 class TaskListView(DashboardPermissionMixin,

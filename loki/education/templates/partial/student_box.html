@@ -5,7 +5,9 @@
   </div>
   <div class="col-sm-10 student-information">
     <div class="col-sm-10 student-information-text">
-      <h4 class="student-name">{{ student.first_name }} {{student.last_name}}</h4>
+      <a href="{% url 'education:student-detail' course.id ca.id %}"
+        <h4 class="student-name">{{ student.first_name }} {{student.last_name}}</h4>
+      </a>
       <hr class="lines"/>
       <b>Email:</b> {{ student.email }} </br>
       {% if student.github_account %}
