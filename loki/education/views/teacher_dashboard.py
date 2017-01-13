@@ -47,8 +47,12 @@ class StudentDetailView(DashboardPermissionMixin,
         url_tasks = Task.objects.filter(course=course, gradable=False)
 
         student = Student.objects.get(id=self.object.user.id)
-        context['passed_solutions'] = Solution.objects.filter(student=student, task__in=tasks, status=2).count()
-        context['failed_solutions'] = Solution.objects.filter(student=student, task__in=tasks, status=3).count()
+        context['passed_solutions'] = Solution.objects.filter(student=student,
+                                                              task__in=tasks,
+                                                              status=Solution.OK).count()
+        context['failed_solutions'] = Solution.objects.filter(student=student,
+                                                              task__in=tasks,
+                                                              status=Solution.NOT_OK).count()
         context['url_solutions'] = Solution.objects.filter(student=student, task__in=url_tasks).count()
         context['count_solutions'] = context['passed_solutions'] + context['failed_solutions'] + context['url_solutions']  # noqa
 
