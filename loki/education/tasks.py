@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import json
 import requests
 import time
-
+import subprocess
 
 from django.conf import settings
 from loki.celery import app
@@ -129,3 +129,7 @@ def retest_solution(solution_id):
     solution = Solution.objects.get(id=solution_id)
     solution.status = Solution.SUBMITED
     submit_solution.delay(solution.id)
+
+@app.task
+def execute_calculate_presense_command():
+    subprocess.call('python manage.py calculate_presence', shell=True, close_fds=True)
