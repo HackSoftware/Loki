@@ -1,0 +1,47 @@
+{% extends 'website/base.html' %}
+{% load key %}
+{% load cropping thumbnail %}
+
+{% block 'page-content' %}
+<div class="container">
+  <div class="course-students">
+    <div class="course-name-div">
+      <div class="course-name"><b>{{ object.course }}</b></div>
+    </div>
+    <div class="col-sm-12 course-box">
+      <div class="col-sm-2">
+        <img src="{% cropped_thumbnail object.user "cropping" %}" class="student-profile-photo" >
+      </div>
+      <div class="col-sm-10 student-information">
+        <div class="col-sm-10 student-information-text">
+          <h4> Студент: {{ object.user }}</h4>
+          <hr class="lines"/>
+          <b>Предадени решения в системата:</b> {{ count_solutions }} </br>
+          <hr/>
+          <b>Общ брой верни решения:</b> {{ passed_solutions }} </br>
+          <b>Общ брой грешни решения:</b> {{ failed_solutions }} </br>
+          <hr/>
+          <b>Общ брой предадени решения url задачи:</b> {{ url_solutions }}
+        </div>
+        <div class="col-sm-2 students-course-btns">
+          <a href="{% url 'education:student-task-list' object.course.id object.user.id %}">
+            <button class="btn btn-warning" id="students-link">Задачи</button>
+          </a>
+        </div>
+      </div>
+      <div class="col-sm-12 course-box-footer check-in-footer">
+        <div class="col-sm-12 check-in">
+            <b>Присъствие</b>
+                <b> {{ course_presence|key:"percentage_presence" }} </b>
+            <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
+        </div>
+        <div class="check-in-table hidden-toggle col-sm-12 col-sm-offset-1">
+            {% with dates_for_weeks=course_presence|key:"dates_for_weeks" user_dates=course_presence|key:"user_dates" weeks=course_presence|key:"weeks"%}
+            {% include 'partial/table_presence.html' with dates_for_weeks=dates_for_weeks user_dates=user_dates weeks=weeks %}
+            {% endwith %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

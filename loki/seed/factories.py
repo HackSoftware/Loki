@@ -329,7 +329,7 @@ class CheckInFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.CheckIn
 
-    mac = factory.Sequence(lambda n: 'd0:00:ad:{0}{0}:d8:e9'.format(n))
+    mac = factory.LazyAttribute(lambda _: faker.mac_address())
     user = factory.SubFactory(BaseUserFactory)
     date = faker.date()
 

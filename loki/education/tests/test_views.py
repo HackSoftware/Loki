@@ -1,8 +1,10 @@
+from datetime import datetime, timedelta
 from test_plus.test import TestCase
 
 from loki.seed.factories import (BaseUserFactory, CourseFactory, TaskFactory,
                                  CourseAssignmentFactory, SolutionFactory,
-                                 MaterialFactory, WeekFactory, LectureFactory)
+                                 MaterialFactory, WeekFactory, LectureFactory,
+                                 CheckInFactory)
 from loki.base_app.models import BaseUser
 from loki.education.models import StudentNote
 
@@ -604,3 +606,81 @@ class CreateStudentNoteTests(TestCase):
 
         self.assertEqual(1, StudentNote.objects.filter(assignment=self.course_assignment).count())
         self.assertEqual(teacher, StudentNote.objects.filter(assignment=self.course_assignment).first().author)
+
+
+class StudentDetailView(TestCase):
+    def setUp(self):
+        self.baseuser = BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.save()
+        self.baseuser2 = BaseUserFactory()
+        self.baseuser2.is_active = True
+        self.baseuser2.save()
+        self.student = BaseUser.objects.promote_to_student(self.baseuser2)
+        self.student.mac = "22:44:55:66:77"
+        self.course = CourseFactory()
+        self.ca = CourseAssignmentFactory(course=self.course,
+                                          user=self.student)
+        self.task = TaskFactory(course=self.course, gradable=True)
+
+    def test_cannot_access_student_list_if_no_login(self):
+        response = self.get('education:student-detail', course=self.course.id, student=self.ca.id)
+        self.assertEquals(response.status_code, 302)
+
+    def test_student_cannot_access_student_list(self):
+        with self.login(email=self.student.email, password=BaseUserFactory.password):
+
+            response = self.get('education:student-detail', course=self.course.id, student=self.ca.id)
+            self.assertEquals(response.status_code, 403)
+
+    def test_teacher_can_see_student_detail_information(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
+
+        solution1 = SolutionFactory(task=self.task,
+                                    student=self.student)
+        solution1.status = 3
+        solution1.save()
+
+        solution2 = SolutionFactory(task=self.task,
+                                    student=self.student)
+        solution2.status = 2
+        solution2.save()
+
+        solution3 = SolutionFactory(task=self.task,
+                                    student=self.student)
+        solution3.status = 2
+        solution3.save()
+
+        url_task = TaskFactory(course=self.course, gradable=False)
+        SolutionFactory(task=url_task,
+                        student=self.student)
+
+        LectureFactory(course=self.course,
+                       date=datetime.now().date() - timedelta(days=9))
+
+        LectureFactory(course=self.course,
+                       date=datetime.now().date() - timedelta(days=7))
+
+        LectureFactory(course=self.course,
+                       date=datetime.now().date() - timedelta(days=5))
+
+        LectureFactory(course=self.course,
+                       date=datetime.now().date() - timedelta(days=3))
+
+        check_in1 = CheckInFactory(mac=self.student.mac,
+                                   user=self.student)
+        check_in1.date = datetime.now().date() - timedelta(days=9)
+        check_in1.save()
+        check_in2 = CheckInFactory(mac=self.student.mac,
+                                   user=self.student)
+        check_in2.date = datetime.now().date() - timedelta(days=7)
+        check_in2.save()
+
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:student-detail', course=self.course.id, student=self.ca.id)
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(self.ca, response.context['object'])
+            self.assertEqual(2, response.context['passed_solutions'])
+            self.assertEqual(1, response.context['failed_solutions'])
+            self.assertEqual(1, response.context['url_solutions'])

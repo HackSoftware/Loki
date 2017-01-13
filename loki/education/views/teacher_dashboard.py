@@ -9,6 +9,7 @@ from loki.education.mixins import (DashboardPermissionMixin,
                                    CannotSeeOthersCoursesDashboardsMixin,
                                    IsTeacherMixin)
 from loki.education.helper import task_solutions, latest_solution_statuses
+from loki.education.services import get_course_presence
 
 
 class StudentListView(DashboardPermissionMixin,
@@ -27,6 +28,35 @@ class StudentListView(DashboardPermissionMixin,
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['course'] = Course.objects.get(id=self.kwargs.get("course"))
+        return context
+
+
+class StudentDetailView(DashboardPermissionMixin,
+                        IsTeacherMixin,
+                        CannotSeeOthersCoursesDashboardsMixin,
+                        DetailView):
+
+    model = CourseAssignment
+    pk_url_kwarg = 'student'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        course = Course.objects.get(id=self.kwargs.get("course"))
+        tasks = Task.objects.filter(course=course, gradable=True)
+        url_tasks = Task.objects.filter(course=course, gradable=False)
+
+        student = Student.objects.get(id=self.object.user.id)
+        context['passed_solutions'] = Solution.objects.filter(student=student,
+                                                              task__in=tasks,
+                                                              status=Solution.OK).count()
+        context['failed_solutions'] = Solution.objects.filter(student=student,
+                                                              task__in=tasks,
+                                                              status=Solution.NOT_OK).count()
+        context['url_solutions'] = Solution.objects.filter(student=student, task__in=url_tasks).count()
+        context['count_solutions'] = context['passed_solutions'] + context['failed_solutions'] + context['url_solutions']  # noqa
+
+        context['course_presence'] = get_course_presence(course=course, user=student)
+
         return context
 
 
