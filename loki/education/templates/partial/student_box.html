@@ -5,7 +5,7 @@
   </div>
   <div class="col-sm-10 student-information">
     <div class="col-sm-10 student-information-text">
-      <a href="{% url 'education:student-detail' course.id ca.id %}"
+      <a href="{% url 'education:student-detail' course.id ca.id %}">
         <h4 class="student-name">{{ student.first_name }} {{student.last_name}}</h4>
       </a>
       <hr class="lines"/>
@@ -15,7 +15,7 @@
         <a href="{{ student.github_account }}" target="_blank">{{ student.github_account }}</a> </br>
       {% endif %}
       {% if ca.student_presence %}
-        <b>Присъствие:</b> {{ ca.student_presence }}%</br>
+        <b>Присъствие:</b> <span class="student-presence-percent">{{ ca.student_presence }}%</span></br>
       {% endif %}
       {% if ca.studentnote_set.exists %}
       <div class="student-box-footer student-note-footer">

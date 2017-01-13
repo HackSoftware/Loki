@@ -1,18 +1,16 @@
 {% extends 'website/base.html' %}
 {% load key %}
+{% load cropping thumbnail %}
 
 {% block 'page-content' %}
 <div class="container">
   <div class="course-students">
     <div class="course-name-div">
-      <a href="{% url 'education:course-list' %}">
-        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-      </a>
       <div class="course-name"><b>{{ object.course }}</b></div>
     </div>
     <div class="col-sm-12 course-box">
       <div class="col-sm-2">
-        <img src="{{ MEDIA_URL }}{{ course.coursedescription.custom_logo }}" class="course-logo">
+        <img src="{% cropped_thumbnail object.user "cropping" %}" class="student-profile-photo" >
       </div>
       <div class="col-sm-10 student-information">
         <div class="col-sm-10 student-information-text">
