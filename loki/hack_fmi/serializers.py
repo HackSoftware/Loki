@@ -1,6 +1,8 @@
 from rest_framework import serializers
 
-from .models import Skill, Competitor, Team, TeamMembership, Season, Invitation, Mentor, TeamMentorship
+from .models import (Skill, Competitor, Team, TeamMembership,
+                     Season, Invitation, Mentor, TeamMentorship,
+                     SeasonCompetitorInfo)
 
 
 class TeamMembershipSerializer(serializers.ModelSerializer):
@@ -69,6 +71,13 @@ class CompetitorInTeamSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
         )
+
+
+class CompetitorListSerializer(CompetitorInTeamSerializer):
+
+    class Meta(CompetitorInTeamSerializer.Meta):
+        model = Competitor
+        fields = CompetitorInTeamSerializer.Meta.fields + ('known_skills', 'other_skills')
 
 
 class CustomTeamSerializer(serializers.ModelSerializer):
@@ -279,10 +288,23 @@ class OnBoardingCompetitorSerializer(serializers.ModelSerializer):
         )
 
         fields = (
+            'id',
             'is_vegetarian',
             'shirt_size',
             'needs_work',
             'social_links',
             'known_skills',
             'other_skills'
+        )
+
+
+class SeasonCompetitorInfoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SeasonCompetitorInfo
+
+        fields = (
+            'competitor',
+            'season',
+            'looking_for_team'
         )

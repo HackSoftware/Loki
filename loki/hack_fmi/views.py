@@ -9,19 +9,21 @@ from rest_framework import mixins
 from rest_framework_jwt.views import RefreshJSONWebToken
 
 from .models import (Skill, Team, TeamMembership,
-                     Mentor, Season, TeamMentorship, BlackListToken)
+                     Mentor, Season, TeamMentorship,
+                     BlackListToken, SeasonCompetitorInfo)
 from .serializers import (SkillSerializer, TeamSerializer, Invitation,
                           InvitationSerializer, MentorSerializer,
                           SeasonSerializer, PublicTeamSerializer,
                           OnBoardingCompetitorSerializer,
+                          SeasonCompetitorInfoSerializer,
                           TeamMembershipSerializer,
                           TeamMentorshipSerializer,
+                          CompetitorListSerializer,
                           CustomTeamSerializer)
 from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           IsMemberOfTeam, IsTeamMembershipInActiveSeason,
                           IsTeamLeader, IsSeasonDeadlineUpToDate,
-                          IsMentorDatePickUpToDate,
-                          IsTeamInActiveSeason, IsTeamleaderOrCantCreateIvitation,
+                          IsMentorDatePickUpToDate, IsTeamleaderOrCantCreateIvitation,
                           IsInvitedMemberAlreadyInYourTeam,
                           IsInvitedMemberAlreadyInOtherTeam,
                           CanInviteMoreMembersInTeam,
@@ -31,7 +33,8 @@ from .permissions import (IsHackFMIUser, IsTeamLeaderOrReadOnly,
                           CanAttachMoreMentorsToTeam,
                           CantCreateTeamWithTeamNameThatAlreadyExists,
                           TeamLiederCantCreateOtherTeam,
-                          IsInvitedMemberCompetitor)
+                          IsInvitedMemberCompetitor, IsSeasonActive,
+                          IsCompetitorMemberOfTeamForActiveSeason)
 from .helper import send_team_delete_email, send_invitation, get_object_variable_or_none
 from .mixins import MeSerializerMixin, JwtApiAuthenticationMixin
 
@@ -73,6 +76,9 @@ class MeSeasonAPIView(JwtApiAuthenticationMixin,
         team_data = None
         data["team"] = None
 
+        looking_for_team = False
+        data["looking_for_team"] = None
+
         if not data['is_competitor']:
             return Response(data=data, status=status.HTTP_200_OK)
 
@@ -93,6 +99,12 @@ class MeSeasonAPIView(JwtApiAuthenticationMixin,
 
         data["team"] = team_data
         data["team_membership_id"] = tm_id
+
+        season_competitor_info = SeasonCompetitorInfo.objects.get(competitor=competitor)
+        if season_competitor_info:
+            looking_for_team = season_competitor_info.looking_for_team
+
+        data["looking_for_team"] = looking_for_team
 
         return Response(data=data, status=status.HTTP_200_OK)
 
@@ -130,7 +142,7 @@ class TeamAPI(JwtApiAuthenticationMixin,
               mixins.RetrieveModelMixin,
               viewsets.GenericViewSet):
     serializer_class = TeamSerializer
-    queryset = Team.objects.all()
+    queryset = Team.objects.filter(season__is_active=True)
 
     """
     Get away from overriding JwtApiAuthenticationMixin'permission classes
@@ -138,7 +150,7 @@ class TeamAPI(JwtApiAuthenticationMixin,
 
     def get_permissions(self):
         permission_classes = (IsHackFMIUser, IsTeamLeaderOrReadOnly,
-                              IsSeasonDeadlineUpToDate, IsTeamInActiveSeason,
+                              IsSeasonDeadlineUpToDate,
                               CantCreateTeamWithTeamNameThatAlreadyExists,
                               TeamLiederCantCreateOtherTeam)
         self.permission_classes += super().permission_classes + permission_classes
@@ -311,6 +323,28 @@ class TestApi(JwtApiAuthenticationMixin,
 
     def get(self, request):
         return Response("Great, status 200", status=status.HTTP_200_OK)
+
+
+class SeasonInfoAPIView(JwtApiAuthenticationMixin, generics.CreateAPIView):
+    serializer_class = SeasonCompetitorInfoSerializer
+
+    def get_permissions(self):
+        permission_classes = (IsSeasonActive, IsCompetitorMemberOfTeamForActiveSeason)
+        self.permission_classes += super().permission_classes + permission_classes
+        return [permission() for permission in self.permission_classes]
+
+
+class CompetitorListAPIView(JwtApiAuthenticationMixin, generics.ListAPIView):
+    def get_permissions(self):
+        permission_classes = (IsTeamLeader, IsTeamMembershipInActiveSeason,
+                              CanInviteMoreMembersInTeam)
+        self.permission_classes += super().permission_classes + permission_classes
+        return [permission() for permission in self.permission_classes]
+
+    serializer_class = CompetitorListSerializer
+
+    def get_queryset(self):
+        return SeasonCompetitorInfo.objects.get_competitors_for_active_season()
 
 
 class JWTLogoutView(JwtApiAuthenticationMixin,

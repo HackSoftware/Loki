@@ -127,13 +127,6 @@ class TeamLiederCantCreateOtherTeam(permissions.BasePermission):
         return True
 
 
-class IsTeamInActiveSeason(permissions.BasePermission):
-    message = "This team is not in an active season!"
-
-    def has_object_permission(self, request, view, obj):
-        return obj.season.is_active is True
-
-
 class IsTeamleaderOrCantCreateIvitation(permissions.BasePermission):
     message = "Only current season team leaders can invite members."
 
@@ -245,6 +238,31 @@ class IsInvitedMemberCompetitor(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.method == "POST":
             return Competitor.objects.get_competitor_by_email(email=request.data['competitor_email']).exists()
+        return True
+
+
+class IsSeasonActive(permissions.BasePermission):
+
+    message = "You cannot post data in nonactive season!"
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            season = Season.objects.get(id=request.data['season'])
+            if season is not None:
+                return season.is_active
+        return True
+
+
+class IsCompetitorMemberOfTeamForActiveSeason(permissions.BasePermission):
+
+    message = "You are already member of team in this season!"
+
+    def has_permission(self, request, view):
+        if request.method == 'POST':
+            competitor = Competitor.objects.get(id=request.data['competitor'])
+            if competitor is not None:
+                return not TeamMembership.objects.get_team_memberships_for_active_season(
+                    competitor=competitor).exists()
         return True
 
 
