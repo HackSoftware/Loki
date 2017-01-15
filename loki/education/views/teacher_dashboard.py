@@ -41,10 +41,6 @@ class StudentDetailView(DashboardPermissionMixin,
     model = CourseAssignment
     pk_url_kwarg = 'ca'
 
-    # def get_object(self, **kwargs):
-    #     ca_id = self.kwargs.get("ca")
-    #     return CourseAssignment.objects.get(id=ca_id)
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         course = Course.objects.get(id=self.kwargs.get("course"))
