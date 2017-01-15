@@ -1028,13 +1028,21 @@ $TabBorder: #C5C4C4;
 
     }
 
+
     .course-logo {
         width: 100%;
         padding: 15px;
         @media screen and (max-width: 836px) {
           width: 50%;
         }
+    }
 
+    .student-profile-photo {
+      width: 100%;
+      padding: 10px;
+      @media screen and (max-width: 836px) {
+        width: 50%;
+      }
     }
 
     .hidden-toggle {
@@ -1050,6 +1058,7 @@ $TabBorder: #C5C4C4;
 
       .check-in {
         cursor: pointer;
+        text-align: center;
       }
 
       .check-in-table {
@@ -1080,7 +1089,6 @@ $TabBorder: #C5C4C4;
       background-color: #EAEAEA;
     }
 }
-
 
 .apply-form {
     h1 {

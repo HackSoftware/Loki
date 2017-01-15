@@ -3,27 +3,31 @@
 {% load cropping thumbnail %}
 
 {% block 'page-content' %}
+{% autoescape off %}
 <div class="container">
   <div class="course-students">
     <div class="course-name-div">
+      <a href="{% url 'education:student-list' object.course.id %}">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      </a>
       <div class="course-name"><b>{{ object.course }}</b></div>
     </div>
     <div class="col-sm-12 course-box">
       <div class="col-sm-2">
-        <img src="{% cropped_thumbnail object.user "cropping" %}" class="student-profile-photo" >
+        <img src="{% cropped_thumbnail object.user "cropping" %}" class="student-profile-photo">
       </div>
-      <div class="col-sm-10 student-information">
-        <div class="col-sm-10 student-information-text">
+      <div class="col-sm-10 course-text">
+        <div class="col-sm-10 course-information">
           <h4> Студент: {{ object.user }}</h4>
           <hr class="lines"/>
-          <b>Предадени решения в системата:</b> {{ count_solutions }} </br>
+          <b>Предадени решения в системата:</b> {{ count_solutions }}
           <hr/>
           <b>Общ брой верни решения:</b> {{ passed_solutions }} </br>
           <b>Общ брой грешни решения:</b> {{ failed_solutions }} </br>
           <hr/>
           <b>Общ брой предадени решения url задачи:</b> {{ url_solutions }}
         </div>
-        <div class="col-sm-2 students-course-btns">
+        <div class="col-sm-2 course-btns">
           <a href="{% url 'education:student-task-list' object.course.id object.user.id %}">
             <button class="btn btn-warning" id="students-link">Задачи</button>
           </a>
@@ -43,5 +47,6 @@
       </div>
     </div>
   </div>
-</div>
+</div>~
+{% endautoescape %}
 {% endblock %}
