@@ -622,15 +622,18 @@ class StudentDetailView(TestCase):
         self.ca = CourseAssignmentFactory(course=self.course,
                                           user=self.student)
         self.task = TaskFactory(course=self.course, gradable=True)
+        self.baseuser3 = BaseUserFactory()
+        self.baseuser3.is_active = True
+        self.baseuser3.save()
 
     def test_cannot_access_student_list_if_no_login(self):
-        response = self.get('education:student-detail', course=self.course.id, student=self.ca.id)
+        response = self.get('education:student-detail', course=self.course.id, ca=self.ca.id)
         self.assertEquals(response.status_code, 302)
 
     def test_student_cannot_access_student_list(self):
         with self.login(email=self.student.email, password=BaseUserFactory.password):
 
-            response = self.get('education:student-detail', course=self.course.id, student=self.ca.id)
+            response = self.get('education:student-detail', course=self.course.id, ca=self.ca.id)
             self.assertEquals(response.status_code, 403)
 
     def test_teacher_can_see_student_detail_information(self):
@@ -678,9 +681,25 @@ class StudentDetailView(TestCase):
         check_in2.save()
 
         with self.login(email=teacher.email, password=BaseUserFactory.password):
-            response = self.get('education:student-detail', course=self.course.id, student=self.ca.id)
+            response = self.get('education:student-detail', course=self.course.id, ca=self.ca.id)
             self.assertEqual(response.status_code, 200)
             self.assertEqual(self.ca, response.context['object'])
             self.assertEqual(2, response.context['passed_solutions'])
             self.assertEqual(1, response.context['failed_solutions'])
             self.assertEqual(1, response.context['url_solutions'])
+
+    def test_teacher_cannot_see_other_students_detail_information(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        teacher.teached_courses = [self.course]
+
+        other_student = BaseUser.objects.promote_to_student(self.baseuser3)
+        other_student_course = CourseFactory()
+        other_student_ca = CourseAssignmentFactory(course=other_student_course,
+                                                   user=other_student)
+
+        self.assertFalse(other_student_course in teacher.teached_courses.all())
+
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            response = self.get('education:student-detail', course=other_student_course.id,
+                                ca=other_student_ca.id)
+            self.assertEqual(response.status_code, 403)
