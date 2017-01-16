@@ -1,12 +1,20 @@
 [report]
 omit = 
+  config/*
 	*/migrations/*
 	*/admin.py
-	*/tests.py
+	*/tests/*
 	*/__init__.py
-	loki/manage.py
+  */apps.py
+  */management/commands/_private.py
+  */urls.py
+  manage.py
+  clock.py
+  # Exclude configuration files in the project
 	loki/wsgi.py
   loki/base_app/modelresources.py
+  loki/celery.py
+  loki/emails/backends.py
 
 exclude_lines =
     class Command
