@@ -392,9 +392,6 @@ class TestFactory(factory.DjangoModelFactory):
 
     task = factory.RelatedFactory(TaskFactory)
     language = factory.SubFactory(ProgrammingLanguageFactory)
-    test_type = faker.\
-        random_element(elements=('0',))
-    extra_options = faker.file_name(category=None, extension='json')
 
 
 class SourceCodeTestFactory(TestFactory):
