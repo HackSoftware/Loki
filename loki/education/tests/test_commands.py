@@ -1,10 +1,26 @@
+from unittest import mock
+
 from test_plus.test import TestCase
 from django.core.management import call_command
 from datetime import datetime, timedelta
 
-from loki.seed.factories import (BaseUserFactory, CourseFactory, CourseAssignmentFactory,
-                                 LectureFactory, CheckInFactory, StudentFactory)
-from loki.education.models import Lecture, CheckIn, Certificate
+from loki.seed.factories import (
+    BaseUserFactory,
+    CourseFactory,
+    CourseAssignmentFactory,
+    LectureFactory,
+    CheckInFactory,
+    StudentFactory,
+    TaskFactory,
+    SolutionFactory
+)
+
+from loki.education.models import (
+    Lecture,
+    CheckIn,
+    Certificate,
+    Solution
+)
 
 
 class CalculatePresenceTests(TestCase):
@@ -121,3 +137,21 @@ class GenerateCertificatesTests(TestCase):
 
         cert = Certificate.objects.first()
         self.assertEqual(cert, self.course_assignment.certificate)
+
+
+class RegradePendingSolutionsTests(TestCase):
+    def setUp(self):
+        self.student = StudentFactory()
+        self.course = CourseFactory()
+
+        self.task = TaskFactory(course=self.course)
+        self.solution = SolutionFactory(student=self.student,
+                                        task=self.task,
+                                        status=Solution.PENDING)
+
+    @mock.patch('loki.education.tasks.submit_solution', side_effect=lambda *args, **kwargs: None)
+    def test_regrade_pending_solution_submits_pending_solutions(self, mock):
+        call_command('regrade_pending_solutions')
+
+        self.solution.refresh_from_db()
+        self.assertEqual(Solution.SUBMITED, self.solution.status)
