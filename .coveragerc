@@ -17,7 +17,6 @@ omit =
   loki/emails/backends.py
 
 exclude_lines =
-    class Command
     __init__
     pragma: no cover
     def __repr__

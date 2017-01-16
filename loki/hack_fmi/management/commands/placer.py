@@ -1,3 +1,5 @@
+# pragma: nocover
+
 from django.core.management.base import BaseCommand
 from hack_fmi.models import Team, Season
 import json
