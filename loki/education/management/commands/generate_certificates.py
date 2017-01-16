@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django.utils import timezone
-from education.models import Course, Certificate
+from loki.education.models import Course, Certificate
 
 
 class Command(BaseCommand):

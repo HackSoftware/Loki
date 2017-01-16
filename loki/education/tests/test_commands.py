@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from loki.seed.factories import (BaseUserFactory, CourseFactory, CourseAssignmentFactory,
                                  LectureFactory, CheckInFactory, StudentFactory)
-from loki.education.models import Lecture, CheckIn
+from loki.education.models import Lecture, CheckIn, Certificate
 
 
 class CalculatePresenceTests(TestCase):
@@ -100,3 +100,24 @@ class CalculatePresenceTests(TestCase):
 
         self.course_assignment2.refresh_from_db()
         self.assertEqual(self.course_assignment2.student_presence, 75)
+
+
+class GenerateCertificatesTests(TestCase):
+    def setUp(self):
+        now = datetime.now()
+        self.student = StudentFactory()
+        self.course = CourseFactory(start_time=now.date() - timedelta(days=10),
+                                    end_time=now.date() + timedelta(days=10),
+                                    generate_certificates_until=now.date() + timedelta(days=10))
+        self.course_assignment = CourseAssignmentFactory(course=self.course,
+                                                         user=self.student)
+
+    def test_certificate_is_generated_for_student(self):
+        self.assertEqual(0, Certificate.objects.count())
+
+        call_command('generate_certificates')
+
+        self.assertEqual(1, Certificate.objects.count())
+
+        cert = Certificate.objects.first()
+        self.assertEqual(cert, self.course_assignment.certificate)
