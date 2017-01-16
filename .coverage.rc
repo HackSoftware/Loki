@@ -6,7 +6,8 @@ omit =
 	*/__init__.py
 	loki/manage.py
 	loki/wsgi.py
-	loki/example_local_settings.py
+  loki/base_app/modelresources.py
+
 exclude_lines =
     class Command
     __init__
