@@ -1,7 +1,7 @@
 # Loki Project
 
   [![Build Status](https://travis-ci.org/HackSoftware/Loki.svg?branch=master)](https://travis-ci.org/HackSoftware/Loki)
-  [![Coverage Status](https://coveralls.io/repos/HackSoftware/Loki/badge.svg?branch=master)](https://coveralls.io/r/HackSoftware/Loki?branch=master)
+  [![Coverage Status](https://coveralls.io/repos/github/HackSoftware/Loki/badge.svg?branch=master)](https://coveralls.io/github/HackSoftware/Loki?branch=master)
 
 
 Loki is son of Odin. That project stores all the data of HackBulgaria.
