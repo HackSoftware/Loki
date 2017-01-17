@@ -1,7 +1,8 @@
 # Test dependencies go here.
 
 
-coverage==4.0.3
+coverage==4.3.3
+coveralls==1.1
 flake8==2.5.4
 django-test-plus==1.0.13
 factory_boy==2.8.1
