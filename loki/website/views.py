@@ -222,6 +222,52 @@ class ProfileEditView(LoginRequiredMixin, FormView):
 
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['user'] = self.request.user
+
+        return context
+
+
+class StudentProfileEditView(LoginRequiredMixin, FormView):
+    template_name = 'website/profile_edit_student.html'
+    success_url = reverse_lazy('website:profile_edit_student')
+    form_class = StudentEditForm
+
+    def dispatch(self, *args, **kwargs):
+        self.student = get_or_none(Student, email=self.request.user.email)
+
+        if self.student is None:
+            return redirect(reverse('website:profile'))
+
+        return super().dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+
+        kwargs['instance'] = self.student
+
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['user'] = self.request.user
+
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        check_macs_for_student(self.student, self.student.mac)
+
+        if Teacher.objects.filter(email=self.request.user.email).exists():
+            teacher = Teacher.objects.get(email=self.request.user.email)
+            TeacherEditForm(self.request.POST, self.request.FILES,
+                            instance=teacher).save()
+
+        return super().form_valid(form)
+
 
 @login_required(login_url='website:login')
 def profile_edit_student(request):
