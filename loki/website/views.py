@@ -4,21 +4,46 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-from .models import SuccessVideo, SuccessStoryPerson, Snippet, Course, CourseDescription
-from .forms import (RegisterForm, LoginForm, BaseEditForm, StudentEditForm,
-                    TeacherEditForm)
-from .decorators import anonymous_required
-
-from loki.education.models import WorkingAt, Student, Teacher
-from loki.applications.models import ApplicationInfo
-from loki.base_app.models import Partner, GeneralPartner, BaseUser
-from loki.interview_system.models import Interview
-from loki.base_app.services import send_activation_mail, send_forgotten_password_email
+from loki.base_app.models import (
+    Partner,
+    GeneralPartner,
+    BaseUser
+)
+from loki.base_app.services import (
+    send_activation_mail,
+    send_forgotten_password_email
+)
 from loki.base_app.helper import get_or_none
+
+from loki.education.models import (
+    WorkingAt,
+    Student,
+    Teacher
+)
 from loki.education.helper import check_macs_for_student
 
+from loki.applications.models import ApplicationInfo
 
-class IndexView(TemplateView):
+from loki.interview_system.models import Interview
+
+from .models import (
+    SuccessVideo,
+    SuccessStoryPerson,
+    Course,
+    CourseDescription
+)
+from .forms import (
+    RegisterForm,
+    LoginForm,
+    BaseEditForm,
+    StudentEditForm,
+    TeacherEditForm
+)
+from .decorators import anonymous_required
+from .mixins import SnippetBasedView
+
+
+class IndexView(SnippetBasedView, TemplateView):
     template_name = 'website/index.html'
 
     def get_context_data(self, **kwargs):
@@ -32,48 +57,56 @@ class IndexView(TemplateView):
         context['success_students'] = map(lambda x: x.student, context['success'])
         context['success_students_count'] = len(set(context['success_students']))
 
-        context['snippets'] = {snippet.label: snippet for snippet in Snippet.objects.all()}
-
         return context
 
 
-class AboutView(TemplateView):
+class AboutView(SnippetBasedView, TemplateView):
     template_name = 'website/about.html'
+
+
+class CoursesView(SnippetBasedView, TemplateView):
+    template_name = 'website/courses.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['snippets'] = {snippet.label: snippet for snippet in Snippet.objects.all()}
+
+        context['opened_course_applications'] = ApplicationInfo.objects.get_open_for_apply()
+        context['active_courses'] = Course.objects.get_active_courses()
+        context['closed_courses_without_cd'] = Course.objects\
+                                                     .get_closed_courses()\
+                                                     .filter(coursedescription__isnull=False)\
+                                                     .order_by('-start_time')
 
         return context
 
 
-def courses(request):
-    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
-    opened_course_applications = ApplicationInfo.objects.get_open_for_apply()
-    active_courses = Course.objects.get_active_courses()
-    closed_courses_without_cd = Course.objects.get_closed_courses().filter(
-                                coursedescription__isnull=False).order_by('-start_time')
-    return render(request, "website/courses.html", locals())
+class PartnersView(SnippetBasedView, TemplateView):
+    template_name = 'website/partners.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        general_partners = GeneralPartner.objects.all().order_by('?')
+        context['general_partners'] = [gp.partner for gp in general_partners]
+        context['partners'] = Partner.objects.all().order_by('?')
+
+        return context
 
 
-def partners(request):
-    general_partners = GeneralPartner.objects.all().order_by('?')
-    general_partners = [gp.partner for gp in general_partners]
-    partners = Partner.objects.all().order_by('?')
-    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
+class CourseDetailsView(SnippetBasedView, TemplateView):
+    template_name = 'website/course_details.html'
 
-    return render(request, "website/partners.html", locals())
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
+        cd = get_object_or_404(CourseDescription, url=self.kwargs['course_url'])
 
-def course_details(request, course_url):
-    # cd refers to course_description
-    cd = get_object_or_404(CourseDescription, url=course_url)
-    teachers = cd.course.teacher_set.all()
-    partners = cd.course.partner.all().order_by('?')
-    course_days = " ".join([word.strip() for word in cd.course_days.split(",")])
-    snippets = {snippet.label: snippet for snippet in Snippet.objects.all()}
+        context['cd'] = cd
+        context['teachers'] = cd.course.teacher_set.all()
+        context['partners'] = cd.course.partner.all().order_by('?')
+        context['course_days'] = ' '.join([word.strip() for word in cd.course_days.split(',')])
 
-    return render(request, "website/course_details.html", locals())
+        return context
 
 
 @anonymous_required(redirect_url=reverse_lazy('website:profile'))
