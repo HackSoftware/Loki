@@ -55,12 +55,10 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'image_cropping',
     'channels',
-    'raven.contrib.django.raven_compat',  # used for sentry logging
-
+    'raven.contrib.django.raven_compat',
     'loki.hack_fmi.apps.HackFMIConfig',
     'loki.base_app.apps.BaseAppConfig',
     'loki.education',
-    'loki.status',
     'loki.website',
     'loki.applications',
     'loki.emails.apps.EmailsConfig',

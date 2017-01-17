@@ -1,10 +1,26 @@
+from unittest import mock
+
 from test_plus.test import TestCase
 from django.core.management import call_command
 from datetime import datetime, timedelta
 
-from loki.seed.factories import (BaseUserFactory, CourseFactory, CourseAssignmentFactory,
-                                 LectureFactory, CheckInFactory, StudentFactory)
-from loki.education.models import Lecture, CheckIn
+from loki.seed.factories import (
+    BaseUserFactory,
+    CourseFactory,
+    CourseAssignmentFactory,
+    LectureFactory,
+    CheckInFactory,
+    StudentFactory,
+    TaskFactory,
+    SolutionFactory
+)
+
+from loki.education.models import (
+    Lecture,
+    CheckIn,
+    Certificate,
+    Solution
+)
 
 
 class CalculatePresenceTests(TestCase):
@@ -100,3 +116,42 @@ class CalculatePresenceTests(TestCase):
 
         self.course_assignment2.refresh_from_db()
         self.assertEqual(self.course_assignment2.student_presence, 75)
+
+
+class GenerateCertificatesTests(TestCase):
+    def setUp(self):
+        now = datetime.now()
+        self.student = StudentFactory()
+        self.course = CourseFactory(start_time=now.date() - timedelta(days=10),
+                                    end_time=now.date() + timedelta(days=10),
+                                    generate_certificates_until=now.date() + timedelta(days=10))
+        self.course_assignment = CourseAssignmentFactory(course=self.course,
+                                                         user=self.student)
+
+    def test_certificate_is_generated_for_student(self):
+        self.assertEqual(0, Certificate.objects.count())
+
+        call_command('generate_certificates')
+
+        self.assertEqual(1, Certificate.objects.count())
+
+        cert = Certificate.objects.first()
+        self.assertEqual(cert, self.course_assignment.certificate)
+
+
+class RegradePendingSolutionsTests(TestCase):
+    def setUp(self):
+        self.student = StudentFactory()
+        self.course = CourseFactory()
+
+        self.task = TaskFactory(course=self.course)
+        self.solution = SolutionFactory(student=self.student,
+                                        task=self.task,
+                                        status=Solution.PENDING)
+
+    @mock.patch('loki.education.tasks.submit_solution', side_effect=lambda *args, **kwargs: None)
+    def test_regrade_pending_solution_submits_pending_solutions(self, mock):
+        call_command('regrade_pending_solutions')
+
+        self.solution.refresh_from_db()
+        self.assertEqual(Solution.SUBMITED, self.solution.status)

@@ -10,7 +10,6 @@ urlpatterns = patterns(
     url(r'^ckeditor/', include('ckeditor.urls')),
     url(r'^education/', include('loki.education.urls', namespace='education')),
     url(r'^base/', include('loki.base_app.urls', namespace='base_app')),
-    url(r'^status/', include('loki.status.urls', namespace='status')),
     url(r'^apply/', include('loki.applications.urls', namespace='applications')),
     url(r'^interview/', include('loki.interview_system.urls', namespace='interview_system')),
     url(r'^', include('loki.website.urls', namespace='website')),
