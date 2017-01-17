@@ -272,6 +272,10 @@ def profile_edit_teacher(request):
 
 
 class ForgottenPasswordView(TemplateView):
+    """
+    REFACTOR: Make this a FormView
+    We are using a plain html form in the template. Can be done better.
+    """
     template_name = 'website/auth/forgotten_password.html'
 
     def dispatch(self, *args, **kwargs):
