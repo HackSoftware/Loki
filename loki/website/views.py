@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView, FormView
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -206,21 +206,21 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         return context
 
 
-@login_required(login_url='website:login')
-def profile_edit(request):
-    base_form = BaseEditForm(instance=request.user)
+class ProfileEditView(LoginRequiredMixin, FormView):
+    template_name = 'website/profile_edit.html'
+    form_class = BaseEditForm
+    success_url = reverse_lazy('website:profile_edit')
 
-    if request.method == 'POST':
-        base_form = BaseEditForm(request.POST, request.FILES, instance=request.user)
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.request.user
 
-        if base_form.is_valid():
-            base_form.save()
-        else:
-            errors = base_form.errors
+        return kwargs
 
-        return redirect(reverse('website:profile_edit'))
+    def form_valid(self, form):
+        form.save()
 
-    return render(request, "website/profile_edit.html", locals())
+        return super().form_valid(form)
 
 
 @login_required(login_url='website:login')
