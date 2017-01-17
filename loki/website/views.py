@@ -271,13 +271,28 @@ def profile_edit_teacher(request):
     return render(request, 'website/profile_edit_teacher.html', locals())
 
 
-def forgotten_password(request):
-    if request.POST:
-        email = request.POST.get('email', '').strip()
+class ForgottenPasswordView(TemplateView):
+    template_name = 'website/auth/forgotten_password.html'
+
+    def dispatch(self, *args, **kwargs):
+        self.message = None
+
+        return super().dispatch(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['message'] = self.message
+
+        return context
+
+    def post(self, *args, **kwargs):
+        email = self.request.POST.get('email', '').strip()
         baseuser = get_or_none(BaseUser, email=email)
         if baseuser is None:
-            message = "Потребител с посочения email не е открит"
+            self.message = "Потребител с посочения email не е открит"
         else:
-            message = "Email за промяна на паролата беше изпратен на посочения адрес"
-            send_forgotten_password_email(request, baseuser)
-    return render(request, 'website/auth/forgotten_password.html', locals())
+            self.message = "Email за промяна на паролата беше изпратен на посочения адрес"
+            send_forgotten_password_email(self.request, baseuser)
+
+        return self.get(*args, **kwargs)
