@@ -33,7 +33,7 @@ In order to setup it, there are the following steps:
 -   Setup local environment variables
 
 
-There is an [example_env_variables](example_env_variables) file, from which you can see the exact environment variables you need to export.
+You can check [`config/settings`](config/settings) files for settings. Most of them are loaded as env variables.
 
 
 -   Run migrations
