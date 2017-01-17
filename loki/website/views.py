@@ -1,5 +1,5 @@
-from django.views.generic import TemplateView
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.views.generic import TemplateView, FormView
+from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -39,8 +39,7 @@ from .forms import (
     StudentEditForm,
     TeacherEditForm
 )
-from .decorators import anonymous_required
-from .mixins import SnippetBasedView
+from .mixins import SnippetBasedView, AnonymousRequired
 
 
 class IndexView(SnippetBasedView, TemplateView):
@@ -109,40 +108,68 @@ class CourseDetailsView(SnippetBasedView, TemplateView):
         return context
 
 
-@anonymous_required(redirect_url=reverse_lazy('website:profile'))
-def register(request):
-    origin = request.GET.get('origin', None)
-    form = RegisterForm(initial={'origin': origin})
+class RegisterView(AnonymousRequired, FormView):
+    template_name = 'website/auth/register.html'
+    form_class = RegisterForm
 
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            send_activation_mail(request, user)
-            return render(request, 'website/auth/thanks.html')
-    return render(request, "website/auth/register.html", locals())
+    def dispatch(self, *args, **kwargs):
+        self.origin = self.request.GET.get('origin', None)
+
+        return super().dispatch(*args, **kwargs)
+
+    def get_initial(self):
+        return {'origin': self.origin}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['origin'] = self.origin
+
+        return context
+
+    def form_valid(self, form):
+        user = form.save()
+        send_activation_mail(self.request, user)
+
+        return render(self.request, 'website/auth/thanks.html')
 
 
-@anonymous_required(redirect_url=reverse_lazy('website:profile'))
-def log_in(request):
-    form = LoginForm()
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            user = authenticate(email=email, password=password)
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    if request.GET.get("next"):
-                        return redirect(request.GET["next"])
-                    return redirect(reverse('website:profile'))
-                else:
-                    error = "Моля активирай акаунта си"
-            else:
-                error = "Невалидни email и/или парола"
-    return render(request, "website/auth/login.html", locals())
+class LogInView(AnonymousRequired, FormView):
+    template_name = 'website/auth/login.html'
+    form_class = LoginForm
+
+    def dispatch(self, *args, **kwargs):
+        self.error = None
+
+        return super().dispatch(*args, **kwargs)
+
+    def get_success_url(self):
+        url = self.request.GET.get('next', reverse('website:profile'))
+        return url
+
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        password = form.cleaned_data['password']
+        user = authenticate(email=email, password=password)
+
+        if user is None:
+            self.error = "Невалидни email и/или парола"
+            return self.form_invalid(form)
+
+        if not user.is_active:
+            self.error = "Моля активирай акаунта си"
+            return self.form_invalid(form)
+
+        login(self.request, user)
+
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['error'] = self.error
+
+        return context
 
 
 @login_required
