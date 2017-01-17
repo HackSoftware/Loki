@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from loki.base_app.models import (
     Partner,
@@ -178,21 +179,31 @@ def logout_view(request):
     return redirect(reverse('website:index'))
 
 
-@login_required(login_url='website:login')
-def profile(request):
-    user = BaseUser.objects.get(email=request.user.email)
-    try:
-        student = Student.objects.get(email=request.user.email)
-    except Student.DoesNotExist:
-        student = None
-    try:
-        teacher = Teacher.objects.get(email=request.user.email)
-    except Teacher.DoesNotExist:
-        teacher = None
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'website/profile.html'
 
-    interviews = Interview.objects.get_active(user)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    return render(request, 'website/profile.html', locals())
+        context['user'] = self.request.user
+
+        try:
+            student = Student.objects.get(email=self.request.user.email)
+        except Student.DoesNotExist:
+            student = None
+        finally:
+            context['student'] = student
+
+        try:
+            teacher = Teacher.objects.get(email=self.request.user.email)
+        except Teacher.DoesNotExist:
+            teacher = None
+        finally:
+            context['teacher'] = teacher
+
+        context['interviews'] = Interview.objects.get_active(self.request.user)
+
+        return context
 
 
 @login_required(login_url='website:login')
