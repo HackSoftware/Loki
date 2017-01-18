@@ -270,30 +270,6 @@ class StudentProfileEditView(LoginRequiredMixin, FormView):
 
 
 @login_required(login_url='website:login')
-def profile_edit_student(request):
-    try:
-        student = Student.objects.get(email=request.user.email)
-    except Student.DoesNotExist:
-        return redirect(reverse('website:profile'))
-    student_form = StudentEditForm(instance=student)
-
-    if request.method == 'POST':
-        student_form = StudentEditForm(request.POST, request.FILES,
-                                       instance=student)
-        if student_form.is_valid():
-            student_form.save()
-            check_macs_for_student(student, student.mac)
-            if Teacher.objects.filter(email=request.user.email).exists():
-                teacher = Teacher.objects.get(email=request.user.email)
-                TeacherEditForm(request.POST, request.FILES,
-                                instance=teacher).save()
-        else:
-            errors = student_form.errors
-            return render(request, "website/profile_edit_student.html", locals())
-    return render(request, 'website/profile_edit_student.html', locals())
-
-
-@login_required(login_url='website:login')
 def profile_edit_teacher(request):
     try:
         teacher = Teacher.objects.get(email=request.user.email)
