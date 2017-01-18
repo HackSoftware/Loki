@@ -36,6 +36,8 @@ def add_student_to_course(*, user, course, group_time=CourseAssignment.LATE):
                                     course=course,
                                     group_time=group_time)
 
+    return student
+
 
 def add_teacher_to_course(*, user, course):
     student = user.get_student()
@@ -54,3 +56,5 @@ def add_teacher_to_course(*, user, course):
     teacher = Teacher.objects.filter(email=user.email).first()
     teacher.teached_courses.add(course)
     teacher.save()
+
+    return teacher

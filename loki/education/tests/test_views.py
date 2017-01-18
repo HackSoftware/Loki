@@ -55,7 +55,8 @@ class CourseListViewTests(TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn(course, response.context['student_courses'])
             self.assertNotIn(course2, response.context['student_courses'])
-            self.assertIsNone(response.context['teacher_courses'])
+
+            self.assertNotIn('teacher_courses', response.context)
 
     def test_teacher_can_see_only_courses_for_which_is_teacher(self):
         teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
@@ -68,7 +69,8 @@ class CourseListViewTests(TestCase):
             self.assertEqual(response.status_code, 200)
             self.assertIn(course, response.context['teacher_courses'])
             self.assertNotIn(course2, response.context['teacher_courses'])
-            self.assertIsNone(response.context['student_courses'])
+
+            self.assertNotIn('student_courses', response.context)
 
     def test_common_teacher_and_student_user_can_see_courses_for_which_ca_or_is_teacher(self):
         teacher = BaseUser.objects.promote_to_teacher(self.baseuser)

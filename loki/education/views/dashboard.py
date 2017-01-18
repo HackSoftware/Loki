@@ -14,8 +14,6 @@ class CourseListView(DashboardPermissionMixin,
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['teacher_courses'] = None
-        context['student_courses'] = None
         if self.request.user.get_teacher():
             context['teacher_courses'] = self.request.user.teacher.teached_courses.all()
 
@@ -26,18 +24,16 @@ class CourseListView(DashboardPermissionMixin,
         user = self.request.user.get_student() if self.request.user.get_student() else self.request.user.get_teacher()
 
         course_presence = {}
-        if context['teacher_courses']:
-            for course in context['teacher_courses']:
-                if course.lecture_set.exists():
-                    course_presence[course] = get_course_presence(course=course, user=user)
 
-        if context['student_courses']:
-            for course in context['student_courses']:
-                if course.lecture_set.exists():
-                    course_presence[course] = get_course_presence(course=course, user=user)
+        for course in context.get('teacher_courses', []):
+            if course.lecture_set.exists():
+                course_presence[course] = get_course_presence(course=course, user=user)
+
+        for course in context.get('student_courses', []):
+            if course.lecture_set.exists():
+                course_presence[course] = get_course_presence(course=course, user=user)
 
         context['course_presence'] = course_presence
-
         return context
 
 
