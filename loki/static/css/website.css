@@ -723,6 +723,12 @@ body {
     @media screen and (max-width: 836px) {
       .course-box .course-logo {
         width: 50%; } }
+  .course-box .student-profile-photo {
+    width: 100%;
+    padding: 10px; }
+    @media screen and (max-width: 836px) {
+      .course-box .student-profile-photo {
+        width: 50%; } }
   .course-box .hidden-toggle {
     display: none;
     width: 80%; }
@@ -732,7 +738,8 @@ body {
     margin-top: 5px;
     position: relative; }
     .course-box .course-box-footer .check-in {
-      cursor: pointer; }
+      cursor: pointer;
+      text-align: center; }
     .course-box .course-box-footer .check-in-table {
       background-color: #EAEAEA;
       margin-top: 10px;

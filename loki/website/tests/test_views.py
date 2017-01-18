@@ -267,7 +267,7 @@ class TestWebsite(TestCase):
         with self.login(email=student.email,
                         password=factories.BaseUserFactory.password):
             data = {'mac': "a1:b2:c3:d4:e5:00"}
-            response = self.post('website:profile_edit_student', data=data)
+            response = self.post('website:profile_edit_student', data=data, follow=True)
             self.response_200(response)
 
         self.assertEqual(data['mac'], Student.objects.get(email=student.email).mac)
@@ -281,7 +281,7 @@ class TestWebsite(TestCase):
                         password=factories.BaseUserFactory.password):
 
             data = {'mac': mac}
-            response = self.post('website:profile_edit_student', data=data)
+            response = self.post('website:profile_edit_student', data=data, follow=True)
             self.response_200(response)
 
         self.assertEqual(mac, Student.objects.get(email=student.email).mac)
@@ -297,7 +297,7 @@ class TestWebsite(TestCase):
                         password=factories.BaseUserFactory.password):
 
             data = {'mac': mac}
-            response = self.post('website:profile_edit_teacher', data=data)
+            response = self.post('website:profile_edit_teacher', data=data, follow=True)
             self.response_200(response)
 
         self.assertEqual(mac, Teacher.objects.get(email=teacher.email).mac)

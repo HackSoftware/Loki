@@ -33,7 +33,7 @@
       <div class="col-sm-12 check-in">
           <b>Присъствие</b>
             {% with course_data=course_presence|key:course %}
-              <b> {{ course_data|key:"percentage_presence" }} </b>
+             <span class="student-presence-percent">{{ course_data|key:"percentage_presence" }}</span>
             {% endwith %}
           <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
       </div>

@@ -37,6 +37,27 @@ class DashboardPermissionMixin(BaseUserPassesTestMixin):
         return super().handle_no_permission()
 
 
+class CannotSeeOtherStudentsMixin(BaseUserPassesTestMixin):
+    '''
+    If teacher is not part of the course teachers, he cannot see
+    the students detailed information
+    '''
+    def test_func(self):
+        course_id = self.kwargs.get('course')
+        course = get_object_or_404(Course, pk=course_id)
+        teacher = Teacher.objects.filter(id=self.request.user.id,
+                                         teached_courses__id__exact=course.id)
+        if not teacher.exists():
+            return False
+
+        ca_id = self.kwargs.get('ca')
+        ca = CourseAssignment.objects.filter(id=ca_id, course=course_id)
+        if not ca.exists():
+            return False
+
+        return True and super().test_func()
+
+
 class CannotSeeOthersCoursesDashboardsMixin(BaseUserPassesTestMixin):
     def test_func(self):
         course_id = self.kwargs.get('course')

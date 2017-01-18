@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
-from education.models import Solution
-from education.tasks import submit_solution
+from loki.education.models import Solution
+from loki.education.tasks import submit_solution
 
 
 class Command(BaseCommand):

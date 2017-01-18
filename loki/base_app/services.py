@@ -3,8 +3,6 @@ import uuid
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.contrib.sites.models import Site
-from operator import itemgetter
-from fuzzywuzzy import fuzz
 
 from loki.emails.services import send_template_email
 
@@ -55,35 +53,6 @@ def get_possible_academies():
          'total_score': 0} for a in academies]
 
     return possible
-
-
-def fuzzy_search_education_place(words):
-    universities = get_possible_universities()
-    # schools = get_possible_schools()
-    schools = []
-    academies = get_possible_academies()
-
-    everything = universities + schools + academies
-
-    for word in set(words):
-        for obj in everything:
-            s = 0
-            c = 0
-
-            for field in obj:
-                if field in EXCLUDE_FIELDS:
-                    continue
-
-                ratio = fuzz.ratio(word.lower(), obj[field].lower())
-
-                s += ratio
-                c += 1
-
-            obj['total_score'] += s / c
-
-    flatten = sorted(everything, key=itemgetter('total_score'), reverse=True)
-
-    return list(filter(lambda r: r['total_score'] >= FILTER_UNDER_TRESHOLD, flatten))[:5]
 
 
 def send_activation_mail(request, user):

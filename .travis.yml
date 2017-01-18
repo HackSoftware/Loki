@@ -1,8 +1,8 @@
 language: python
 python:
-- '3.4'
+- '3.5'
 addons:
-  postgresql: '9.3'
+  postgresql: '9.4'
 services: postgresql
 install:
 - pip install -r requirements/base.txt
@@ -16,7 +16,7 @@ script:
 - flake8
 - coverage run --source='.' -m py.test
 after_success:
-- coveralls --rcfile=.coverage.rc
+- coveralls --rcfile=.coveragerc
 notifications:
   slack:
     secure: UJWWLC1NEy5slof7PrsrpGjL0ydS7jHBkeog6owqSk6avgOlbE7xGvKNiLfawJOIJ9SkOzaKJIxnCZ37QutT70gtwnb/a+cLK1XhNXuAiRE9OKIFCRSsMX3FxEX0YHIeHE1Q4EoMOr7pCWAFCGRReZNhAHvpRkfzO0F1KBtbCLI=

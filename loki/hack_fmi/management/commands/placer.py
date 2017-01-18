@@ -1,7 +1,10 @@
-from django.core.management.base import BaseCommand
-from hack_fmi.models import Team, Season
 import json
+
 from tabulate import tabulate
+
+from django.core.management.base import BaseCommand
+
+from loki.hack_fmi.models import Team, Season
 
 
 class Command(BaseCommand):

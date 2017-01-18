@@ -1,0 +1,27 @@
+[report]
+omit = 
+  config/*
+	*/migrations/*
+	*/admin.py
+	*/tests/*
+	*/__init__.py
+  */apps.py
+  */management/commands/_private.py
+  */urls.py
+  manage.py
+  clock.py
+  # Exclude template tags
+  loki/website/processors.py
+  # Exclude configuration files in the project
+	loki/wsgi.py
+  loki/base_app/modelresources.py
+  loki/celery.py
+  loki/emails/backends.py
+
+exclude_lines =
+    __init__
+    pragma: no cover
+    def __repr__
+    raise AssertionError
+    raise NotImplementedError
+    if __name__ == .__main__.:

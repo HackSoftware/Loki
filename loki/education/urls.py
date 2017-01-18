@@ -32,6 +32,8 @@ urlpatterns = [
     # Teacher views
     url(r'^course/(?P<course>[0-9]+)/students/$',
         teacher_dashboard.StudentListView.as_view(), name='student-list'),
+    url(r'^course/(?P<course>[0-9]+)/students/(?P<ca>[0-9]+)$',
+        teacher_dashboard.StudentDetailView.as_view(), name='student-detail'),
     url(r'^teacher/course/(?P<course>[0-9]+)/$',
         teacher_dashboard.CourseDetailView.as_view(), name='course-detail'),
     url(r'^course/(?P<course>[0-9]+)/teacher-task-dashboard/$',

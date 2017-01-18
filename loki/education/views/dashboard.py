@@ -1,5 +1,6 @@
 from django.views.generic.list import ListView
 from django.views.generic import TemplateView
+
 from loki.education.models import Course, Material
 from loki.education.mixins import (DashboardPermissionMixin,
                                    CannotSeeOthersCoursesDashboardsMixin)
