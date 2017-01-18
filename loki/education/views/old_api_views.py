@@ -15,11 +15,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from loki.base_app.models import City, Company, BaseUser
+from loki.base_app.models import City, Company
 
 from ..permissions import IsTeacher, IsTeacherForCA
 from ..models import (CheckIn, Student, Lecture, CourseAssignment, WorkingAt,
-                      Task, Solution, Certificate)
+                      Task, Solution, Certificate, Teacher)
 
 from ..serializers import (LectureSerializer, CourseSerializer, FullCASerializer,
                            SolutionSerializer, WorkingAtSerializer,
