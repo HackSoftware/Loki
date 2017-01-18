@@ -10,6 +10,8 @@ omit =
   */urls.py
   manage.py
   clock.py
+  # Exclude template tags
+  loki/website/processors.py
   # Exclude configuration files in the project
 	loki/wsgi.py
   loki/base_app/modelresources.py
