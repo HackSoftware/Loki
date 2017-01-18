@@ -5,7 +5,7 @@
 
 Loki is the **Learning Management System** used by [HackBulgaria](https://hackbulgaria.com) for their courses.
 
-It stores the website & the LMS in one. APIs used by the [HackFMI app](https://github.com/HackSoftware/HackFMI-NG2) are also located here.
+It stores the website & the LMS in one. APIs used by the [HackFMI app](https://github.com/HackSoftware/HackFMI-NG2) are also located here. The project is integrated with a [grader system](https://github.com/HackBulgaria/HackTester) for code checking & fast feedback loop for the students.
 
 Developed by [HackSoft](http://hacksoft.io)
 
