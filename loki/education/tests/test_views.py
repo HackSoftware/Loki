@@ -75,11 +75,9 @@ class CourseListViewTests(TestCase):
         course = CourseFactory()
         teacher.teached_courses = [course]
 
-        bu = BaseUserFactory()
         course2 = CourseFactory()
         CourseAssignmentFactory(course=course2,
                                 user=student)
-
 
         with self.login(username=teacher.email, password=BaseUserFactory.password):
             response = self.get('education:course-list')

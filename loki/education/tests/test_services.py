@@ -61,7 +61,6 @@ class AddTeacherToCourseTest(TestCase):
         teacher = Teacher.objects.filter(email=self.base_user.email).first()
         self.assertIn(self.course, teacher.teached_courses.all())
 
-
     def test_add_course_in_teacher_teached_courses(self):
         teacher = BaseUser.objects.promote_to_teacher(self.base_user)
         self.assertEqual(1, Teacher.objects.filter(email=self.base_user.email).count())

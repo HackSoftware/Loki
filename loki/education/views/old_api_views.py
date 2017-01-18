@@ -19,7 +19,7 @@ from loki.base_app.models import City, Company, BaseUser
 
 from ..permissions import IsTeacher, IsTeacherForCA
 from ..models import (CheckIn, Student, Lecture, CourseAssignment, WorkingAt,
-                      Task, Solution, Certificate, Teacher)
+                      Task, Solution, Certificate)
 
 from ..serializers import (LectureSerializer, CourseSerializer, FullCASerializer,
                            SolutionSerializer, WorkingAtSerializer,

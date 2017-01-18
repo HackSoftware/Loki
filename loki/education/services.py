@@ -4,6 +4,7 @@ from loki.education.models import CheckIn, Teacher, CourseAssignment, Student
 from loki.education.helper import get_dates_for_weeks, percentage_presence
 from loki.education.exceptions import CannotBeStudentForSameCourse, CannotBeTeacherForSameCourse
 
+
 def get_course_presence(*, course, user):
     course_presence = {}
     if course.lecture_set.exists():
@@ -16,13 +17,16 @@ def get_course_presence(*, course, user):
 
     return course_presence
 
+
 def check_user_is_teacher_for_course(teacher, course):
     if course in teacher.teached_courses.all():
         raise CannotBeStudentForSameCourse
 
+
 def check_user_is_student_for_course(student, course):
     if student.id in course.courseassignment_set.values_list('user', flat=True):
         raise CannotBeTeacherForSameCourse
+
 
 def add_student_to_course(*, user, course, group_time=CourseAssignment.LATE):
     if user.get_teacher():
