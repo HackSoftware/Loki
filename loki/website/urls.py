@@ -11,8 +11,8 @@ from .views import (
     ProfileView,
     ProfileEditView,
     StudentProfileEditView,
+    TeacherProfileEditView,
     ForgottenPasswordView,
-    profile_edit_teacher,
     logout_view
 )
 
@@ -30,7 +30,6 @@ urlpatterns = [
     url(r'^profile/edit/$', ProfileEditView.as_view(), name='profile_edit'),
     url(r'^profile/edit/student$', StudentProfileEditView.as_view(),
         name='profile_edit_student'),
-    url(r'^profile/edit/teacher$', profile_edit_teacher,
-        name="profile_edit_teacher"),
+    url(r'^profile/edit/teacher$', TeacherProfileEditView.as_view(), name='profile_edit_teacher'),
     url(r'^forgotten-password/$', ForgottenPasswordView.as_view(), name='forgotten_password'),
 ]

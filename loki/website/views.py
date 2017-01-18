@@ -269,28 +269,43 @@ class StudentProfileEditView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-@login_required(login_url='website:login')
-def profile_edit_teacher(request):
-    try:
-        teacher = Teacher.objects.get(email=request.user.email)
-    except Teacher.DoesNotExist:
-        return redirect(reverse('website:profile'))
-    teacher_form = TeacherEditForm(instance=teacher)
+class TeacherProfileEditView(LoginRequiredMixin, FormView):
+    template_name = 'website/profile_edit_teacher.html'
+    success_url = reverse_lazy('website:profile_edit_teacher')
+    form_class = TeacherEditForm
 
-    if request.method == 'POST':
-        teacher_form = TeacherEditForm(request.POST, request.FILES,
-                                       instance=teacher)
-        if teacher_form.is_valid():
-            teacher_form.save()
-            check_macs_for_student(teacher, teacher.mac)
-            if Student.objects.filter(email=request.user.email).exists():
-                student = Student.objects.get(email=request.user.email)
-                StudentEditForm(request.POST, request.FILES,
-                                instance=student).save()
-        else:
-            errors = teacher_form.errors
-            return render(request, "website/profile_edit_teacher.html", locals())
-    return render(request, 'website/profile_edit_teacher.html', locals())
+    def dispatch(self, *args, **kwargs):
+        self.teacher = get_or_none(Teacher, email=self.request.user.email)
+
+        if self.teacher is None:
+            return redirect(reverse('website:profile'))
+
+        return super().dispatch(*args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+
+        kwargs['instance'] = self.teacher
+
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['user'] = self.request.user
+
+        return context
+
+    def form_valid(self, form):
+        form.save()
+        check_macs_for_student(self.teacher, self.teacher.mac)
+
+        if Student.objects.filter(email=self.request.user.email).exists():
+            student = Student.objects.get(email=self.request.user.email)
+            StudentEditForm(self.request.POST, self.request.FILES,
+                            instance=student).save()
+
+        return super().form_valid(form)
 
 
 class ForgottenPasswordView(TemplateView):
