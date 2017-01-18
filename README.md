@@ -3,9 +3,11 @@
   [![Build Status](https://travis-ci.org/HackSoftware/Loki.svg?branch=master)](https://travis-ci.org/HackSoftware/Loki)
   [![Coverage Status](https://coveralls.io/repos/github/HackSoftware/Loki/badge.svg?branch=master)](https://coveralls.io/github/HackSoftware/Loki?branch=master)
 
+Loki is the **Learning Management System** used by [HackBulgaria](https://hackbulgaria.com) for their courses.
 
-Loki is son of Odin. That project stores all the data of HackBulgaria.
-It takes care of all the courses and HackFMI! It is developed by HackBulgaria Software team!
+It stores the website & the LMS in one. APIs used by the [HackFMI app](https://github.com/HackSoftware/HackFMI-NG2) are also located here.
+
+Developed by [HackSoft](http://hacksoft.io)
 
 Local development setup
 -----------------------
