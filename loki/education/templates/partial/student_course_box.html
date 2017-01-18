@@ -1,0 +1,14 @@
+{% extends 'partial/course_box.html' %}
+
+{% block 'course_buttons'%}
+    {% if course.task_set.exists and course.is_active %}
+      <a href="{% url 'education:task-list' course.id %}">
+        <button class="btn btn-warning">Предай задачи</button>
+      </a>
+    {% endif %}
+    {% if course.material_set.exists and course.is_active %}
+      <a href="{% url 'education:material-list' course.id %}">
+        <button class="btn btn-warning" id="materials-link">Материали</button>
+      </a>
+    {% endif %}
+{% endblock %}

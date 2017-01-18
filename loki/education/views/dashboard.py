@@ -1,4 +1,5 @@
 from django.views.generic.list import ListView
+from django.views.generic import TemplateView
 
 from loki.education.models import Course, Material
 from loki.education.mixins import (DashboardPermissionMixin,
@@ -7,32 +8,33 @@ from loki.education.services import get_course_presence
 
 
 class CourseListView(DashboardPermissionMixin,
-                     ListView):
+                     TemplateView):
 
-    model = Course
+    template_name = 'education/course_list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        if self.request.user.get_teacher():
+            context['teacher_courses'] = self.request.user.teacher.teached_courses.all()
 
         if self.request.user.get_student():
-            user = self.request.user.student
-        else:
-            user = self.request.user.teacher
+            context['student_courses'] = Course.objects.filter(
+                courseassignment__user=self.request.user).order_by('-end_time')
+
+        user = self.request.user.get_student() if self.request.user.get_student() else self.request.user.get_teacher()
 
         course_presence = {}
-        for course in self.get_queryset():
-            if not course.lecture_set.exists():
-                continue
-            course_presence[course] = get_course_presence(course=course, user=user)
+
+        for course in context.get('teacher_courses', []):
+            if course.lecture_set.exists():
+                course_presence[course] = get_course_presence(course=course, user=user)
+
+        for course in context.get('student_courses', []):
+            if course.lecture_set.exists():
+                course_presence[course] = get_course_presence(course=course, user=user)
+
         context['course_presence'] = course_presence
-
         return context
-
-    def get_queryset(self):
-        if self.request.user.get_teacher():
-            return self.request.user.teacher.teached_courses.all()
-        if self.request.user.get_student():
-            return Course.objects.filter(courseassignment__user=self.request.user).order_by('-end_time')
 
 
 class MaterialListView(DashboardPermissionMixin,

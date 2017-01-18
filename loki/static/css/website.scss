@@ -391,7 +391,7 @@ $TabBorder: #C5C4C4;
         margin-bottom: 30px;
         padding-bottom: 10px;
         background: white;
-        background: #f6f6f6;;
+        background: #f6f6f6;
         display: inline-block;
         position: relative;
         box-shadow: 0 8px 8px rgba(0,0,0,0.12), 0 8px 8px rgba(0,0,0,0.24);
@@ -512,6 +512,13 @@ $TabBorder: #C5C4C4;
       }
     }
 
+  #panda-divider {
+    margin-left: 40%;
+    margin-top: -30px;
+    @media screen and (max-width: 450px) {
+      margin-left: 25%;
+    }
+  }
 }
 
 .dropdown-menu {
@@ -520,7 +527,7 @@ $TabBorder: #C5C4C4;
 
 .active-courses-container {
     text-align: center;
-    margin-bottom: 50px;
+    /*margin-bottom: 10px;*/
 }
 
 .course-logo-container{
@@ -1088,6 +1095,13 @@ $TabBorder: #C5C4C4;
     .check-in-footer {
       background-color: #EAEAEA;
     }
+}
+
+.course-detail-box {
+  padding-bottom: 10px;
+  background-color: #f6f6f6;
+  box-shadow: 0 8px 8px rgba(0,0,0,0.12), 0 8px 8px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
 }
 
 .apply-form {

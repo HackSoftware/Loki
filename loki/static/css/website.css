@@ -345,13 +345,19 @@ body {
         right: 10px;
         bottom: 5px;
         font-size: 10px; }
+.container #panda-divider {
+  margin-left: 40%;
+  margin-top: -30px; }
+  @media screen and (max-width: 450px) {
+    .container #panda-divider {
+      margin-left: 25%; } }
 
 .dropdown-menu {
   margin-top: 20px; }
 
 .active-courses-container {
   text-align: center;
-  margin-bottom: 50px; }
+  /*margin-bottom: 10px;*/ }
 
 .course-logo-container {
   margin-bottom: 40px; }
@@ -749,6 +755,12 @@ body {
         margin-bottom: 0px; }
   .course-box .check-in-footer {
     background-color: #EAEAEA; }
+
+.course-detail-box {
+  padding-bottom: 10px;
+  background-color: #f6f6f6;
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
 
 .apply-form h1 {
   padding-bottom: 30px; }
