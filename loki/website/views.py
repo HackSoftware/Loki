@@ -40,10 +40,14 @@ from .forms import (
     StudentEditForm,
     TeacherEditForm
 )
-from .mixins import SnippetBasedView, AnonymousRequired
+from .mixins import (
+    AddSnippetsToContext,
+    AddUserToContext,
+    AnonymousRequired
+)
 
 
-class IndexView(SnippetBasedView, TemplateView):
+class IndexView(AddSnippetsToContext, TemplateView):
     template_name = 'website/index.html'
 
     def get_context_data(self, **kwargs):
@@ -60,11 +64,11 @@ class IndexView(SnippetBasedView, TemplateView):
         return context
 
 
-class AboutView(SnippetBasedView, TemplateView):
+class AboutView(AddSnippetsToContext, TemplateView):
     template_name = 'website/about.html'
 
 
-class CoursesView(SnippetBasedView, TemplateView):
+class CoursesView(AddSnippetsToContext, TemplateView):
     template_name = 'website/courses.html'
 
     def get_context_data(self, **kwargs):
@@ -80,7 +84,7 @@ class CoursesView(SnippetBasedView, TemplateView):
         return context
 
 
-class PartnersView(SnippetBasedView, TemplateView):
+class PartnersView(AddSnippetsToContext, TemplateView):
     template_name = 'website/partners.html'
 
     def get_context_data(self, **kwargs):
@@ -93,7 +97,7 @@ class PartnersView(SnippetBasedView, TemplateView):
         return context
 
 
-class CourseDetailsView(SnippetBasedView, TemplateView):
+class CourseDetailsView(AddSnippetsToContext, TemplateView):
     template_name = 'website/course_details.html'
 
     def get_context_data(self, **kwargs):
@@ -179,13 +183,11 @@ def logout_view(request):
     return redirect(reverse('website:index'))
 
 
-class ProfileView(LoginRequiredMixin, TemplateView):
+class ProfileView(LoginRequiredMixin, AddUserToContext, TemplateView):
     template_name = 'website/profile.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        context['user'] = self.request.user
 
         try:
             student = Student.objects.get(email=self.request.user.email)
@@ -206,7 +208,7 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class ProfileEditView(LoginRequiredMixin, FormView):
+class ProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
     template_name = 'website/profile_edit.html'
     form_class = BaseEditForm
     success_url = reverse_lazy('website:profile_edit')
@@ -222,15 +224,8 @@ class ProfileEditView(LoginRequiredMixin, FormView):
 
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
 
-        context['user'] = self.request.user
-
-        return context
-
-
-class StudentProfileEditView(LoginRequiredMixin, FormView):
+class StudentProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
     template_name = 'website/profile_edit_student.html'
     success_url = reverse_lazy('website:profile_edit_student')
     form_class = StudentEditForm
@@ -250,13 +245,6 @@ class StudentProfileEditView(LoginRequiredMixin, FormView):
 
         return kwargs
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['user'] = self.request.user
-
-        return context
-
     def form_valid(self, form):
         form.save()
         check_macs_for_student(self.student, self.student.mac)
@@ -269,7 +257,7 @@ class StudentProfileEditView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-class TeacherProfileEditView(LoginRequiredMixin, FormView):
+class TeacherProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
     template_name = 'website/profile_edit_teacher.html'
     success_url = reverse_lazy('website:profile_edit_teacher')
     form_class = TeacherEditForm
@@ -288,13 +276,6 @@ class TeacherProfileEditView(LoginRequiredMixin, FormView):
         kwargs['instance'] = self.teacher
 
         return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        context['user'] = self.request.user
-
-        return context
 
     def form_valid(self, form):
         form.save()
