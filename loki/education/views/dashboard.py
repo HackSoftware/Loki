@@ -13,7 +13,8 @@ class CourseListView(DashboardPermissionMixin,
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
+        context['teacher_courses'] = None
+        context['student_courses'] = None
         if self.request.user.get_teacher():
             context['teacher_courses'] = self.request.user.teacher.teached_courses.all()
 
@@ -21,21 +22,18 @@ class CourseListView(DashboardPermissionMixin,
             context['student_courses'] = Course.objects.filter(
                 courseassignment__user=self.request.user).order_by('-end_time')
 
-        user = self.request.user.get_student() if self.request.user.get_student() else self.request.get_teacher()
+        user = self.request.user.get_student() if self.request.user.get_student() else self.request.user.get_teacher()
 
         course_presence = {}
-        if context['teacher_courses'].exists():
+        if context['teacher_courses']:
             for course in context['teacher_courses']:
-                if not course.lecture_set.exists():
-                    continue
-                course_presence[course] = get_course_presence(course=course, user=user)
+                if course.lecture_set.exists():
+                    course_presence[course] = get_course_presence(course=course, user=user)
 
-
-        if context['student_courses'].exists():
+        if context['student_courses']:
             for course in context['student_courses']:
-                if not course.lecture_set.exists():
-                    continue
-                course_presence[course] = get_course_presence(course=course, user=user)
+                if course.lecture_set.exists():
+                    course_presence[course] = get_course_presence(course=course, user=user)
 
         context['course_presence'] = course_presence
 
