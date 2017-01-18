@@ -1,6 +1,6 @@
 from test_plus.test import TestCase
+from django.core.exceptions import ValidationError
 
-from loki.education.exceptions import CannotBeStudentForSameCourse, CannotBeTeacherForSameCourse
 from loki.education.services import add_student_to_course, add_teacher_to_course
 from loki.education.models import Student, CourseAssignment, Teacher
 from loki.seed.factories import BaseUserFactory, CourseFactory, CourseAssignmentFactory
@@ -18,8 +18,16 @@ class AddStudentToCourseTest(TestCase):
         teacher.teached_courses = [self.course]
         teacher.save()
 
-        with self.assertRaises(CannotBeStudentForSameCourse):
+        with self.assertRaises(ValidationError):
             add_student_to_course(user=teacher, course=self.course)
+
+    def test_raises_errors_if_there_is_courseassingment_for_student(self):
+        student = BaseUser.objects.promote_to_student(self.base_user)
+        self.assertEqual(1, Student.objects.filter(email=self.base_user.email).count())
+        CourseAssignmentFactory(user=student, course=self.course)
+
+        with self.assertRaises(ValidationError):
+            add_student_to_course(user=student, course=self.course)
 
     def test_onboarding_user_if_not_student_and_create_courseassingment(self):
         self.assertEqual(0, Student.objects.filter(email=self.base_user.email).count())
@@ -50,8 +58,16 @@ class AddTeacherToCourseTest(TestCase):
         CourseAssignmentFactory(user=student,
                                 course=self.course)
 
-        with self.assertRaises(CannotBeTeacherForSameCourse):
+        with self.assertRaises(ValidationError):
             add_teacher_to_course(user=student, course=self.course)
+
+    def test_check_raises_if_teacher_is_already_teacher_on_this_course(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.base_user)
+        teacher.teached_courses = [self.course]
+        teacher.save()
+
+        with self.assertRaises(ValidationError):
+            add_teacher_to_course(user=teacher, course=self.course)
 
     def test_onboarding_user_if_not_teacher_and_add_course_in_teached_courses(self):
         self.assertEqual(0, Student.objects.filter(email=self.base_user.email).count())
