@@ -2,23 +2,21 @@
 
 {% block 'course_buttons'%}
   {% if course.task_set.exists and course.is_active %}
-        <a href="{% url 'education:teacher-task-list' course.id %}">
-          <button class="btn btn-warning" id="tasks-link">Задачи</button>
-        </a>
-      {% endif %}
-      {% if user.get_teacher and course.student_set.exists %}
-        <a href="{% url 'education:student-list' course.id %}">
-          <button class="btn btn-warning" id="students-link">Студенти</button>
-        </a>
-      {% endif %}
-      {% if course.material_set.exists and course.is_active %}
-        <a href="{% url 'education:material-list' course.id %}">
-          <button class="btn btn-warning" id="materials-link">Материали</button>
-        </a>
-      {% endif %}
-      {% if user.get_teacher %}
-        <a href="{% url 'education:course-detail' course.id %}">
-          <button class="btn btn-warning" id="info-link">Обща информация</button>
-        </a>
-      {% endif %}
+      <a href="{% url 'education:teacher-task-list' course.id %}">
+        <button class="btn btn-warning" id="tasks-link">Задачи</button>
+      </a>
+  {% endif %}
+  {% if course.student_set.exists %}
+    <a href="{% url 'education:student-list' course.id %}">
+      <button class="btn btn-warning" id="students-link">Студенти</button>
+    </a>
+  {% endif %}
+  {% if course.material_set.exists and course.is_active %}
+    <a href="{% url 'education:material-list' course.id %}">
+      <button class="btn btn-warning" id="materials-link">Материали</button>
+    </a>
+  {% endif %}
+    <a href="{% url 'education:course-detail' course.id %}">
+      <button class="btn btn-warning" id="info-link">Обща информация</button>
+    </a>
 {% endblock %}
