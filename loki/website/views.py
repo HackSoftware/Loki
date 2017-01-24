@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, CreateView
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -318,3 +318,16 @@ class ForgottenPasswordView(TemplateView):
             send_forgotten_password_email(self.request, baseuser)
 
         return self.get(*args, **kwargs)
+
+
+class WorkingAtCreateView(LoginRequiredMixin, CreateView):
+    model = WorkingAt
+    fields = ["company", "location", "start_date", "title", "description"]
+
+    success_url = reverse_lazy('website:profile')
+
+    def form_valid(self, form):
+        student = self.request.user.get_student()
+        working_at = form.save(commit=False)
+        working_at.student = student
+        return super().form_valid(form)
