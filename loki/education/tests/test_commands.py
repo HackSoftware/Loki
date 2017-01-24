@@ -1,9 +1,12 @@
+import os
+
 from unittest import mock
 
 from test_plus.test import TestCase
 from django.core.management import call_command
 from datetime import datetime, timedelta
 
+from loki.base_app.models import BaseUser
 from loki.seed.factories import (
     BaseUserFactory,
     CourseFactory,
@@ -155,3 +158,24 @@ class RegradePendingSolutionsTests(TestCase):
 
         self.solution.refresh_from_db()
         self.assertEqual(Solution.SUBMITED, self.solution.status)
+
+class CreateCSVWithWorkingAtsTests(TestCase):
+    def test_create_file_if_there_is_db(self):
+        baseuser = BaseUserFactory()
+        baseuser.is_active = True
+        baseuser.save()
+        student = BaseUser.objects.promote_to_student(baseuser)
+        course = CourseFactory()
+        course = CourseFactory(id=4)
+        course = CourseFactory(id=6)
+        course = CourseFactory(id=26)
+
+        course_assignment = CourseAssignmentFactory(course=course,
+                                                    user=student)
+
+        self.assertFalse(os.path.exists('working_ats.csv'))
+        call_command('create_csv_with_all_workingats')
+        self.assertTrue(os.path.exists('working_ats.csv'))
+
+    def tearDown(self):
+        os.remove('working_ats.csv')
