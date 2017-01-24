@@ -5,13 +5,14 @@ from django.utils.translation import ugettext_lazy as _
 
 from loki.base_app.models import BaseUser
 from loki.base_app.helper import get_or_none, validate_password
-from loki.education.models import Student, Teacher
+from loki.education.models import Student, Teacher, WorkingAt
 from loki.education.validators import validate_phone, validate_github_account
 
 INPUTS = {
     'text': forms.TextInput,
     'pass': forms.PasswordInput,
-    'hidden': forms.HiddenInput
+    'hidden': forms.HiddenInput,
+    'checkbox': forms.CheckboxInput
 }
 
 
@@ -106,3 +107,22 @@ class TeacherEditForm(ModelForm):
         phone = self.cleaned_data.get("phone")
         validate_phone(phone)
         return phone
+
+
+class WorkingAtForm(ModelForm):
+    looking_for_job = forms.BooleanField(required=False, label="В момента работя, но си търся нова работа.")
+
+    class Meta:
+        model = WorkingAt
+        fields = ("company", "start_date", "title", "description")
+
+        labels = {
+            'company': 'Компания',
+            'start_date': 'Дата на започване',
+            'title': 'Длъжност',
+            'description': 'Описание'
+        }
+
+        widgets = {
+        'start_date': w('text', ' yyyy-mm-dd')
+        }

@@ -14,6 +14,7 @@ from .views import (
     TeacherProfileEditView,
     ForgottenPasswordView,
     WorkingAtCreateView,
+    StudentLookingForJobUpdateView,
     logout_view
 )
 
@@ -29,6 +30,7 @@ urlpatterns = [
     url(r'^register/$', RegisterView.as_view(), name='register'),
     url(r'^profile/$', ProfileView.as_view(), name='profile'),
     url(r'^profile/working-at$', WorkingAtCreateView.as_view(), name='working-at'),
+    url(r'^profile/working-at/looking-for-job/$', StudentLookingForJobUpdateView.as_view(), name='update_looking_for_job'),
 
     url(r'^profile/edit/$', ProfileEditView.as_view(), name='profile_edit'),
     url(r'^profile/edit/student$', StudentProfileEditView.as_view(),

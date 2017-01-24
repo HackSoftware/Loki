@@ -1,4 +1,6 @@
 from django.views.generic import TemplateView, FormView, CreateView
+from django.views.generic.base import View
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -38,7 +40,8 @@ from .forms import (
     LoginForm,
     BaseEditForm,
     StudentEditForm,
-    TeacherEditForm
+    TeacherEditForm,
+    WorkingAtForm
 )
 from .mixins import (
     AddSnippetsToContext,
@@ -322,12 +325,25 @@ class ForgottenPasswordView(TemplateView):
 
 class WorkingAtCreateView(LoginRequiredMixin, CreateView):
     model = WorkingAt
-    fields = ["company", "location", "start_date", "title", "description"]
-
+    form_class = WorkingAtForm
     success_url = reverse_lazy('website:profile')
 
     def form_valid(self, form):
         student = self.request.user.get_student()
         working_at = form.save(commit=False)
         working_at.student = student
+        working_at.save()
+
+        student.looking_for_job = form.cleaned_data.get('looking_for_job', False)
+        student.save()
+
         return super().form_valid(form)
+
+
+class StudentLookingForJobUpdateView(View):
+
+    def post(self, request, *args, **kwargs):
+        student = self.request.user.get_student()
+        student.looking_for_job = True
+        student.save()
+        return redirect(reverse_lazy('website:profile'))
