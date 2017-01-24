@@ -519,6 +519,42 @@ $TabBorder: #C5C4C4;
       margin-left: 25%;
     }
   }
+
+  .working-at-title {
+    text-align: center;
+    font-size: large;
+    margin-bottom: 2%;
+
+    .panda-reminder {
+      width: 75px;
+    }
+  }
+
+  .working-at-form {
+
+    .save-form {
+      width: 40%;
+      margin-left: 30%;
+      @media screen and (max-width: 360px) {
+        width: 60%;
+        margin-left: 20%;
+      }
+    }
+  }
+
+  .not-working {
+    button {
+      margin-top: 20px;
+      width: 40%;
+      margin-left: 30%;
+      text-align: center;
+      white-space: normal;
+      @media screen and (max-width: 360px) {
+        width: 60%;
+        margin-left: 20%;
+      }
+    }
+  }
 }
 
 .dropdown-menu {

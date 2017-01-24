@@ -2,9 +2,19 @@
 {% load crispy_forms_tags %}
 {% block 'page-content' %}
   <div class="container">
-    <form action="" method="post">{% csrf_token %}
-        {{ form|crispy }}
-        <input type="submit" value="Save" />
-    </form>
-  </div>
+    <div class="working-at-title">
+      Къде работиш? <img class="panda-reminder" src="{{STATIC_URL}}website_images/panda_bulbblink.gif" />
+    </div>
+    <div class="col-md-5 col-md-offset-3">
+      <form class="working-at-form" action="" method="POST">
+        {% csrf_token %}
+          {{ form|crispy }}
+          <input type="submit" class="save-form btn btn-warning col-sm-6 col-sm-offset-3" value="Запази" />
+      </form>
+      <form class="not-working" action="{% url 'website:update_looking_for_job' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-warning col-sm-6 col-sm-offset-3">НЕ работя, но си търся работа.</button>
+      </form="">
+    </div>
+</div>
 {% endblock %}
