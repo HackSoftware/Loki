@@ -309,6 +309,12 @@ class WorkingAt(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
 
+    def __str__(self):
+        return "{} from {}".format(self.company_name, self.start_date)
+
+    def __repr__(self):
+        return self.__str__()
+
 
 class Certificate(models.Model):
     assignment = models.OneToOneField(CourseAssignment)
