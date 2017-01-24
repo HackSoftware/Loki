@@ -315,6 +315,7 @@ class WorkingAt(models.Model):
     def __repr__(self):
         return self.__str__()
 
+
 class Certificate(models.Model):
     assignment = models.OneToOneField(CourseAssignment)
     token = models.CharField(default=uuid.uuid4, unique=True, max_length=110)

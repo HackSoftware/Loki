@@ -13,10 +13,11 @@ class Command(BaseCommand):
         angular_js = Course.objects.get(id=4)
         node_js = Course.objects.get(id=6)
         angular_2 = Course.objects.get(id=26)
-        courses = Course.objects.exclude(id__in=[angular_js.id, node_js.id, angular_2.id]).filter(end_time__lte=timezone.now())
+        courses = Course.objects.exclude(
+                                id__in=[angular_js.id, node_js.id, angular_2.id]).filter(
+                                end_time__lte=timezone.now())
 
         student_ids = CourseAssignment.objects.filter(course__in=courses).values_list('user', flat=True).distinct()
-
 
         with open('working_ats.csv', 'w') as csvfile:
             fieldnames = ["Name", "email", "Courses", "Working Ats"]
