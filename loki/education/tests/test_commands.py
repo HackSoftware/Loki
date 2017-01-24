@@ -159,6 +159,7 @@ class RegradePendingSolutionsTests(TestCase):
         self.solution.refresh_from_db()
         self.assertEqual(Solution.SUBMITED, self.solution.status)
 
+
 class CreateCSVWithWorkingAtsTests(TestCase):
     def test_create_file_if_there_is_db(self):
         baseuser = BaseUserFactory()
@@ -166,12 +167,12 @@ class CreateCSVWithWorkingAtsTests(TestCase):
         baseuser.save()
         student = BaseUser.objects.promote_to_student(baseuser)
         course = CourseFactory()
-        course = CourseFactory(id=4)
-        course = CourseFactory(id=6)
-        course = CourseFactory(id=26)
+        CourseFactory(id=4)
+        CourseFactory(id=6)
+        CourseFactory(id=26)
 
-        course_assignment = CourseAssignmentFactory(course=course,
-                                                    user=student)
+        CourseAssignmentFactory(course=course,
+                                user=student)
 
         self.assertFalse(os.path.exists('working_ats.csv'))
         call_command('create_csv_with_all_workingats')
