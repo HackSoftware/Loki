@@ -10,7 +10,10 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         # Without paid courses - AngularJS, NodeJS, Angular 2 and active courses
-        courses = Course.objects.exclude(id__in=[4, 6, 26]).filter(end_time__lte=timezone.now())
+        angular_js = Course.objects.get(id=4)
+        node_js = Course.objects.get(id=6)
+        angular_2 = Course.objects.get(id=26)
+        courses = Course.objects.exclude(id__in=[angular_js.id, node_js.id, angular_2.id]).filter(end_time__lte=timezone.now())
 
         student_ids = CourseAssignment.objects.filter(course__in=courses).values_list('user', flat=True).distinct()
 
@@ -25,9 +28,11 @@ class Command(BaseCommand):
                 courses_ids = student.courseassignment_set.values_list('course', flat=True).all()
                 courses = Course.objects.filter(id__in=courses_ids).order_by('-start_time')
                 working_ats = WorkingAt.objects.filter(student=student).order_by('-start_date')
+                working_ats = "" if not working_ats else working_ats
 
                 row = {"Name": student,
                        "email": student.email,
                        "Courses": courses,
                        "Working Ats": working_ats}
+
                 writer.writerow(row)
