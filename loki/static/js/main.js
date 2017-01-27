@@ -122,11 +122,7 @@ $(document).ready(function(){
       create: true,
       persist: false,
       sortField: 'text',
-      placeholder: 'Избери компания...',
-      onChange: function(value) {
-        console.log(value);
-      }
+      placeholder: 'Избери компания...'
   });
-
 
 });
