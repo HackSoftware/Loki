@@ -357,6 +357,8 @@ body {
   margin-bottom: 2%; }
   .container .working-at-title .panda-reminder {
     width: 75px; }
+.container .working-at-form #working-company select {
+  width: 100%; }
 .container .working-at-form .save-form {
   width: 40%;
   margin-left: 30%; }

@@ -1,6 +1,5 @@
 from django.views.generic import TemplateView, FormView, CreateView
 from django.views.generic.base import View
-from django.http import HttpResponse
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout

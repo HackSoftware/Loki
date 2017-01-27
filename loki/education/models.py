@@ -300,7 +300,7 @@ class GraderRequest(models.Model):
 class WorkingAt(models.Model):
     student = models.ForeignKey(Student)
     company = models.ForeignKey(Company, blank=True, null=True)
-    location = models.ForeignKey(City)
+    location = models.ForeignKey(City, blank=True, null=True)
     course = models.ForeignKey(Course, blank=True, null=True)
 
     came_working = models.BooleanField(default=False)

@@ -124,5 +124,5 @@ class WorkingAtForm(ModelForm):
         }
 
         widgets = {
-        'start_date': w('text', ' yyyy-mm-dd')
+            'start_date': w('text', 'yyyy-mm-dd')
         }
