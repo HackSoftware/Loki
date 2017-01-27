@@ -18,7 +18,7 @@
           {{ field|as_crispy_field  }}
         {% endif %}
       {% endfor %}
-        <input type="submit" class="save-form btn btn-warning col-sm-6 col-sm-offset-3" value="Запази" />
+        <input id="working-at-submit" type="submit" class="save-form btn btn-warning col-sm-6 col-sm-offset-3" value="Запази"/>
     </form>
     <form class="not-working" action="{% url 'website:update_looking_for_job' %}" method="POST">
       {% csrf_token %}

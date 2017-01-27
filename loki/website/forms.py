@@ -114,7 +114,7 @@ class WorkingAtForm(ModelForm):
 
     class Meta:
         model = WorkingAt
-        fields = ("company", "start_date", "title", "description")
+        fields = ("company", "start_date", "title", "description", "company_name")
 
         labels = {
             'company': 'Компания',
@@ -124,5 +124,6 @@ class WorkingAtForm(ModelForm):
         }
 
         widgets = {
-            'start_date': w('text', 'yyyy-mm-dd')
+            'start_date': w('text', 'yyyy-mm-dd'),
+            'company_name': w('hidden', '')
         }

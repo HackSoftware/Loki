@@ -9,7 +9,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from loki.base_app.models import (
     Partner,
     GeneralPartner,
-    BaseUser
+    BaseUser,
+    Company
 )
 from loki.base_app.services import (
     send_activation_mail,
@@ -327,6 +328,16 @@ class WorkingAtCreateView(LoginRequiredMixin, IsStudentMixin, CreateView):
     model = WorkingAt
     form_class = WorkingAtForm
     success_url = reverse_lazy('website:profile')
+
+    def post(self, request, *args, **kwargs):
+        company = request.POST.get('company')
+        try:
+            c = Company.objects.filter(id=company)
+        except Exception as e:
+            request.POST._mutable = True
+            request.POST['company'] = ''
+            request.POST['company_name'] = company
+        return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
         student = self.request.user.get_student()
