@@ -8,7 +8,7 @@ from faker import Factory
 from loki.seed import factories
 from loki.base_app.models import GeneralPartner
 from loki.base_app.models import BaseUser
-from loki.education.models import Student, CheckIn, Teacher
+from loki.education.models import Student, CheckIn, Teacher, WorkingAt
 
 faker = Factory.create()
 
@@ -317,6 +317,13 @@ class WorkingAtTests(TestCase):
         self.assertEquals(response.status_code, 302)
 
     def test_baseuser_cannot_access_workingat_form(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        self.assertEquals(isinstance(student.get_student(), Student), True)
+        with self.login(username=student.email, password=factories.BaseUserFactory.password):
+            response = self.get('website:working-at')
+            self.assertEquals(response.status_code, 200)
+
+    def test_student_can_access_workingat_form(self):
         with self.login(username=self.baseuser.email, password=factories.BaseUserFactory.password):
             response = self.get('website:working-at')
             self.assertEquals(response.status_code, 404)
