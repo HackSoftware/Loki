@@ -303,3 +303,36 @@ class TestWebsite(TestCase):
         self.assertEqual(mac, Teacher.objects.get(email=teacher.email).mac)
         self.assertEqual(teacher.baseuser_ptr_id,
                          CheckIn.objects.filter(mac__iexact=mac).first().user.id)
+
+
+class WorkingAtTests(TestCase):
+
+    def setUp(self):
+        self.baseuser = factories.BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.save()
+
+    def test_unsigned_user_cannot_access_workingat_form(self):
+        response = self.get('website:working-at')
+        self.assertEquals(response.status_code, 302)
+
+    def test_baseuser_cannot_access_workingat_form(self):
+        with self.login(username=self.baseuser.email, password=factories.BaseUserFactory.password):
+            response = self.get('website:working-at')
+            self.assertEquals(response.status_code, 404)
+
+    def test_teacher_cannot_access_workingat_form(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        self.assertEquals(teacher.get_student(), False)
+        with self.login(username=teacher.email, password=factories.BaseUserFactory.password):
+            response = self.get('website:working-at')
+            self.assertEquals(response.status_code, 404)
+
+    def test_teacher_who_is_student_access_workingat_form(self):
+        teacher_student = BaseUser.objects.promote_to_teacher(self.baseuser)
+        BaseUser.objects.promote_to_student(self.baseuser)
+        self.assertEquals(isinstance(teacher_student.get_teacher(), Teacher), True)
+        self.assertEquals(isinstance(teacher_student.get_student(), Student), True)
+        with self.login(username=teacher_student.email, password=factories.BaseUserFactory.password):
+            response = self.get('website:working-at')
+            self.assertEquals(response.status_code, 200)
