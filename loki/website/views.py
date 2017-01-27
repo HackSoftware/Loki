@@ -24,6 +24,7 @@ from loki.education.models import (
     Teacher
 )
 from loki.education.helper import check_macs_for_student
+from loki.education.mixins import IsStudentMixin
 
 from loki.applications.models import ApplicationInfo
 
@@ -323,7 +324,7 @@ class ForgottenPasswordView(TemplateView):
         return self.get(*args, **kwargs)
 
 
-class WorkingAtCreateView(LoginRequiredMixin, CreateView):
+class WorkingAtCreateView(LoginRequiredMixin, IsStudentMixin, CreateView):
     model = WorkingAt
     form_class = WorkingAtForm
     success_url = reverse_lazy('website:profile')
