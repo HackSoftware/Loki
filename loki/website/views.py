@@ -332,8 +332,8 @@ class WorkingAtCreateView(LoginRequiredMixin, IsStudentMixin, CreateView):
     def post(self, request, *args, **kwargs):
         company = request.POST.get('company')
         try:
-            c = Company.objects.filter(id=company)
-        except Exception as e:
+            Company.objects.filter(id=company)
+        except Company.DoesNotExist:
             request.POST._mutable = True
             request.POST['company'] = ''
             request.POST['company_name'] = company
