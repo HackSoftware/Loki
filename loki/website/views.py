@@ -232,7 +232,7 @@ class ProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
 
 class StudentProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
     template_name = 'website/profile_edit_student.html'
-    success_url = reverse_lazy('website:profile_edit_student')
+    success_url = reverse_lazy('website:profile')
     form_class = StudentEditForm
 
     def dispatch(self, *args, **kwargs):
@@ -264,7 +264,7 @@ class StudentProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
 
 class TeacherProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
     template_name = 'website/profile_edit_teacher.html'
-    success_url = reverse_lazy('website:profile_edit_teacher')
+    success_url = reverse_lazy('website:profile')
     form_class = TeacherEditForm
 
     def dispatch(self, *args, **kwargs):
