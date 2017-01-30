@@ -43,5 +43,7 @@ urlpatterns = [
     url(r'^course/(?P<course>[0-9]+)/(?P<student>[0-9]+)/tasks/(?P<task>[0-9]+)/$',
         teacher_dashboard.StudentSolutionListView.as_view(), name='student-solution-list'),
     url(r'^student-note-create/(?P<course>[0-9]+)/$',
-        teacher_dashboard.StudentNoteCreateView.as_view(), name='student-note-create')
+        teacher_dashboard.StudentNoteCreateView.as_view(), name='student-note-create'),
+    url(r'^course/(?P<course>[0-9]+)/drop-student/(?P<courseassingment>[0-9]+)/$',
+        teacher_dashboard.DropStudentView.as_view(), name='drop-student')
 ]

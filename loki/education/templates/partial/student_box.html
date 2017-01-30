@@ -18,18 +18,22 @@
         <b>Присъствие:</b> <span class="student-presence-percent">{{ ca.student_presence }}%</span></br>
       {% endif %}
       {% if ca.studentnote_set.exists %}
-      <div class="student-box-footer student-note-footer">
-        <div class="student-note">
-          <b>Бележки от преподаватели</b>
-          <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
-          <div class="student-notes-table hidden-toggle">
-            {% include 'partial/student_notes.html' with ca=ca %}
+        <div class="student-box-footer student-note-footer">
+          <div class="student-note">
+            <b>Бележки от преподаватели</b>
+            <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
+            <div class="student-notes-table hidden-toggle">
+              {% include 'partial/student_notes.html' with ca=ca %}
+            </div>
           </div>
         </div>
-      </div>
       {% endif %}
     </div>
     <div class="col-sm-2 students-course-btns">
+      <form id="tasks-link" action="{% url 'education:drop-student' course.id ca.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-warning ">Изключване</button>
+      </form>
       <a href="{% url 'education:student-task-list' course.id student.id %}">
         <button class="btn btn-warning" id="tasks-link">Задачи</button>
       </a>

@@ -1,8 +1,10 @@
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
+from django.views.generic.base import View
+from django.shortcuts import get_object_or_404, redirect
 
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from loki.education.models import (Course, Task, Solution, Student,
                                    CourseAssignment, StudentNote)
 from loki.education.mixins import (DashboardPermissionMixin,
@@ -155,3 +157,15 @@ class StudentNoteCreateView(DashboardPermissionMixin,
         note = form.save(commit=False)
         note.author = author
         return super().form_valid(form)
+
+
+class DropStudentView(IsTeacherMixin,
+                      View):
+
+    def post(self, request, *args, **kwargs):
+        course_assingment = get_object_or_404(CourseAssignment, id=self.kwargs.get('courseassingment'))
+        course_assingment.is_attending = False
+        course_assingment.save()
+
+        return redirect(reverse_lazy('education:student-list',
+                        kwargs={'course': self.kwargs.get('course')}))
