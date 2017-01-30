@@ -195,6 +195,7 @@ class ProfileView(LoginRequiredMixin, AddUserToContext, TemplateView):
 
         try:
             student = Student.objects.get(email=self.request.user.email)
+            context['jobs'] = WorkingAt.objects.filter(student=student).order_by('-start_date').all()
         except Student.DoesNotExist:
             student = None
         finally:
@@ -354,7 +355,7 @@ class WorkingAtCreateView(LoginRequiredMixin,
 
 
 class StudentLookingForJobUpdateView(LoginRequiredMixin,
-                                     CanAccessWorkingAtPermissionMixin, 
+                                     CanAccessWorkingAtPermissionMixin,
                                      View):
 
     def post(self, request, *args, **kwargs):

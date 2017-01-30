@@ -345,12 +345,6 @@ body {
         right: 10px;
         bottom: 5px;
         font-size: 10px; }
-.container #panda-divider {
-  margin-left: 40%;
-  margin-top: -30px; }
-  @media screen and (max-width: 450px) {
-    .container #panda-divider {
-      margin-left: 25%; } }
 .container .working-at-title {
   text-align: center;
   font-size: large;
@@ -376,6 +370,11 @@ body {
     .container .not-working button {
       width: 60%;
       margin-left: 20%; } }
+.container .divider {
+  background-color: #f6c58f;
+  width: 100%;
+  height: 2px;
+  margin-top: 2%; }
 
 .dropdown-menu {
   margin-top: 20px; }
@@ -668,6 +667,31 @@ body {
       width: 25px; }
   .row-profile .profile-github-account {
     text-decoration: none; }
+  .row-profile .jobs {
+    display: flex;
+    flex-wrap: wrap-reverse; }
+    .row-profile .jobs .job {
+      width: 32%;
+      margin: 5px;
+      position: relative;
+      background-color: #E9EDEC;
+      padding: 5px;
+      padding-bottom: 20px;
+      border-radius: 8px 8px 8px 8px; }
+      .row-profile .jobs .job .job-title-company {
+        color: #ec971f;
+        margin-right: 5px;
+        margin-bottom: 10px;
+        font-size: 16px; }
+      .row-profile .jobs .job .title-border {
+        background-color: #f6c58f;
+        width: 100%;
+        height: 1px;
+        margin-top: 1%;
+        margin-bottom: 1%; }
+      .row-profile .jobs .job .job-start-date {
+        position: absolute;
+        font-size: 12px; }
 
 #edit-app {
   margin-top: 10px; }
