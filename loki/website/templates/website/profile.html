@@ -76,6 +76,9 @@
   <div class="row-profile">
     <img class="jobs-hackman" src="{{STATIC_URL}}website_images/hackman.png" alt="hackman-transparent-logo">
     <span id="jobs-title">Работни позиции<span>
+    <a href="{% url 'website:working-at' %}">
+      <i class="fa fa-plus-square-o fa-1x" aria-hidden="true"></i>
+    </a>
     <div class="jobs">
     {% for job in jobs %}
         <div class="job">
