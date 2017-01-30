@@ -30,18 +30,24 @@
         </tr>
         {% endif %}
         {% if user.get_student %}
-        <tr>
-          <td><i class="profile-socials fa fa-skype"></i></td>
-          <td>{{student.skype}}</td>
-        </tr>
-        <tr>
-          <td><b>Телефонен номер<b></td>
-          <td>{{student.phone}}</td>
-        </tr>
-        <tr>
-          <td><b>MAC<b></td>
-          <td>{{student.mac}}</td>
-        </tr>
+          {% if student.skype %}
+            <tr>
+              <td><i class="profile-socials fa fa-skype"></i></td>
+              <td>{{student.skype}}</td>
+            </tr>
+          {% endif %}
+          {% if student.phone %}
+            <tr>
+              <td><b>Телефонен номер<b></td>
+              <td>{{student.phone}}</td>
+            </tr>
+          {% endif %}
+          {% if student.mac %}
+            <tr>
+              <td><b>MAC<b></td>
+              <td>{{student.mac}}</td>
+            </tr>
+          {% endif %}
         {% endif%}
         {% if user.get_teacher and not user.get_student %}
         <tr>
