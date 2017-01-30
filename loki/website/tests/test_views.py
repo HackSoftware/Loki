@@ -343,3 +343,18 @@ class WorkingAtTests(TestCase):
         with self.login(username=teacher_student.email, password=factories.BaseUserFactory.password):
             response = self.get('website:working-at')
             self.assertEquals(response.status_code, 200)
+
+    def test_student_fill_working_at_form(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        company = factories.CompanyFactory()
+        self.assertEquals(WorkingAt.objects.filter(student=student).count(), 0)
+        with self.login(username=student.email, password=factories.BaseUserFactory.password):
+            data = {
+                'company': company.id,
+                'start_date': '2016-10-10',
+                'title': 'programmer'
+            }
+            response = self.post('website:working-at', data=data)
+            self.assertEquals(WorkingAt.objects.filter(student=student).count(), 1)
+            self.assertEquals(response.status_code, 302)
+            self.assertRedirects(response, reverse('website:profile'))
