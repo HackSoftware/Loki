@@ -667,9 +667,15 @@ body {
       width: 25px; }
   .row-profile .profile-github-account {
     text-decoration: none; }
+  .row-profile .jobs-hackman {
+    width: 40px;
+    margin-bottom: 10px;
+    margin-right: 10px; }
+  .row-profile #jobs-title {
+    font-size: 28px; }
   .row-profile .jobs {
     display: flex;
-    flex-wrap: wrap-reverse; }
+    flex-wrap: wrap; }
     .row-profile .jobs .job {
       width: 32%;
       margin: 5px;
@@ -677,7 +683,14 @@ body {
       background-color: #E9EDEC;
       padding: 5px;
       padding-bottom: 20px;
-      border-radius: 8px 8px 8px 8px; }
+      border-radius: 8px 8px 8px 8px;
+      font-size: 15px; }
+      @media screen and (max-width: 800px) {
+        .row-profile .jobs .job {
+          width: 49%; } }
+      @media screen and (max-width: 520px) {
+        .row-profile .jobs .job {
+          width: 100%; } }
       .row-profile .jobs .job .job-title-company {
         color: #ec971f;
         margin-right: 5px;

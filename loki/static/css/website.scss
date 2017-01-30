@@ -967,9 +967,19 @@ $TabBorder: #C5C4C4;
     text-decoration: none;
   }
 
+  .jobs-hackman {
+    width: 40px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
+
+  #jobs-title {
+    font-size: 28px;
+  }
+
   .jobs {
     display: flex;
-    flex-wrap: wrap-reverse;
+    flex-wrap: wrap;
 
     .job {
       width: 32%;
@@ -979,7 +989,15 @@ $TabBorder: #C5C4C4;
       padding: 5px;
       padding-bottom: 20px;
       border-radius: 8px 8px 8px 8px;
+      font-size: 15px;
 
+      @media screen and (max-width: 800px) {
+          width: 49%;
+      }
+
+      @media screen and (max-width: 520px) {
+          width: 100%;
+      }
 
       .job-title-company {
         color: #ec971f;

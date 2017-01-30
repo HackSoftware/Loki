@@ -336,7 +336,7 @@ class WorkingAtCreateView(LoginRequiredMixin,
         company = request.POST.get('company')
         try:
             Company.objects.filter(id=company)
-        except Company.DoesNotExist:
+        except (Company.DoesNotExist, ValueError):
             request.POST._mutable = True
             request.POST['company'] = ''
             request.POST['company_name'] = company
