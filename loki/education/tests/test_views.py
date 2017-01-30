@@ -726,3 +726,25 @@ class StudentDetailView(TestCase):
             response = self.get('education:student-detail', course=other_student_course.id,
                                 ca=other_student_ca.id)
             self.assertEqual(response.status_code, 403)
+
+
+class DropStudentTests(TestCase):
+
+    def setUp(self):
+        self.baseuser = BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.save()
+        self.baseuser2 = BaseUserFactory()
+        self.baseuser2.is_active = True
+        self.baseuser2.save()
+        self.student = BaseUser.objects.promote_to_student(self.baseuser2)
+        self.course = CourseFactory()
+        self.course_assignment = CourseAssignmentFactory(course=self.course,
+                                                         user=self.student)
+
+    def test_non_teacher_cannot_drop_student(self):
+        with self.login(email=self.baseuser2.email, password=BaseUserFactory.password):
+            response = self.post('education:drop-student',
+                                 course=self.course.id,
+                                 courseassignment=self.course_assignment.id)
+            self.assertEqual(response.status_code, 404)

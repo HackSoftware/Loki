@@ -160,6 +160,7 @@ class StudentNoteCreateView(DashboardPermissionMixin,
 
 
 class DropStudentView(IsTeacherMixin,
+                      CannotSeeOtherStudentsMixin,
                       View):
 
     def post(self, request, *args, **kwargs):
