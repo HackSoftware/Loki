@@ -358,3 +358,17 @@ class WorkingAtTests(TestCase):
             self.assertEquals(WorkingAt.objects.filter(student=student).count(), 1)
             self.assertEquals(response.status_code, 302)
             self.assertRedirects(response, reverse('website:profile'))
+
+    def test_student_looking_for_job(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        # default value is False, we are going to set it to True
+        updated_looking_for_job = True
+        with self.login(username=student.email, password=factories.BaseUserFactory.password):
+            data = {
+                'looking_for_job': updated_looking_for_job
+            }
+            response = self.post('website:update_looking_for_job', data=data)
+            self.assertEquals(Student.objects.get(id=student.id).looking_for_job,
+                              data['looking_for_job'])
+            self.assertEquals(response.status_code, 302)
+            self.assertRedirects(response, reverse('website:profile'))

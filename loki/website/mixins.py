@@ -31,7 +31,7 @@ class AnonymousRequired:
         return super().dispatch(*args, **kwargs)
 
 
-class CanAccessWorkingAtPermissionMisin:
+class CanAccessWorkingAtPermissionMixin:
     def dispatch(self, *args, **kwargs):
         if not self.request.user.get_student():
             raise Http404

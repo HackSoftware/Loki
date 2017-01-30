@@ -47,7 +47,7 @@ from .mixins import (
     AddSnippetsToContext,
     AddUserToContext,
     AnonymousRequired,
-    CanAccessWorkingAtPermissionMisin
+    CanAccessWorkingAtPermissionMixin
 )
 
 
@@ -325,7 +325,7 @@ class ForgottenPasswordView(TemplateView):
 
 
 class WorkingAtCreateView(LoginRequiredMixin,
-                          CanAccessWorkingAtPermissionMisin,
+                          CanAccessWorkingAtPermissionMixin,
                           CreateView):
     model = WorkingAt
     form_class = WorkingAtForm
@@ -353,7 +353,9 @@ class WorkingAtCreateView(LoginRequiredMixin,
         return super().form_valid(form)
 
 
-class StudentLookingForJobUpdateView(View):
+class StudentLookingForJobUpdateView(LoginRequiredMixin,
+                                     CanAccessWorkingAtPermissionMixin, 
+                                     View):
 
     def post(self, request, *args, **kwargs):
         student = self.request.user.get_student()
