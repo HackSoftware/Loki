@@ -89,12 +89,12 @@
 
             {% if forloop.first %}
               <div id="teacher-{{ teacher.id }}" class="teacher-info col-md-12">
-                <p>{{ teacher.description }}</p>
+                <p>{{ teacher.description | linebreaksbr }}</p>
               </div>
 
             {% else %}
               <div id="teacher-{{ teacher.id }}" class="teacher-info teacher-info-hidden col-md-12">
-                <p>{{ teacher.description }}</p>
+                <p>{{ teacher.description | linebreaksbr }}</p>
               </div>
             {% endif %}
 
