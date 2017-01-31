@@ -26,7 +26,7 @@ class StudentListView(DashboardPermissionMixin,
 
     def get_queryset(self):
         course_id = self.kwargs.get("course")
-        return CourseAssignment.objects.filter(course__id=course_id)
+        return CourseAssignment.objects.filter(course__id=course_id).order_by('-is_attending')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -164,9 +164,8 @@ class DropStudentView(IsTeacherMixin,
                       View):
 
     def post(self, request, *args, **kwargs):
-        course_assingment = get_object_or_404(CourseAssignment, id=self.kwargs.get('courseassingment'))
+        course_assingment = get_object_or_404(CourseAssignment, id=self.kwargs.get('ca'))
         course_assingment.is_attending = False
         course_assingment.save()
-
-        return redirect(reverse_lazy('education:student-list',
+        return redirect(reverse('education:student-list',
                         kwargs={'course': self.kwargs.get('course')}))
