@@ -372,3 +372,13 @@ class WorkingAtTests(TestCase):
                               data['looking_for_job'])
             self.assertEquals(response.status_code, 302)
             self.assertRedirects(response, reverse('website:profile'))
+
+    def test_profile_data_after_creating_workingat_objects(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        self.assertEquals(WorkingAt.objects.filter(student=student).count(), 0)
+        job = factories.WorkingAtFactory(student=student)
+        self.assertEquals(WorkingAt.objects.filter(student=student).count(), 1)
+        with self.login(username=student.email, password=factories.BaseUserFactory.password):
+            response = self.get('website:profile')
+            self.assertEquals(response.status_code, 200)
+            self.assertIn(job, response.context['jobs'])
