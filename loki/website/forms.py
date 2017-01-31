@@ -72,12 +72,13 @@ class LoginForm(forms.Form):
 class BaseEditForm(ModelForm):
     class Meta:
         model = BaseUser
-        fields = ('first_name', 'last_name', 'github_account', 'full_image',
+        fields = ('first_name', 'last_name', 'github_account', 'linkedin_account', 'full_image',
                   'cropping')
         labels = {
             'first_name': 'Име',
             'last_name': 'Фамилия',
             'github_account': 'GitHub',
+            'linkedin_account': 'Linkedin',
             'cropping': 'Изрежи снимката си'
         }
 

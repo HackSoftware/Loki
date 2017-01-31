@@ -351,6 +351,9 @@ body {
   margin-bottom: 2%; }
   .container .working-at-title .panda-reminder {
     width: 75px; }
+.container .working-at-description {
+  font-size: 16px;
+  margin-top: 10%; }
 .container .working-at-form #working-company select {
   width: 100%; }
 .container .working-at-form .save-form {
@@ -665,7 +668,7 @@ body {
     margin-left: 25px; }
     .row-profile .interviews img {
       width: 25px; }
-  .row-profile .profile-github-account {
+  .row-profile .profile-github-account, .row-profile .profile-linkedin-account {
     text-decoration: none; }
   .row-profile .jobs-hackman {
     width: 40px;

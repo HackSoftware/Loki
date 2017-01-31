@@ -522,6 +522,11 @@ $TabBorder: #C5C4C4;
     }
   }
 
+  .working-at-description {
+    font-size: 16px;
+    margin-top: 10%;
+  }
+
   .working-at-form {
 
     #working-company {
@@ -963,7 +968,7 @@ $TabBorder: #C5C4C4;
       width: 25px;
     }
   }
-  .profile-github-account {
+  .profile-github-account, .profile-linkedin-account {
     text-decoration: none;
   }
 
@@ -1232,6 +1237,7 @@ $TabBorder: #C5C4C4;
   #user-name {
     margin-left: 30%;
   }
+
   #confirm_interview-btn {
     margin-left: 30%;
     padding: 15px;

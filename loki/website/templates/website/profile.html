@@ -14,9 +14,7 @@
     <div class="col-md-6 col-md-offset-1">
       <table class="table">
       <thead>
-        <tr>
-          <th id="user-name">{{user.first_name}} {{user.last_name}}</th><th></th>
-        </tr>
+        <caption id="user-name"><b>{{user.first_name}} {{user.last_name}}</b></caption>
       </thead>
       <tbody>
         <tr>
@@ -27,6 +25,12 @@
         <tr>
           <td><i class="profile-socials fa fa-github fa-3x"></i></td>
           <td><a class="profile-github-account" href={{user.github_account}} target="_blank">{{user.github_account}}</a></td>
+        </tr>
+        {% endif %}
+        {% if user.linkedin_account %}
+        <tr>
+          <td><i class="profile-socials fa fa-linkedin fa-3x"></i></td>
+          <td><a class="profile-linkedin-account" href={{user.linkedin_account}} target="_blank">{{ user.linkedin_account }}</a></td>
         </tr>
         {% endif %}
         {% if user.get_student %}
