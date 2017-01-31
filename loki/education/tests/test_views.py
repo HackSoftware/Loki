@@ -742,20 +742,20 @@ class DropStudentTests(TestCase):
         self.course_assignment = CourseAssignmentFactory(course=self.course,
                                                          user=self.student)
 
-    def test_cannot_drop_student_if_no_login(self):
+    def test_cannot_drop_student_if_not_logged_in(self):
         response = self.post('education:drop-student',
                              course=self.course.id,
                              ca=self.course_assignment.id)
         self.assertEqual(response.status_code, 302)
 
-    def test_non_teacher_cannot_drop_student(self):
+    def test_non_teachers_cannot_drop_student(self):
         with self.login(email=self.baseuser2.email, password=BaseUserFactory.password):
             response = self.post('education:drop-student',
                                  course=self.course.id,
                                  ca=self.course_assignment.id)
             self.assertEqual(response.status_code, 403)
 
-    def test_teacher_cannot_drop_student_if_he_dont_teach_course(self):
+    def test_teacher_cannot_drop_students_from_other_courses(self):
         teacher = BaseUser.objects.promote_to_teacher(self.baseuser2)
 
         course = CourseFactory()
@@ -768,7 +768,7 @@ class DropStudentTests(TestCase):
                                  ca=self.course_assignment.id)
             self.assertEqual(response.status_code, 403)
 
-    def test_teacher_can_drop_student_if_he_dont_teach_course(self):
+    def test_teacher_can_drop_student_from_course_if_he_teaches_it(self):
         teacher = BaseUser.objects.promote_to_teacher(self.baseuser2)
         teacher.teached_courses = [self.course]
         teacher.save()
