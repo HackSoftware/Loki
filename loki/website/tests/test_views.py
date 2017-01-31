@@ -351,8 +351,8 @@ class WorkingAtTests(TestCase):
         with self.login(username=student.email, password=factories.BaseUserFactory.password):
             data = {
                 'company': company.id,
-                'start_date': '2016-10-10',
-                'title': 'programmer'
+                'start_date': faker.date(),
+                'title': faker.text(max_nb_chars=50)
             }
             response = self.post('website:working-at', data=data)
             self.assertEquals(WorkingAt.objects.filter(student=student).count(), 1)
