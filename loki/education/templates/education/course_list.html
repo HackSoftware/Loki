@@ -1,7 +1,14 @@
 {% extends 'website/base.html' %}
-
+{% load django_bootstrap_breadcrumbs %}
 {% block 'page-content' %}
 {% autoescape off %}
+
+{% block breadcrumbs %}
+    <li class="active", style="background: transparent">
+    <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'website:profile'%}">
+    Profile</a>
+    </li>
+{% endblock %}
   <div class="container">
     {% if user.get_teacher %}
       {% if teacher_courses.get_active_courses.exists %}

@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'image_cropping',
     'channels',
+    'django_bootstrap_breadcrumbs',
     'raven.contrib.django.raven_compat',
     'loki.hack_fmi.apps.HackFMIConfig',
     'loki.base_app.apps.BaseAppConfig',
