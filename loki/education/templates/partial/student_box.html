@@ -1,23 +1,28 @@
 {% load cropping thumbnail %}
-<div class="col-sm-12 student-box">
+<div class="row student-box">
   <div class="col-sm-2">
     <img src="{% cropped_thumbnail student "cropping" %}" class="student-profile-photo" >
   </div>
-  <div class="col-sm-10 student-information">
-    <div class="col-sm-10 student-information-text">
-      <a href="{% url 'education:student-detail' course.id ca.id %}">
-        <h4 class="student-name">{{ student.first_name }} {{student.last_name}}</h4>
-      </a>
-      <hr class="lines"/>
-      <b>Email:</b> {{ student.email }} </br>
-      {% if student.github_account %}
-        <i class="student-social-links fa fa-github fa-3x"></i>
-        <a href="{{ student.github_account }}" target="_blank">{{ student.github_account }}</a> </br>
+  <div class="col-sm-8 student-information-text">
+    <a href="{% url 'education:student-detail' course.id ca.id %}">
+      {% if ca.is_attending %}
+      <h4 class="student-name">{{ student.first_name }} {{student.last_name}}
+        <i class="fa fa-info-circle" aria-hidden="true"></i>
+      </h4>
+      {% else %}
+      <h4 class="student-name">{{ student.first_name }} {{student.last_name}} - <span class="dropped-student">ИЗКЛЮЧЕН</span></h4>
       {% endif %}
-      {% if ca.student_presence %}
-        <b>Присъствие:</b> <span class="student-presence-percent">{{ ca.student_presence }}%</span></br>
-      {% endif %}
-      {% if ca.studentnote_set.exists %}
+    </a>
+    <hr class="lines"/>
+    <b>Email:</b> {{ student.email }} </br>
+    {% if student.github_account %}
+      <i class="student-social-links fa fa-github fa-3x"></i>
+      <a href="{{ student.github_account }}" target="_blank">{{ student.github_account }}</a> </br>
+    {% endif %}
+    {% if ca.student_presence %}
+      <b>Присъствие:</b> <span class="student-presence-percent">{{ ca.student_presence }}%</span></br>
+    {% endif %}
+    {% if ca.studentnote_set.exists %}
       <div class="student-box-footer student-note-footer">
         <div class="student-note">
           <b>Бележки от преподаватели</b>
@@ -27,18 +32,26 @@
           </div>
         </div>
       </div>
-      {% endif %}
-    </div>
-    <div class="col-sm-2 students-course-btns">
-      <a href="{% url 'education:student-task-list' course.id student.id %}">
-        <button class="btn btn-warning" id="tasks-link">Задачи</button>
-      </a>
-      {% if ca.course.is_active %}
-        <button id="note-link" class="btn btn-warning submit-dialog-btn" data-task-name="{{student}}"
-                data-toggle="modal" data-student-id="{{student.id}}"
-                data-target="#student-note-{{ student.id }}">Нова бележка</button>
-        {% include 'partial/student_note_modal.html' with ca=ca.id author=user course=ca.course %}
-      {% endif %}
-    </div>
+    {% endif %}
+  </div>
+  <div class="col-sm-2 students-course-btns">
+    <a href="{% url 'education:student-task-list' course.id student.id %}">
+      <button class="btn btn-warning" id="tasks-link">Задачи</button>
+    </a>
+    {% if ca.course.is_active %}
+      <button id="note-link" class="btn btn-warning submit-dialog-btn" data-task-name="{{student}}"
+              data-toggle="modal" data-student-id="{{student.id}}"
+              data-target="#student-note-{{ student.id }}">Нова бележка</button>
+      {% include 'partial/student_note_modal.html' with ca=ca.id author=user course=ca.course %}
+    {% endif %}
+    {% if ca.is_attending and course.is_active %}
+      <form id="tasks-link" action="{% url 'education:drop-student' course.id ca.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-default" id="drop-link">
+          <i class="ace-icon fa fa-trash-o bigger-120"></i>
+          Изключване
+        </button>
+      </form>
+    {% endif %}
   </div>
 </div>

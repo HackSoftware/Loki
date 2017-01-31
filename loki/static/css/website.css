@@ -266,7 +266,6 @@ body {
   padding-bottom: 10px;
   background: white;
   background: #f6f6f6;
-  display: inline-block;
   position: relative;
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
@@ -303,25 +302,13 @@ body {
     border-radius: 5px; }
   .container .course-students .student-box .students-course-btns {
     margin-top: 20px; }
-    .container .course-students .student-box .students-course-btns #note-link, .container .course-students .student-box .students-course-btns #tasks-link {
-      width: 70%;
+    .container .course-students .student-box .students-course-btns #note-link, .container .course-students .student-box .students-course-btns #tasks-link, .container .course-students .student-box .students-course-btns #drop-link {
+      width: 100%;
       margin-top: 5px;
       text-align: center;
       white-space: normal; }
-      @media screen and (max-width: 992px) {
-        .container .course-students .student-box .students-course-btns #note-link, .container .course-students .student-box .students-course-btns #tasks-link {
-          margin-right: 5%;
-          margin-left: 15%; } }
-    @media screen and (max-width: 1200px) {
-      .container .course-students .student-box .students-course-btns {
-        padding-left: 0px;
-        padding-right: 0px;
-        width: 30%; } }
-    @media screen and (max-width: 765px) {
-      .container .course-students .student-box .students-course-btns {
-        margin-left: 20%;
-        margin-bottom: 10px;
-        width: 60%; } }
+    .container .course-students .student-box .students-course-btns #drop-link {
+      padding: 5px; }
   .container .course-students .student-box .student-social-links {
     font-size: 2em; }
   .container .course-students .student-box .student-notes {
@@ -883,5 +870,8 @@ body {
 .solution-container {
   margin-left: 6%;
   margin-right: 5%; }
+
+.dropped-student {
+  color: #bc1212; }
 
 /*# sourceMappingURL=website.css.map */

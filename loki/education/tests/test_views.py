@@ -726,3 +726,59 @@ class StudentDetailView(TestCase):
             response = self.get('education:student-detail', course=other_student_course.id,
                                 ca=other_student_ca.id)
             self.assertEqual(response.status_code, 403)
+
+
+class DropStudentTests(TestCase):
+
+    def setUp(self):
+        self.baseuser = BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.save()
+        self.baseuser2 = BaseUserFactory()
+        self.baseuser2.is_active = True
+        self.baseuser2.save()
+        self.student = BaseUser.objects.promote_to_student(self.baseuser2)
+        self.course = CourseFactory()
+        self.course_assignment = CourseAssignmentFactory(course=self.course,
+                                                         user=self.student)
+
+    def test_cannot_drop_student_if_not_logged_in(self):
+        response = self.post('education:drop-student',
+                             course=self.course.id,
+                             ca=self.course_assignment.id)
+        self.assertEqual(response.status_code, 302)
+
+    def test_non_teachers_cannot_drop_student(self):
+        with self.login(email=self.baseuser2.email, password=BaseUserFactory.password):
+            response = self.post('education:drop-student',
+                                 course=self.course.id,
+                                 ca=self.course_assignment.id)
+            self.assertEqual(response.status_code, 403)
+
+    def test_teacher_cannot_drop_students_from_other_courses(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser2)
+
+        course = CourseFactory()
+        teacher.teached_courses = [course]
+        teacher.save()
+
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            response = self.post('education:drop-student',
+                                 course=self.course.id,
+                                 ca=self.course_assignment.id)
+            self.assertEqual(response.status_code, 403)
+
+    def test_teacher_can_drop_student_from_course_if_he_teaches_it(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser2)
+        teacher.teached_courses = [self.course]
+        teacher.save()
+
+        self.assertTrue(self.course_assignment.is_attending)
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            response = self.post('education:drop-student',
+                                 course=self.course.id,
+                                 ca=self.course_assignment.id)
+            self.assertEqual(response.status_code, 302)
+
+        self.course_assignment.refresh_from_db()
+        self.assertFalse(self.course_assignment.is_attending)
