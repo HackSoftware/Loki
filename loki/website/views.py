@@ -195,7 +195,7 @@ class ProfileView(LoginRequiredMixin, AddUserToContext, TemplateView):
 
         try:
             student = Student.objects.get(email=self.request.user.email)
-            context['jobs'] = WorkingAt.objects.filter(student=student).order_by('-start_date').all()
+            context['jobs'] = WorkingAt.objects.filter(student=student).order_by('start_date').all()
         except Student.DoesNotExist:
             student = None
         finally:
