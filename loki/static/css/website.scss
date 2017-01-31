@@ -455,7 +455,11 @@ $TabBorder: #C5C4C4;
               width: 100%;
               margin-top: 5px;
               text-align: center;
+              white-space: normal;
+            }
 
+            #drop-link {
+              padding: 5px;
             }
         }
 

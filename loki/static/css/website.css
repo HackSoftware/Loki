@@ -305,7 +305,10 @@ body {
     .container .course-students .student-box .students-course-btns #note-link, .container .course-students .student-box .students-course-btns #tasks-link, .container .course-students .student-box .students-course-btns #drop-link {
       width: 100%;
       margin-top: 5px;
-      text-align: center; }
+      text-align: center;
+      white-space: normal; }
+    .container .course-students .student-box .students-course-btns #drop-link {
+      padding: 5px; }
   .container .course-students .student-box .student-social-links {
     font-size: 2em; }
   .container .course-students .student-box .student-notes {
