@@ -742,9 +742,43 @@ class DropStudentTests(TestCase):
         self.course_assignment = CourseAssignmentFactory(course=self.course,
                                                          user=self.student)
 
+    def test_cannot_drop_student_if_no_login(self):
+        response = self.post('education:drop-student',
+                             course=self.course.id,
+                             ca=self.course_assignment.id)
+        self.assertEqual(response.status_code, 302)
+
     def test_non_teacher_cannot_drop_student(self):
         with self.login(email=self.baseuser2.email, password=BaseUserFactory.password):
             response = self.post('education:drop-student',
                                  course=self.course.id,
-                                 courseassignment=self.course_assignment.id)
-            self.assertEqual(response.status_code, 404)
+                                 ca=self.course_assignment.id)
+            self.assertEqual(response.status_code, 403)
+
+    def test_teacher_cannot_drop_student_if_he_dont_teach_course(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser2)
+
+        course = CourseFactory()
+        teacher.teached_courses = [course]
+        teacher.save()
+
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            response = self.post('education:drop-student',
+                                 course=self.course.id,
+                                 ca=self.course_assignment.id)
+            self.assertEqual(response.status_code, 403)
+
+    def test_teacher_can_drop_student_if_he_dont_teach_course(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser2)
+        teacher.teached_courses = [self.course]
+        teacher.save()
+
+        self.assertTrue(self.course_assignment.is_attending)
+        with self.login(email=teacher.email, password=BaseUserFactory.password):
+            response = self.post('education:drop-student',
+                                 course=self.course.id,
+                                 ca=self.course_assignment.id)
+            self.assertEqual(response.status_code, 302)
+
+        self.course_assignment.refresh_from_db()
+        self.assertFalse(self.course_assignment.is_attending)

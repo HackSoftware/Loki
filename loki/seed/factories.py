@@ -193,7 +193,7 @@ class CourseAssignmentFactory(factory.DjangoModelFactory):
     cv = faker.file_name(category=None, extension=None)
     favourite_partners = factory.RelatedFactory(PartnerFactory)
     group_time = int(faker.random_element(elements=('1', '2')))
-    is_attending = faker.boolean()
+    is_attending = True
     student_presence = 0
     is_online = faker.boolean()
 

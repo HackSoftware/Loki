@@ -159,7 +159,8 @@ class StudentNoteCreateView(DashboardPermissionMixin,
         return super().form_valid(form)
 
 
-class DropStudentView(IsTeacherMixin,
+class DropStudentView(DashboardPermissionMixin,
+                      IsTeacherMixin,
                       CannotSeeOtherStudentsMixin,
                       View):
 
