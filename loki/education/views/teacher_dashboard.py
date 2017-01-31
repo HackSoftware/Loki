@@ -4,7 +4,7 @@ from django.views.generic.edit import CreateView
 from django.views.generic.base import View
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from loki.education.models import (Course, Task, Solution, Student,
                                    CourseAssignment, StudentNote)
 from loki.education.mixins import (DashboardPermissionMixin,
