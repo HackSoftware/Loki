@@ -704,7 +704,8 @@ body {
         margin-bottom: 1%; }
       .row-profile .jobs .job .job-start-date {
         position: absolute;
-        font-size: 12px; }
+        font-size: 12px;
+        bottom: 5px; }
 
 #edit-app {
   margin-top: 10px; }

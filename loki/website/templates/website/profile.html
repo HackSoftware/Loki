@@ -85,7 +85,11 @@
           <b class="job-title-company">{{ job.title }} в {{ job.company.name }}{% if job.company_name%}{{ job.company_name }}{% endif %}</b> </br>
           <div class="title-border"></div>
           <span class="job-description">{{ job.description }}</span>
-          <div class="job-start-date">От: {{ job.start_date }}</div>
+          <div class="job-start-date"><b>От:</b> {{ job.start_date }}
+            {% if job.end_date %}
+              <b>До:</b> {{ job.end_date }}
+            {% endif %}
+          </div>
         </div>
       {% endfor %}
     </div>
