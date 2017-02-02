@@ -62,19 +62,19 @@
         <pre><code>{{solution.code}}</code></pre>
       </div>
       {% else %}
-      <h5><b>Предаден линк:
-        <a class="solution-url-link" href={{solution.url}} target="_blank">
-          {{solution.url}}
-        </a></b>
+      <h5>
+        <b>Предаден линк:
+          <a class="solution-url-link" href={{solution.url}} target="_blank">
+            {{solution.url}}
+          </a>
+        </b>
       </h5>
       {% endif %}
     </div>
   {% endfor %}
   {% else %}
   <div class="solutions-task-div">
-    <div id="solutions-task-name">
-      <b>Няма предадени решения : )</b>
-    </div>
+    <b>Няма предадени решения : )</b>
   </div>
   {% endif %}
 </div>
