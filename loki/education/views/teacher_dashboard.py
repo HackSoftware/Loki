@@ -1,7 +1,9 @@
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView
-
+from django.views.generic.base import View
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
 from django.core.urlresolvers import reverse
 from loki.education.models import (Course, Task, Solution, Student,
                                    CourseAssignment, StudentNote)
@@ -24,7 +26,7 @@ class StudentListView(DashboardPermissionMixin,
 
     def get_queryset(self):
         course_id = self.kwargs.get("course")
-        return CourseAssignment.objects.filter(course__id=course_id)
+        return CourseAssignment.objects.filter(course__id=course_id).order_by('-is_attending')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -155,3 +157,18 @@ class StudentNoteCreateView(DashboardPermissionMixin,
         note = form.save(commit=False)
         note.author = author
         return super().form_valid(form)
+
+
+class DropStudentView(DashboardPermissionMixin,
+                      IsTeacherMixin,
+                      CannotSeeOtherStudentsMixin,
+                      View):
+
+    def post(self, request, *args, **kwargs):
+        course_assingment = get_object_or_404(CourseAssignment, id=self.kwargs.get('ca'))
+        course_assingment.is_attending = False
+        course_assingment.save()
+        messages.success(request, 'Успешно изключи {} от курса.'.format(course_assingment.user))
+
+        return redirect(reverse('education:student-list',
+                        kwargs={'course': self.kwargs.get('course')}))
