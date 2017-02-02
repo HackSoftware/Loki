@@ -828,7 +828,7 @@ body {
   margin-top: 10px;
   margin-bottom: 10px;
   padding-top: 10px;
-  padding-left: 6%;
+  padding-left: 2%;
   padding-bottom: 15px;
   font-size: 18px; }
   @media screen and (max-width: 622px) {
@@ -839,9 +839,9 @@ body {
       height: 80px; } }
   .task-name-container .solution-created-at, .task-name-container .dates-week, .material-name-container .solution-created-at, .material-name-container .dates-week {
     float: right;
-    padding-right: 5%;
+    padding-right: 2%;
     display: inline-block;
-    font-size: 14px;
+    font-size: 12px;
     margin-top: 4px; }
 
 .solution-status .fail-status-solution, .last-solution-status .fail-status-solution {
