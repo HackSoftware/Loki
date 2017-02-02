@@ -854,13 +854,11 @@ body {
   word-wrap: break-word; }
 
 .solutions-task-div, .material-course-div {
-  padding-left: 20px;
-  font-size: 18px;
-  margin-bottom: 5px; }
+  font-size: 18px; }
   .solutions-task-div a, .material-course-div a {
     text-decoration: none;
     color: #f7931e; }
-  .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .solutions-task-div .course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .material-course-div .course-name {
+  .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .solutions-task-div .course-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .material-course-div .course-name {
     padding-left: 10px;
     display: inline-block; }
 

@@ -1257,15 +1257,13 @@ $TabBorder: #C5C4C4;
 }
 
 .solutions-task-div, .material-course-div {
-  padding-left: 20px;
   font-size: 18px;
-  margin-bottom: 5px;
   a {
     text-decoration: none;
     color: #f7931e;
   }
 
-  #solutions-task-name ,#material-course-name, #task-course-name, .course-name {
+  #material-course-name, #task-course-name, .course-name {
     padding-left: 10px;
     display: inline-block;
   }
