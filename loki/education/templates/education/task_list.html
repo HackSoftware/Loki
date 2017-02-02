@@ -2,29 +2,26 @@
 
 {% load key %}
 
+{% block breadcrumbs %}
+<div class="container breadcrumb-class">
+  <li class="active", style="background: transparent;">
+    <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'website:index' %}">
+    <i class="glyphicon glyphicon-home" aria-hidden="true"></i></a>
+    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+    <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'education:course-list' %}">Курсове</a>
+    {% if user.get_teacher %}
+      <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+      <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'education:student-list' course.id %}">Студенти</a>
+    {% endif %}
+  </li>
+</div>
+{% endblock %}
+
 {% block 'page-content' %}
 {% autoescape off %}
-<div class="task-course-div">
-  {% if user.get_student and not user.get_teacher %}
-    <a href="{% url 'education:course-list' %}">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    </a>
-  {% else %}
-    <a href="{% url 'education:student-list' course.id %}">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    </a>
-  {% endif %}
-  <div class="course-name">
-    {% if user.get_teacher %}
-      <b>{{course.name}} - Студенти</b>
-    {% else %}
-      <b>{{object_list.first.course.name}}</b>
-    {% endif %}
-  </div>
-</div>
+
 {% if object_list.exists %}
   <div class="container">
-    <hr/>
     <section class="row">
       <div class="active-tasks-container container-fluid">
           <table id="course-tasks-table" class="table table-hover table-striped " cellspacing="0">

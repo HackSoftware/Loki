@@ -1,43 +1,50 @@
 {% extends 'website/base.html' %}
 
+{% block breadcrumbs %}
+<div class="container breadcrumb-class">
+  <li class="active", style="background: transparent;">
+    <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'website:index' %}">
+    <i class="glyphicon glyphicon-home" aria-hidden="true"></i></a>
+    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+    <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'education:course-list' %}">Курсове</a>
+  </li>
+</div>
+{% endblock %}
+
 {% block 'page-content' %}
 {% autoescape off %}
-{% if object_list.exists %}
-<div class="material-course-div">
-  <a href="{% url 'education:course-list' %}">
-    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-  </a>
-  <div id="material-course-name">
-    <b>{{object_list.first.course.name}}</b>
-  </div>
-</div>
-{% for material in object_list %}
-  <div class="task-name-container"><b>  Седмица {{ material.week.number }} - {{ material.title }}</b>
-    <div class="dates-week">
-      <b>{% for lecture in material.week.lecture_set.all %} {{ lecture.date }} {% endfor %} </b>
+<div class="container">
+  {% if object_list.exists %}
+  <div class="material-course-div">
+    <div id="material-course-name">
+      <b>{{object_list.first.course.name}}</b>
     </div>
   </div>
-  <div class="material-container">
-      <div class="presentations">
-      {% for lecture in material.week.lecture_set.all %}
-        {% if lecture.presentation_url %}
-        <a class="course-presentation" href="{{ lecture.presentation_url }}" target="_blank"> Презентация от {{ lecture.date }} </a>
-        <br>
-        {% endif %}
-      {% endfor %}
-      </div>
-    <div class="material-description"> <b>Допълнителна информация: </b> {{ material.description }}</div>
+  {% for material in object_list %}
+    <div class="task-name-container"><b>Седмица {{ material.week.number }} - {{ material.title }}</b>
+      <span class="dates-week">
+        <b>{% for lecture in material.week.lecture_set.all %} {{ lecture.date }} {% endfor %} </b>
+      </span>
+    </div>
+    <div class="material-container">
+        <div class="presentations">
+        {% for lecture in material.week.lecture_set.all %}
+          {% if lecture.presentation_url %}
+          <a class="course-presentation" href="{{ lecture.presentation_url }}" target="_blank"> Презентация от {{ lecture.date }} </a>
+          <br>
+          {% endif %}
+        {% endfor %}
+        </div>
+      <div class="material-description"> <b>Допълнителна информация: </b> {{ material.description }}</div>
+    </div>
+  {% endfor %}
+  {% else %}
+  <div class="material-course-div">
+    <div id="material-course-name">
+      <b>Все още няма материали за този курс : )</b>
+    </div>
   </div>
-{% endfor %}
-{% else %}
-<div class="material-course-div">
-  <a href="{% url 'education:course-list' %}">
-    <i class="fa fa-arrow-left" aria-hidden="true"></i>
-  </a>
-  <div id="material-course-name">
-    <b>Все още няма материали за този курс : )</b>
-  </div>
+  {% endif %}
 </div>
-{% endif %}
 {% endautoescape %}
 {% endblock %}
