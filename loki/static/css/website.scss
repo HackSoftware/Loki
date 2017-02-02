@@ -521,14 +521,19 @@ $TabBorder: #C5C4C4;
   }
 }
 
-.breadcrumb-class {
-  a:hover {
-      text-decoration: none;
-  }
-  i {
-    color: #f0ad4f;
+.breadcrumb {
+  margin: 0;
+  
+  .breadcrumb-class {
+    a:hover {
+        text-decoration: none;
+    }
+    i {
+      color: #f0ad4f;
+    }
   }
 }
+
 
 .dropdown-menu {
     margin-top: 20px;
@@ -563,10 +568,6 @@ $TabBorder: #C5C4C4;
 .course-logo {
     font-size: 12em;
     position: relative;
-}
-
-#course-details-breadcrumb {
-    font-size: 20px;
 }
 
 #details-apply-button {

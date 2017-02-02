@@ -352,10 +352,12 @@ body {
     .container #panda-divider {
       margin-left: 25%; } }
 
-.breadcrumb-class a:hover {
-  text-decoration: none; }
-.breadcrumb-class i {
-  color: #f0ad4f; }
+.breadcrumb {
+  margin: 0; }
+  .breadcrumb .breadcrumb-class a:hover {
+    text-decoration: none; }
+  .breadcrumb .breadcrumb-class i {
+    color: #f0ad4f; }
 
 .dropdown-menu {
   margin-top: 20px; }
@@ -381,9 +383,6 @@ body {
 .course-logo {
   font-size: 12em;
   position: relative; }
-
-#course-details-breadcrumb {
-  font-size: 20px; }
 
 #details-apply-button {
   margin-top: 30px; }
