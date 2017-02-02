@@ -521,16 +521,24 @@ $TabBorder: #C5C4C4;
   }
 }
 
+.breadcrumb-class {
+  a:hover {
+      text-decoration: none;
+  }
+  i {
+    color: #f0ad4f;
+  }
+}
+
 .dropdown-menu {
     margin-top: 20px;
 }
 
 .active-courses-container {
     text-align: center;
-    /*margin-bottom: 10px;*/
 }
 
-.course-logo-container{
+.course-logo-container {
     margin-bottom: 40px;
     a:hover {
         text-decoration: none;
@@ -555,10 +563,6 @@ $TabBorder: #C5C4C4;
 .course-logo {
     font-size: 12em;
     position: relative;
-}
-
-.breadcrumb {
-    margin-top: 20px;
 }
 
 #course-details-breadcrumb {
@@ -1252,7 +1256,7 @@ $TabBorder: #C5C4C4;
   word-wrap: break-word;
 }
 
-.solutions-task-div, .material-course-div, .task-course-div {
+.solutions-task-div, .material-course-div {
   padding-left: 20px;
   font-size: 18px;
   margin-bottom: 5px;

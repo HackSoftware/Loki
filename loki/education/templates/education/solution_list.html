@@ -1,32 +1,36 @@
 {% extends 'website/base.html' %}
 
+{% block breadcrumbs %}
+<div class="container breadcrumb-class">
+  <li class="active", style="background: transparent;">
+    <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'website:index' %}">
+     <i class="glyphicon glyphicon-home" aria-hidden="true"></i></a>
+    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+    {% if user.get_student and not user.get_teacher %}
+      <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'education:task-list' course.id %}">Курсове</a>
+    {% else %}
+      <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'education:student-list' course.id %}">Курсове</a>
+    {% endif %}
+    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+    {% if user.get_student and not user.get_teacher %}
+      <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'education:task-list' course.id %}">Задачи</a>
+    {% else %}
+      <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'education:student-task-list' course.id student.id %}">{{ student.full_name }}</a>
+    {% endif %}
+  </li>
+</div>
+{% endblock %}
+
 {% block 'page-content' %}
 {% autoescape off %}
 {% if object_list.exists %}
 <div class="solutions-task-div">
-  {% if user.get_student and not user.get_teacher %}
-    <a href="{% url 'education:task-list' course.id %}">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    </a>
-  {% else %}
-    <a href="{% url 'education:student-task-list' course.id student.id %}">
-      <i class="fa fa-arrow-left" aria-hidden="true"></i>
-    </a>
-  {% endif %}
   <div id="solutions-task-name">
-    {% if user.get_student and not user.get_teacher %}
-      <b>Предадени решения на задача:
-        <a href="{{ solution.task.description }}" target="_blank">
-          {{object_list.first.task.name}}
-        </a>
-      </b>
-    {% else %}
-      <b>Предадени решения на задача от {{ student.first_name}} {{ student.last_name }}:
-        <a href="{{ solution.task.description }}" target="_blank">
-          {{object_list.first.task.name}}
-        </a>
-      </b>
-    {% endif %}
+    <b>Предадени решения на задача:
+      <a href="{{ solution.task.description }}" target="_blank">
+        {{object_list.first.task.name}}
+      </a>
+    </b>
   </div>
 </div>
 {% for solution in object_list %}

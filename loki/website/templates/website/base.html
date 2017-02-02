@@ -119,8 +119,10 @@
       </nav>
 
   </div>
-    {% block breadcrumbs %}
-    {% endblock breadcrumbs %}
+  <ol class="breadcrumb">
+      {% block breadcrumbs %}
+      {% endblock breadcrumbs %}
+</ol>
 
     {% include 'website/partial/messages.html' %}
 

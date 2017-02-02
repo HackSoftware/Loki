@@ -352,12 +352,16 @@ body {
     .container #panda-divider {
       margin-left: 25%; } }
 
+.breadcrumb-class a:hover {
+  text-decoration: none; }
+.breadcrumb-class i {
+  color: #f0ad4f; }
+
 .dropdown-menu {
   margin-top: 20px; }
 
 .active-courses-container {
-  text-align: center;
-  /*margin-bottom: 10px;*/ }
+  text-align: center; }
 
 .course-logo-container {
   margin-bottom: 40px; }
@@ -377,9 +381,6 @@ body {
 .course-logo {
   font-size: 12em;
   position: relative; }
-
-.breadcrumb {
-  margin-top: 20px; }
 
 #course-details-breadcrumb {
   font-size: 20px; }
@@ -852,14 +853,14 @@ body {
   width: 90%;
   word-wrap: break-word; }
 
-.solutions-task-div, .material-course-div, .task-course-div {
+.solutions-task-div, .material-course-div {
   padding-left: 20px;
   font-size: 18px;
   margin-bottom: 5px; }
-  .solutions-task-div a, .material-course-div a, .task-course-div a {
+  .solutions-task-div a, .material-course-div a {
     text-decoration: none;
     color: #f7931e; }
-  .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .solutions-task-div .course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .material-course-div .course-name, .task-course-div #solutions-task-name, .task-course-div #material-course-name, .task-course-div #task-course-name, .task-course-div .course-name {
+  .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .solutions-task-div .course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .material-course-div .course-name {
     padding-left: 10px;
     display: inline-block; }
 
