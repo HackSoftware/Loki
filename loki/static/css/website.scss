@@ -392,7 +392,6 @@ $TabBorder: #C5C4C4;
         padding-bottom: 10px;
         background: white;
         background: #f6f6f6;
-        display: inline-block;
         position: relative;
         box-shadow: 0 8px 8px rgba(0,0,0,0.12), 0 8px 8px rgba(0,0,0,0.24);
         transition: all 0.3s cubic-bezier(.25,.8,.25,1);
@@ -452,28 +451,15 @@ $TabBorder: #C5C4C4;
         .students-course-btns {
             margin-top: 20px;
 
-            #note-link, #tasks-link {
-              width: 70%;
+            #note-link, #tasks-link, #drop-link {
+              width: 100%;
               margin-top: 5px;
               text-align: center;
               white-space: normal;
-
-              @media screen and (max-width: 992px) {
-                margin-right: 5%;
-                margin-left: 15%;
-              }
             }
 
-            @media screen and (max-width: 1200px) {
-              padding-left: 0px;
-              padding-right: 0px;
-              width: 30%;
-            }
-
-            @media screen and (max-width: 765px) {
-              margin-left: 20%;
-              margin-bottom: 10px;
-              width: 60%;
+            #drop-link {
+              padding: 5px;
             }
         }
 
@@ -564,16 +550,29 @@ $TabBorder: #C5C4C4;
   }
 }
 
+.breadcrumb {
+  margin: 0;
+  
+  .breadcrumb-class {
+    a:hover {
+        text-decoration: none;
+    }
+    i {
+      color: #f0ad4f;
+    }
+  }
+}
+
+
 .dropdown-menu {
     margin-top: 20px;
 }
 
 .active-courses-container {
     text-align: center;
-    /*margin-bottom: 10px;*/
 }
 
-.course-logo-container{
+.course-logo-container {
     margin-bottom: 40px;
     a:hover {
         text-decoration: none;
@@ -598,14 +597,6 @@ $TabBorder: #C5C4C4;
 .course-logo {
     font-size: 12em;
     position: relative;
-}
-
-.breadcrumb {
-    margin-top: 20px;
-}
-
-#course-details-breadcrumb {
-    font-size: 20px;
 }
 
 #details-apply-button {
@@ -1314,7 +1305,7 @@ $TabBorder: #C5C4C4;
   margin-top: 10px;
   margin-bottom: 10px;
   padding-top: 10px;
-  padding-left: 6%;
+  padding-left: 2%;
   padding-bottom:15px;
   font-size: 18px;
   @media screen and (max-width: 622px) {
@@ -1326,13 +1317,11 @@ $TabBorder: #C5C4C4;
 
   .solution-created-at, .dates-week {
     float: right;
-    padding-right: 5%;
+    padding-right: 2%;
     display: inline-block;
-    font-size: 14px;
+    font-size: 12px;
     margin-top: 4px;
   }
-
-
 }
 
 
@@ -1351,16 +1340,14 @@ $TabBorder: #C5C4C4;
   word-wrap: break-word;
 }
 
-.solutions-task-div, .material-course-div, .task-course-div {
-  padding-left: 20px;
+.solutions-task-div, .material-course-div {
   font-size: 18px;
-  margin-bottom: 5px;
   a {
     text-decoration: none;
     color: #f7931e;
   }
 
-  #solutions-task-name ,#material-course-name, #task-course-name, .course-name {
+  #material-course-name, #task-course-name, .course-name {
     padding-left: 10px;
     display: inline-block;
   }
@@ -1395,4 +1382,8 @@ $TabBorder: #C5C4C4;
 .solution-container {
   margin-left: 6%;
   margin-right: 5%;
+}
+
+.dropped-student {
+  color: rgb(188, 18, 18);
 }

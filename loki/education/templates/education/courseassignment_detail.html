@@ -2,16 +2,23 @@
 {% load key %}
 {% load cropping thumbnail %}
 
+{% block breadcrumbs %}
+<div class="container breadcrumb-class">
+  <li class="active", style="background: transparent;">
+    <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'website:index' %}">
+    <i class="glyphicon glyphicon-home" aria-hidden="true"></i></a>
+    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+    <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'education:course-list' %}">Курсове</a>
+    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+    <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'education:student-list' object.course.id %}">Студенти</a>
+  </li>
+</div>
+{% endblock %}
+
 {% block 'page-content' %}
 {% autoescape off %}
 <div class="container">
   <div class="course-students">
-    <div class="course-name-div">
-      <a href="{% url 'education:student-list' object.course.id %}">
-        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-      </a>
-      <div class="course-name"><b>{{ object.course }}</b></div>
-    </div>
     <div class="col-sm-12 course-box">
       <div class="col-sm-2">
         <img src="{% cropped_thumbnail object.user "cropping" %}" class="student-profile-photo">

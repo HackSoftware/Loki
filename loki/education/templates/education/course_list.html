@@ -1,56 +1,56 @@
 {% extends 'website/base.html' %}
-
 {% block 'page-content' %}
 {% autoescape off %}
-  <div class="container">
-    {% if user.get_teacher %}
-      {% if teacher_courses.get_active_courses.exists %}
-        <section class="row">
-          <div class="active-courses-container container-fluid">
-            <h3>Преподавателски активни курсове </h3>
-              {% for course in teacher_courses.get_active_courses.all %}
-                  {% include "partial/teacher_course_box.html" with course=course %}
-              {% endfor %}
-          </div>
-        </section>
-        {% endif %}
-      {% endif %}
-    {% if user.get_student %}
-      {% if student_courses.get_active_courses.exists %}
+
+<div class="container">
+  {% if user.get_teacher %}
+    {% if teacher_courses.get_active_courses.exists %}
       <section class="row">
         <div class="active-courses-container container-fluid">
-          <h3>Студентски активни курсове </h3>
-          {% for course in student_courses.get_active_courses.all %}
-          {% include "partial/student_course_box.html" with course=course %}
-          {% endfor %}
+          <h3>Преподавателски активни курсове </h3>
+            {% for course in teacher_courses.get_active_courses.all %}
+                {% include "partial/teacher_course_box.html" with course=course %}
+            {% endfor %}
         </div>
       </section>
       {% endif %}
     {% endif %}
-    {% if user.get_teacher %}
-      {% if teacher_courses.get_closed_courses.exists %}
+  {% if user.get_student %}
+    {% if student_courses.get_active_courses.exists %}
+    <section class="row">
+      <div class="active-courses-container container-fluid">
+        <h3>Студентски активни курсове </h3>
+        {% for course in student_courses.get_active_courses.all %}
+        {% include "partial/student_course_box.html" with course=course %}
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+  {% endif %}
+  {% if user.get_teacher %}
+    {% if teacher_courses.get_closed_courses.exists %}
+      <section class="row">
+        <div class="active-courses-container container-fluid">
+          <h3>Архив на изминали преподавателски курсове </h3>
+            {% for course in teacher_courses.get_closed_courses.all %}
+                {% include "partial/teacher_course_box.html" with course=course %}
+            {% endfor %}
+        </div>
+      </section>
+    {% endif %}
+  {% endif %}
+  {% if user.get_student %}
+      {% if student_courses.get_closed_courses.exists %}
         <section class="row">
           <div class="active-courses-container container-fluid">
-            <h3>Архив на изминали преподавателски курсове </h3>
-              {% for course in teacher_courses.get_closed_courses.all %}
-                  {% include "partial/teacher_course_box.html" with course=course %}
+            <h3>Архив на изминали студентски курсове </h3>
+              {% for course in student_courses.get_closed_courses.all %}
+                  {% include "partial/student_course_box.html" with course=course %}
               {% endfor %}
           </div>
         </section>
       {% endif %}
-    {% endif %}
-    {% if user.get_student %}
-        {% if student_courses.get_closed_courses.exists %}
-          <section class="row">
-            <div class="active-courses-container container-fluid">
-              <h3>Архив на изминали студентски курсове </h3>
-                {% for course in student_courses.get_closed_courses.all %}
-                    {% include "partial/student_course_box.html" with course=course %}
-                {% endfor %}
-            </div>
-          </section>
-        {% endif %}
-    {% endif %}
-  </div>
+  {% endif %}
+</div>
 {% endautoescape %}
 {% endblock %}

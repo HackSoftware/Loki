@@ -266,7 +266,6 @@ body {
   padding-bottom: 10px;
   background: white;
   background: #f6f6f6;
-  display: inline-block;
   position: relative;
   box-shadow: 0 8px 8px rgba(0, 0, 0, 0.12), 0 8px 8px rgba(0, 0, 0, 0.24);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
@@ -303,25 +302,13 @@ body {
     border-radius: 5px; }
   .container .course-students .student-box .students-course-btns {
     margin-top: 20px; }
-    .container .course-students .student-box .students-course-btns #note-link, .container .course-students .student-box .students-course-btns #tasks-link {
-      width: 70%;
+    .container .course-students .student-box .students-course-btns #note-link, .container .course-students .student-box .students-course-btns #tasks-link, .container .course-students .student-box .students-course-btns #drop-link {
+      width: 100%;
       margin-top: 5px;
       text-align: center;
       white-space: normal; }
-      @media screen and (max-width: 992px) {
-        .container .course-students .student-box .students-course-btns #note-link, .container .course-students .student-box .students-course-btns #tasks-link {
-          margin-right: 5%;
-          margin-left: 15%; } }
-    @media screen and (max-width: 1200px) {
-      .container .course-students .student-box .students-course-btns {
-        padding-left: 0px;
-        padding-right: 0px;
-        width: 30%; } }
-    @media screen and (max-width: 765px) {
-      .container .course-students .student-box .students-course-btns {
-        margin-left: 20%;
-        margin-bottom: 10px;
-        width: 60%; } }
+    .container .course-students .student-box .students-course-btns #drop-link {
+      padding: 5px; }
   .container .course-students .student-box .student-social-links {
     font-size: 2em; }
   .container .course-students .student-box .student-notes {
@@ -376,12 +363,18 @@ body {
   height: 2px;
   margin-top: 2%; }
 
+.breadcrumb {
+  margin: 0; }
+  .breadcrumb .breadcrumb-class a:hover {
+    text-decoration: none; }
+  .breadcrumb .breadcrumb-class i {
+    color: #f0ad4f; }
+
 .dropdown-menu {
   margin-top: 20px; }
 
 .active-courses-container {
-  text-align: center;
-  /*margin-bottom: 10px;*/ }
+  text-align: center; }
 
 .course-logo-container {
   margin-bottom: 40px; }
@@ -401,12 +394,6 @@ body {
 .course-logo {
   font-size: 12em;
   position: relative; }
-
-.breadcrumb {
-  margin-top: 20px; }
-
-#course-details-breadcrumb {
-  font-size: 20px; }
 
 #details-apply-button {
   margin-top: 30px; }
@@ -890,7 +877,7 @@ body {
   margin-top: 10px;
   margin-bottom: 10px;
   padding-top: 10px;
-  padding-left: 6%;
+  padding-left: 2%;
   padding-bottom: 15px;
   font-size: 18px; }
   @media screen and (max-width: 622px) {
@@ -901,9 +888,9 @@ body {
       height: 80px; } }
   .task-name-container .solution-created-at, .task-name-container .dates-week, .material-name-container .solution-created-at, .material-name-container .dates-week {
     float: right;
-    padding-right: 5%;
+    padding-right: 2%;
     display: inline-block;
-    font-size: 14px;
+    font-size: 12px;
     margin-top: 4px; }
 
 .solution-status .fail-status-solution, .last-solution-status .fail-status-solution {
@@ -915,14 +902,12 @@ body {
   width: 90%;
   word-wrap: break-word; }
 
-.solutions-task-div, .material-course-div, .task-course-div {
-  padding-left: 20px;
-  font-size: 18px;
-  margin-bottom: 5px; }
-  .solutions-task-div a, .material-course-div a, .task-course-div a {
+.solutions-task-div, .material-course-div {
+  font-size: 18px; }
+  .solutions-task-div a, .material-course-div a {
     text-decoration: none;
     color: #f7931e; }
-  .solutions-task-div #solutions-task-name, .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .solutions-task-div .course-name, .material-course-div #solutions-task-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .material-course-div .course-name, .task-course-div #solutions-task-name, .task-course-div #material-course-name, .task-course-div #task-course-name, .task-course-div .course-name {
+  .solutions-task-div #material-course-name, .solutions-task-div #task-course-name, .solutions-task-div .course-name, .material-course-div #material-course-name, .material-course-div #task-course-name, .material-course-div .course-name {
     padding-left: 10px;
     display: inline-block; }
 
@@ -946,5 +931,8 @@ body {
 .solution-container {
   margin-left: 6%;
   margin-right: 5%; }
+
+.dropped-student {
+  color: #bc1212; }
 
 /*# sourceMappingURL=website.css.map */

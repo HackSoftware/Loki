@@ -1,15 +1,20 @@
 {% extends 'website/base.html' %}
 
+{% block breadcrumbs %}
+<div class="container breadcrumb-class">
+  <li class="active", style="background: transparent;">
+    <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'website:index' %}">
+     <i class="glyphicon glyphicon-home" aria-hidden="true"></i></a>
+    <i class="fa fa-angle-double-right" aria-hidden="true"></i>
+    <a aria-expanded="false" role="button" class="breadcrumbs" href="{% url 'education:course-list' %}">Курсове</a>
+  </li>
+</div>
+{% endblock %}
+
 {% block 'page-content' %}
 {% autoescape off %}
 <div class="container">
   <div class="course-students">
-    <div class="course-name-div">
-      <a href="{% url 'education:course-list' %}">
-        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-      </a>
-      <div class="course-name"><b>{{course.name}}</b></div>
-    </div>
     {% if object_list.exists %}
       {% for ca in object_list %}
         {% include 'partial/student_box.html' with student=ca.user course=ca.course ca=ca%}
