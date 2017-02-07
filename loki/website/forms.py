@@ -129,9 +129,8 @@ class WorkingAtForm(ModelForm):
                 data['company'] = ''
 
         super().__init__(data, files, auto_id, prefix,
-                 initial, error_class, label_suffix,
-                 empty_permitted, instance)
-
+                         initial, error_class, label_suffix,
+                         empty_permitted, instance)
 
     class Meta:
         model = WorkingAt

@@ -9,8 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from loki.base_app.models import (
     Partner,
     GeneralPartner,
-    BaseUser,
-    Company
+    BaseUser
 )
 from loki.base_app.services import (
     send_activation_mail,
