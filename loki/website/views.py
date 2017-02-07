@@ -332,16 +332,6 @@ class WorkingAtCreateView(LoginRequiredMixin,
     form_class = WorkingAtForm
     success_url = reverse_lazy('website:profile')
 
-    def post(self, request, *args, **kwargs):
-        company = request.POST.get('company')
-        try:
-            Company.objects.filter(id=company)
-        except (Company.DoesNotExist, ValueError):
-            request.POST._mutable = True
-            request.POST['company'] = ''
-            request.POST['company_name'] = company
-        return super().post(request, *args, **kwargs)
-
     def form_valid(self, form):
         student = self.request.user.get_student()
         working_at = form.save(commit=False)

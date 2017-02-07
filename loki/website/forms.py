@@ -2,8 +2,9 @@ from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.forms.utils import ErrorList
 
-from loki.base_app.models import BaseUser
+from loki.base_app.models import BaseUser, Company
 from loki.base_app.helper import get_or_none, validate_password
 from loki.education.models import Student, Teacher, WorkingAt
 from loki.education.validators import validate_phone, validate_github_account
@@ -112,6 +113,25 @@ class TeacherEditForm(ModelForm):
 
 class WorkingAtForm(ModelForm):
     looking_for_job = forms.BooleanField(required=False, label="В момента работя, но си търся нова работа.")
+
+    def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None,
+                 initial=None, error_class=ErrorList, label_suffix=None,
+                 empty_permitted=False, instance=None):
+
+        if data:
+            company = data['company']
+
+            try:
+                Company.objects.filter(id=company)
+            except ValueError:
+                data._mutable = True
+                data['company_name'] = company
+                data['company'] = ''
+
+        super().__init__(data, files, auto_id, prefix,
+                 initial, error_class, label_suffix,
+                 empty_permitted, instance)
+
 
     class Meta:
         model = WorkingAt
