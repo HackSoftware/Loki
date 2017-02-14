@@ -344,7 +344,7 @@ class WorkingAtTests(TestCase):
             response = self.get('website:working-at')
             self.assertEquals(response.status_code, 200)
 
-    def test_student_fill_working_at_form(self):
+    def test_student_fill_working_at_form_with_existing_company(self):
         student = BaseUser.objects.promote_to_student(self.baseuser)
         company = factories.CompanyFactory()
         self.assertEquals(WorkingAt.objects.filter(student=student).count(), 0)
@@ -356,6 +356,24 @@ class WorkingAtTests(TestCase):
             }
             response = self.post('website:working-at', data=data)
             self.assertEquals(WorkingAt.objects.filter(student=student).count(), 1)
+            self.assertEquals(response.status_code, 302)
+            self.assertRedirects(response, reverse('website:profile'))
+
+    def test_student_fill_working_at_form_with_nonexisting_company(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        company = factories.CompanyFactory()
+        self.assertEquals(WorkingAt.objects.filter(student=student).count(), 0)
+        with self.login(username=student.email, password=factories.BaseUserFactory.password):
+            data = {
+                'company': faker.text(max_nb_chars=20),
+                'start_date': faker.date(),
+                'title': faker.text(max_nb_chars=50)
+            }
+            response = self.post('website:working-at', data=data)
+            working_at = WorkingAt.objects.filter(student=student)
+            self.assertEquals(working_at.count(), 1)
+            self.assertIsNone(working_at.last().company)
+            self.assertEqual(working_at.last().company_name, data['company'])
             self.assertEquals(response.status_code, 302)
             self.assertRedirects(response, reverse('website:profile'))
 
