@@ -3,6 +3,8 @@ from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
+from captcha.fields import ReCaptchaField
+
 from loki.base_app.models import BaseUser
 from loki.base_app.helper import get_or_none, validate_password
 from loki.education.models import Student, Teacher
@@ -34,6 +36,7 @@ class RegisterForm(forms.Form):
     last_name = forms.CharField(label=_('Фамилия'), widget=w('text', 'Фамилия'))
     email = forms.EmailField(widget=w('text', 'Email'))
     password = forms.CharField(label=_("Парола"), widget=w('pass', 'Парола'))
+    captcha = ReCaptchaField(label=_(""), attrs={'theme': 'clean'})
 
     def clean_password(self):
         password = self.cleaned_data.get("password")

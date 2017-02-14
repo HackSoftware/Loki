@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'image_cropping',
     'channels',
+    'captcha',
     'raven.contrib.django.raven_compat',
     'loki.hack_fmi.apps.HackFMIConfig',
     'loki.base_app.apps.BaseAppConfig',
@@ -276,3 +277,9 @@ CHANNEL_LAYERS = {
 }
 
 INVITATION_GROUP_NAME = "Invitations-{id}"
+
+# captcha settings
+NOCAPTCHA = True
+RECAPTCHA_PUBLIC_KEY = env('RECAPTCHA_PUBLIC_KEY', default="")
+RECAPTCHA_PRIVATE_KEY = env('RECAPTCHA_PRIVATE_KEY', default="")
+RECAPTCHA_USE_SSL = True
