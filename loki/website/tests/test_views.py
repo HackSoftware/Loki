@@ -361,7 +361,7 @@ class WorkingAtTests(TestCase):
 
     def test_student_fill_working_at_form_with_nonexisting_company(self):
         student = BaseUser.objects.promote_to_student(self.baseuser)
-        company = factories.CompanyFactory()
+        factories.CompanyFactory()
         self.assertEquals(WorkingAt.objects.filter(student=student).count(), 0)
         with self.login(username=student.email, password=factories.BaseUserFactory.password):
             data = {
