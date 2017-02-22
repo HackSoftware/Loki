@@ -3,6 +3,7 @@ from dateutil import rrule
 
 from django.db import models
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 from jsonfield import JSONField
 
 from loki.base_app.models import BaseUser, City, Company
@@ -315,6 +316,17 @@ class WorkingAt(models.Model):
 
     def __repr__(self):
         return self.__str__()
+
+    def clean(self):
+        if self.company and self.company_name:
+            self.company_name = None
+
+        if not self.company and not self.company_name:
+            raise ValidationError({'company': ['Това поле е задължително.']})
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
 
 class Certificate(models.Model):
