@@ -1,5 +1,6 @@
 {% extends 'website/base.html' %}
 {% load crispy_forms_tags %}
+{% load key %}
 {% block 'page-content' %}
 <div class="container">
   <div class="col-sm-6 working-at-description">
@@ -17,14 +18,7 @@
     <form class="working-at-form" action="" method="POST">
       {% csrf_token %}
       {% for field in form %}
-        {% if field.name == "company" %}
-        <div id="working-company">
-          {{ field.label_tag }}
-          {{ field }}
-        </div>
-        {% else %}
           {{ field|as_crispy_field  }}
-        {% endif %}
       {% endfor %}
       <input id="working-at-submit" type="submit" class="save-form btn btn-warning col-sm-6 col-sm-offset-3" value="Запази" />
     </form>

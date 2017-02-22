@@ -515,10 +515,18 @@ $TabBorder: #C5C4C4;
   }
 
   .working-at-form {
-
-    #working-company {
+    #div_id_company {
       select {
         width: 100%;
+      }
+      .controls {
+      .selectize-control{
+        visibility: hidden;
+        .selectize-input{
+          visibility: visible;
+          right: 15px;
+          }
+        }
       }
     }
   }
