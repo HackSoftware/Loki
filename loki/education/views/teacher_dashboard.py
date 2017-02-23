@@ -171,7 +171,6 @@ class StudentNoteUpdateView(DashboardPermissionMixin,
                        kwargs={'course': self.kwargs.get('course')})
 
     def form_valid(self, form):
-        import ipdb; ipdb.set_trace()
         author = self.request.user.get_teacher()
         note = form.save(commit=False)
         note.author = author
