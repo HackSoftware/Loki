@@ -6,10 +6,10 @@ from loki.education.models import WorkingAt
 from loki.base_app.models import Company
 from datetime import datetime
 
+
 class WorkingAtTest(TestCase):
 
     def test_saving_workingat_with_both_company_and_company_name(self):
-        company = Company.objects.create(name="Hack")
         with self.assertRaises(ValidationError):
             WorkingAt.objects.create(start_date=datetime.now().date())
         self.assertEqual(0, WorkingAt.objects.all().count())

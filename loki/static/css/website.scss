@@ -520,11 +520,14 @@ $TabBorder: #C5C4C4;
         width: 100%;
       }
       .controls {
-      .selectize-control{
-        visibility: hidden;
-        .selectize-input{
-          visibility: visible;
-          right: 15px;
+        .selectize-control {
+          visibility: hidden;
+          padding: 0;
+          .selectize-input {
+            visibility: visible;
+          }
+          .selectize-dropdown.form-control {
+            height:auto;
           }
         }
       }

@@ -345,10 +345,12 @@ body {
 .container .working-at-form #div_id_company select {
   width: 100%; }
 .container .working-at-form #div_id_company .controls .selectize-control {
-  visibility: hidden; }
+  visibility: hidden;
+  padding: 0; }
   .container .working-at-form #div_id_company .controls .selectize-control .selectize-input {
-    visibility: visible;
-    right: 15px; }
+    visibility: visible; }
+  .container .working-at-form #div_id_company .controls .selectize-control .selectize-dropdown.form-control {
+    height: auto; }
 .container .not-working button {
   margin-top: 20px;
   width: 40%;
