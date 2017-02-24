@@ -108,10 +108,10 @@ $(document).ready(function(){
   $(".check-in").click(function(){
     $(this).closest('.course-box').find('.check-in-table').toggle();
   });
-
-  $(".student-note").click(function(){
-    $(this).closest('.student-box').find('.student-notes-table').toggle();
-  });
+  // 
+  // $(".student-note").click(function(event){
+  //   $(this).closest('.student-box').find('.student-notes-table').toggle();
+  // });
 
   $(".student-presence-percent").each(function(){
     var percent = parseInt($(this).html())/100;

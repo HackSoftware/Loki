@@ -280,8 +280,6 @@ body {
   .container .course-students .student-box .student-box-footer {
     margin-top: 5px;
     position: relative; }
-  .container .course-students .student-box .student-notes-table {
-    display: none; }
   .container .course-students .student-box .student-note-footer .student-note {
     cursor: pointer; }
   .container .course-students .student-box .lines {
