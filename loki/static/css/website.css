@@ -326,8 +326,10 @@ body {
       .container .course-students .student-box .student-notes .note .note-date {
         position: absolute;
         right: 10px;
-        bottom: -3px;
+        bottom: -2px;
         font-size: 10px; }
+        .container .course-students .student-box .student-notes .note .note-date .edit-note {
+          font-size: 1.5em; }
 .container #panda-divider {
   margin-left: 40%;
   margin-top: -30px; }
@@ -867,8 +869,5 @@ body {
 
 .dropped-student {
   color: #bc1212; }
-
-#edit-link {
-  font-size: 20px; }
 
 /*# sourceMappingURL=website.css.map */

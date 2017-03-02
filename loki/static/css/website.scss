@@ -486,8 +486,12 @@ $TabBorder: #C5C4C4;
             .note-date {
               position: absolute;
               right: 10px;
-              bottom: -3px;
+              bottom: -2px;
               font-size: 10px;
+
+              .edit-note {
+                font-size: 1.5em;
+              }
             }
           }
         }
@@ -1283,8 +1287,4 @@ $TabBorder: #C5C4C4;
 
 .dropped-student {
   color: rgb(188, 18, 18);
-}
-
-#edit-link {
-  font-size: 20px;
 }
