@@ -1,0 +1,23 @@
+<div id="student-note-update-{{ student.id }}"  class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role"document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel"><b>Бележка за студент {{ student }}</b></h4>
+      </div>
+      <form id="student-note-update" action="{% url 'education:student-note-update' course.id studentnote.id %}" method="POST">
+        <div class="modal-body">
+            {% csrf_token %}
+            <textarea name="text" class="form-control message-text" value="">{{ studentnote.text }}</textarea>
+            <input type="hidden" name="assignment" value="{{ ca }}">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-warning student-note">Запази</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
