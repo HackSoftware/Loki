@@ -1,4 +1,5 @@
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, CreateView
+from django.views.generic.base import View
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -38,12 +39,14 @@ from .forms import (
     LoginForm,
     BaseEditForm,
     StudentEditForm,
-    TeacherEditForm
+    TeacherEditForm,
+    WorkingAtForm
 )
 from .mixins import (
     AddSnippetsToContext,
     AddUserToContext,
-    AnonymousRequired
+    AnonymousRequired,
+    CanAccessWorkingAtPermissionMixin
 )
 
 
@@ -191,6 +194,7 @@ class ProfileView(LoginRequiredMixin, AddUserToContext, TemplateView):
 
         try:
             student = Student.objects.get(email=self.request.user.email)
+            context['jobs'] = WorkingAt.objects.filter(student=student).order_by('start_date').all()
         except Student.DoesNotExist:
             student = None
         finally:
@@ -227,7 +231,7 @@ class ProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
 
 class StudentProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
     template_name = 'website/profile_edit_student.html'
-    success_url = reverse_lazy('website:profile_edit_student')
+    success_url = reverse_lazy('website:profile')
     form_class = StudentEditForm
 
     def dispatch(self, *args, **kwargs):
@@ -259,7 +263,7 @@ class StudentProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
 
 class TeacherProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
     template_name = 'website/profile_edit_teacher.html'
-    success_url = reverse_lazy('website:profile_edit_teacher')
+    success_url = reverse_lazy('website:profile')
     form_class = TeacherEditForm
 
     def dispatch(self, *args, **kwargs):
@@ -318,3 +322,33 @@ class ForgottenPasswordView(TemplateView):
             send_forgotten_password_email(self.request, baseuser)
 
         return self.get(*args, **kwargs)
+
+
+class WorkingAtCreateView(LoginRequiredMixin,
+                          CanAccessWorkingAtPermissionMixin,
+                          CreateView):
+    model = WorkingAt
+    form_class = WorkingAtForm
+    success_url = reverse_lazy('website:profile')
+
+    def form_valid(self, form):
+        student = self.request.user.get_student()
+        working_at = form.save(commit=False)
+        working_at.student = student
+        working_at.save()
+
+        student.looking_for_job = form.cleaned_data.get('looking_for_job', False)
+        student.save()
+
+        return super().form_valid(form)
+
+
+class StudentLookingForJobUpdateView(LoginRequiredMixin,
+                                     CanAccessWorkingAtPermissionMixin,
+                                     View):
+
+    def post(self, request, *args, **kwargs):
+        student = self.request.user.get_student()
+        student.looking_for_job = True
+        student.save()
+        return redirect(reverse_lazy('website:profile'))

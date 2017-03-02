@@ -168,6 +168,7 @@ class StudentFactory(BaseUserFactory):
     mac = factory.LazyAttribute(lambda _: faker.mac_address())
     phone = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=20))
     skype = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=20))
+    looking_for_job = False
 
 
 class CourseFactory(factory.DjangoModelFactory):

@@ -3,6 +3,7 @@ from dateutil import rrule
 
 from django.db import models
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 from jsonfield import JSONField
 
 from loki.base_app.models import BaseUser, City, Company
@@ -24,6 +25,7 @@ class StudentAndTeacherCommonModel(models.Model):
 class Student(BaseUser, StudentAndTeacherCommonModel):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
     skype = models.CharField(null=True, blank=True, max_length=20)
+    looking_for_job = models.BooleanField(default=False)
 
     def __str__(self):
         return self.full_name
@@ -299,7 +301,7 @@ class GraderRequest(models.Model):
 class WorkingAt(models.Model):
     student = models.ForeignKey(Student)
     company = models.ForeignKey(Company, blank=True, null=True)
-    location = models.ForeignKey(City)
+    location = models.ForeignKey(City, blank=True, null=True)
     course = models.ForeignKey(Course, blank=True, null=True)
 
     came_working = models.BooleanField(default=False)
@@ -314,6 +316,17 @@ class WorkingAt(models.Model):
 
     def __repr__(self):
         return self.__str__()
+
+    def clean(self):
+        if self.company and self.company_name:
+            self.company_name = None
+
+        if not self.company and not self.company_name:
+            raise ValidationError({'company': ['Това поле е задължително.']})
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
 
 class Certificate(models.Model):

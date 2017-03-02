@@ -81,6 +81,14 @@ class IsTeacherMixin(BaseUserPassesTestMixin):
         return True and super().test_func()
 
 
+class IsStudentMixin(BaseUserPassesTestMixin):
+    def test_func(self):
+        if not self.request.user.get_student():
+            return False
+
+        return True and super().test_func()
+
+
 class SolutionApiAuthenticationPermissionMixin:
     authentication_classes = (SessionAuthentication, )
     permission_classes = (IsStudent, )

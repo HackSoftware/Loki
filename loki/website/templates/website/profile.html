@@ -14,9 +14,7 @@
     <div class="col-md-6 col-md-offset-1">
       <table class="table">
       <thead>
-        <tr>
-          <th id="user-name">{{user.first_name}} {{user.last_name}}</th><th></th>
-        </tr>
+        <caption id="user-name"><b>{{user.first_name}} {{user.last_name}}</b></caption>
       </thead>
       <tbody>
         <tr>
@@ -29,19 +27,31 @@
           <td><a class="profile-github-account" href={{user.github_account}} target="_blank">{{user.github_account}}</a></td>
         </tr>
         {% endif %}
+        {% if user.linkedin_account %}
+        <tr>
+          <td><i class="profile-socials fa fa-linkedin fa-3x"></i></td>
+          <td><a class="profile-linkedin-account" href={{user.linkedin_account}} target="_blank">{{ user.linkedin_account }}</a></td>
+        </tr>
+        {% endif %}
         {% if user.get_student %}
-        <tr>
-          <td><i class="profile-socials fa fa-skype"></i></td>
-          <td>{{student.skype}}</td>
-        </tr>
-        <tr>
-          <td><b>Телефонен номер<b></td>
-          <td>{{student.phone}}</td>
-        </tr>
-        <tr>
-          <td><b>MAC<b></td>
-          <td>{{student.mac}}</td>
-        </tr>
+          {% if student.skype %}
+            <tr>
+              <td><i class="profile-socials fa fa-skype"></i></td>
+              <td>{{student.skype}}</td>
+            </tr>
+          {% endif %}
+          {% if student.phone %}
+            <tr>
+              <td><b>Телефонен номер<b></td>
+              <td>{{student.phone}}</td>
+            </tr>
+          {% endif %}
+          {% if student.mac %}
+            <tr>
+              <td><b>MAC<b></td>
+              <td>{{student.mac}}</td>
+            </tr>
+          {% endif %}
         {% endif%}
         {% if user.get_teacher and not user.get_student %}
         <tr>
@@ -60,15 +70,45 @@
   </div>
 </div>
 
+{% if user.get_student %}
+<div class="container">
+  <div class="divider"></div>
+  <div class="row-profile">
+    <img class="jobs-hackman" src="{{STATIC_URL}}website_images/hackman.png" alt="hackman-transparent-logo">
+    <span id="jobs-title">Работни позиции<span>
+    <a href="{% url 'website:working-at' %}">
+      <i class="fa fa-plus-square-o fa-1x" aria-hidden="true"></i>
+    </a>
+    {% if jobs %}
+    <div class="jobs">
+      {% for job in jobs %}
+        <div class="job">
+          <b class="job-title-company">{{ job.title }} в {{ job.company.name }}{% if job.company_name%}{{ job.company_name }}{% endif %}</b> </br>
+          <div class="title-border"></div>
+          <span class="job-description">{{ job.description }}</span>
+          <div class="job-start-date"><b>От:</b> {{ job.start_date }}
+            {% if job.end_date %}
+              <b>До:</b> {{ job.end_date }}
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
 {% if interviews %}
 <div class="container">
+  <div class="divider"></div>
   <div class="row-profile">
     <div>
       <table class="table interviews table-hover">
         <thead>
           <caption>
             <b>Вашите интервюта</b>
-            <img src="{{ STATIC_URL }}website_images/hackman_head.png" />
+            <img src="{{ STATIC_URL }}website_images/hackman_head.png"/>
           </caption>
           <tr>
             <th>Дата</th>
@@ -92,4 +132,5 @@
   </div>
 </div>
 {% endif %}
+
 {% endblock %}

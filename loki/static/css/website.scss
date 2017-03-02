@@ -498,12 +498,66 @@ $TabBorder: #C5C4C4;
       }
     }
 
-  #panda-divider {
-    margin-left: 40%;
-    margin-top: -30px;
-    @media screen and (max-width: 450px) {
-      margin-left: 25%;
+  .working-at-title {
+    text-align: center;
+    font-size: large;
+    margin-bottom: 2%;
+
+    .panda-reminder {
+      width: 75px;
     }
+  }
+
+  .working-at-description {
+    font-size: 16px;
+    margin-top: 10%;
+    margin-bottom: 2%;
+  }
+
+  .working-at-form {
+    #div_id_company {
+      select {
+        width: 100%;
+      }
+      .controls {
+        .selectize-control {
+          visibility: hidden;
+          padding: 0;
+          .selectize-input {
+            visibility: visible;
+          }
+          .selectize-dropdown.form-control {
+            height:auto;
+          }
+        }
+      }
+    }
+  }
+
+  .not-working {
+    button {
+      margin-top: 20px;
+      width: 40%;
+      margin-left: 30%;
+      text-align: center;
+      white-space: normal;
+      @media screen and (max-width: 360px) {
+        width: 60%;
+        margin-left: 20%;
+      }
+    }
+  }
+
+  #working-at-submit {
+    width: 30%;
+    margin-left: 35%;
+  }
+
+  .divider {
+    background-color: #f6c58f;
+    width: 100%;
+    height: 2px;
+    margin-top: 2%;
   }
 }
 
@@ -913,8 +967,63 @@ $TabBorder: #C5C4C4;
       width: 25px;
     }
   }
-  .profile-github-account {
+  .profile-github-account, .profile-linkedin-account {
     text-decoration: none;
+  }
+
+  .jobs-hackman {
+    width: 40px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+  }
+
+  #jobs-title {
+    font-size: 28px;
+  }
+
+  .jobs {
+    display: flex;
+    flex-wrap: wrap;
+
+    .job {
+      width: 32%;
+      margin: 5px;
+      position: relative;
+      background-color: #E9EDEC;
+      padding: 5px;
+      padding-bottom: 20px;
+      border-radius: 8px 8px 8px 8px;
+      font-size: 15px;
+
+      @media screen and (max-width: 800px) {
+          width: 49%;
+      }
+
+      @media screen and (max-width: 520px) {
+          width: 100%;
+      }
+
+      .job-title-company {
+        color: #ec971f;
+        margin-right: 5px;
+        margin-bottom: 10px;
+        font-size: 16px;
+      }
+
+      .title-border {
+        background-color: #f6c58f;
+        width: 100%;
+        height: 1px;
+        margin-top: 1%;
+        margin-bottom: 1%;
+      }
+
+      .job-start-date {
+        position: absolute;
+        font-size: 12px;
+        bottom: 5px;
+      }
+    }
   }
 
 }
@@ -1128,6 +1237,7 @@ $TabBorder: #C5C4C4;
   #user-name {
     margin-left: 30%;
   }
+
   #confirm_interview-btn {
     margin-left: 30%;
     padding: 15px;
