@@ -326,7 +326,7 @@ body {
       .container .course-students .student-box .student-notes .note .note-date {
         position: absolute;
         right: 10px;
-        bottom: -6px;
+        bottom: -5px;
         font-size: 10px; }
 .container #panda-divider {
   margin-left: 40%;
