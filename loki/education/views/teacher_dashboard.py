@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
@@ -174,6 +175,7 @@ class StudentNoteUpdateView(DashboardPermissionMixin,
         author = self.request.user.get_teacher()
         note = form.save(commit=False)
         note.author = author
+        note.post_time = datetime.now()
         return super().form_valid(form)
 
 
