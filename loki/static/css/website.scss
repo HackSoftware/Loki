@@ -478,7 +478,6 @@ $TabBorder: #C5C4C4;
             border-radius: 0px 8px 8px 8px;
 
             .note-author {
-              background-color: #ffc583;
               padding: 1px 3px 1px 3px;
               border-radius: 0px 10px 10px 10px;
               margin-right: 5px;
@@ -1285,4 +1284,8 @@ $TabBorder: #C5C4C4;
 
 .dropped-student {
   color: rgb(188, 18, 18);
+}
+
+#edit-link {
+  font-size: 20px;
 }

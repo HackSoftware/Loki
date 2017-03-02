@@ -320,7 +320,6 @@ body {
       padding-bottom: 10px;
       border-radius: 0px 8px 8px 8px; }
       .container .course-students .student-box .student-notes .note .note-author {
-        background-color: #ffc583;
         padding: 1px 3px 1px 3px;
         border-radius: 0px 10px 10px 10px;
         margin-right: 5px;
@@ -869,5 +868,8 @@ body {
 
 .dropped-student {
   color: #bc1212; }
+
+#edit-link {
+  font-size: 20px; }
 
 /*# sourceMappingURL=website.css.map */
