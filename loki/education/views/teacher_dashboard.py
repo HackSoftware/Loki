@@ -1,6 +1,7 @@
+from datetime import datetime
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.base import View
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages
@@ -156,6 +157,25 @@ class StudentNoteCreateView(DashboardPermissionMixin,
         author = self.request.user.get_teacher()
         note = form.save(commit=False)
         note.author = author
+        return super().form_valid(form)
+
+
+class StudentNoteUpdateView(DashboardPermissionMixin,
+                            IsTeacherMixin,
+                            UpdateView):
+    model = StudentNote
+    fields = ['text']
+    pk_url_kwarg = "studentnote"
+
+    def get_success_url(self):
+        return reverse('education:student-list',
+                       kwargs={'course': self.kwargs.get('course')})
+
+    def form_valid(self, form):
+        author = self.request.user.get_teacher()
+        note = form.save(commit=False)
+        note.author = author
+        note.post_time = datetime.now()
         return super().form_valid(form)
 
 

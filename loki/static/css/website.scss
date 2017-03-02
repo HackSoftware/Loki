@@ -416,9 +416,7 @@ $TabBorder: #C5C4C4;
           position: relative;
 
         }
-        .student-notes-table {
-          display: none;
-        }
+
 
         .student-note-footer {
           .student-note {
@@ -475,12 +473,10 @@ $TabBorder: #C5C4C4;
             margin-bottom: 5px;
             position: relative;
             background-color: #E6EAED;
-            padding: 5px;
-            padding-bottom: 10px;
+            padding: 5px 5px 15px 5px;
             border-radius: 0px 8px 8px 8px;
 
             .note-author {
-              background-color: #ffc583;
               padding: 1px 3px 1px 3px;
               border-radius: 0px 10px 10px 10px;
               margin-right: 5px;
@@ -490,8 +486,12 @@ $TabBorder: #C5C4C4;
             .note-date {
               position: absolute;
               right: 10px;
-              bottom: 5px;
+              bottom: -2px;
               font-size: 10px;
+
+              .edit-note {
+                font-size: 1.5em;
+              }
             }
           }
         }
@@ -563,7 +563,7 @@ $TabBorder: #C5C4C4;
 
 .breadcrumb {
   margin: 0;
-  
+
   .breadcrumb-class {
     a:hover {
         text-decoration: none;
