@@ -117,4 +117,16 @@ $(document).ready(function(){
     var percent = parseInt($(this).html())/100;
     $(this).css("color", "rgb(" + Math.floor(255 * (1-percent)) + "," + Math.floor(255 * percent) + ",0)");
   });
+
+  // Django-image-cropping includes jquery for a second time
+  // and selectize lib cannot handle it
+  if( $("#id_company").length > 0) {
+    $('#id_company').selectize({
+        create: true,
+        persist: false,
+        sortField: 'text',
+        placeholder: 'Избери компания...'
+    });
+  }
+
 });
