@@ -6,11 +6,13 @@
         <span class="note-text">{{ note.text }}</span>
         <div class="note-date">{{ note.post_time| date:'d-m-Y' }}
         </div>
-        {{ note.id }}
         {% if user.id == note.author.id %}
-          <button id="note-link-2" class="btn btn-warning submit-dialog-btn"
-                  data-toggle="modal" data-target="#student-note-update-{{ student.id }}">Редактирай</button>
-            {% include 'partial/update_student_note_modal.html' with student=student ca=ca.id studentnote=note %}
+          <button id="note-link-2" class="btn btn-default"
+                  data-toggle="modal" data-target="#student-note-update-{{ student.id }}">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                  Редактирай
+          </button>
+          {% include 'partial/update_student_note_modal.html' with student=student ca=ca.id studentnote=note %}
         {% endif %}
     </div>
     {% endfor %}
