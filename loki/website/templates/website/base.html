@@ -68,6 +68,7 @@
               <li class="{% menu_active 'website:index' %}"><a href="{% url 'website:index' %}">Начало</a></li>
               <li class="{% menu_active 'website:about' %}"><a href="{% url 'website:about' %}">За нас</a></li>
               <li class="{% menu_active 'website:courses' %}"><a href="{% url 'website:courses' %}">Курсове</a></li>
+              <li class="{% menu_active 'website:corporate-trainings' %}"><a href="{% url 'website:corporate-trainings' %}">Корпоративни обучения</a></li>
               {% if apply_active_courses %}
                 <li class="{% menu_active 'applications:apply_overview' %}"><a href="{% url 'applications:apply_overview' %}">Кандидатствай</a></li>
               {% endif %}

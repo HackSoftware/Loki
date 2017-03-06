@@ -67,6 +67,10 @@ class IndexView(AddSnippetsToContext, TemplateView):
         return context
 
 
+class CorporateTrainingsView(AddSnippetsToContext, TemplateView):
+    template_name = 'website/corporate_trainings.html'
+
+
 class AboutView(AddSnippetsToContext, TemplateView):
     template_name = 'website/about.html'
 

@@ -15,7 +15,8 @@ from .views import (
     ForgottenPasswordView,
     WorkingAtCreateView,
     StudentLookingForJobUpdateView,
-    logout_view
+    logout_view,
+    CorporateTrainingsView,
 )
 
 
@@ -24,6 +25,7 @@ urlpatterns = [
     url(r'^about/$', AboutView.as_view(), name='about'),
     url(r'^courses/$', CoursesView.as_view(), name='courses'),
     url(r'^partners/$', PartnersView.as_view(), name='partners'),
+    url(r'^corporate-trainings/$', CorporateTrainingsView.as_view(), name='corporate-trainings'),
     url(r'^courses/(?P<course_url>[-\w]+)/$', CourseDetailsView.as_view(), name='course_details'),
     url(r'^login/$', LogInView.as_view(), name='login'),
     url(r'^logout/$', logout_view, name="logout"),

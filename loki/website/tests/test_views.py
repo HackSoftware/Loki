@@ -33,6 +33,12 @@ class TestWebsite(TestCase):
 
         self.assertIsNotNone(response.context['snippets'])
 
+    def test_corporate_trainings(self):
+        url = reverse('website:corporate-trainings')
+        response = self.client.get(url)
+
+        self.assertIsNotNone(response.context['snippets'])
+
     def test_partners(self):
         company = factories.CompanyFactory()
         partner = factories.PartnerFactory(
