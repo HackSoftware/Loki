@@ -72,6 +72,7 @@ class Course(models.Model):
 
     start_time = models.DateField(blank=True, null=True)
     end_time = models.DateField(blank=True, null=True)
+    deadline_date = models.DateField(blank=True, null=True)
     generate_certificates_until = models.DateField()
 
     partner = models.ManyToManyField('base_app.Partner', blank=True)
@@ -80,6 +81,9 @@ class Course(models.Model):
 
     def is_active(self):
         return self.end_time >= timezone.now().date()
+
+    def is_in_deadline(self):
+        return self.deadline_date >= timezone.now().date()
 
     @property
     def duration_in_weeks(self):
