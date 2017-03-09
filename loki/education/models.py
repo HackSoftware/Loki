@@ -83,7 +83,10 @@ class Course(models.Model):
         return self.end_time >= timezone.now().date()
 
     def is_in_deadline(self):
-        return self.deadline_date >= timezone.now().date()
+        if self.deadline_date:
+            return self.deadline_date >= timezone.now().date()
+
+        return True
 
     @property
     def duration_in_weeks(self):
