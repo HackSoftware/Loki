@@ -1,7 +1,7 @@
 {% extends 'partial/course_box.html' %}
 
 {% block 'course_buttons'%}
-  {% if course.task_set.exists and course.is_active %}
+  {% if course.task_set.exists %}
       <a href="{% url 'education:teacher-task-list' course.id %}">
         <button class="btn btn-warning" id="tasks-link">Задачи</button>
       </a>
@@ -11,7 +11,7 @@
       <button class="btn btn-warning" id="students-link">Студенти</button>
     </a>
   {% endif %}
-  {% if course.material_set.exists and course.is_active %}
+  {% if course.material_set.exists %}
     <a href="{% url 'education:material-list' course.id %}">
       <button class="btn btn-warning" id="materials-link">Материали</button>
     </a>

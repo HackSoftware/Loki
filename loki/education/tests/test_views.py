@@ -146,6 +146,14 @@ class TaskListViewTests(TestCase):
             self.assertIn(task2, response.context['object_list'])
             self.assertNotIn(task_for_course2, response.context['object_list'])
 
+    def test_cannot_submit_solutions_if_date_is_not_in_deadline(self):
+        self.course.deadline_date = datetime.now().date() - timedelta(days=2)
+        self.course.save()
+
+        with self.login(email=self.student.email, password=BaseUserFactory.password):
+            response = self.get('education:task-list', course=self.course.id)
+            self.assertEqual(response.status_code, 404)
+
 
 class SolutionListViewTests(TestCase):
 

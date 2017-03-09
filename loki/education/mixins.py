@@ -100,3 +100,11 @@ class CannotSeeCourseTaskListMixin(BaseUserPassesTestMixin):
             raise Http404
 
         return True and super().test_func()
+
+
+class IsDateInDeadlineDateForCourse(BaseUserPassesTestMixin):
+    def test_func(self):
+        if not self.course.is_in_deadline():
+            raise Http404
+
+        return True and super().test_func()
