@@ -181,6 +181,8 @@ class CourseFactory(factory.DjangoModelFactory):
 
     end_time = faker.date_time()
     start_time = faker.date_time()
+    deadline_date = faker.date_time()
+
     fb_group = faker.url()
     generate_certificates_until = faker.date()
 
