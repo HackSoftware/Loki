@@ -1,6 +1,6 @@
 import factory
 from django.utils import timezone
-from datetime import timedelta
+from datetime import datetime, timedelta
 from faker import Factory
 
 from loki.base_app import models as base_app_models
@@ -181,7 +181,7 @@ class CourseFactory(factory.DjangoModelFactory):
 
     end_time = faker.date_time()
     start_time = faker.date_time()
-    deadline_date = faker.date_time()
+    deadline_date = datetime.now().date()
 
     fb_group = faker.url()
     generate_certificates_until = faker.date()
