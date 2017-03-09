@@ -1,8 +1,8 @@
 <html>
     <head>
-        <title>HackBulgaria {{ student.full_name }} Certificate</title>
+        <title>HackBulgaria {{ object.assignment }} Certificate</title>
         <link rel="stylesheet" href="{{ STATIC_URL }}certificates/certificate.css">
-        <meta property="og:title" content="HackBulgaria {{ student.full_name }} Certificate"/>
+        <meta property="og:title" content="HackBulgaria {{ object }} Certificate"/>
         <meta property="og:image" content="https://hackbulgaria.com/static/img/certificate_screen.png"/>
         <meta property="og:site_name" content="Hack Bulgaria"/>
         <meta property="og:description" content="Certificate for being {{ percent_awesome }} awesome in the {{ course.name }} course in HackBulgaria"/>
@@ -19,13 +19,13 @@
         <a href="http://hackbulgaria.com/">
             <img id="logo" src="/static/img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
         </a>
-        <h2 id="title">Certificate for being <span id="percent">{{ percent_awesome }}% </span> awesome in {{ course.name }} </h2>
+        <h2 id="title">Certificate for being <span id="percent">{{ percent_awesome }}% </span> awesome in {{ object.assignment.course }} </h2>
         <div>
-            <p id="name"><a href="{{ student.github_account }}">{{ student.full_name }}</a></p>
+            <p id="name"><a href="{{ student.github_account }}">{{ object.assignment.user.full_name }}</a></p>
         </div>
 
         <div class="tasks_field">
-            {% if problems %}
+            {% if object.assignment.course.tasks %}
             <fieldset id="projects">
                 <legend>Graded Problems</legend>
                 {% if projects and problems %}
@@ -64,7 +64,7 @@
                             <span class="code-not-sent">Not sent</span>
                         {% endif %}
                     </div>
-                    {% endfor %}     
+                    {% endfor %}
             </fieldset>
             {% endif %}
         </div>

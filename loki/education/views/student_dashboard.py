@@ -1,11 +1,12 @@
 from django.views.generic.list import ListView
-from loki.education.models import Course, Task, Solution
+from django.views.generic.detail import DetailView
+
+from loki.education.models import Course, Task, Solution, Certificate
 from loki.education.mixins import (DashboardPermissionMixin,
                                    CannotSeeOthersCoursesDashboardsMixin,
                                    CannotSeeCourseTaskListMixin,
                                    IsDateInDeadlineDateForCourse)
 from loki.education.helper import task_solutions, latest_solution_statuses
-
 
 class TaskListView(DashboardPermissionMixin,
                    CannotSeeOthersCoursesDashboardsMixin,
@@ -53,3 +54,12 @@ class SolutionListView(DashboardPermissionMixin,
         course = self.kwargs.get('course')
         context['course'] = Course.objects.get(id=course)
         return context
+
+
+class CertificateDetailView(DetailView):
+
+    model = Certificate
+
+    def get_object(self):
+        token = self.kwargs.get('token')
+        return Certificate.objects.get(token=token)
