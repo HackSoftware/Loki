@@ -1,3 +1,4 @@
+{% load percent_tag %}
 <html>
     <head>
         <title>HackBulgaria {{ object.assignment }} Certificate</title>
@@ -19,7 +20,7 @@
         <a href="http://hackbulgaria.com/">
             <img id="logo" src="/static/img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
         </a>
-        <h2 id="title">Certificate for being <span id="percent">{{ percent_awesome }}% </span> awesome in {{ object.assignment.course }} </h2>
+        <h2 id="title">Certificate for being <span id="percent">{% get_student_progress_for_course object.assignment %}% </span> awesome in {{ object.assignment.course }} </h2>
         <div>
             <p id="name"><a href="{{ student.github_account }}">{{ object.assignment.user.full_name }}</a></p>
         </div>
