@@ -261,7 +261,14 @@ class SolutionAdmin(admin.ModelAdmin):
 
 # admin.site.register(Solution, SolutionAdmin)
 
-admin.site.register(Certificate)
+@admin.register(Certificate)
+class GraderRequestAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'id',
+        'assignment',
+        'token',
+    ]
 
 
 @admin.register(GraderRequest)
