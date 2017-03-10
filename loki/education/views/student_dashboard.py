@@ -63,3 +63,14 @@ class CertificateDetailView(DetailView):
     def get_object(self):
         token = self.kwargs.get('token')
         return Certificate.objects.get(token=token)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        gradable_tasks = self.object.assignment.course.task_set.filter(gradable=True).all()
+        url_tasks = self.object.assignment.course.task_set.filter(gradable=False).all()
+
+        context['gradable_tasks'] = gradable_tasks
+        context['url_tasks'] = url_tasks
+
+        return context

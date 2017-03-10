@@ -26,13 +26,13 @@
         </div>
 
         <div class="tasks_field">
-            {% if object.assignment.course.tasks %}
+            {% if gradable_tasks or url_tasks %}
             <fieldset id="projects">
                 <legend>Graded Problems</legend>
-                {% if projects and problems %}
+                {% if gradable_tasks %}
                     <span class="subtext">Problems that are automatically graded</span>
                 {% endif %}
-                {% for task in problems %}
+                {% for task in gradable_tasks %}
                 <div>
                     <a href="{{ task.description }}" target="_blank">Week {{ task.week }}
                             {{ task.name }}
@@ -47,13 +47,13 @@
                 {% endfor %}
             </fieldset>
             {% endif %}
-            {% if projects %}
+            {% if url_tasks %}
             <fieldset id='projects'>
                 <legend>Projects:</legend>
-                    {% if projects and problems %}
+                    {% if url_tasks %}
                         <span class="subtext">Bigger projects that cannot be graded</span>
                     {% endif %}
-                    {% for task in projects %}
+                    {% for task in url_tasks %}
                     <div>
                         <a href="{{ task.description }}" target="_blank">Week {{ task.week }}
                             {{ task.name }}
@@ -71,8 +71,8 @@
         </div>
 
         <div class="lectors-signatures">
-            {% for teacher in teachers %}
-                {% if teacher.signature %}
+            {% for teacher in object.assignment.course.teacher_set.all %}
+                {% if teacher %}
                     <div class="teacher">
                         <div class="signature">
                             <img src="{{MEDIA_URL}}{{teacher.signature}}">
