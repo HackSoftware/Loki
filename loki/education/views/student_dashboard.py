@@ -6,7 +6,9 @@ from loki.education.mixins import (DashboardPermissionMixin,
                                    CannotSeeOthersCoursesDashboardsMixin,
                                    CannotSeeCourseTaskListMixin,
                                    IsDateInDeadlineDateForCourse)
-from loki.education.helper import task_solutions, latest_solution_statuses, get_student_data_for_course
+from loki.education.helper import task_solutions, latest_solution_statuses
+from loki.education.services import get_student_data_for_course
+
 
 class TaskListView(DashboardPermissionMixin,
                    CannotSeeOthersCoursesDashboardsMixin,

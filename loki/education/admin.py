@@ -259,10 +259,9 @@ class SolutionAdmin(admin.ModelAdmin):
 
     search_fields = ['id', 'task__name', 'student__first_name']
 
-# admin.site.register(Solution, SolutionAdmin)
 
 @admin.register(Certificate)
-class GraderRequestAdmin(admin.ModelAdmin):
+class CertificateAdmin(admin.ModelAdmin):
 
     list_display = [
         'id',
