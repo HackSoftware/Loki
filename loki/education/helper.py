@@ -12,6 +12,7 @@ from django.utils import timezone
 
 from .models import CheckIn, Student, GraderRequest, Lecture, Solution
 from loki.education.decorators import cache_progress_result
+from loki.education.cache import get_student_cache_key_for_course_data
 
 
 def crop_image(x1, y1, x2, y2, path):
@@ -144,7 +145,7 @@ def percentage_presence(user_dates, course):
 
     return "{0}%".format(int((len(user_dates) / len(lecture_dates)) * 100))
 
-# @cache_progress_result(key_function=get_student_cache_key_for_course_data)
+@cache_progress_result(key_function=get_student_cache_key_for_course_data)
 def get_student_data_for_course(course_assignment):
     course_data = {"gradable_tasks": [],
                    "url_tasks": []}
