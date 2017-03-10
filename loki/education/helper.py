@@ -147,5 +147,22 @@ def percentage_presence(user_dates, course):
 
 
 @cache_progress_result(key_function=get_student_cache_key_for_course)
-def get_student_progress_for_course_in_percents(course_assignment):
-    return 42
+def calculate_student_progress_for_course_in_percents(course_assignment):
+    course = course_assignment.course
+
+    gradable_tasks = course.task_set.filter(gradable=True).all()
+    url_tasks = course.task_set.filter(gradable=False).all()
+
+    all_tasks = gradable_tasks.count() + url_tasks.count()
+    total = 0
+
+    for gradable_task in gradable_tasks:
+        if gradable_task.solution_set.filter(status=2).exists():
+            total += 1
+
+    for url_task in url_tasks:
+        if url_task.solution_set.exists():
+            total += 1
+
+    percent_awesome = round(( total/all_tasks ) * 100, 2)
+    return percent_awesome
