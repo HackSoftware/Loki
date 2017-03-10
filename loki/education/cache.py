@@ -7,5 +7,4 @@ def get_student_cache_key_for_course_data(course_assignment):
 
 def delete_cache_for_courseassingment(course_assignment):
     cache_key_for_course = get_student_cache_key_for_course_data(course_assignment)
-    cache.delete(cache_key_for_course_assingment)
     cache.delete(cache_key_for_course)
