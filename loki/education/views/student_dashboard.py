@@ -6,7 +6,7 @@ from loki.education.mixins import (DashboardPermissionMixin,
                                    CannotSeeOthersCoursesDashboardsMixin,
                                    CannotSeeCourseTaskListMixin,
                                    IsDateInDeadlineDateForCourse)
-from loki.education.helper import task_solutions, latest_solution_statuses
+from loki.education.helper import task_solutions, latest_solution_statuses, get_student_data_for_course
 
 class TaskListView(DashboardPermissionMixin,
                    CannotSeeOthersCoursesDashboardsMixin,
@@ -67,10 +67,10 @@ class CertificateDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        gradable_tasks = self.object.assignment.course.task_set.filter(gradable=True).all()
-        url_tasks = self.object.assignment.course.task_set.filter(gradable=False).all()
+        course_data = get_student_data_for_course(self.object.assignment)
 
-        context['gradable_tasks'] = gradable_tasks
-        context['url_tasks'] = url_tasks
+        context['gradable_tasks'] = course_data["gradable_tasks"]
+        context['url_tasks'] = course_data["url_tasks"]
+        context['percent_awesome'] = course_data["percent_awesome"]
 
         return context

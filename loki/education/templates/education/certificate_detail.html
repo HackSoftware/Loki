@@ -1,4 +1,5 @@
 {% load percent_tag %}
+{% load key %}
 <html>
     <head>
         <title>HackBulgaria {{ object.assignment }} Certificate</title>
@@ -20,7 +21,7 @@
         <a href="http://hackbulgaria.com/">
             <img id="logo" src="/static/img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
         </a>
-        <h2 id="title">Certificate for being <span id="percent">{% get_student_progress_for_course object.assignment %}% </span> awesome in {{ object.assignment.course }} </h2>
+        <h2 id="title">Certificate for being <span id="percent">{{ percent_awesome }}% </span> awesome in {{ object.assignment.course }} </h2>
         <div>
             <p id="name"><a href="{{ student.github_account }}">{{ object.assignment.user.full_name }}</a></p>
         </div>
@@ -34,15 +35,11 @@
                 {% endif %}
                 {% for task in gradable_tasks %}
                 <div>
-                    <a href="{{ task.description }}" target="_blank">Week {{ task.week }}
-                            {{ task.name }}
+                    <a href="{{ task|key:"description" }}" target="_blank">Week {{ task|key:"week" }}
+                            {{ task|key:"name" }}
                         </a> -
-                        {% if task.solution and task.solution.url %}
-                            <a class="code-sent" href="{{ task.solution.url }}">Source Link
-                            </a>
-                        {% else %}
-                            <span class="code-not-sent">Not sent</span>
-                        {% endif %}
+                    <a class="code-sent"> {{ task|key:"solution_status" }}
+                    </a>
                 </div>
                 {% endfor %}
             </fieldset>
@@ -55,14 +52,15 @@
                     {% endif %}
                     {% for task in url_tasks %}
                     <div>
-                        <a href="{{ task.description }}" target="_blank">Week {{ task.week }}
-                            {{ task.name }}
-                        </a> -
-                        {% if task.solution %}
-                            <a class="code-sent" href="{{ task.solution.url }}">Source Link
-                            </a>
+                        <a href="{{ task|key:"description" }}" target="_blank">Week {{ task|key:"week" }}
+                                {{ task|key:"name" }}
+                            </a> -
+                        {% if task|key:"solution" %}
+                        <a class="code-sent" href=" {{ task|key:"solution" }} "> Source link
+                        </a>
                         {% else %}
-                            <span class="code-not-sent">Not sent</span>
+                        <a class="code-sent"> Not sent
+                        </a>
                         {% endif %}
                     </div>
                     {% endfor %}

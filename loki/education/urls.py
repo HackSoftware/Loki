@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'^api/solution-status/(?P<pk>[0-9]+)/$', old_api_views.SolutionStatusAPI.as_view(), name='solution_status'),
     url(r'^api/student-solutions/$', old_api_views.StudentSolutionsList.as_view(), name='student_solutions'),
     # url(r'^certificate/(?P<pk>[0-9]+)/$', old_api_views.certificate_old, name='certificate_old'),
-    url(r'^certificate/(?P<token>[\w|-]+)/$',
+    url(r'^certificate/(?P<token>[0-9a-f-]+)/$',
         student_dashboard.CertificateDetailView.as_view(), name="certificate-detail"),
     # Common views for Teacher Dashboard and Student Dashboard
     url(r'^dashboard/$', dashboard.CourseListView.as_view(), name='course-list'),
