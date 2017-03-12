@@ -14,7 +14,7 @@
         <form method="POST" action="" class="register-form" >
             {{form|crispy}}
             {% csrf_token %}
-            <div class="g-recaptcha" data-sitekey="6LdCiBUUAAAAAAFuibcq37olKWT6MzFdlTGZ3Zn0"></div>
+            <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_SITE_KEY }}"></div> 
             <button type="submit" class="btn btn-warning btn-login" >Hack on!</button>
             <a href="{% url 'website:login' %}">
                 Вече имаш регистрация?

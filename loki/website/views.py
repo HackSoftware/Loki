@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
 
 from loki.base_app.models import (
     Partner,
@@ -128,6 +129,7 @@ class RegisterView(AnonymousRequired, FormView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        context['RECAPTCHA_SITE_KEY'] = settings.RECAPTCHA_PUBLIC_KEY
         context['origin'] = self.origin
 
         return context
