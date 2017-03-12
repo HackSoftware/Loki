@@ -1,0 +1,15 @@
+{% extends 'website/base.html' %}
+
+{% block 'page-content' %}
+{% autoescape off %}
+  <div class="container">
+    <section class="row">
+
+      <div class="col-lg-12">
+        {{ snippets.corporate_trainings.text }}
+      </div>
+
+    </section>
+  </div>
+{% endautoescape %}
+{% endblock %}

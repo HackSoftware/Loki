@@ -27,7 +27,7 @@
         <div class="student-note">
           <b>Бележки от преподаватели</b>
           <i id="btn-check-in" class="fa fa fa-chevron-down fa-1x"></i>
-          <div class="student-notes-table hidden-toggle">
+          <div class="student-notes-table">
             {% include 'partial/student_notes.html' with ca=ca %}
           </div>
         </div>
@@ -38,13 +38,13 @@
     <a href="{% url 'education:student-task-list' course.id student.id %}">
       <button class="btn btn-warning" id="tasks-link">Задачи</button>
     </a>
-    {% if ca.course.is_active %}
+    {% if ca.course.is_in_deadline %}
       <button id="note-link" class="btn btn-warning submit-dialog-btn" data-task-name="{{student}}"
               data-toggle="modal" data-student-id="{{student.id}}"
               data-target="#student-note-{{ student.id }}">Нова бележка</button>
       {% include 'partial/student_note_modal.html' with ca=ca.id author=user course=ca.course %}
     {% endif %}
-    {% if ca.is_attending and course.is_active %}
+    {% if ca.is_attending and course.is_in_deadline %}
       <form id="tasks-link" action="{% url 'education:drop-student' course.id ca.id %}" method="POST">
         {% csrf_token %}
         <button type="submit" class="btn btn-default" id="drop-link">

@@ -22,6 +22,7 @@
     <link rel="stylesheet" type="text/css" href="/static/bower_components/devicon/devicon-colors.css">
     <link href="/static/bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link href="/static/bower_components/jqueryui-datepicker/datepicker.css" rel="stylesheet">
+    <link href="/static/bower_components/selectize/dist/css/selectize.css" rel="stylesheet" type="text/css" />
 
     <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
     <!-- Facebook Pixel Code -->
@@ -68,6 +69,7 @@
               <li class="{% menu_active 'website:index' %}"><a href="{% url 'website:index' %}">Начало</a></li>
               <li class="{% menu_active 'website:about' %}"><a href="{% url 'website:about' %}">За нас</a></li>
               <li class="{% menu_active 'website:courses' %}"><a href="{% url 'website:courses' %}">Курсове</a></li>
+              <li class="{% menu_active 'website:corporate-trainings' %}"><a href="{% url 'website:corporate-trainings' %}">Корпоративни обучения</a></li>
               {% if apply_active_courses %}
                 <li class="{% menu_active 'applications:apply_overview' %}"><a href="{% url 'applications:apply_overview' %}">Кандидатствай</a></li>
               {% endif %}
@@ -168,13 +170,13 @@
 
       <div class="col-md-4">
       <div class="heading">Newsletter</div>
-        <form action="https://hackbulgaria.us8.list-manage1.com/subscribe?u=a476a3e7cfa73bd769237bbc4&id=73d829bc65" name="mc-embedded-subscribe-form" class="validate ng-pristine ng-valid" target="_blank" novalidate="" method="POST">
-        <div>
-          <p>Получавайте интересно съдържание свързано с курсове и събития.</p>
-          <input type="text" name="EMAIL" placeholder="E-mail адрес" class="email-input">
-          <br>
-          <input type="submit" value="Добави ме" name="subscribe" class="button">
-        </div>
+        <form action="http://hackbulgaria.us8.list-manage1.com/subscribe?u=a476a3e7cfa73bd769237bbc4&id=73d829bc65" name="mc-embedded-subscribe-form" class="validate ng-pristine ng-valid" target="_blank" novalidate="" method="POST">
+          <div>
+            <p>Получавайте интересно съдържание свързано с курсове и събития.</p>
+            <input type="text" name="EMAIL" placeholder="E-mail адрес" class="email-input">
+            <br>
+            <input type="submit" value="Добави ме" name="subscribe" class="button">
+          </div>
         </form>
       </div>
 
@@ -194,6 +196,7 @@
   <script src="/static/bower_components/jqueryui-datepicker/datepicker.js"></script>
   <script src="/static/bower_components/js-cookie/src/js.cookie.js"></script>
   <script src="/static/js/main.js"></script>
+  <script type="text/javascript" src="/static/bower_components/selectize/dist/js/standalone/selectize.js"></script>
   {% block 'scripts' %}
   {% endblock %}
   <script>

@@ -2,13 +2,15 @@ from django.views.generic.list import ListView
 from loki.education.models import Course, Task, Solution
 from loki.education.mixins import (DashboardPermissionMixin,
                                    CannotSeeOthersCoursesDashboardsMixin,
-                                   CannotSeeCourseTaskListMixin)
+                                   CannotSeeCourseTaskListMixin,
+                                   IsDateInDeadlineDateForCourse)
 from loki.education.helper import task_solutions, latest_solution_statuses
 
 
 class TaskListView(DashboardPermissionMixin,
                    CannotSeeOthersCoursesDashboardsMixin,
                    CannotSeeCourseTaskListMixin,
+                   IsDateInDeadlineDateForCourse,
                    ListView):
     model = Task
 

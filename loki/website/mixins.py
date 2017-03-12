@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.shortcuts import redirect
+from django.http import Http404
 
 from .services import get_snippets
 
@@ -26,5 +27,13 @@ class AnonymousRequired:
     def dispatch(self, *args, **kwargs):
         if self.request.user.is_authenticated():
             return redirect(reverse('website:profile'))
+
+        return super().dispatch(*args, **kwargs)
+
+
+class CanAccessWorkingAtPermissionMixin:
+    def dispatch(self, *args, **kwargs):
+        if not self.request.user.get_student():
+            raise Http404
 
         return super().dispatch(*args, **kwargs)

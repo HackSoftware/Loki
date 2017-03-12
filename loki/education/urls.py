@@ -44,6 +44,8 @@ urlpatterns = [
         teacher_dashboard.StudentSolutionListView.as_view(), name='student-solution-list'),
     url(r'^student-note-create/(?P<course>[0-9]+)/$',
         teacher_dashboard.StudentNoteCreateView.as_view(), name='student-note-create'),
+    url(r'^student-note-update/(?P<course>[0-9]+)/(?P<studentnote>[0-9]+)$',
+        teacher_dashboard.StudentNoteUpdateView.as_view(), name='student-note-update'),
     url(r'^course/(?P<course>[0-9]+)/drop-student/(?P<ca>[0-9]+)/$',
         teacher_dashboard.DropStudentView.as_view(), name='drop-student')
 ]

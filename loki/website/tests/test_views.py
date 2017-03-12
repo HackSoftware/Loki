@@ -10,7 +10,7 @@ from faker import Factory
 from loki.seed import factories
 from loki.base_app.models import GeneralPartner
 from loki.base_app.models import BaseUser
-from loki.education.models import Student, CheckIn, Teacher
+from loki.education.models import Student, CheckIn, Teacher, WorkingAt
 
 faker = Factory.create()
 
@@ -36,6 +36,12 @@ class TestWebsite(TestCase):
 
     def test_about(self):
         url = reverse('website:about')
+        response = self.client.get(url)
+
+        self.assertIsNotNone(response.context['snippets'])
+
+    def test_corporate_trainings(self):
+        url = reverse('website:corporate-trainings')
         response = self.client.get(url)
 
         self.assertIsNotNone(response.context['snippets'])
@@ -310,3 +316,100 @@ class TestWebsite(TestCase):
         self.assertEqual(mac, Teacher.objects.get(email=teacher.email).mac)
         self.assertEqual(teacher.baseuser_ptr_id,
                          CheckIn.objects.filter(mac__iexact=mac).first().user.id)
+
+
+class WorkingAtTests(TestCase):
+
+    def setUp(self):
+        self.baseuser = factories.BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.save()
+
+    def test_unsigned_user_cannot_access_workingat_form(self):
+        response = self.get('website:working-at')
+        self.assertEquals(response.status_code, 302)
+
+    def test_baseuser_cannot_access_workingat_form(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        self.assertEquals(isinstance(student.get_student(), Student), True)
+        with self.login(username=student.email, password=factories.BaseUserFactory.password):
+            response = self.get('website:working-at')
+            self.assertEquals(response.status_code, 200)
+
+    def test_student_can_access_workingat_form(self):
+        with self.login(username=self.baseuser.email, password=factories.BaseUserFactory.password):
+            response = self.get('website:working-at')
+            self.assertEquals(response.status_code, 404)
+
+    def test_teacher_cannot_access_workingat_form(self):
+        teacher = BaseUser.objects.promote_to_teacher(self.baseuser)
+        self.assertEquals(teacher.get_student(), False)
+        with self.login(username=teacher.email, password=factories.BaseUserFactory.password):
+            response = self.get('website:working-at')
+            self.assertEquals(response.status_code, 404)
+
+    def test_teacher_who_is_student_access_workingat_form(self):
+        teacher_student = BaseUser.objects.promote_to_teacher(self.baseuser)
+        BaseUser.objects.promote_to_student(self.baseuser)
+        self.assertEquals(isinstance(teacher_student.get_teacher(), Teacher), True)
+        self.assertEquals(isinstance(teacher_student.get_student(), Student), True)
+        with self.login(username=teacher_student.email, password=factories.BaseUserFactory.password):
+            response = self.get('website:working-at')
+            self.assertEquals(response.status_code, 200)
+
+    def test_student_fill_working_at_form_with_existing_company(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        company = factories.CompanyFactory()
+        self.assertEquals(WorkingAt.objects.filter(student=student).count(), 0)
+        with self.login(username=student.email, password=factories.BaseUserFactory.password):
+            data = {
+                'company': company.id,
+                'start_date': faker.date(),
+                'title': faker.text(max_nb_chars=50)
+            }
+            response = self.post('website:working-at', data=data)
+            self.assertEquals(WorkingAt.objects.filter(student=student).count(), 1)
+            self.assertEquals(response.status_code, 302)
+            self.assertRedirects(response, reverse('website:profile'))
+
+    def test_student_fill_working_at_form_with_nonexisting_company(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        factories.CompanyFactory()
+        self.assertEquals(WorkingAt.objects.filter(student=student).count(), 0)
+        with self.login(username=student.email, password=factories.BaseUserFactory.password):
+            data = {
+                'company': faker.text(max_nb_chars=20),
+                'start_date': faker.date(),
+                'title': faker.text(max_nb_chars=50)
+            }
+            response = self.post('website:working-at', data=data)
+            working_at = WorkingAt.objects.filter(student=student)
+            self.assertEquals(working_at.count(), 1)
+            self.assertIsNone(working_at.last().company)
+            self.assertEqual(working_at.last().company_name, data['company'])
+            self.assertEquals(response.status_code, 302)
+            self.assertRedirects(response, reverse('website:profile'))
+
+    def test_student_looking_for_job(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        # default value is False, we are going to set it to True
+        updated_looking_for_job = True
+        with self.login(username=student.email, password=factories.BaseUserFactory.password):
+            data = {
+                'looking_for_job': updated_looking_for_job
+            }
+            response = self.post('website:update_looking_for_job', data=data)
+            self.assertEquals(Student.objects.get(id=student.id).looking_for_job,
+                              data['looking_for_job'])
+            self.assertEquals(response.status_code, 302)
+            self.assertRedirects(response, reverse('website:profile'))
+
+    def test_profile_data_after_creating_workingat_objects(self):
+        student = BaseUser.objects.promote_to_student(self.baseuser)
+        self.assertEquals(WorkingAt.objects.filter(student=student).count(), 0)
+        job = factories.WorkingAtFactory(student=student)
+        self.assertEquals(WorkingAt.objects.filter(student=student).count(), 1)
+        with self.login(username=student.email, password=factories.BaseUserFactory.password):
+            response = self.get('website:profile')
+            self.assertEquals(response.status_code, 200)
+            self.assertIn(job, response.context['jobs'])

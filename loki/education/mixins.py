@@ -81,6 +81,14 @@ class IsTeacherMixin(BaseUserPassesTestMixin):
         return True and super().test_func()
 
 
+class IsStudentMixin(BaseUserPassesTestMixin):
+    def test_func(self):
+        if not self.request.user.get_student():
+            return False
+
+        return True and super().test_func()
+
+
 class SolutionApiAuthenticationPermissionMixin:
     authentication_classes = (SessionAuthentication, )
     permission_classes = (IsStudent, )
@@ -89,6 +97,14 @@ class SolutionApiAuthenticationPermissionMixin:
 class CannotSeeCourseTaskListMixin(BaseUserPassesTestMixin):
     def test_func(self):
         if not self.course.task_set.exists():
+            raise Http404
+
+        return True and super().test_func()
+
+
+class IsDateInDeadlineDateForCourse(BaseUserPassesTestMixin):
+    def test_func(self):
+        if not self.course.is_in_deadline():
             raise Http404
 
         return True and super().test_func()

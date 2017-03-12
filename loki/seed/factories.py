@@ -1,6 +1,6 @@
 import factory
 from django.utils import timezone
-from datetime import timedelta
+from datetime import datetime, timedelta
 from faker import Factory
 
 from loki.base_app import models as base_app_models
@@ -168,6 +168,7 @@ class StudentFactory(BaseUserFactory):
     mac = factory.LazyAttribute(lambda _: faker.mac_address())
     phone = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=20))
     skype = factory.LazyAttribute(lambda _: faker.text(max_nb_chars=20))
+    looking_for_job = False
 
 
 class CourseFactory(factory.DjangoModelFactory):
@@ -180,6 +181,8 @@ class CourseFactory(factory.DjangoModelFactory):
 
     end_time = faker.date_time()
     start_time = faker.date_time()
+    deadline_date = datetime.now().date()
+
     fb_group = faker.url()
     generate_certificates_until = faker.date()
 

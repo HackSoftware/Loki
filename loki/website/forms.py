@@ -2,18 +2,20 @@ from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.forms.utils import ErrorList
 
 from captcha.fields import ReCaptchaField
 
-from loki.base_app.models import BaseUser
+from loki.base_app.models import BaseUser, Company
 from loki.base_app.helper import get_or_none, validate_password
-from loki.education.models import Student, Teacher
+from loki.education.models import Student, Teacher, WorkingAt
 from loki.education.validators import validate_phone, validate_github_account
 
 INPUTS = {
     'text': forms.TextInput,
     'pass': forms.PasswordInput,
-    'hidden': forms.HiddenInput
+    'hidden': forms.HiddenInput,
+    'checkbox': forms.CheckboxInput
 }
 
 
@@ -74,12 +76,13 @@ class LoginForm(forms.Form):
 class BaseEditForm(ModelForm):
     class Meta:
         model = BaseUser
-        fields = ('first_name', 'last_name', 'github_account', 'full_image',
+        fields = ('first_name', 'last_name', 'github_account', 'linkedin_account', 'full_image',
                   'cropping')
         labels = {
             'first_name': 'Име',
             'last_name': 'Фамилия',
             'github_account': 'GitHub',
+            'linkedin_account': 'Linkedin',
             'cropping': 'Изрежи снимката си'
         }
 
@@ -109,3 +112,43 @@ class TeacherEditForm(ModelForm):
         phone = self.cleaned_data.get("phone")
         validate_phone(phone)
         return phone
+
+
+class WorkingAtForm(ModelForm):
+    looking_for_job = forms.BooleanField(required=False, label="В момента работя, но си търся нова работа.")
+
+    def __init__(self, data=None, files=None, auto_id='id_%s', prefix=None,
+                 initial=None, error_class=ErrorList, label_suffix=None,
+                 empty_permitted=False, instance=None):
+
+        if data:
+            company = data['company']
+
+            try:
+                Company.objects.filter(id=company)
+            except ValueError:
+                data._mutable = True
+                data['company_name'] = company
+                data['company'] = ''
+
+        super().__init__(data, files, auto_id, prefix,
+                         initial, error_class, label_suffix,
+                         empty_permitted, instance)
+
+    class Meta:
+        model = WorkingAt
+        fields = ("company", "start_date", "end_date", "title", "description", "company_name")
+
+        labels = {
+            'company': 'Компания',
+            'start_date': 'Дата на започване',
+            'end_date': 'Дата на приключване',
+            'title': 'Длъжност',
+            'description': 'Описание'
+        }
+
+        widgets = {
+            'start_date': w('text', 'yyyy-mm-dd'),
+            'end_date': w('text', 'yyyy-mm-dd'),
+            'company_name': w('hidden', '')
+        }
