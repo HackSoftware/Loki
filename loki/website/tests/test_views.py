@@ -1,3 +1,5 @@
+import os
+
 from django.test import Client
 from django.core.urlresolvers import reverse
 from django.core import mail
@@ -20,6 +22,11 @@ class TestWebsite(TestCase):
         self.baseuser = factories.BaseUserFactory()
         self.baseuser.is_active = True
         self.baseuser.save()
+        # add recaptcha testing env on Register
+        os.environ['RECAPTCHA_TESTING'] = 'True'
+
+    def tearDown(self):
+        del os.environ['RECAPTCHA_TESTING']
 
     def test_index(self):
         url = reverse('website:index')
@@ -201,11 +208,11 @@ class TestWebsite(TestCase):
             'last_name': faker.last_name(),
             'email': faker.email(),
             'password': 'sdfsdfd13',
+            'g-recaptcha-response': 'PASSED'
         }
         url = reverse('website:register')
 
         post_resp = self.client.post(url, data)
-
         self.response_200(post_resp)
 
         made_user = BaseUser.objects.last()
