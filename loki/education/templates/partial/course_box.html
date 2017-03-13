@@ -5,7 +5,11 @@
   </div>
   <div class="col-sm-9 course-text">
     <div class="col-sm-9 course-information">
-      <h3 class="course-name-tasks-link" id="course-name">{{ course.name }}</h3>
+      <h3 class="course-name-tasks-link" id="course-name">{{ course.name }}
+        <span>{% if user.get_student %}
+        <a href="{% url 'education:certificate-detail' ca.certificate.token %}"> Сертификат</a>
+        {% endif %} </span>
+      </h3>
       <div>
          <b>Начало на курса:</b> {{ course.start_time }} <br>
          <b>Край  на курса:</b> {{ course.end_time }} <br>

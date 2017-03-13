@@ -329,7 +329,6 @@ class TeacherSolutionListViewTests(TestCase):
         self.teacher.teached_courses = [self.course]
         solution = SolutionFactory(task=self.task, student=self.student)
         solution2 = SolutionFactory(task=self.task, student=self.student)
-        solution3 = SolutionFactory(task=self.task)
 
         with self.login(email=self.teacher.email, password=BaseUserFactory.password):
             response = self.get('education:student-solution-list', course=self.course.id,
@@ -339,9 +338,6 @@ class TeacherSolutionListViewTests(TestCase):
             self.assertIn(solution, response.context['solution_list'])
             self.assertIn(solution2, response.context['object_list'])
             self.assertIn(solution2, response.context['solution_list'])
-            self.assertNotIn(solution3, response.context['object_list'])
-            self.assertNotIn(solution3, response.context['solution_list'])
-
 
 class MaterialListViewTests(TestCase):
 

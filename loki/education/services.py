@@ -97,7 +97,7 @@ def get_student_data_for_course(course_assignment):
         solution = False
 
         if task.solution_set.filter(student=student).exists():
-            solution = task.solution_set.last().url
+            solution = task.solution_set.filter(student=student).last().url
             total += 1
 
         course_data["url_tasks"].append({"name": task.name,
