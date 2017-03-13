@@ -424,6 +424,7 @@ class SolutionFactory(factory.DjangoModelFactory):
     url = factory.\
         Sequence(lambda n: 'https://github.com/zad{}/solution.py'.format(n))
     code = faker.text()
+    status = faker.random_element(elements=(0, 1, 2, 3, 4, 5, 6))
 
 
 class StudentNoteFactory(factory.DjangoModelFactory):

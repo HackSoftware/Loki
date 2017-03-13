@@ -807,5 +807,25 @@ class CertificatesTests(TestCase):
 
         self.assertEqual(200, response.status_code)
 
+    def test_context_of_the_certificate(self):
+        url_tasks = TaskFactory.create_batch(5, course=self.course, gradable=False)
+        gradable_task1 = TaskFactory(course=self.course, gradable=True)
+        gradable_task2 = TaskFactory(course=self.course, gradable=True)
+
+
+        solution_for_first_gradabletask = SolutionFactory(task=gradable_task1, student=self.student, status=1)
+        solution_for_first_gradabletask2 = SolutionFactory(task=gradable_task1, student=self.student, status=2)
+        solution_for_second_gradabletask1 = SolutionFactory(task=gradable_task2, student=self.student, status=1)
+
+        url_solutions = [SolutionFactory(task=task, status=6, student=self.student) for task in url_tasks]
+
+        response = self.get("education:certificate-detail",
+                            token=self.certificate.token)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(2, len(response.context["gradable_tasks"]))
+        self.assertEqual(5, len(response.context["url_tasks"]))
+
+
     def tearDown(self):
         delete_cache_for_courseassingment(self.course_assignment)
