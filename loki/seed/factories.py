@@ -1,4 +1,5 @@
 import factory
+import uuid
 from django.utils import timezone
 from datetime import datetime, timedelta
 from faker import Factory
@@ -324,8 +325,8 @@ class CertificateFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.Certificate
 
-    assignment = factory.RelatedFactory(CourseAssignmentFactory)
-    token = faker.word()
+    assignment = factory.SubFactory(CourseAssignmentFactory)
+    token = factory.LazyAttribute(lambda _: uuid.uuid4)
 
 
 class CheckInFactory(factory.DjangoModelFactory):

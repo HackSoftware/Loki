@@ -4,7 +4,7 @@ from test_plus.test import TestCase
 from loki.seed.factories import (BaseUserFactory, CourseFactory, TaskFactory,
                                  CourseAssignmentFactory, SolutionFactory,
                                  MaterialFactory, WeekFactory, LectureFactory,
-                                 CheckInFactory)
+                                 CheckInFactory, CertificateFactory)
 from loki.base_app.models import BaseUser
 from loki.education.models import StudentNote
 
@@ -786,3 +786,16 @@ class DropStudentTests(TestCase):
 
         self.course_assignment.refresh_from_db()
         self.assertFalse(self.course_assignment.is_attending)
+
+
+class CertificatesTests(TestCase):
+
+    def setUp(self):
+        self.baseuser = BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.save()
+        self.student = BaseUser.objects.promote_to_student(self.baseuser)
+        self.course = CourseFactory()
+        self.course_assignment = CourseAssignmentFactory(course=self.course,
+                                                         user=self.student)
+        self.certificate = CertificateFactory(assignment=self.course_assignment)

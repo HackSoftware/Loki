@@ -8,7 +8,6 @@ from loki.education.mixins import (DashboardPermissionMixin,
                                    IsDateInDeadlineDateForCourse)
 from loki.education.helper import task_solutions, latest_solution_statuses
 from loki.education.services import get_student_data_for_course
-from loki.education.cache import delete_cache_for_courseassingment
 
 
 class TaskListView(DashboardPermissionMixin,
