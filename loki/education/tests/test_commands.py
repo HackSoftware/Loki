@@ -144,7 +144,6 @@ class GenerateCertificatesTests(TestCase):
 
     def test_certificate_not_generated_for_nonattending_student(self):
         self.assertEqual(0, Certificate.objects.count())
-        import ipdb; ipdb.set_trace()
         self.course_assignment.is_attending = False
         self.course_assignment.save()
 
