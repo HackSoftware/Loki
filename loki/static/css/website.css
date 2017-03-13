@@ -369,7 +369,8 @@ body {
   margin-top: 2%; }
 
 .breadcrumb {
-  margin: 0; }
+  margin: 0;
+  background-color: #f2f2f2; }
   .breadcrumb .breadcrumb-class a:hover {
     text-decoration: none; }
   .breadcrumb .breadcrumb-class i {
