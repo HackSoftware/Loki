@@ -104,10 +104,6 @@ class PersonalUserInformationTests(TestCase):
             baseuser_ptr_id=self.baseuser.id,)
         self.team.add_member(competitor=self.competitor)
 
-        self.certificate = factories.CertificateFactory(
-            assignment_id=self.courseAssignment.id,
-            assignment=self.courseAssignment)
-
         self.city = factories.CityFactory()
 
     def test_me_returns_full_team_membership_set(self):
@@ -130,12 +126,13 @@ class PersonalUserInformationTests(TestCase):
                          self.course.name)
 
     def test_me_returns_certificate(self):
+        certificate = factories.CertificateFactory(assignment=self.courseAssignment)
         self.client.force_authenticate(user=self.baseuser)
         url_me = reverse('base_app:me')
         response = self.client.get(url_me, format='json')
         certificate_token = response.\
             data['student']['courseassignment_set'][0]['certificate']['token']
-        self.assertEqual(certificate_token, str(self.certificate.token))
+        self.assertEqual(certificate_token, str(certificate.token))
 
     def test_baseuser_update(self):
         self.client.force_authenticate(user=self.baseuser)
