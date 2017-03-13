@@ -20,7 +20,8 @@ class CourseListView(DashboardPermissionMixin,
         if self.request.user.get_student():
             context['student_courses'] = Course.objects.filter(
                 courseassignment__user=self.request.user).order_by('-end_time')
-            context['student_assignments'] = CourseAssignment.objects.filter(user=self.request.user).order_by('-course__end_time')
+            context['student_assignments'] = CourseAssignment.objects.filter(
+                user=self.request.user).order_by('-course__end_time')
 
         user = self.request.user.get_student() if self.request.user.get_student() else self.request.user.get_teacher()
 

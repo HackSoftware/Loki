@@ -35,7 +35,6 @@ class TasksTests(TestCase):
                 return_value=make_mock_object(status_code=202,
                                               json=lambda: {'run_id': faker.pyint()},
                                               headers={'Location': faker.url()}))
-
     @skip("Don't want to test")
     @mock.patch('loki.education.tasks.poll_solution', side_effect=lambda *args, **kwargs: None)
     def test_submit_solution_submits_the_solution(self, poll_solution, requests_post):
