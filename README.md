@@ -24,6 +24,12 @@ In order to setup it, there are the following steps:
 <!-- -->
 
     $ pip install -r requirements/base.txt
+    
+-   Install Redis Server
+
+<!-- -->
+
+    $ sudo apt-get install redis server
 
 -   Setup Postgres
 
