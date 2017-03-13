@@ -7,7 +7,7 @@
     <div class="col-sm-9 course-information">
       <h3 class="course-name-tasks-link" id="course-name">{{ course.name }}</h3>
       <h4>
-        {% if user.get_student %}
+        {% if user.get_student and ca.certificate %}
           <a href="{% url 'education:certificate-detail' ca.certificate.token %}">
           <i class="fa fa-graduation-cap" aria-hidden="true"></i>Сертификат</a>
         {% endif %}
