@@ -326,7 +326,7 @@ class CertificateFactory(factory.DjangoModelFactory):
         model = education_models.Certificate
 
     assignment = factory.SubFactory(CourseAssignmentFactory)
-    token = factory.LazyAttribute(lambda _: uuid.uuid4)
+    token = faker.uuid4()
 
 
 class CheckInFactory(factory.DjangoModelFactory):

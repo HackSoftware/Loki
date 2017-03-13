@@ -799,3 +799,9 @@ class CertificatesTests(TestCase):
         self.course_assignment = CourseAssignmentFactory(course=self.course,
                                                          user=self.student)
         self.certificate = CertificateFactory(assignment=self.course_assignment)
+
+    def test_everyone_can_see_certificate(self):
+        response = self.get("education:certificate-detail",
+                            token=self.certificate.token)
+
+        self.assertEqual(200, response.status_code)

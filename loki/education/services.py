@@ -105,6 +105,8 @@ def get_student_data_for_course(course_assignment):
                                          "week": task.week,
                                          "solution": solution})
 
-    percent_awesome = round((total/all_tasks) * 100, 2)
+    percent_awesome = 0
+    if total:
+        percent_awesome = round((total/all_tasks) * 100, 2)
     course_data['percent_awesome'] = percent_awesome
     return course_data
