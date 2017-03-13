@@ -7,6 +7,7 @@ from loki.seed.factories import (BaseUserFactory, CourseFactory, TaskFactory,
                                  CheckInFactory, CertificateFactory)
 from loki.base_app.models import BaseUser
 from loki.education.models import StudentNote
+from loki.education.cache import delete_cache_for_courseassingment
 
 from faker import Factory
 faker = Factory.create()
@@ -805,3 +806,6 @@ class CertificatesTests(TestCase):
                             token=self.certificate.token)
 
         self.assertEqual(200, response.status_code)
+
+    def tearDown(self):
+        delete_cache_for_courseassingment(self.course_assignment)
