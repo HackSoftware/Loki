@@ -1,3 +1,5 @@
+import os
+
 from django.core.urlresolvers import reverse
 
 from test_plus.test import TestCase
@@ -35,7 +37,8 @@ class BaseUserRegistrationTests(TestCase):
             'email': faker.email(),
             'first_name': faker.text(max_nb_chars=20),
             'last_name': faker.text(max_nb_chars=20),
-            'password': faker.password()
+            'password': faker.password(),
+            'g-recaptcha-response': 'PASSED'
         }
         self.user_reg_form = {
             'studies_at': faker.country(),
@@ -54,6 +57,11 @@ class BaseUserRegistrationTests(TestCase):
             'educationplace': self.academy.id
         }
         self.reg_form_with_academy.update(self.user_reg_form)
+        # add recaptcha testing env on Register
+        os.environ['RECAPTCHA_TESTING'] = 'True'
+
+    def tearDown(self):
+        del os.environ['RECAPTCHA_TESTING']
 
     def test_register_base_user_via_form(self):
         reg_form = RegisterForm(data=self.user_reg_form)
