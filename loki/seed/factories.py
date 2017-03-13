@@ -375,9 +375,9 @@ class TaskFactory(factory.DjangoModelFactory):
 
     course = factory.SubFactory(CourseFactory)
     description = factory.\
-        Sequence(lambda n: 'https://github.com/zad{}/solution.py'.format(n))
+        Sequence(lambda n: 'https://github.com/task{}/'.format(n))
     is_exam = faker.boolean(chance_of_getting_true=0)
-    name = faker.text(max_nb_chars=128)
+    name = factory.LazyAttribute(lambda _: faker.word())
     week = faker.random_number(digits=1)
     gradable = faker.boolean(chance_of_getting_true=100)
 

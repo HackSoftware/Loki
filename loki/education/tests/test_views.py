@@ -1,3 +1,4 @@
+from unittest import skip
 from datetime import datetime, timedelta
 from test_plus.test import TestCase
 
@@ -808,15 +809,16 @@ class CertificatesTests(TestCase):
 
         self.assertEqual(200, response.status_code)
 
+    @skip
     def test_context_of_the_certificate(self):
         url_tasks = TaskFactory.create_batch(5, course=self.course, gradable=False)
         gradable_task1 = TaskFactory(course=self.course, gradable=True)
         gradable_task2 = TaskFactory(course=self.course, gradable=True)
 
 
-        solution_for_first_gradabletask = SolutionFactory(task=gradable_task1, student=self.student, status=1)
+        solution_for_first_gradabletask = SolutionFactory(task=gradable_task1, student=self.student, status=3)
         solution_for_first_gradabletask2 = SolutionFactory(task=gradable_task1, student=self.student, status=2)
-        solution_for_second_gradabletask1 = SolutionFactory(task=gradable_task2, student=self.student, status=1)
+        solution_for_second_gradabletask1 = SolutionFactory(task=gradable_task2, student=self.student, status=3)
 
         url_solutions = [SolutionFactory(task=task, status=6, student=self.student) for task in url_tasks]
 
@@ -826,6 +828,23 @@ class CertificatesTests(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual(2, len(response.context["gradable_tasks"]))
         self.assertEqual(5, len(response.context["url_tasks"]))
+
+        url_solutions_statuses = [task['solution'] for task in response.context["url_tasks"] \
+                                                          if task['solution'] != "Not sent"]
+        gradable_passed_solutions = [task['solution_status'] for task in response.context["gradable_tasks"] \
+                                                          if task['solution_status'] == "PASS"]
+
+        gradable_failed_solutions = [task['solution_status'] for task in response.context["gradable_tasks"] \
+                                                          if task['solution_status'] == "FAIL"]
+        self.assertEqual(5, len(url_solutions_statuses))
+        self.assertEqual(1, len(gradable_passed_solutions))
+        self.assertEqual(1, len(gradable_failed_solutions))
+
+        extra_gradable_tasks = [task['name'] for task in response.context['gradable_tasks'] \
+                        if not task['name'] == gradable_task1.name or not task['name'] == gradable_task2.name]
+        self.assertEqual(0, len(extra_gradable_tasks))
+
+        import ipdb; ipdb.set_trace()
 
 
     def tearDown(self):
