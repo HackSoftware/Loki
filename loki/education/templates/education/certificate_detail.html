@@ -26,42 +26,42 @@
         </div>
 
         <div class="tasks_field">
-            {% if gradable_tasks or url_tasks %}
+            {% if gradable_tasks %}
             <fieldset id="projects">
-                <legend>Graded Problems</legend>
-                {% if gradable_tasks %}
-                    <span class="subtext">Problems that are automatically graded</span>
-                {% endif %}
+                <legend>Graded Problems:</legend>
+                <span class="subtext">Problems that are automatically graded</span>
                 {% for task in gradable_tasks %}
-                <div>
-                    <a href="{{ task|key:"description" }}" target="_blank">Week {{ task|key:"week" }}
-                            {{ task|key:"name" }}
-                        </a> -
-                    <a class="code-sent"> {{ task|key:"solution_status" }}
-                    </a>
-                </div>
+                  <div>
+                    {% with sol_status=task|key:"solution_status" %}
+                      <a href="{{ task|key:"description" }}" target="_blank">
+                       Week {{ task|key:"week" }} - {{ task|key:"name" }}</a> -
+                      {% if sol_status == 'PASS' %}
+                        <a class="code-sent">{{ sol_status }}</a>
+                      {% else %}
+                        <a class="code-not-sent">{{ sol_status }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </div>
                 {% endfor %}
             </fieldset>
             {% endif %}
+
             {% if url_tasks %}
             <fieldset id='projects'>
                 <legend>Projects:</legend>
-                    {% if url_tasks %}
-                        <span class="subtext">Bigger projects that cannot be graded</span>
-                    {% endif %}
+                    <span class="subtext">Bigger projects that cannot be graded</span>
                     {% for task in url_tasks %}
-                    <div>
-                        <a href="{{ task|key:"description" }}" target="_blank">Week {{ task|key:"week" }}
-                                {{ task|key:"name" }}
-                            </a> -
-                        {% if task|key:"solution" %}
-                        <a class="code-sent" href=" {{ task|key:"solution" }} "> Source link
-                        </a>
-                        {% else %}
-                        <a class="code-sent"> Not sent
-                        </a>
-                        {% endif %}
-                    </div>
+                      <div>
+                        {% with sol_status=task|key:"solution" %}
+                          <a href="{{ task|key:"description" }}" target="_blank">
+                          Week {{ task|key:"week" }} - {{ task|key:"name" }}</a> -
+                          {% if sol_status %}
+                            <a class="code-sent" href="{{ sol_status }}">Source link</a>
+                          {% else %}
+                            <a class="code-not-sent">Not sent</a>
+                          {% endif %}
+                        {% endwith %}
+                      </div>
                     {% endfor %}
             </fieldset>
             {% endif %}
@@ -74,7 +74,7 @@
                         <div class="signature">
                             <img src="{{MEDIA_URL}}{{teacher.signature}}">
                         </div>
-                        <div>/{{teacher.first_name}} {{teacher.last_name}}/</div>
+                        <div>{{teacher.first_name}} {{teacher.last_name}}</div>
                     </div>
                 {% endif %}
             {% endfor %}
