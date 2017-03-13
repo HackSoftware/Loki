@@ -26,12 +26,10 @@
         </div>
 
         <div class="tasks_field">
-            {% if gradable_tasks or url_tasks %}
+            {% if gradable_tasks %}
             <fieldset id="projects">
-                <legend>Graded Problems</legend>
-                {% if gradable_tasks %}
-                    <span class="subtext">Problems that are automatically graded</span>
-                {% endif %}
+                <legend>Graded Problems:</legend>
+                <span class="subtext">Problems that are automatically graded</span>
                 {% for task in gradable_tasks %}
                   <div>
                     {% with sol_status=task|key:"solution_status" %}
@@ -51,9 +49,7 @@
             {% if url_tasks %}
             <fieldset id='projects'>
                 <legend>Projects:</legend>
-                    {% if url_tasks %}
-                        <span class="subtext">Bigger projects that cannot be graded</span>
-                    {% endif %}
+                    <span class="subtext">Bigger projects that cannot be graded</span>
                     {% for task in url_tasks %}
                       <div>
                         {% with sol_status=task|key:"solution" %}
