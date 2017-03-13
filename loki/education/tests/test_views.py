@@ -809,12 +809,10 @@ class CertificatesTests(TestCase):
 
         self.assertEqual(200, response.status_code)
 
-    @skip
     def test_context_of_the_certificate(self):
         url_tasks = TaskFactory.create_batch(5, course=self.course, gradable=False)
         gradable_task1 = TaskFactory(course=self.course, gradable=True)
         gradable_task2 = TaskFactory(course=self.course, gradable=True)
-
 
         solution_for_first_gradabletask = SolutionFactory(task=gradable_task1, student=self.student, status=3)
         solution_for_first_gradabletask2 = SolutionFactory(task=gradable_task1, student=self.student, status=2)
@@ -839,13 +837,6 @@ class CertificatesTests(TestCase):
         self.assertEqual(5, len(url_solutions_statuses))
         self.assertEqual(1, len(gradable_passed_solutions))
         self.assertEqual(1, len(gradable_failed_solutions))
-
-        extra_gradable_tasks = [task['name'] for task in response.context['gradable_tasks'] \
-                        if not task['name'] == gradable_task1.name or not task['name'] == gradable_task2.name]
-        self.assertEqual(0, len(extra_gradable_tasks))
-
-        import ipdb; ipdb.set_trace()
-
 
     def tearDown(self):
         delete_cache_for_courseassingment(self.course_assignment)
