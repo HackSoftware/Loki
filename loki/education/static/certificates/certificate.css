@@ -42,7 +42,7 @@ a {
 }
 
 a:hover {
-    color: #FFD222;
+    color: #47679F;
 }
 
 #title {
@@ -93,12 +93,16 @@ legend {
     padding-bottom: 10px;
 }
 
-.code-sent {
-    color: #477649;
+.code-pass {
+    color: #559558;
+}
+
+.code-fail {
+    color: #AD1E17;
 }
 
 .code-not-sent {
-    color: #AD1E17;
+    color: #8D6361;
 }
 
 .subtext{

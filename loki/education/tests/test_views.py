@@ -340,6 +340,7 @@ class TeacherSolutionListViewTests(TestCase):
             self.assertIn(solution2, response.context['object_list'])
             self.assertIn(solution2, response.context['solution_list'])
 
+
 class MaterialListViewTests(TestCase):
 
     def setUp(self):

@@ -1,5 +1,4 @@
 import factory
-import uuid
 from django.utils import timezone
 from datetime import datetime, timedelta
 from faker import Factory

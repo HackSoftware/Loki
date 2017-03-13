@@ -36,9 +36,11 @@
                       <a href="{{ task|key:"description" }}" target="_blank">
                        Week {{ task|key:"week" }} - {{ task|key:"name" }}</a> -
                       {% if sol_status == 'PASS' %}
-                        <a class="code-sent">{{ sol_status }}</a>
+                        <a class="code-pass">{{ sol_status }}</a>
+                      {% elif sol_status == 'Not sent' %}
+                      <a class="code-not-sent">{{ sol_status }}</a>
                       {% else %}
-                        <a class="code-not-sent">{{ sol_status }}</a>
+                        <a class="code-fail">{{ sol_status }}</a>
                       {% endif %}
                     {% endwith %}
                   </div>
@@ -56,7 +58,7 @@
                           <a href="{{ task|key:"description" }}" target="_blank">
                           Week {{ task|key:"week" }} - {{ task|key:"name" }}</a> -
                           {% if sol_status %}
-                            <a class="code-sent" href="{{ sol_status }}">Source link</a>
+                            <a class="code-pass" href="{{ sol_status }}">Source link</a>
                           {% else %}
                             <a class="code-not-sent">Not sent</a>
                           {% endif %}
