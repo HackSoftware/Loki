@@ -1,4 +1,3 @@
-from unittest import skip
 from datetime import datetime, timedelta
 from test_plus.test import TestCase
 
@@ -814,11 +813,11 @@ class CertificatesTests(TestCase):
         gradable_task1 = TaskFactory(course=self.course, gradable=True)
         gradable_task2 = TaskFactory(course=self.course, gradable=True)
 
-        solution_for_first_gradabletask = SolutionFactory(task=gradable_task1, student=self.student, status=3)
-        solution_for_first_gradabletask2 = SolutionFactory(task=gradable_task1, student=self.student, status=2)
-        solution_for_second_gradabletask1 = SolutionFactory(task=gradable_task2, student=self.student, status=3)
+        SolutionFactory(task=gradable_task1, student=self.student, status=3)
+        SolutionFactory(task=gradable_task1, student=self.student, status=2)
+        SolutionFactory(task=gradable_task2, student=self.student, status=3)
 
-        url_solutions = [SolutionFactory(task=task, status=6, student=self.student) for task in url_tasks]
+        [SolutionFactory(task=task, status=6, student=self.student) for task in url_tasks]
 
         response = self.get("education:certificate-detail",
                             token=self.certificate.token)
@@ -827,13 +826,12 @@ class CertificatesTests(TestCase):
         self.assertEqual(2, len(response.context["gradable_tasks"]))
         self.assertEqual(5, len(response.context["url_tasks"]))
 
-        url_solutions_statuses = [task['solution'] for task in response.context["url_tasks"] \
-                                                          if task['solution'] != "Not sent"]
-        gradable_passed_solutions = [task['solution_status'] for task in response.context["gradable_tasks"] \
-                                                          if task['solution_status'] == "PASS"]
-
-        gradable_failed_solutions = [task['solution_status'] for task in response.context["gradable_tasks"] \
-                                                          if task['solution_status'] == "FAIL"]
+        url_solutions_statuses = [task['solution'] for task in response.context["url_tasks"]
+                                  if task['solution'] != "Not sent"]
+        gradable_passed_solutions = [task['solution_status'] for task in response.context["gradable_tasks"]
+                                     if task['solution_status'] == "PASS"]
+        gradable_failed_solutions = [task['solution_status'] for task in response.context["gradable_tasks"]
+                                     if task['solution_status'] == "FAIL"]
         self.assertEqual(5, len(url_solutions_statuses))
         self.assertEqual(1, len(gradable_passed_solutions))
         self.assertEqual(1, len(gradable_failed_solutions))

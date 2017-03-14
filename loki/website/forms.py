@@ -95,7 +95,7 @@ class StudentEditForm(ModelForm):
         fields = ('mac', 'skype', 'phone', 'english_names')
 
         labels = {
-        "english_names": "Имена на латиница"
+            "english_names": "Имена на латиница"
         }
 
     def clean_phone(self):
