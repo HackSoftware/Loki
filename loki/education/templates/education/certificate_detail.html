@@ -80,7 +80,11 @@
                         <div class="signature">
                             <img src="{{MEDIA_URL}}{{teacher.signature}}">
                         </div>
-                        <div>{{teacher.first_name}} {{teacher.last_name}}</div>
+                        {% if teacher.get_english_names %}
+                          <div>{{ teacher.get_english_names }}</div>
+                        {% else %}
+                          <div>{{teacher.first_name}} {{teacher.last_name}}</div>
+                        {% endif %}
                     </div>
                 {% endif %}
             {% endfor %}
