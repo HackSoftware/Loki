@@ -92,7 +92,7 @@ class BaseEditForm(ModelForm):
 class StudentEditForm(ModelForm):
     class Meta:
         model = Student
-        fields = ('mac', 'skype', 'phone')
+        fields = ('mac', 'skype', 'phone', 'english_names')
 
     def clean_phone(self):
         phone = self.cleaned_data.get("phone").strip()
