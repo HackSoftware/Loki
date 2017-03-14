@@ -1,6 +1,7 @@
 from functools import wraps
 
 from django.core.cache import cache
+from django.conf import settings
 
 
 def cache_result(key_function):
@@ -14,7 +15,7 @@ def cache_result(key_function):
             """
             if cached_result is None:
                 cached_result = function(*args, **kwargs)
-                cache.set(key, cached_result)
+                cache.set(key, cached_result, settings.CACHES['default']['TIMEOUT'])
             return cached_result
         return wrapper
     return inner

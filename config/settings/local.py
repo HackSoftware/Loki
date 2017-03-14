@@ -17,7 +17,8 @@ REDIS_LOCATION = env('REDIS_LOCATION', default='redis://127.0.0.1:6379/0')
 
 CACHES = {
     'default': {
-         'BACKEND': 'django_redis.cache.RedisCache',
-         'LOCATION': REDIS_LOCATION,
-        }
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': '',
+        'TIMEOUT': 200
+    }
 }
