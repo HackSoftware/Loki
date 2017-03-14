@@ -174,24 +174,19 @@ class RegradePendingSolutionsTests(TestCase):
 
 
 class CreateCSVWithWorkingAtsTests(TestCase):
-    @skip
     def test_create_file_if_there_is_db(self):
         baseuser = BaseUserFactory()
         baseuser.is_active = True
         baseuser.save()
         student = BaseUser.objects.promote_to_student(baseuser)
         course = CourseFactory()
-        # CourseFactory(id=4)
-        # CourseFactory(id=6)
-        # CourseFactory(id=26)
 
         CourseAssignmentFactory(course=course,
                                 user=student)
 
         self.assertFalse(os.path.exists('working_ats.csv'))
-        call_command('create_csv_with_all_workingats')
+        call_command('create_csv_with_all_workingats', '4,6,26')
         self.assertTrue(os.path.exists('working_ats.csv'))
 
-    @skip
     def tearDown(self):
         os.remove('working_ats.csv')

@@ -9,5 +9,4 @@ class Command(BaseCommand):
         courses = Course.objects.filter(generate_certificates_until__gt=timezone.now())
         for course in courses:
             for assignment in course.courseassignment_set.filter(is_attending=True):
-                # print("Generate certificate for {}".format(assignment))
                 cert, is_new = Certificate.objects.get_or_create(assignment=assignment)

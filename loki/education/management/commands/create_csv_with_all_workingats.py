@@ -8,13 +8,16 @@ from loki.education.models import Course, CourseAssignment, Student, WorkingAt
 class Command(BaseCommand):
     help = "Create CSV file with all information about working ats"
 
+    def add_arguments(self, parser):
+        parser.add_argument('paid_courses',
+                            help='Provide ids of paid courses as string "1, 2, 3"')
+
     def handle(self, **options):
         # Without paid courses - AngularJS, NodeJS, Angular 2 and active courses
-        angular_js = Course.objects.get(id=4)
-        node_js = Course.objects.get(id=6)
-        angular_2 = Course.objects.get(id=26)
+        courses = options['paid_courses'].split(',')
+        courses = [int(course_id) for course_id in courses]
         courses = Course.objects.exclude(
-                                id__in=[angular_js.id, node_js.id, angular_2.id]).filter(
+                                id__in=courses).filter(
                                 end_time__lte=timezone.now())
 
         student_ids = CourseAssignment.objects.filter(course__in=courses).values_list('user', flat=True).distinct()
