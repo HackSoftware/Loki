@@ -68,9 +68,11 @@
             </fieldset>
             {% endif %}
         </div>
-        <div>
-            <h3>{{ object.assignment.user.get_english_names }} attended on {{ object.assignment.student_presence }}% of the course.</h3>
-        </div>
+        {% if object.assignment.student_presence %}
+          <div>
+              <h3>{{ object.assignment.user.get_english_names }} attended on {{ object.assignment.student_presence }}% of the course.</h3>
+          </div>
+          {% endif %}
         <div class="lectors-signatures">
             {% for teacher in object.assignment.course.teacher_set.all %}
                 {% if teacher %}
