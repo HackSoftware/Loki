@@ -25,7 +25,9 @@ class StudentAdmin(ImportExportActionModelAdmin):
         'github_account',
         'get_courses',
         'is_active',
+        'english_names',
     ]
+
     list_display_links = ['email']
     list_filter = ('courses', 'is_active')
     search_fields = ['email', 'first_name', 'last_name', 'mac', 'github_account']
@@ -84,6 +86,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'name',
+        'english_name'
     ]
 
     list_display_links = ['name']
