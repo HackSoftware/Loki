@@ -33,6 +33,12 @@
           <td><a class="profile-linkedin-account" href={{user.linkedin_account}} target="_blank">{{ user.linkedin_account }}</a></td>
         </tr>
         {% endif %}
+        {% if user.english_names %}
+        <tr>
+          <td><b>Твойте имена на латиница<b></td>
+          <td>{{ user.english_names }}</td>
+        </tr>
+      {% endif %}
         {% if user.get_student %}
           {% if student.skype %}
             <tr>
@@ -50,12 +56,6 @@
             <tr>
               <td><b>MAC<b></td>
               <td>{{student.mac}}</td>
-            </tr>
-          {% endif %}
-          {% if student.english_names %}
-            <tr>
-              <td><b>Твойте имена на латиница<b></td>
-              <td>{{student.english_names}}</td>
             </tr>
           {% endif %}
         {% endif%}

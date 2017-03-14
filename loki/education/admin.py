@@ -24,8 +24,7 @@ class StudentAdmin(ImportExportActionModelAdmin):
         'mac',
         'github_account',
         'get_courses',
-        'is_active',
-        'english_names',
+        'is_active'
     ]
 
     list_display_links = ['email']
