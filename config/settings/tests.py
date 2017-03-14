@@ -27,16 +27,6 @@ EMAIL_PORT = 1025
 # for unit testing purposes
 EMAIL_BACKEND = 'django.core.mail.backends.locmem.EmailBackend'
 
-# CACHING
-# ------------------------------------------------------------------------------
-# Speed advantages of in-memory caching without having to run Memcached
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': ''
-    }
-}
-
 # TESTING
 # ------------------------------------------------------------------------------
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
