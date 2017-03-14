@@ -183,9 +183,11 @@ class CreateCSVWithWorkingAtsTests(TestCase):
 
         CourseAssignmentFactory(course=course,
                                 user=student)
+        course1 = CourseFactory()
+        course2 = CourseFactory()
 
         self.assertFalse(os.path.exists('working_ats.csv'))
-        call_command('create_csv_with_all_workingats', '4,6,26')
+        call_command('create_csv_with_all_workingats', "{}, {}".format(course1.id, course2.id))
         self.assertTrue(os.path.exists('working_ats.csv'))
 
     def tearDown(self):
