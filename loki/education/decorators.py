@@ -3,7 +3,7 @@ from functools import wraps
 from django.core.cache import cache
 
 
-def cache_progress_result(key_function):
+def cache_result(key_function):
     def inner(function):
         @wraps(function)
         def wrapper(*args, **kwargs):
