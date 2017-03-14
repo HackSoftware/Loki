@@ -73,11 +73,12 @@ class LoginForm(forms.Form):
 class BaseEditForm(ModelForm):
     class Meta:
         model = BaseUser
-        fields = ('first_name', 'last_name', 'github_account', 'linkedin_account', 'full_image',
+        fields = ('first_name', 'last_name', 'english_names', 'github_account', 'linkedin_account', 'full_image',
                   'cropping')
         labels = {
             'first_name': 'Име',
             'last_name': 'Фамилия',
+            'english_names': 'Имена на латиница',
             'github_account': 'GitHub',
             'linkedin_account': 'Linkedin',
             'cropping': 'Изрежи снимката си'
@@ -92,11 +93,7 @@ class BaseEditForm(ModelForm):
 class StudentEditForm(ModelForm):
     class Meta:
         model = Student
-        fields = ('mac', 'skype', 'phone', 'english_names')
-
-        labels = {
-            "english_names": "Имена на латиница"
-        }
+        fields = ('mac', 'skype', 'phone')
 
     def clean_phone(self):
         phone = self.cleaned_data.get("phone").strip()

@@ -4,7 +4,7 @@ from loki.base_app.models import BaseUser
 
 from loki.education.models import CheckIn, Teacher, CourseAssignment, Student, Solution
 from loki.education.helper import get_dates_for_weeks, percentage_presence
-from loki.education.decorators import cache_progress_result
+from loki.education.decorators import cache_result
 from loki.education.cache import get_student_cache_key_for_course_data
 
 
@@ -62,7 +62,7 @@ def add_teacher_to_course(*, user, course):
     return teacher
 
 
-@cache_progress_result(key_function=get_student_cache_key_for_course_data)
+@cache_result(key_function=get_student_cache_key_for_course_data)
 def get_student_data_for_course(course_assignment):
     course_data = {"gradable_tasks": [],
                    "url_tasks": []}

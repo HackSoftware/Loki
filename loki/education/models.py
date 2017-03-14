@@ -26,7 +26,6 @@ class Student(BaseUser, StudentAndTeacherCommonModel):
     courses = models.ManyToManyField('Course', through='CourseAssignment')
     skype = models.CharField(null=True, blank=True, max_length=20)
     looking_for_job = models.BooleanField(default=False)
-    english_names = models.CharField(null=True, blank=True, max_length=50)
 
     def __str__(self):
         return self.full_name

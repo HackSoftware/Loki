@@ -135,6 +135,7 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
+    english_names = models.CharField(max_length=50, null=True, blank=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
@@ -194,6 +195,9 @@ class BaseUser(AbstractBaseUser, PermissionsMixin):
             return self.interviewer
         except:
             return False
+
+    def get_english_names(self):
+        return self.english_names
 
 
 class EducationInfo(models.Model):
