@@ -94,6 +94,10 @@ class StudentEditForm(ModelForm):
         model = Student
         fields = ('mac', 'skype', 'phone', 'english_names')
 
+        labels = {
+        "english_names": "Имена на латиница"
+        }
+
     def clean_phone(self):
         phone = self.cleaned_data.get("phone").strip()
         validate_phone(phone)
