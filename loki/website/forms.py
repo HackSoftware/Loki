@@ -1,3 +1,5 @@
+from datetime import date
+
 from django import forms
 from django.forms import ModelForm
 from django.core.exceptions import ValidationError
@@ -148,7 +150,7 @@ class WorkingAtForm(ModelForm):
         }
 
         widgets = {
-            'start_date': w('text', 'yyyy-mm-dd'),
-            'end_date': w('text', 'yyyy-mm-dd'),
+            'start_date': forms.SelectDateWidget(years=range(date.today().year, date.today().year - 30, -1)),
+            'end_date': forms.SelectDateWidget(years=range(date.today().year, date.today().year - 30, -1)),
             'company_name': w('hidden', '')
         }
