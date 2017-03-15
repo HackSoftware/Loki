@@ -135,5 +135,10 @@ legend {
 }
 
 .teacher .signature img{
-    width:100px;
+    width: 100px;
+    height: 80px;
+}
+
+.teacher-name {
+  padding: 5px;
 }
