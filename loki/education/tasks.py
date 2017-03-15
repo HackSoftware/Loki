@@ -65,7 +65,10 @@ def get_plain_problem_data(solution):
             "code": solution.code,
             "test": solution.task.test.sourcecodetest.code,
             "extra_options": solution.task.test.options}
-
+    """
+    TODO: Find a better way to do this.
+    """
+    data['extra_options'].update({'lint': False})
     return data
 
 
