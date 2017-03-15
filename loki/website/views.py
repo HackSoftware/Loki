@@ -221,7 +221,7 @@ class ProfileView(LoginRequiredMixin, AddUserToContext, TemplateView):
 class ProfileEditView(LoginRequiredMixin, AddUserToContext, FormView):
     template_name = 'website/profile_edit.html'
     form_class = BaseEditForm
-    success_url = reverse_lazy('website:profile_edit')
+    success_url = reverse_lazy('website:profile')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

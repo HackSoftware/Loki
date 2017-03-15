@@ -30,6 +30,9 @@ class Student(BaseUser, StudentAndTeacherCommonModel):
     def __str__(self):
         return self.full_name
 
+    def get_english_names(self):
+        return self.english_names
+
 
 class Teacher(BaseUser, StudentAndTeacherCommonModel):
     signature = models.ImageField(upload_to="teachers_signatures", null=True, blank=True)
@@ -74,6 +77,7 @@ class Course(models.Model):
     end_time = models.DateField(blank=True, null=True)
     deadline_date = models.DateField(blank=True, null=True)
     generate_certificates_until = models.DateField()
+    english_name = models.CharField(null=True, blank=True, max_length=50)
 
     partner = models.ManyToManyField('base_app.Partner', blank=True)
 
@@ -87,6 +91,9 @@ class Course(models.Model):
             return self.deadline_date >= timezone.now().date()
 
         return self.is_active()
+
+    def get_english_name(self):
+        return self.english_name
 
     @property
     def duration_in_weeks(self):

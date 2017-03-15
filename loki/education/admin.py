@@ -24,8 +24,9 @@ class StudentAdmin(ImportExportActionModelAdmin):
         'mac',
         'github_account',
         'get_courses',
-        'is_active',
+        'is_active'
     ]
+
     list_display_links = ['email']
     list_filter = ('courses', 'is_active')
     search_fields = ['email', 'first_name', 'last_name', 'mac', 'github_account']
@@ -84,6 +85,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'name',
+        'english_name'
     ]
 
     list_display_links = ['name']
@@ -259,9 +261,15 @@ class SolutionAdmin(admin.ModelAdmin):
 
     search_fields = ['id', 'task__name', 'student__first_name']
 
-# admin.site.register(Solution, SolutionAdmin)
 
-admin.site.register(Certificate)
+@admin.register(Certificate)
+class CertificateAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'id',
+        'assignment',
+        'token',
+    ]
 
 
 @admin.register(GraderRequest)

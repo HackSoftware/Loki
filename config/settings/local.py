@@ -12,3 +12,11 @@ EMAIL_BACKEND = 'loki.emails.backends.SendGridConsoleBackend'
 # TESTING
 # ------------------------------------------------------------------------------
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': '',
+        'TIMEOUT': 200
+    }
+}

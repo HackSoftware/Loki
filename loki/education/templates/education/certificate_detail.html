@@ -1,0 +1,100 @@
+{% load key %}
+<html>
+    <head>
+        <title>HackBulgaria {{ object.assignment }} Certificate</title>
+        <link rel="stylesheet" href="{{ STATIC_URL }}certificates/certificate.css">
+        <meta property="og:title" content="HackBulgaria {{ object }} Certificate"/>
+        <meta property="og:image" content="https://hackbulgaria.com/static/img/certificate_screen.png"/>
+        <meta property="og:site_name" content="Hack Bulgaria"/>
+        <meta property="og:description" content="Certificate for being {{ percent_awesome }} awesome in the {{ course.name }} course in HackBulgaria"/>
+        <link rel="shortcut icon" href="/static/img/favicon.ico">
+    </head>
+    <body>
+        <div id="social-holder">
+            <ul style="list-style-type: none;">
+                <li><a href="https://twitter.com/share" class="twitter-share-button">Tweet</a></li>
+                <li><div class="g-plusone" data-size="medium"></div></li>
+                <li><div class="fb-share-button" data-href="" data-layout="button_count"></div></li>
+            </ul>
+        </div>
+        <a href="http://hackbulgaria.com/">
+            <img id="logo" src="/static/img/HackBG-certificates-logo.png" alt="HackBulgaria Logo">
+        </a>
+        <h2 id="title">Certificate for being <span id="percent">{{ percent_awesome }}% </span> awesome in {{ object.assignment.course.get_english_name }} </h2>
+        <div>
+            <p id="name"><a href="{{ student.github_account }}">{{ object.assignment.user.get_english_names }}</a></p>
+        </div>
+
+        <div class="tasks_field">
+            {% if gradable_tasks %}
+            <fieldset id="projects">
+                <legend>Graded Problems:</legend>
+                <span class="subtext">Problems that are automatically graded</span>
+                {% for task in gradable_tasks %}
+                  <div>
+                    {% with sol_status=task|key:"solution_status" %}
+                      <a href="{{ task|key:"description" }}" target="_blank">
+                       Week {{ task|key:"week" }} - {{ task|key:"name" }}</a> -
+                      {% if sol_status == 'PASS' %}
+                        <a class="code-pass">{{ sol_status }}</a>
+                      {% elif sol_status == 'Not sent' %}
+                      <a class="code-not-sent">{{ sol_status }}</a>
+                      {% else %}
+                        <a class="code-fail">{{ sol_status }}</a>
+                      {% endif %}
+                    {% endwith %}
+                  </div>
+                {% endfor %}
+            </fieldset>
+            {% endif %}
+
+            {% if url_tasks %}
+            <fieldset id='projects'>
+                <legend>Projects:</legend>
+                    <span class="subtext">Bigger projects that cannot be graded</span>
+                    {% for task in url_tasks %}
+                      <div>
+                        {% with sol_status=task|key:"solution" %}
+                          <a href="{{ task|key:"description" }}" target="_blank">
+                          Week {{ task|key:"week" }} - {{ task|key:"name" }}</a> -
+                          {% if sol_status %}
+                            <a class="code-pass" href="{{ sol_status }}">Source link</a>
+                          {% else %}
+                            <a class="code-not-sent">Not sent</a>
+                          {% endif %}
+                        {% endwith %}
+                      </div>
+                    {% endfor %}
+            </fieldset>
+            {% endif %}
+        </div>
+        {% if object.assignment.student_presence %}
+        <div>
+            <h3>{{ object.assignment.user.get_english_names }} attended on {{ object.assignment.student_presence }}% of the course.</h3>
+        </div>
+        {% endif %}
+        <div class="lectors-signatures">
+            {% for teacher in object.assignment.course.teacher_set.all %}
+                {% if teacher %}
+                    <div class="teacher">
+                        <div class="signature">
+                            <img class="signature-photo" src="{{MEDIA_URL}}{{teacher.signature}}">
+                        </div>
+                        <div class="teacher-name">
+                          {% if teacher.get_english_names %}
+                            {{ teacher.get_english_names }}
+                          {% else %}
+                            {{teacher.first_name}} {{teacher.last_name}}
+                          {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+    <div id="fb-root"></div>
+    <script src="/static/js/facebook.js"></script>
+    <script src="/static/js/twitter.js"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    </body>
+</html>

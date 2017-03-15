@@ -14,6 +14,7 @@ django-filter==0.11.0
 django-image-cropping==1.0.3
 django-import-export==0.4.5
 django-model-utils==2.4
+django-redis==4.7.0
 django-recaptcha==1.2.1
 django-resized==0.3.5
 djangorestframework==3.4.0

@@ -324,8 +324,8 @@ class CertificateFactory(factory.DjangoModelFactory):
     class Meta:
         model = education_models.Certificate
 
-    assignment = factory.RelatedFactory(CourseAssignmentFactory)
-    token = faker.word()
+    assignment = factory.SubFactory(CourseAssignmentFactory)
+    token = faker.uuid4()
 
 
 class CheckInFactory(factory.DjangoModelFactory):
@@ -375,9 +375,9 @@ class TaskFactory(factory.DjangoModelFactory):
 
     course = factory.SubFactory(CourseFactory)
     description = factory.\
-        Sequence(lambda n: 'https://github.com/zad{}/solution.py'.format(n))
+        Sequence(lambda n: 'https://github.com/task{}/'.format(n))
     is_exam = faker.boolean(chance_of_getting_true=0)
-    name = faker.text(max_nb_chars=128)
+    name = factory.LazyAttribute(lambda _: faker.word())
     week = faker.random_number(digits=1)
     gradable = faker.boolean(chance_of_getting_true=100)
 
@@ -423,6 +423,7 @@ class SolutionFactory(factory.DjangoModelFactory):
     url = factory.\
         Sequence(lambda n: 'https://github.com/zad{}/solution.py'.format(n))
     code = faker.text()
+    status = faker.random_element(elements=(0, 1, 2, 3, 4, 5, 6))
 
 
 class StudentNoteFactory(factory.DjangoModelFactory):

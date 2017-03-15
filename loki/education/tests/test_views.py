@@ -4,9 +4,10 @@ from test_plus.test import TestCase
 from loki.seed.factories import (BaseUserFactory, CourseFactory, TaskFactory,
                                  CourseAssignmentFactory, SolutionFactory,
                                  MaterialFactory, WeekFactory, LectureFactory,
-                                 CheckInFactory)
+                                 CheckInFactory, CertificateFactory)
 from loki.base_app.models import BaseUser
 from loki.education.models import StudentNote
+from loki.education.cache import delete_cache_for_courseassingment
 
 from faker import Factory
 faker = Factory.create()
@@ -329,7 +330,6 @@ class TeacherSolutionListViewTests(TestCase):
         self.teacher.teached_courses = [self.course]
         solution = SolutionFactory(task=self.task, student=self.student)
         solution2 = SolutionFactory(task=self.task, student=self.student)
-        solution3 = SolutionFactory(task=self.task)
 
         with self.login(email=self.teacher.email, password=BaseUserFactory.password):
             response = self.get('education:student-solution-list', course=self.course.id,
@@ -339,8 +339,6 @@ class TeacherSolutionListViewTests(TestCase):
             self.assertIn(solution, response.context['solution_list'])
             self.assertIn(solution2, response.context['object_list'])
             self.assertIn(solution2, response.context['solution_list'])
-            self.assertNotIn(solution3, response.context['object_list'])
-            self.assertNotIn(solution3, response.context['solution_list'])
 
 
 class MaterialListViewTests(TestCase):
@@ -790,3 +788,53 @@ class DropStudentTests(TestCase):
 
         self.course_assignment.refresh_from_db()
         self.assertFalse(self.course_assignment.is_attending)
+
+
+class CertificatesTests(TestCase):
+
+    def setUp(self):
+        self.baseuser = BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.save()
+        self.student = BaseUser.objects.promote_to_student(self.baseuser)
+        self.course = CourseFactory()
+        self.course_assignment = CourseAssignmentFactory(course=self.course,
+                                                         user=self.student)
+        self.certificate = CertificateFactory(assignment=self.course_assignment)
+
+    def test_everyone_can_see_certificate(self):
+        response = self.get("education:certificate-detail",
+                            token=self.certificate.token)
+
+        self.assertEqual(200, response.status_code)
+
+    def test_context_of_the_certificate(self):
+        url_tasks = TaskFactory.create_batch(5, course=self.course, gradable=False)
+        gradable_task1 = TaskFactory(course=self.course, gradable=True)
+        gradable_task2 = TaskFactory(course=self.course, gradable=True)
+
+        SolutionFactory(task=gradable_task1, student=self.student, status=3)
+        SolutionFactory(task=gradable_task1, student=self.student, status=2)
+        SolutionFactory(task=gradable_task2, student=self.student, status=3)
+
+        [SolutionFactory(task=task, status=6, student=self.student) for task in url_tasks]
+
+        response = self.get("education:certificate-detail",
+                            token=self.certificate.token)
+
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(2, len(response.context["gradable_tasks"]))
+        self.assertEqual(5, len(response.context["url_tasks"]))
+
+        url_solutions_statuses = [task['solution'] for task in response.context["url_tasks"]
+                                  if task['solution'] != "Not sent"]
+        gradable_passed_solutions = [task['solution_status'] for task in response.context["gradable_tasks"]
+                                     if task['solution_status'] == "PASS"]
+        gradable_failed_solutions = [task['solution_status'] for task in response.context["gradable_tasks"]
+                                     if task['solution_status'] == "FAIL"]
+        self.assertEqual(5, len(url_solutions_statuses))
+        self.assertEqual(1, len(gradable_passed_solutions))
+        self.assertEqual(1, len(gradable_failed_solutions))
+
+    def tearDown(self):
+        delete_cache_for_courseassingment(self.course_assignment)

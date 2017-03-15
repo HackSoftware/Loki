@@ -20,8 +20,10 @@
     <section class="row">
       <div class="active-courses-container container-fluid">
         <h3>Студентски активни курсове </h3>
-        {% for course in student_courses.get_active_courses.all %}
-        {% include "partial/student_course_box.html" with course=course %}
+        {% for ca in student_assignments.all %}
+            {% if ca.course.is_active %}
+              {% include "partial/student_course_box.html" with course=ca.course ca=ca %}
+            {% endif%}
         {% endfor %}
       </div>
     </section>
@@ -44,9 +46,11 @@
         <section class="row">
           <div class="active-courses-container container-fluid">
             <h3>Архив на изминали студентски курсове </h3>
-              {% for course in student_courses.get_closed_courses.all %}
-                  {% include "partial/student_course_box.html" with course=course %}
-              {% endfor %}
+            {% for ca in student_assignments.all %}
+                {% if not ca.course.is_active %}
+                  {% include "partial/student_course_box.html" with course=ca.course ca=ca %}
+                {% endif%}
+            {% endfor %}
           </div>
         </section>
       {% endif %}
