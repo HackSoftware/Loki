@@ -11,7 +11,7 @@ from image_cropping import ImageCroppingMixin
 class BaseUserAdmin(ImageCroppingMixin, admin.ModelAdmin):
     list_display = ('email', 'first_name', 'last_name',
                     'studies_at', 'works_at', 'is_active')
-
+    readonly_fields = ('created_at',)
     list_filter = ('is_active',)
     search_fields = ['email', 'first_name', 'last_name', 'studies_at', 'works_at']
 
