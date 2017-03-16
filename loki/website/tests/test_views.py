@@ -6,6 +6,7 @@ from django.core import mail
 
 from test_plus.test import TestCase
 from faker import Factory
+from datetime import datetime
 
 from loki.seed import factories
 from loki.base_app.models import GeneralPartner
@@ -229,6 +230,7 @@ class TestWebsite(TestCase):
                          data['first_name'])
         self.assertEqual(made_user.last_name, data['last_name'])
         self.assertTrue(made_user.check_password(data['password']))
+        self.assertEqual(made_user.created_at.date(), datetime.now().date())
         self.assertTemplateUsed(post_resp, 'website/auth/thanks.html')
         self.assertEqual(len(mail.outbox), 1)
 

@@ -6,6 +6,7 @@ from test_plus.test import TestCase
 from rest_framework.test import APIClient
 
 from faker import Factory
+from datetime import datetime
 
 from loki.seed import factories
 from loki.base_app.models import BaseUser, RegisterOrigin
@@ -73,6 +74,7 @@ class BaseUserRegistrationTests(TestCase):
         self.assertEqual(user.email, self.user_data['email'])
         self.\
             assertTrue(user.check_password(self.user_data['password']))
+        self.assertEqual(user.created_at.date(), datetime.now().date())
 
     def test_get_activation_url(self):
         RegisterOrigin.objects.create(
