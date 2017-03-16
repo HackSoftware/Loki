@@ -121,6 +121,8 @@ class BaseUserFactory(factory.DjangoModelFactory):
     avatar = factory.django.ImageField(color='blue')
     full_image = factory.django.ImageField(color='blue')
 
+    created_at = datetime.now()
+
 
 class EducationInfoFactory(factory.DjangoModelFactory):
     class Meta:
