@@ -56,108 +56,6 @@ def set_check_in(request):
     return HttpResponse(status=200)
 
 
-class GetLectures(mixins.ListModelMixin, generics.GenericAPIView):
-
-    serializer_class = LectureSerializer
-
-    def get_queryset(self, request):
-        course_id = self.request.GET.get('course_id')
-        return Lecture.objects.filter(course_id=course_id)
-
-
-@api_view(['GET'])
-@permission_classes((IsAuthenticated,))
-def get_courses(request):
-    teacher = request.user.get_teacher()
-    courses = teacher.teached_courses.all()
-    serializer = CourseSerializer(courses, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class OnBoardStudent(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def make_student(self, baseuser):
-        student = Student(baseuser_ptr_id=baseuser.id)
-        student.save()
-        student.__dict__.update(baseuser.__dict__)
-        return student.save()
-
-    def post(self, request, format=None):
-        if not request.user.get_student():
-            self.make_student(request.user)
-            return Response(status=status.HTTP_200_OK)
-
-
-class CourseAssignmentAPI(generics.ListAPIView):
-    model = CourseAssignment
-    serializer_class = FullCASerializer
-    permission_classes = (IsTeacher,)
-    filter_fields = ('course__id',)
-
-    def get_queryset(self):
-        teached_courses = self.request.user.teacher.teached_courses.all()
-        return CourseAssignment.objects.filter(course__in=teached_courses)
-
-
-class StudentNoteAPI(generics.CreateAPIView):
-    permission_classes = (IsTeacher, IsTeacherForCA)
-    serializer_class = StudentNoteSerializer
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user.get_teacher())
-
-
-@api_view(['POST', 'PATCH'])
-@permission_classes((IsAuthenticated,))
-def working_at(request):
-    if request.method == 'POST':
-        serializer = WorkingAtSerializer(data=request.data)
-        if serializer.is_valid():
-            company = Company.objects.filter(name__iexact=serializer.initial_data['company_name']).first()
-            if company:
-                obj = serializer.save(student=request.user.student, company=company)
-            else:
-                obj = serializer.save(student=request.user.student)
-            return Response(WorkingAtSerializer(obj).data, status=status.HTTP_201_CREATED)
-        errors = serializer.errors
-        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-    if request.method == 'PATCH':
-        working_at_entry = get_object_or_404(WorkingAt, id=request.data['working_at_id'])
-        serializer = WorkingAtSerializer(working_at_entry, data=request.data, partial=True)
-        if serializer.is_valid():
-            company = Company.objects.filter(name__iexact=working_at_entry.company_name).first()
-            if company:
-                obj = serializer.save(student=request.user.student, company=company)
-            else:
-                obj = serializer.save(student=request.user.student)
-            return Response(WorkingAtSerializer(obj).data, status=status.HTTP_201_CREATED)
-        errors = serializer.errors
-        return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET'])
-def get_cities(request):
-    cities = City.objects.all()
-    serializer = CitySerializer(cities, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(['GET'])
-def get_companies(request):
-    companies = Company.objects.all()
-    serializer = CompanySerializer(companies, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-class TasksAPI(generics.ListAPIView):
-    model = Task
-    queryset = Task.objects.all()
-    serializer_class = TaskSerializer
-    permission_classes = (IsAuthenticated,)
-    filter_fields = ('course__id',)
-
-
 class SolutionStatusAPI(
         SolutionApiAuthenticationPermissionMixin,
         mixins.RetrieveModelMixin,
@@ -171,21 +69,6 @@ class SolutionStatusAPI(
     def get_queryset(self):
         student = self.request.user.get_student()
         return student.solution_set
-
-
-class StudentSolutionsList(generics.ListAPIView):
-    serializer_class = SolutionSerializer
-    permission_classes = (IsTeacher,)
-
-    def get_queryset(self):
-        queryset = Solution.objects.filter(task__course__teacher=self.request.user)
-        student_id = self.request.query_params.get('student_id', None)
-        course_id = self.request.query_params.get('course_id', None)
-        if student_id is not None:
-            queryset = queryset.filter(student__id=student_id)
-        if course_id is not None:
-            queryset = queryset.filter(task__course__id=course_id)
-        return queryset
 
 
 class SolutionsAPI(
@@ -242,48 +125,3 @@ class SolutionsAPI(
     def get_queryset(self):
         student = self.request.user.get_student()
         return student.solution_set
-
-
-def certificate_old(request, pk):
-    return render(request, "certificate_old.html", locals())
-
-
-def certificate(request, token):
-    certificate = get_object_or_404(Certificate, token=token)
-    ca = certificate.assignment
-    student = ca.user
-    course = ca.course
-    teachers = course.teacher_set.all()
-
-    tasks = Task.objects.filter(course=ca.course)
-    solutions = Solution.objects.filter(task__in=tasks, student=ca.user)
-    task_to_solution = {solution.task: solution for solution in solutions}
-
-    projects = tasks.filter(gradable=False)
-    problems = tasks.filter(gradable=True)
-
-    solved_projects_count = 0
-    solved_problems_count = 0
-
-    for project in projects:
-        if project.solution_set.count() >= 0:
-            solved_projects_count += 1
-
-    for problem in problems:
-        current_solutions = problem.solution_set.all()
-
-        if current_solutions.count() > 0 and current_solutions.last().status == 'ok':
-            solved_problems_count += 1
-
-    total = solved_problems_count + solved_projects_count
-    percent_awesome = round((total / tasks.count()) * 100, 2)
-
-    for project in projects:
-        if project in task_to_solution:
-            project.solution = task_to_solution[project]
-
-    for problem in problems:
-        if problem in task_to_solution:
-            problem.solution = task_to_solution[problem]
-
-    return render(request, "certificate.html", locals())
