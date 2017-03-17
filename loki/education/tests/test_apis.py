@@ -7,11 +7,7 @@ from django.conf import settings
 
 from rest_framework.test import APIClient
 
-from loki.base_app.models import BaseUser, Company, City
-from loki.education.models import (Student, CheckIn, Lecture,
-                                   StudentNote, WorkingAt,
-                                   Solution, SourceCodeTest)
-from loki.hack_fmi.helper import date_decrease
+from loki.education.models import Student, Solution, SourceCodeTest, CheckIn
 from loki.seed import factories
 
 from faker import Factory

@@ -1,7 +1,7 @@
 import uuid
 import base64
 
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404
 from django.conf import settings
 from django.db import IntegrityError
 from django.http import HttpResponse
@@ -9,22 +9,12 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.base import ContentFile
 
-from rest_framework import serializers, generics, status, mixins
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from rest_framework import serializers, generics, mixins
 
-from loki.base_app.models import City, Company
+from ..models import (CheckIn, Student,
+                      Task, Solution, Teacher)
 
-from ..permissions import IsTeacher, IsTeacherForCA
-from ..models import (CheckIn, Student, Lecture, CourseAssignment, WorkingAt,
-                      Task, Solution, Certificate, Teacher)
-
-from ..serializers import (LectureSerializer, CourseSerializer, FullCASerializer,
-                           SolutionSerializer, WorkingAtSerializer,
-                           CitySerializer, CompanySerializer, TaskSerializer, StudentNoteSerializer,
-                           SolutionStatusSerializer)
+from ..serializers import SolutionSerializer, SolutionStatusSerializer
 from ..tasks import submit_solution
 from ..mixins import SolutionApiAuthenticationPermissionMixin
 
