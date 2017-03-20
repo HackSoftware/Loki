@@ -53,6 +53,9 @@ class StudentDetailView(DashboardPermissionMixin,
         url_tasks = Task.objects.filter(course=course, gradable=False)
 
         student = Student.objects.get(id=self.object.user.id)
+
+        # update student data
+        get_student_data_for_course(ca)
         context['passed_solutions'] = Solution.objects.filter(student=student,
                                                               task__in=tasks,
                                                               status=Solution.OK).count()
@@ -63,9 +66,6 @@ class StudentDetailView(DashboardPermissionMixin,
         context['count_solutions'] = context['passed_solutions'] + context['failed_solutions'] + context['url_solutions']  # noqa
 
         context['course_presence'] = get_course_presence(course=course, user=student)
-
-        course_data = get_student_data_for_course(ca)
-        context['percent_awesome'] = course_data["percent_awesome"]
 
         return context
 

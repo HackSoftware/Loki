@@ -12,6 +12,7 @@ from .models import (Student, Course, CourseAssignment, Teacher, Lecture,
 from .forms import FixJsonFieldDisplayInInheritedClassAdminForm
 from loki.interview_system.decorators import func_args
 
+
 @admin.register(Student)
 class StudentAdmin(ImportExportActionModelAdmin):
     resource_class = StudentResource

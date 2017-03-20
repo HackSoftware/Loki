@@ -27,8 +27,10 @@
         <div class="col-sm-10 course-information">
           <h4> Студент: {{ object.user }}</h4>
           <hr class="lines"/>
+          {% if object.percent_submitted_solutions %}
           <b>Процент предадени задачи:</b>
-          <span class="percent-awesome">{{ percent_awesome }}% </span></br>
+          <span class="percent-awesome">{{ object.percent_submitted_solutions }}% </span></br>
+          {% endif %}
           <b>Предадени решения в системата:</b> {{ count_solutions }}
           <hr/>
           <b>Общ брой верни решения:</b> {{ passed_solutions }} </br>
