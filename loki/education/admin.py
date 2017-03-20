@@ -10,7 +10,7 @@ from .models import (Student, Course, CourseAssignment, Teacher, Lecture,
                      Material)
 
 from .forms import FixJsonFieldDisplayInInheritedClassAdminForm
-
+from loki.interview_system.decorators import func_args
 
 @admin.register(Student)
 class StudentAdmin(ImportExportActionModelAdmin):
@@ -70,6 +70,7 @@ class CourseAssignmentAdmin(ImportExportActionModelAdmin):
         'course',
         'group_time',
         'student_presence',
+        'percent_awesome',
         'cv',
         'is_attending',
         'is_online',
@@ -78,6 +79,10 @@ class CourseAssignmentAdmin(ImportExportActionModelAdmin):
     list_filter = ('course', 'group_time', 'is_attending', 'is_online')
     search_fields = ['user__first_name', 'user__last_name', 'user__email']
     list_display_links = ['user']
+
+    @func_args(short_description='Awesome')
+    def percent_awesome(self, obj):
+        return obj.percent_submitted_solutions
 
 
 @admin.register(Course)
