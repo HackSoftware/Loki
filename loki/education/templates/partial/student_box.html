@@ -1,7 +1,11 @@
 {% load cropping thumbnail %}
 <div class="row student-box">
   <div class="col-sm-2">
-    <img src="{% cropped_thumbnail student "cropping" %}" class="student-profile-photo" >
+    {% if not ca.user.full_image %}
+      <img src="{{ STATIC_URL }}website_images/hackman_head.png" class="student-profile-photo">
+    {% else %}
+      <img src="{% cropped_thumbnail student "cropping" %}" class="student-profile-photo">
+    {% endif %}
   </div>
   <div class="col-sm-8 student-information-text">
     <a href="{% url 'education:student-detail' course.id ca.id %}">
