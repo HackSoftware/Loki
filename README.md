@@ -24,12 +24,12 @@ In order to setup it, there are the following steps:
 <!-- -->
 
     $ pip install -r requirements/base.txt
-    
+
 -   Install Redis Server
 
 <!-- -->
 
-    $ sudo apt-get install redis server
+    $ sudo apt-get install redis-server
 
 -   Setup Postgres
 
@@ -101,9 +101,9 @@ Running tests
 --------------
 
 Before running the tests, you need to install the right requirements for them:
-    
+
     $ pip install -r requirements/test.txt
-  
+
 In order to run the tests, choose whichever command you prefer:
 
     $ python manage.py test
@@ -138,5 +138,5 @@ Linting & pep8
 
 In order to check if everything is ok according to pep8 rules, you can use
 [flake8] (https://pypi.python.org/pypi/flake8) from the project root:
-	
+
     $ flake8 loki
