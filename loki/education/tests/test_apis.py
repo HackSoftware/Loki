@@ -328,19 +328,6 @@ class SolutionsTests(TestCase):
                         filter(student=logged_student).count(), 3)
         self.assertEqual(len(response.data), 1)
 
-    @skip("Don't want to test")
-    def test_certificate(self):
-        client = Client()
-
-        url = reverse('education:certificate',
-                      kwargs={'token': self.certificate.token})
-
-        response = client.get(url)
-
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Source Link')
-        self.assertContains(response, 'Not sent')
-
 
 class TestSolutionTests(TestCase):
 
