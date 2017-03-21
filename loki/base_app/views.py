@@ -1,18 +1,10 @@
-import json
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.contrib import messages
 
-from rest_framework import status
-from rest_framework.decorators import permission_classes, api_view
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-
-from .helper import crop_image, validate_password
+from .helper import validate_password
 from .models import BaseUserRegisterToken, BaseUserPasswordResetToken, RegisterOrigin
-
 
 
 def user_activation(request, token):

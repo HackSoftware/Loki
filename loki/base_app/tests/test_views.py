@@ -1,15 +1,12 @@
 import os
 
-from django.core.urlresolvers import reverse
-
 from test_plus.test import TestCase
-from rest_framework.test import APIClient
 
 from faker import Factory
 from datetime import datetime
 
 from loki.seed import factories
-from loki.base_app.models import BaseUser, RegisterOrigin
+from loki.base_app.models import RegisterOrigin
 from loki.base_app.helper import get_activation_url
 from loki.website.forms import RegisterForm
 
@@ -86,85 +83,3 @@ class BaseUserRegistrationTests(TestCase):
 
         self.assertTrue('?origin=' in url_with_origin)
         self.assertFalse('?origin=' in url_without_origin)
-
-
-class PersonalUserInformationTests(TestCase):
-
-    def setUp(self):
-        self.client = APIClient()
-        self.company = factories.CompanyFactory()
-        self.partner = factories.PartnerFactory(company=self.company)
-        self.course = factories.CourseFactory()
-        self.baseuser = factories.BaseUserFactory()
-        self.baseuser.is_active = True
-
-        self.student = factories.StudentFactory(
-            baseuser_ptr_id=self.baseuser.id,
-            email=self.baseuser.email
-        )
-
-        self.student.__dict__.update(self.__dict__)
-
-        self.team = factories.TeamFactory()
-        self.courseAssignment = factories.\
-            CourseAssignmentFactory(course=self.course,
-                                    user=self.student)
-        self.courseAssignment.favourite_partners.add(self.partner)
-        self.competitor = factories.CompetitorFactory(
-            baseuser_ptr_id=self.baseuser.id,)
-        self.team.add_member(competitor=self.competitor)
-
-        self.city = factories.CityFactory()
-
-    def test_me_returns_full_team_membership_set(self):
-        self.client.force_authenticate(user=self.baseuser)
-        url_me = reverse('base_app:me')
-        response = self.client.get(url_me, format='json')
-        resul_teammembership_set = response.\
-            data['competitor']['teammembership_set'][0]
-
-        self.assertEqual(resul_teammembership_set['team'],
-                         self.team.id)
-
-    def test_me_returns_full_courseassignments_set(self):
-        self.client.force_authenticate(user=self.baseuser)
-        url_me = reverse('base_app:me')
-        response = self.client.get(url_me, format='json')
-        first_courseassignment = response.\
-            data['student']['courseassignment_set'][0]
-        self.assertEqual(first_courseassignment['course']['name'],
-                         self.course.name)
-
-    def test_me_returns_certificate(self):
-        certificate = factories.CertificateFactory(assignment=self.courseAssignment)
-        self.client.force_authenticate(user=self.baseuser)
-        url_me = reverse('base_app:me')
-        response = self.client.get(url_me, format='json')
-        certificate_token = response.\
-            data['student']['courseassignment_set'][0]['certificate']['token']
-        self.assertEqual(certificate_token, str(certificate.token))
-
-    def test_baseuser_update(self):
-        self.client.force_authenticate(user=self.baseuser)
-        update_url = reverse('base_app:update_baseuser')
-        data = {'github_account': 'http://github.com/Ivo'}
-        self.client.patch(update_url, data, format='json')
-        baseuser = BaseUser.objects.get(id=self.baseuser.id)
-
-        self.assertEqual(baseuser.github_account, data['github_account'])
-
-    def test_update_empty_birth_place(self):
-        self.client.force_authenticate(user=self.baseuser)
-        update_url = reverse('base_app:update_baseuser')
-        data = {'birth_place': self.city.id}
-
-        self.client.patch(update_url, data)
-        baseuser = BaseUser.objects.get(id=self.baseuser.id)
-        self.assertEqual(baseuser.birth_place, self.city)
-
-    def test_try_to_update_user_info_if_not_authenticated(self):
-        update_url = reverse('base_app:update_baseuser')
-        data = {'birth_place': self.city.id}
-
-        response = self.client.patch(update_url, data)
-        self.response_401(response)
