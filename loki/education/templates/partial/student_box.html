@@ -26,6 +26,10 @@
     {% if ca.student_presence %}
       <b>Присъствие:</b> <span class="student-presence-percent">{{ ca.student_presence }}%</span></br>
     {% endif %}
+    {% if ca.percent_submitted_solutions %}
+      <b>Процент предадени задачи:</b>
+      <span class="percent-awesome">{{ ca.percent_submitted_solutions }}% </span></br>
+    {% endif %}
     {% if ca.studentnote_set.exists %}
       <div class="student-box-footer student-note-footer">
         <div class="student-note">
