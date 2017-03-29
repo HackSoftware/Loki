@@ -4,7 +4,7 @@
 # REQUIREMENTS:
 # 1. Internet access
 # 2. root privileges (to install apps and libs)
-# 
+# 3. Python3 located at "/usr/bin/python3"
 
 # Side effects:
 # 1. Creates virtual env named "loki"
