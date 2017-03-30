@@ -2,7 +2,7 @@ mkvirtualenv -p /usr/bin/python3 loki
 
 # git clone https://github.com/HackSoftware/Loki.git
 
-cd Loki/
+# cd Loki/
 
 # Install base requirements after all required libs are installed
 pip install -r requirements/base.txt
