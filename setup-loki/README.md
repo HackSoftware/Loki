@@ -7,13 +7,13 @@
 3. python3
 
 ## Run the following commands from within the Loki/ folder
-`sudo chmod +x install-libs.sh`
+`sudo chmod +x setup-loki/install-libs.sh`
 
-`sudo chmod +x setup-loki.sh`
+`sudo chmod +x setup-loki/setup-loki.sh`
 
-`./install-libs.sh`
+`setup-loki/install-libs.sh`
 
-`source setup-libs.sh`
+`source setup-loki/setup-libs.sh`
 
 ## Side effects:
 1. Creates virtual env named "loki"
