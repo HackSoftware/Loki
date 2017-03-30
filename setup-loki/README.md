@@ -4,6 +4,7 @@
 ## REQUIREMENTS:
 1. Internet access
 2. root privileges (to install apps and libs)
+3. python3
 
 ## Run the following commands from within the Loki/ folder
 `sudo chmod +x install-libs.sh`
