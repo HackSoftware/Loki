@@ -1,4 +1,5 @@
 # These are the steps to setup loki on you own machine
+### NOTE: Installs the base project. Does not include redis nor celery
 ### NOTE: Tested on **Ubuntu 16.04**, should work on **14.04** as well
 
 ## REQUIREMENTS:
