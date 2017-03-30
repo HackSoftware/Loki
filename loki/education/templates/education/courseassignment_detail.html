@@ -24,7 +24,7 @@
         {% if not object.user.full_image %}
           <img src="{{ STATIC_URL }}website_images/hackman_head.png" class="student-profile-photo">
         {% else %}
-          <img src="{% cropped_thumbnail student "cropping" %}" class="student-profile-photo">
+          <img src="{% cropped_thumbnail object.user "cropping" %}" class="student-profile-photo">
         {% endif %}
       </div>
       <div class="col-sm-10 course-text">
