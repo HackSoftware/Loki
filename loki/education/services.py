@@ -108,9 +108,7 @@ def get_student_data_for_course(course_assignment):
     percent_awesome = 0
     if total:
         percent_awesome = round((total/all_tasks) * 100, 2)
-    current_percent_submitted_solutions = course_assignment.percent_submitted_solutions
-    if current_percent_submitted_solutions != percent_awesome:
-        current_percent_submitted_solutions = percent_awesome
+        course_assignment.percent_submitted_solutions = percent_awesome
         course_assignment.save()
 
     course_data['percent_awesome'] = percent_awesome

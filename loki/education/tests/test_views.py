@@ -835,6 +835,8 @@ class CertificatesTests(TestCase):
         self.assertEqual(5, len(url_solutions_statuses))
         self.assertEqual(1, len(gradable_passed_solutions))
         self.assertEqual(1, len(gradable_failed_solutions))
+        self.assertEqual(85.71, response.context['percent_awesome'])
+        # self.assertEqual(85.71, self.course_assignment.percent_submitted_solutions)
 
     def tearDown(self):
         delete_cache_for_courseassingment(self.course_assignment)
