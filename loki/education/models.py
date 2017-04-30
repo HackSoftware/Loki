@@ -56,7 +56,7 @@ class CourseAssignment(models.Model):
     user = models.ForeignKey('Student')
     student_presence = models.PositiveSmallIntegerField(blank=True, null=True)
     is_online = models.BooleanField(default=False)
-    percent_submitted_solutions = models.PositiveSmallIntegerField(blank=True, null=True)
+    percent_submitted_solutions = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
         unique_together = ('user', 'course')
