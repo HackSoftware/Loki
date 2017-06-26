@@ -808,6 +808,11 @@ class CertificatesTests(TestCase):
 
         self.assertEqual(200, response.status_code)
 
+    def test_bad_request_is_returned_if_id_is_passed_instead_of_uuid(self):
+        response = self.get('education:certificate-detail', token=self.certificate.id)
+
+        self.response_404(response)
+
     def test_context_of_the_certificate(self):
         url_tasks = TaskFactory.create_batch(5, course=self.course, gradable=False)
         gradable_task1 = TaskFactory(course=self.course, gradable=True)
