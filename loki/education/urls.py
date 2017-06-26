@@ -1,5 +1,6 @@
 from django.conf.urls import url
 
+from loki.common.constants import UUID_REGEX
 from loki.education.views import old_api_views, dashboard, student_dashboard, teacher_dashboard
 
 
@@ -8,8 +9,8 @@ urlpatterns = [
     url(r'^api/solution/$', old_api_views.SolutionsAPI.as_view(), name='solution'),
     url(r'^api/solution/(?P<pk>[0-9]+)/$', old_api_views.SolutionsAPI.as_view(),  name='solution_edit'),
     url(r'^api/solution-status/(?P<pk>[0-9]+)/$', old_api_views.SolutionStatusAPI.as_view(), name='solution_status'),
-    url(r'^certificate/(?P<token>[0-9a-f-]+)/$',
-        student_dashboard.CertificateDetailView.as_view(), name="certificate-detail"),
+    url(r'^certificate/(?P<token>{})/$'.format(UUID_REGEX),
+        student_dashboard.CertificateDetailView.as_view(), name='certificate-detail'),
     # Common views for Teacher Dashboard and Student Dashboard
     url(r'^dashboard/$', dashboard.CourseListView.as_view(), name='course-list'),
     url(r'^course/(?P<course>[0-9]+)/materials/$',
