@@ -77,46 +77,7 @@
               <li><a href="http://blog.hackbulgaria.com/" target="_blank">Блог</a></li>
             </ul>
 
-            <ul class="nav navbar-nav navbar-right">
-              {% if user.is_authenticated %}
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    {% if not user.full_image %}
-                      <img id="user-profile-menu" src="{{ STATIC_URL }}website_images/hackman_head.png"/>
-                    {% else %}
-                      <img id="user-profile-menu" src="{% cropped_thumbnail user 'cropping' %}"/>
-                    {% endif %}
-                    {{ user.full_name }}
-                    <span class="caret"></span>
-                  </a>
 
-                  <ul class="dropdown-menu">
-                    <li><a href="{% url 'website:profile' %}">Профил</a></li>
-                    <li><a href="{% url 'website:profile_edit' %}">Редакция на профилни данни</a></li>
-
-                    {% if user.get_student %}
-                      <li><a href="{% url 'website:profile_edit_student' %}">Редакция на студентски данни</a></li>
-                    {% endif %}
-
-                    {% if user.get_teacher %}
-                      <li><a href="{% url 'website:profile_edit_teacher' %}">Редакция на учителски данни </a></li>
-                    {% endif %}
-
-                    {% if user.application_set.exists and user.application_set.first.application_info.apply_is_active %}
-                      <li><a href="{% url 'applications:edit_applications' %}">Редакция на кандидатури </a></li>
-                    {% endif %}
-
-                    {% if user.student.courseassignment_set.exists or user.get_teacher %}
-                      <li><a href="{% url 'education:course-list' %}">Моите курсове</a></li>
-                    {% endif %}
-                      <li><a href="{% url 'website:logout' %}">Изход</a></li>
-                  </ul>
-                </li>
-              {% else %}
-                <li  class="{% menu_active 'website:register' %}"><a href="{% url 'website:register' %}">Регистрация</a></li>
-                <li  class="{% menu_active 'website:login' %}"><a href="{% url 'website:login' %}">Вход</a></li>
-              {% endif %}
-            </ul>
           </div><!--/.nav-collapse -->
         </div><!--/.container-fluid -->
       </nav>
