@@ -112,10 +112,16 @@
           <p>{{ cd.realization }}</p>
           {% for partner in partners %}
             <div class="course-partner-image col-md-2">
+              {% if partner.video_presentation %}
               <a class="swipebox-video" rel="youtube" href="{{ partner.video_presentation }}">
                 <img class="image" src="{{ MEDIA_URL }}{{ partner.company.logo }}">
                 <img src="{{ STATIC_URL }}/website_images/play_button.png" class="play_button">
               </a>
+	      {% else %}
+              <a class="" rel="" target="_blank" href="{{ partner.website }}">
+                <img class="image" src="{{ MEDIA_URL }}{{ partner.company.logo }}">
+              </a>
+	      {% endif %}
             </div>
           {% endfor %}
         </div>
