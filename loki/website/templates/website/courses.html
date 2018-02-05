@@ -31,15 +31,19 @@
           {% endfor %}
         {% endif %}
 
-        <h3>Текущи курсове:</h3>
-        {% for course in active_courses %}
-          {% include "website/partial/course_box.html" with course=course %}
-        {% endfor %}
+        {% if active_courses %}
+          <h3>Текущи курсове:</h3>
+          {% for course in active_courses %}
+            {% include "website/partial/course_box.html" with course=course %}
+          {% endfor %}
+        {% endif %}
 
-        <h3>Архив на изминали курсове:</h3>
-        {% for course in closed_courses_without_cd %}
+        {% if closed_courses_without_cd %}
+          <h3>Архив на изминали курсове:</h3>
+          {% for course in closed_courses_without_cd %}
           {% include "website/partial/course_box.html" with course=course %}
-        {% endfor %}
+          {% endfor %}
+        {% endif %}
       </div>
     </section>
 
