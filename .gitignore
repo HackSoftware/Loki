@@ -67,3 +67,4 @@ bower_components
 *.swp
 data.json
 *.sql
+*.un~
