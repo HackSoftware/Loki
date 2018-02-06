@@ -3,8 +3,11 @@ from django.core.exceptions import ValidationError
 
 from loki.education.services import add_student_to_course, add_teacher_to_course
 from loki.education.models import Student, CourseAssignment, Teacher
-from loki.seed.factories import BaseUserFactory, CourseFactory, CourseAssignmentFactory
+from loki.seed.factories import (BaseUserFactory, CourseFactory,
+                                 CourseAssignmentFactory, TaskFactory,
+                                 SolutionFactory)
 from loki.base_app.models import BaseUser
+from loki.education.services import get_student_data_for_course
 
 
 class AddStudentToCourseTest(TestCase):
@@ -84,3 +87,76 @@ class AddTeacherToCourseTest(TestCase):
         add_teacher_to_course(user=self.base_user, course=self.course)
 
         self.assertIn(self.course, teacher.teached_courses.all())
+
+
+class GetStudentDataForCourse(TestCase):
+
+    PASS = 2
+    FAIL = 3
+
+    def setUp(self):
+        self.baseuser = BaseUserFactory()
+        self.baseuser.is_active = True
+        self.baseuser.save()
+        self.student = BaseUser.objects.promote_to_student(self.baseuser)
+        self.course = CourseFactory()
+        self.course_assignment = CourseAssignmentFactory(course=self.course,
+                                                         user=self.student)
+
+    def test_course_data_returns_zero_percent_awesome_when_no_solutions(self):
+        result_course_data = get_student_data_for_course(self.course_assignment)
+        self.assertEqual(0, result_course_data['percent_awesome'])
+
+    def test_course_data_returns_empty_tasks_when_no_solutions(self):
+        result_course_data = get_student_data_for_course(self.course_assignment)
+        self.assertEqual([], result_course_data['url_tasks'])
+        self.assertEqual([], result_course_data['gradable_tasks'])
+
+    def test_course_data_contains_correct_tasks_data(self):
+        gradable_task = TaskFactory(course=self.course, gradable=True)
+        SolutionFactory(task=gradable_task, student=self.student, status=self.PASS)
+
+        url_task = TaskFactory(course=self.course, gradable=False)
+        solution2 = SolutionFactory(task=url_task, student=self.student)
+        result_course_data = get_student_data_for_course(self.course_assignment)
+
+        self.assertEqual(1, len(result_course_data['gradable_tasks']))
+        self.assertEqual('PASS',
+                         result_course_data['gradable_tasks'][0]['solution_status'])
+        self.assertEqual(gradable_task.name,
+                         result_course_data['gradable_tasks'][0]['name'])
+
+        self.assertEqual(1, len(result_course_data['url_tasks']))
+        self.assertEqual(solution2.url,
+                         result_course_data['url_tasks'][0]['solution'])
+        self.assertEqual(url_task.name,
+                         result_course_data['url_tasks'][0]['name'])
+
+        self.assertEqual(result_course_data['percent_awesome'], 100.0)
+
+    def test_course_data_contains_correct_percent_awesome_when_multiple_tasks(self):
+        url_task1 = TaskFactory(course=self.course, gradable=False)
+        url_task2 = TaskFactory(course=self.course, gradable=False)
+        gradable_task1 = TaskFactory(course=self.course, gradable=True)
+        gradable_task2 = TaskFactory(course=self.course, gradable=True)
+
+        SolutionFactory(task=url_task1, student=self.student)
+        SolutionFactory(task=url_task2, student=self.student)
+
+        SolutionFactory(task=gradable_task1, student=self.student, status=self.PASS)
+        SolutionFactory(task=gradable_task2, student=self.student, status=self.FAIL)
+
+        result_course_data = get_student_data_for_course(self.course_assignment)
+        self.assertEqual(75.0, result_course_data['percent_awesome'])
+
+    def test_correct_persent_awesome_when_multiple_solutions_of_task(self):
+        gradable_task1 = TaskFactory(course=self.course, gradable=True)
+        TaskFactory(course=self.course, gradable=False)
+
+        SolutionFactory(task=gradable_task1, student=self.student, status=self.PASS)
+        SolutionFactory(task=gradable_task1, student=self.student, status=self.PASS)
+        SolutionFactory(task=gradable_task1, student=self.student, status=self.FAIL)
+        SolutionFactory(task=gradable_task1, student=self.student, status=self.PASS)
+
+        result_course_data = get_student_data_for_course(self.course_assignment)
+        self.assertEqual(50.0, result_course_data['percent_awesome'])

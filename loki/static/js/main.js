@@ -108,12 +108,12 @@ $(document).ready(function(){
   $(".check-in").click(function(){
     $(this).closest('.course-box').find('.check-in-table').toggle();
   });
-  // 
+  //
   // $(".student-note").click(function(event){
   //   $(this).closest('.student-box').find('.student-notes-table').toggle();
   // });
 
-  $(".student-presence-percent").each(function(){
+  $(".student-presence-percent, .percent-awesome").each(function(){
     var percent = parseInt($(this).html())/100;
     $(this).css("color", "rgb(" + Math.floor(255 * (1-percent)) + "," + Math.floor(255 * percent) + ",0)");
   });

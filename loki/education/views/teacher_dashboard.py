@@ -13,7 +13,8 @@ from loki.education.mixins import (DashboardPermissionMixin,
                                    IsTeacherMixin,
                                    CannotSeeOtherStudentsMixin)
 from loki.education.helper import task_solutions, latest_solution_statuses
-from loki.education.services import get_course_presence
+from loki.education.services import (get_course_presence,
+                                     get_student_data_for_course)
 
 
 class StudentListView(DashboardPermissionMixin,
@@ -47,10 +48,14 @@ class StudentDetailView(DashboardPermissionMixin,
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         course = Course.objects.get(id=self.kwargs.get("course"))
+        ca = CourseAssignment.objects.get(id=self.kwargs.get("ca"))
         tasks = Task.objects.filter(course=course, gradable=True)
         url_tasks = Task.objects.filter(course=course, gradable=False)
 
         student = Student.objects.get(id=self.object.user.id)
+
+        # update student data
+        get_student_data_for_course(ca)
         context['passed_solutions'] = Solution.objects.filter(student=student,
                                                               task__in=tasks,
                                                               status=Solution.OK).count()
@@ -61,6 +66,7 @@ class StudentDetailView(DashboardPermissionMixin,
         context['count_solutions'] = context['passed_solutions'] + context['failed_solutions'] + context['url_solutions']  # noqa
 
         context['course_presence'] = get_course_presence(course=course, user=student)
+
         return context
 
 
